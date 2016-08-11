@@ -33,9 +33,16 @@ class QueryParamAuth extends AuthMethod
                 return $identity;
             }
         }
-        if ($accessToken !== null) {
+        if (!empty($accessToken)) {
             $this->handleFailure($response);
         }
-        return null;
+        if(empty($accessToken)){
+            $result = [
+                'status'=>'401',
+                'message'=>'您尚未登录，请先登录',
+            ];
+            echo json_encode($result);
+            exit;
+        }
     }
 }

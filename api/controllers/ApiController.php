@@ -13,7 +13,7 @@ class ApiController extends Controller
     	$behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
             'class' => QueryParamAuth::className(),
-            'except'=>[]
+            'except'=>['register','is-exist','send-message','login']
         ];
     	$behaviors['verbs'] = [
     			'class'=> \yii\filters\VerbFilter::className(),
@@ -38,12 +38,16 @@ class ApiController extends Controller
             'status'=>(string)$code,
             'message'=>$message,
         ];
-        if(!empty($data)){
-			if($tradeNull){
-				array_walk_recursive($data,[static::className(),'HandleData']);
+		if(!empty($data)){
+			if(gettype($data)=='array'){
+				if($tradeNull){
+					array_walk_recursive($data,[static::className(),'HandleData']);
+				}
+				$result['data'] = $data;
+			}else{
+				$result['data'] = (string)$data;
 			}
-            $result['data'] = $data;
-        }
+		}
         return $result;
     }
     
@@ -53,13 +57,17 @@ class ApiController extends Controller
     			'message'=>$message,
     			'totalval' => (string)$totalval,
     	];
-    	if(!empty($data)){
-			if($tradeNull){
-				array_walk_recursive($data,[static::className(),'HandleData']);
+		if(!empty($data)){
+			if(gettype($data)=='array'){
+				if($tradeNull){
+					array_walk_recursive($data,[static::className(),'HandleData']);
+				}
+				$result['data'] = $data;
+			}else{
+				$result['data'] = (string)$data;
 			}
-    		$result['data'] = $data;
-    	}  
-    	return $result;
+		}
+		return $result;
     }
 
 	/**
@@ -72,7 +80,7 @@ class ApiController extends Controller
 			$val = '';
 		}
 		if (gettype($val) == 'integer') {
-			$v = (string)$val;
+			$val = (string)$val;
 		}
 	}
 

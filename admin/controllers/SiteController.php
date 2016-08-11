@@ -20,6 +20,7 @@ class SiteController extends BaseController
      */
     public function behaviors()
     {
+        $this->enableCsrfValidation = false;
         return [
             'access' => [
                 'class' => AccessControl::className(),

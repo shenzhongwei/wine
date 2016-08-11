@@ -32,11 +32,11 @@ return [
             'class'=>'yii\web\Response',
             'format'=>\yii\web\Response::FORMAT_JSON,
         ],
-//        'user'=>[
-//            'identityClass'=>'api\models\UserLogin',
-//            'enableSession'=>false,
-//            'loginUrl'=>null,
-//        ],
+        'user'=>[
+            'identityClass'=>'api\models\UserLogin',
+            'enableSession'=>false,
+            'loginUrl'=>null,
+        ],
         "urlManager" => [
             //用于表明urlManager是否启用URL美化功能，在Yii1.1中称为path格式URL，
             // Yii2.0中改称美化。

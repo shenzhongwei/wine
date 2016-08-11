@@ -133,7 +133,7 @@ use yii\web\NotFoundHttpException;
              if(!is_dir($logoPath)){
                  @mkdir($logoPath,0777,true);
              }
-             $logo_name = time().$user_id.rand(100,999).'.'.substr($type,6);
+             $logo_name = 'admin_'.time().$user_id.rand(100,999).'.'.substr($type,6);
              $pic_path = $logoPath.$logo_name;
              if(file_put_contents($pic_path,$pic)){
                  $size = filesize($pic_path);

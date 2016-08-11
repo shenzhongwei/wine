@@ -87,7 +87,12 @@ abstract class AuthMethod extends ActionFilter implements AuthInterface
      */
     public function handleFailure($response)
     {
-        throw new UnauthorizedHttpException('Your request was made with invalid credentials.');
+        $result = [
+            'status'=>'401',
+            'message'=>'您的登录信息已失效，请重新登录',
+        ];
+        echo json_encode($result);
+        exit;
     }
 
     /**
