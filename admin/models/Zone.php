@@ -1,0 +1,86 @@
+<?php
+
+namespace admin\models;
+
+use Yii;
+
+/**
+ * This is the model class for table "zone".
+ *
+ * @property integer $id
+ * @property string $name
+ * @property integer $parentid
+ * @property string $shortname
+ * @property integer $leveltype
+ * @property string $citycode
+ * @property string $zipcode
+ * @property string $lng
+ * @property string $lat
+ * @property string $pinyin
+ * @property string $status
+ */
+class Zone extends \yii\db\ActiveRecord
+{
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        return 'zone';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['id'], 'required'],
+            [['id', 'parentid', 'leveltype'], 'integer'],
+            [['status'], 'string'],
+            [['name', 'shortname', 'pinyin'], 'string', 'max' => 40],
+            [['citycode', 'zipcode'], 'string', 'max' => 7],
+            [['lng', 'lat'], 'string', 'max' => 20],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => '主键',
+            'name' => '省市区名称',
+            'parentid' => '上级ID',
+            'shortname' => '简称',
+            'leveltype' => '级别:0,中国；1，省分；2，市；3，区、县',
+            'citycode' => '城市代码',
+            'zipcode' => '邮编',
+            'lng' => '经度',
+            'lat' => '纬度',
+            'pinyin' => '拼音',
+            'status' => 'Status',
+        ];
+    }
+
+    public function getParent(){
+        return $this->hasOne(self::className(),['id'=>'parentid'])->where('status<>0');
+    }
+
+    public function getChilds(){
+        return $this->hasMany(self::className(),['parentid'=>'id'])->where('status<>0');
+    }
+
+    public static function GetAllProvince(){
+        return self::find()->where("status<>'0' and leveltype=1")->asArray()->all();
+    }
+    public static function GetDefaultCity(){
+        return self::find()->where("status<>'0' and leveltype=2 and parentid=320000")->asArray()->all();
+    }
+
+    public static function GetDefaultDistrict(){
+        return self::find()->where("status<>'0' and leveltype=3 and parentid=320400")->asArray()->all();
+    }
+
+}
