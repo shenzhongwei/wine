@@ -5,12 +5,19 @@ $params = array_merge(
     require(__DIR__ . '/params.php'),
     require(__DIR__ . '/params-local.php')
 );
-
 return [
     "modules" => [
         "admin" => [
             "class" => 'mdm\admin\Module',
         ],
+        'gridview' =>  [
+            'class' => '\kartik\grid\Module',
+            // enter optional module parameters below - only if you need to
+            // use your own export download action or custom translation
+            // message source
+             'downloadAction' => 'gridview/export/download',
+            // 'i18n' => []
+        ]
     ],
 
     "aliases" => [
@@ -88,6 +95,20 @@ return [
         'authManager' => [
             'class' => 'yii\rbac\DbManager', // 使用数据库管理配置文件
             "defaultRoles" => ["guest"],
+        ],
+        'assetManager'=>[
+            'bundles'=>[
+                'yii\web\JqueryAsset' => [
+                    'js'=>[]
+                ],
+                'yii\bootstrap\BootstrapPluginAsset' => [
+                    'js'=>[]
+                ],
+                'yii\bootstrap\BootstrapAsset' => [
+                    'css' => [],
+                ],
+            ],
+
         ],
     ],
     'params' => $params,

@@ -279,4 +279,59 @@ class UserController extends ApiController{
             return $this->showResult(200,'保存成功');
         }
     }
+
+    /**
+     * 忘记密码接口
+     */
+    public function actionResetPwd(){
+        //获取表单参数
+        $phone = Yii::$app->request->post('phone','');
+        $code = Yii::$app->request->post('code','');
+        $password = Yii::$app->request->post('password','');
+        $confirmPwd = Yii::$app->request->post('confirmPwd','');
+        //判断数据是否完整获取
+        if(empty($phone)){
+            return $this->showResult(301,'未获取到您的手机号');
+        }
+        if(empty($password)||empty($confirmPwd)){
+            return $this->showResult(301,'密码选项不能为空');
+        }
+        if(empty($code)){
+            return $this->showResult(301,'未获取到您的验证码');
+        }
+        if($password!==$confirmPwd){
+            return $this->showResult(301,'两次输入的密码不一致');
+        }
+        //判断手机号格式
+        if(!$this->validateMobilePhone($phone)){
+            return $this->showResult(303,'手机格式错误');
+        }
+        //判断是否已注册
+        $isExist = UserLogin::findIdentityByUsername($phone);
+        if(empty($isExist)){
+            return $this->showResult(303,'该手机号未注册，请先注册');
+        }
+        //判断验证码是否正确
+        $codeCache = Yii::$app->cache->get('message_'.$phone);
+        if($codeCache===false){
+            return $this->showResult(303,'验证码已过期，请重新获取');
+        }elseif($codeCache!=$code){
+            return $this->showResult(303,'验证码错误，请重新输入');
+        }
+        //执行修改密码和存入数据库操作
+        $isExist->password = md5(Yii::$app->params['pwd_pre'].$password);
+        if(!$isExist->save()){
+            return $this->showResult(400,'修改密码失败');
+        }else{
+            return $this->showResult(200,'修改密码成功');
+        }
+    }
+
+    /**
+     *我的消息列表接口
+     */
+    public function actionMessageList(){
+        $user_id = Yii::$app->user->identity->uid;
+//        $messageLists
+    }
 }

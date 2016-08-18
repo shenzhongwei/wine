@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <h1 class="logo-name" style="font-size: 80px;text-align: center;letter-spacing: 0px;margin-top: 200px">SANTE</h1>
 
         </div>
-        <h3>欢迎使用双天酒</h3>
+        <h3></h3>
 
 
     <div class="row">
