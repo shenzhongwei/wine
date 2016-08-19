@@ -3,53 +3,281 @@ Navicat MySQL Data Transfer
 
 Source Server         : localhost
 Source Server Version : 50540
-Source Host           : localhost:3306
-Source Database       : marriage
+Source Host           : 127.0.0.1:3306
+Source Database       : wine
 
 Target Server Type    : MYSQL
 Target Server Version : 50540
 File Encoding         : 65001
 
-Date: 2016-08-09 07:09:36
+Date: 2016-08-18 13:41:46
 */
 
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
--- Table structure for mm_admin
+-- Table structure for ad_list
 -- ----------------------------
-DROP TABLE IF EXISTS `mm_admin`;
-CREATE TABLE `mm_admin` (
-  `ma_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '后台管理员表',
-  `ma_username` varchar(16) NOT NULL DEFAULT '' COMMENT '登录名',
-  `ma_password` varchar(64) NOT NULL DEFAULT '' COMMENT '后台登录密码',
-  `ma_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '管理员类型',
-  `ma_phone` varchar(16) NOT NULL DEFAULT '' COMMENT '手机号',
-  `ma_name` varchar(16) NOT NULL DEFAULT '' COMMENT '姓名',
-  `ma_token` varchar(64) NOT NULL DEFAULT '' COMMENT '用户token',
-  `ma_logo` varchar(255) NOT NULL DEFAULT '' COMMENT '头像',
-  `ma_last_login_time` datetime NOT NULL DEFAULT '1999-01-01 01:01:01' COMMENT '最近登录时间',
-  `ma_last_login_ip` varchar(15) NOT NULL DEFAULT '' COMMENT '最近登录ip',
-  `ma_lock` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否被锁定',
-  `ma_status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态',
+DROP TABLE IF EXISTS `ad_list`;
+CREATE TABLE `ad_list` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '类型',
+  `target_id` int(11) NOT NULL DEFAULT '0' COMMENT '对应id',
+  `pic` varchar(128) NOT NULL DEFAULT '' COMMENT '广告图片',
+  `url` varchar(128) NOT NULL DEFAULT '' COMMENT '图片链接网站',
+  `is_show` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否显示,1是，0否',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='广告图表';
+
+-- ----------------------------
+-- Records of ad_list
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for dics
+-- ----------------------------
+DROP TABLE IF EXISTS `dics`;
+CREATE TABLE `dics` (
+  `type` varchar(128) NOT NULL DEFAULT '' COMMENT '类型',
+  `id` tinyint(2) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `name` varchar(128) NOT NULL DEFAULT '' COMMENT '名称',
+  PRIMARY KEY (`type`,`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='字典表';
+
+-- ----------------------------
+-- Records of dics
+-- ----------------------------
+INSERT INTO `dics` VALUES ('消息类型', '1', '系统通知');
+INSERT INTO `dics` VALUES ('消息类型', '2', '用户通知');
+INSERT INTO `dics` VALUES ('消息类型', '3', '订单通知');
+INSERT INTO `dics` VALUES ('消息跳转页面', '1', '首页');
+INSERT INTO `dics` VALUES ('消息跳转页面', '2', '开通会员页面');
+INSERT INTO `dics` VALUES ('消息跳转页面', '3', '订单物流页');
+INSERT INTO `dics` VALUES ('消息跳转页面', '4', '订单详情页');
+INSERT INTO `dics` VALUES ('消息跳转页面', '5', '商品分类列表页');
+INSERT INTO `dics` VALUES ('消息跳转页面', '6', '商品抢购列表页');
+INSERT INTO `dics` VALUES ('消息跳转页面', '7', '商品会员列表页');
+INSERT INTO `dics` VALUES ('消息跳转页面', '8', '购物车列表页');
+INSERT INTO `dics` VALUES ('消息类型', '4', '商品通知');
+INSERT INTO `dics` VALUES ('消息跳转页面', '9', '我的收藏列表页');
+INSERT INTO `dics` VALUES ('消息跳转页面', '10', '商品详情页');
+INSERT INTO `dics` VALUES ('广告图片类型', '1', '外部网页');
+INSERT INTO `dics` VALUES ('广告图片类型', '2', '产品广告');
+INSERT INTO `dics` VALUES ('广告图片类型', '3', '品牌广告');
+INSERT INTO `dics` VALUES ('广告图片类型', '4', '商家广告');
+INSERT INTO `dics` VALUES ('广告图片类型', '5', '香型广告');
+INSERT INTO `dics` VALUES ('广告图片类型', '6', '类型广告');
+
+-- ----------------------------
+-- Table structure for good_brand
+-- ----------------------------
+DROP TABLE IF EXISTS `good_brand`;
+CREATE TABLE `good_brand` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '品牌id',
+  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '品牌名',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='商品品牌表';
+
+-- ----------------------------
+-- Records of good_brand
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for good_info
+-- ----------------------------
+DROP TABLE IF EXISTS `good_info`;
+CREATE TABLE `good_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `type` int(11) NOT NULL COMMENT '类型',
+  `brand` int(11) NOT NULL DEFAULT '0' COMMENT '品牌',
+  `smell` int(11) NOT NULL DEFAULT '0' COMMENT '香型',
+  `boot` int(11) NOT NULL DEFAULT '0' COMMENT '产地',
+  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '商品名',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='商品表';
+
+-- ----------------------------
+-- Records of good_info
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for good_price_field
+-- ----------------------------
+DROP TABLE IF EXISTS `good_price_field`;
+CREATE TABLE `good_price_field` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `discription` varchar(200) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='价格区间表';
+
+-- ----------------------------
+-- Records of good_price_field
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for good_smell
+-- ----------------------------
+DROP TABLE IF EXISTS `good_smell`;
+CREATE TABLE `good_smell` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '酒香id',
+  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '酒香名称',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='酒香类型';
+
+-- ----------------------------
+-- Records of good_smell
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for good_type
+-- ----------------------------
+DROP TABLE IF EXISTS `good_type`;
+CREATE TABLE `good_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '类型id',
+  `name` varchar(25) NOT NULL DEFAULT '' COMMENT '类型名称',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='产品类型表';
+
+-- ----------------------------
+-- Records of good_type
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for message_list
+-- ----------------------------
+DROP TABLE IF EXISTS `message_list`;
+CREATE TABLE `message_list` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `type_id` tinyint(2) NOT NULL DEFAULT '0' COMMENT '类型id 1系统消息 2用户消息 3订单消息 4 商品通知',
+  `title` varchar(50) NOT NULL DEFAULT '' COMMENT '标题',
+  `content` varchar(255) NOT NULL DEFAULT '' COMMENT '内容',
+  `own_id` int(11) NOT NULL DEFAULT '0' COMMENT '所属id，根据消息类型id判断',
+  `target` int(2) NOT NULL DEFAULT '0' COMMENT '目标id 跳转页面',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 1未读 0已读',
+  `publish_at` varchar(20) NOT NULL DEFAULT '' COMMENT '生成时间',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='消息表';
+
+-- ----------------------------
+-- Records of message_list
+-- ----------------------------
+INSERT INTO `message_list` VALUES ('1', '2', '新用户消息', '感谢您注册成为双天酒客户，这里好酒多多，开通会员更有专享活动，赶紧来看看吧!', '9', '1', '0', '2016-08-11');
+
+-- ----------------------------
+-- Table structure for user_address
+-- ----------------------------
+DROP TABLE IF EXISTS `user_address`;
+CREATE TABLE `user_address` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `uid` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
+  `get_person` varchar(128) NOT NULL DEFAULT '',
+  `get_phone` varchar(32) NOT NULL DEFAULT '' COMMENT '手机号',
+  `region` varchar(255) NOT NULL DEFAULT '' COMMENT '地区',
+  `address` varchar(255) NOT NULL DEFAULT '' COMMENT '详细地址',
+  `lat` int(10) NOT NULL DEFAULT '0' COMMENT '纬度',
+  `lng` int(10) NOT NULL DEFAULT '0' COMMENT '经度',
+  `tag` varchar(32) NOT NULL DEFAULT '' COMMENT '标签',
+  `is_default` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否为默认地址 0否 1是',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 0删除 1正常',
   `created_time` datetime NOT NULL DEFAULT '1999-01-01 01:01:01',
   `updated_time` datetime NOT NULL DEFAULT '1999-01-01 01:01:01',
-  PRIMARY KEY (`ma_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`),
+  KEY `fk_user_address_id` (`uid`),
+  CONSTRAINT `fk_user_address_id` FOREIGN KEY (`uid`) REFERENCES `user_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='收货地址表';
 
 -- ----------------------------
--- Records of mm_admin
+-- Records of user_address
 -- ----------------------------
-INSERT INTO `mm_admin` VALUES ('1', 'szw', 'c650dfa9c6587dc02cd400d0d3dd1db4', '1', '17701420032', '沈中伟', 'eQ4WuSHAm6pOW2cXz0EplNnw9zE2Admm', 'photo/logo/14700640821694.png', '2016-08-08 19:28:17', '::1', '0', '1', '2016-07-26 01:01:01', '2016-08-08 19:28:17');
-INSERT INTO `mm_admin` VALUES ('2', 'admin', 'c650dfa9c6587dc02cd400d0d3dd1db4', '2', '17701420032', '沈中伟', 'SNOrpl2xZ4PNBN_xxQHbVw_0VCwmQY9m', 'photo/logo/14700640821694.png', '2016-08-06 11:23:30', '::1', '0', '1', '2016-08-01 23:47:08', '2016-08-06 11:23:30');
-INSERT INTO `mm_admin` VALUES ('3', 'test1', 'c650dfa9c6587dc02cd400d0d3dd1db4', '3', '17701420032', 'szw', 'tc7pYvhhf6_cazT4KuhVpR4HX75PQVks', 'photo/logo/14700640821694.png', '2016-08-06 11:22:06', '::1', '0', '1', '2016-08-01 23:49:13', '2016-08-06 11:22:06');
-INSERT INTO `mm_admin` VALUES ('4', 'test2', 'c650dfa9c6587dc02cd400d0d3dd1db4', '3', '17701420032', '沈中伟', 'VhHBXkAaQNPeXSKYPFK7WQkFrSiyV92c', 'photo/logo/14700640821694.png', '2016-08-02 22:01:25', '::1', '0', '1', '2016-08-02 00:16:04', '2016-08-05 09:26:23');
 
 -- ----------------------------
--- Table structure for mm_admin_item
+-- Table structure for user_info
 -- ----------------------------
-DROP TABLE IF EXISTS `mm_admin_item`;
-CREATE TABLE `mm_admin_item` (
+DROP TABLE IF EXISTS `user_info`;
+CREATE TABLE `user_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `phone` varchar(13) NOT NULL DEFAULT '' COMMENT '注册手机号',
+  `sex` enum('保密','女','男') NOT NULL DEFAULT '保密' COMMENT '性别',
+  `head_url` varchar(128) NOT NULL DEFAULT '' COMMENT '头像地址',
+  `birth` varchar(255) NOT NULL DEFAULT '' COMMENT '生日',
+  `nickname` varchar(32) NOT NULL DEFAULT '' COMMENT '昵称',
+  `realname` varchar(32) NOT NULL DEFAULT '' COMMENT '真实姓名',
+  `invite_user_id` int(11) NOT NULL DEFAULT '0' COMMENT '邀请人id',
+  `is_vip` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否为会员 0不是 1是',
+  `invite_code` varchar(32) NOT NULL DEFAULT '' COMMENT '邀请码(不可更改)',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 0删除 1正常',
+  `created_time` datetime NOT NULL DEFAULT '1999-01-01 01:01:01',
+  `updated_time` datetime NOT NULL DEFAULT '1999-01-01 01:01:01',
+  PRIMARY KEY (`id`),
+  KEY `status` (`status`),
+  KEY `id` (`id`,`status`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='用户信息表';
+
+-- ----------------------------
+-- Records of user_info
+-- ----------------------------
+INSERT INTO `user_info` VALUES ('9', '17701420032', '保密', '/logo/12111396429.jpg', '', '沈小鱼', '沈中伟', '0', '0', 'W6SB9873', '1', '2016-08-11 17:12:35', '2016-08-11 17:30:27');
+
+-- ----------------------------
+-- Table structure for user_login
+-- ----------------------------
+DROP TABLE IF EXISTS `user_login`;
+CREATE TABLE `user_login` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `uid` int(11) NOT NULL DEFAULT '0' COMMENT '所属用户id',
+  `username` varchar(50) NOT NULL DEFAULT '' COMMENT '登录帐号',
+  `password` varchar(50) NOT NULL DEFAULT '' COMMENT '登录密码',
+  `token` varchar(100) NOT NULL COMMENT 'token(每次登录都会改变)',
+  `last_login_time` datetime NOT NULL DEFAULT '1999-01-01 01:01:01' COMMENT '最后登录时间',
+  `reg_id` varchar(32) NOT NULL DEFAULT '' COMMENT '设备id',
+  `reg_type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '推送类型 1个人 2企业',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 1正常 0锁定',
+  PRIMARY KEY (`id`),
+  KEY `fk_user_login_id` (`uid`,`status`),
+  CONSTRAINT `fk_user_login_id` FOREIGN KEY (`uid`, `status`) REFERENCES `user_info` (`id`, `status`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='用户登录表';
+
+-- ----------------------------
+-- Records of user_login
+-- ----------------------------
+INSERT INTO `user_login` VALUES ('5', '9', '17701420032', 'c84eedb44f19c6a8b335f6bbdb64989c', 'zGXCCBrVQAmD9H2MeJJIWeHB9FZnRPMs', '2016-08-11 17:30:34', '', '1', '1');
+
+-- ----------------------------
+-- Table structure for wine_admin
+-- ----------------------------
+DROP TABLE IF EXISTS `wine_admin`;
+CREATE TABLE `wine_admin` (
+  `wa_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '后台管理员表',
+  `wa_username` varchar(16) NOT NULL DEFAULT '' COMMENT '登录名',
+  `wa_password` varchar(64) NOT NULL DEFAULT '' COMMENT '后台登录密码',
+  `wa_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '管理员类型',
+  `wa_phone` varchar(16) NOT NULL DEFAULT '' COMMENT '手机号',
+  `wa_name` varchar(16) NOT NULL DEFAULT '' COMMENT '姓名',
+  `wa_token` varchar(64) NOT NULL DEFAULT '' COMMENT '用户token',
+  `wa_logo` varchar(255) NOT NULL DEFAULT '' COMMENT '头像',
+  `wa_last_login_time` datetime NOT NULL DEFAULT '1999-01-01 01:01:01' COMMENT '最近登录时间',
+  `wa_last_login_ip` varchar(15) NOT NULL DEFAULT '' COMMENT '最近登录ip',
+  `wa_lock` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否被锁定',
+  `wa_status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态',
+  `created_time` datetime NOT NULL DEFAULT '1999-01-01 01:01:01',
+  `updated_time` datetime NOT NULL DEFAULT '1999-01-01 01:01:01',
+  PRIMARY KEY (`wa_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wine_admin
+-- ----------------------------
+INSERT INTO `wine_admin` VALUES ('1', 'szw', 'ebb2fda117935a983a78becd4e6508ab', '1', '17701420032', '沈中伟', '75DnZhI3h41vI1gU-a7ze2f1Jb9s_b1m', '/logo/14708160181764.png', '2016-08-18 13:18:01', '::1', '0', '1', '2016-07-26 01:01:01', '2016-08-18 13:18:01');
+INSERT INTO `wine_admin` VALUES ('2', 'admin', 'ebb2fda117935a983a78becd4e6508ab', '2', '17701420032', '沈中伟', 'epySlNQRxzQ6afVFIV3f8VjJlJpe7URW', '', '2016-08-10 10:26:06', '::1', '0', '1', '2016-08-01 23:47:08', '2016-08-10 11:16:34');
+INSERT INTO `wine_admin` VALUES ('3', 'test1', 'ebb2fda117935a983a78becd4e6508ab', '3', '17701420032', 'szw', 'tc7pYvhhf6_cazT4KuhVpR4HX75PQVks', '', '2016-08-06 11:22:06', '::1', '0', '1', '2016-08-01 23:49:13', '2016-08-10 11:16:40');
+INSERT INTO `wine_admin` VALUES ('4', 'test2', 'ebb2fda117935a983a78becd4e6508ab', '3', '17701420032', '沈中伟', 'VhHBXkAaQNPeXSKYPFK7WQkFrSiyV92c', '', '2016-08-02 22:01:25', '::1', '0', '1', '2016-08-02 00:16:04', '2016-08-05 09:26:23');
+INSERT INTO `wine_admin` VALUES ('5', 'test3', 'ebb2fda117935a983a78becd4e6508ab', '2', '15383228828', '小鱼思密达', 'O1nIxdkycR3kX67KvrHJAr38gzQ-aXyY', '', '1999-01-01 01:01:01', '', '0', '1', '2016-08-10 11:03:22', '2016-08-11 14:58:56');
+
+-- ----------------------------
+-- Table structure for wine_admin_item
+-- ----------------------------
+DROP TABLE IF EXISTS `wine_admin_item`;
+CREATE TABLE `wine_admin_item` (
   `name` varchar(64) NOT NULL,
   `type` int(11) NOT NULL,
   `description` text,
@@ -61,234 +289,235 @@ CREATE TABLE `mm_admin_item` (
   PRIMARY KEY (`name`),
   KEY `rule_name` (`rule_name`),
   KEY `type` (`type`),
-  CONSTRAINT `mm_admin_item_ibfk_1` FOREIGN KEY (`rule_name`) REFERENCES `mm_admin_rule` (`name`) ON DELETE SET NULL ON UPDATE CASCADE
+  CONSTRAINT `wine_admin_item_ibfk_1` FOREIGN KEY (`rule_name`) REFERENCES `wine_admin_rule` (`name`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of mm_admin_item
+-- Records of wine_admin_item
 -- ----------------------------
-INSERT INTO `mm_admin_item` VALUES ('/*', '2', '', 'Marriage', '', '0', '1467628934', '1467628934');
-INSERT INTO `mm_admin_item` VALUES ('/admin/*', '2', '', 'Marriage', '', '0', '1467628933', '1467628933');
-INSERT INTO `mm_admin_item` VALUES ('/admin/assignment/*', '2', '', 'Marriage', '', '0', '1467628930', '1467628930');
-INSERT INTO `mm_admin_item` VALUES ('/admin/assignment/assign', '2', '', 'Marriage', '', '0', '1467628930', '1467628930');
-INSERT INTO `mm_admin_item` VALUES ('/admin/assignment/index', '2', '', 'Marriage', '', '0', '1467628930', '1467628930');
-INSERT INTO `mm_admin_item` VALUES ('/admin/assignment/revoke', '2', '', 'Marriage', '', '0', '1467628930', '1467628930');
-INSERT INTO `mm_admin_item` VALUES ('/admin/assignment/view', '2', '', 'Marriage', '', '0', '1467628930', '1467628930');
-INSERT INTO `mm_admin_item` VALUES ('/admin/default/*', '2', '', 'Marriage', '', '0', '1467628930', '1467628930');
-INSERT INTO `mm_admin_item` VALUES ('/admin/default/index', '2', '', 'Marriage', '', '0', '1467628930', '1467628930');
-INSERT INTO `mm_admin_item` VALUES ('/admin/menu/*', '2', '', 'Marriage', '', '0', '1467628930', '1467628930');
-INSERT INTO `mm_admin_item` VALUES ('/admin/menu/create', '2', '', 'Marriage', '', '0', '1467628930', '1467628930');
-INSERT INTO `mm_admin_item` VALUES ('/admin/menu/delete', '2', '', 'Marriage', '', '0', '1467628930', '1467628930');
-INSERT INTO `mm_admin_item` VALUES ('/admin/menu/index', '2', '', 'Marriage', '', '0', '1467628930', '1467628930');
-INSERT INTO `mm_admin_item` VALUES ('/admin/menu/update', '2', '', 'Marriage', '', '0', '1467628930', '1467628930');
-INSERT INTO `mm_admin_item` VALUES ('/admin/menu/view', '2', '', 'Marriage', '', '0', '1467628930', '1467628930');
-INSERT INTO `mm_admin_item` VALUES ('/admin/permission/*', '2', '', 'Marriage', '', '0', '1467628931', '1467628931');
-INSERT INTO `mm_admin_item` VALUES ('/admin/permission/assign', '2', '', 'Marriage', '', '0', '1467628930', '1467628930');
-INSERT INTO `mm_admin_item` VALUES ('/admin/permission/create', '2', '', 'Marriage', '', '0', '1467628930', '1467628930');
-INSERT INTO `mm_admin_item` VALUES ('/admin/permission/delete', '2', '', 'Marriage', '', '0', '1467628930', '1467628930');
-INSERT INTO `mm_admin_item` VALUES ('/admin/permission/index', '2', '', 'Marriage', '', '0', '1467628930', '1467628930');
-INSERT INTO `mm_admin_item` VALUES ('/admin/permission/remove', '2', '', 'Marriage', '', '0', '1467628931', '1467628931');
-INSERT INTO `mm_admin_item` VALUES ('/admin/permission/update', '2', '', 'Marriage', '', '0', '1467628930', '1467628930');
-INSERT INTO `mm_admin_item` VALUES ('/admin/permission/view', '2', '', 'Marriage', '', '0', '1467628930', '1467628930');
-INSERT INTO `mm_admin_item` VALUES ('/admin/role/*', '2', '', 'Marriage', '', '0', '1467628931', '1467628931');
-INSERT INTO `mm_admin_item` VALUES ('/admin/role/assign', '2', '', 'Marriage', '', '0', '1467628931', '1467628931');
-INSERT INTO `mm_admin_item` VALUES ('/admin/role/create', '2', '', 'Marriage', '', '0', '1467628931', '1467628931');
-INSERT INTO `mm_admin_item` VALUES ('/admin/role/delete', '2', '', 'Marriage', '', '0', '1467628931', '1467628931');
-INSERT INTO `mm_admin_item` VALUES ('/admin/role/index', '2', '', 'Marriage', '', '0', '1467628931', '1467628931');
-INSERT INTO `mm_admin_item` VALUES ('/admin/role/remove', '2', '', 'Marriage', '', '0', '1467628931', '1467628931');
-INSERT INTO `mm_admin_item` VALUES ('/admin/role/update', '2', '', 'Marriage', '', '0', '1467628931', '1467628931');
-INSERT INTO `mm_admin_item` VALUES ('/admin/role/view', '2', '', 'Marriage', '', '0', '1467628931', '1467628931');
-INSERT INTO `mm_admin_item` VALUES ('/admin/route/*', '2', '', 'Marriage', '', '0', '1467628931', '1467628931');
-INSERT INTO `mm_admin_item` VALUES ('/admin/route/assign', '2', '', 'Marriage', '', '0', '1467628931', '1467628931');
-INSERT INTO `mm_admin_item` VALUES ('/admin/route/create', '2', '', 'Marriage', '', '0', '1467628931', '1467628931');
-INSERT INTO `mm_admin_item` VALUES ('/admin/route/index', '2', '', 'Marriage', '', '0', '1467628931', '1467628931');
-INSERT INTO `mm_admin_item` VALUES ('/admin/route/refresh', '2', '', 'Marriage', '', '0', '1467628931', '1467628931');
-INSERT INTO `mm_admin_item` VALUES ('/admin/route/remove', '2', '', 'Marriage', '', '0', '1467628931', '1467628931');
-INSERT INTO `mm_admin_item` VALUES ('/admin/rule/*', '2', '', 'Marriage', '', '0', '1467628932', '1467628932');
-INSERT INTO `mm_admin_item` VALUES ('/admin/rule/create', '2', '', 'Marriage', '', '0', '1467628932', '1467628932');
-INSERT INTO `mm_admin_item` VALUES ('/admin/rule/delete', '2', '', 'Marriage', '', '0', '1467628932', '1467628932');
-INSERT INTO `mm_admin_item` VALUES ('/admin/rule/index', '2', '', 'Marriage', '', '0', '1467628932', '1467628932');
-INSERT INTO `mm_admin_item` VALUES ('/admin/rule/update', '2', '', 'Marriage', '', '0', '1467628932', '1467628932');
-INSERT INTO `mm_admin_item` VALUES ('/admin/rule/view', '2', '', 'Marriage', '', '0', '1467628932', '1467628932');
-INSERT INTO `mm_admin_item` VALUES ('/admin/user/*', '2', '', 'Marriage', '', '0', '1467628933', '1467628933');
-INSERT INTO `mm_admin_item` VALUES ('/admin/user/activate', '2', '', 'Marriage', '', '0', '1467628933', '1467628933');
-INSERT INTO `mm_admin_item` VALUES ('/admin/user/change-password', '2', '', 'Marriage', '', '0', '1467628933', '1467628933');
-INSERT INTO `mm_admin_item` VALUES ('/admin/user/delete', '2', '', 'Marriage', '', '0', '1467628932', '1467628932');
-INSERT INTO `mm_admin_item` VALUES ('/admin/user/index', '2', '', 'Marriage', '', '0', '1467628932', '1467628932');
-INSERT INTO `mm_admin_item` VALUES ('/admin/user/login', '2', '', 'Marriage', '', '0', '1467628932', '1467628932');
-INSERT INTO `mm_admin_item` VALUES ('/admin/user/logout', '2', '', 'Marriage', '', '0', '1467628932', '1467628932');
-INSERT INTO `mm_admin_item` VALUES ('/admin/user/request-password-reset', '2', '', 'Marriage', '', '0', '1467628932', '1467628932');
-INSERT INTO `mm_admin_item` VALUES ('/admin/user/reset-password', '2', '', 'Marriage', '', '0', '1467628933', '1467628933');
-INSERT INTO `mm_admin_item` VALUES ('/admin/user/signup', '2', '', 'Marriage', '', '0', '1467628932', '1467628932');
-INSERT INTO `mm_admin_item` VALUES ('/admin/user/view', '2', '', 'Marriage', '', '0', '1467628932', '1467628932');
-INSERT INTO `mm_admin_item` VALUES ('/debug/*', '2', '', 'Marriage', '', '0', '1467628933', '1467628933');
-INSERT INTO `mm_admin_item` VALUES ('/debug/default/*', '2', '', 'Marriage', '', '0', '1467628933', '1467628933');
-INSERT INTO `mm_admin_item` VALUES ('/debug/default/db-explain', '2', '', 'Marriage', '', '0', '1467628933', '1467628933');
-INSERT INTO `mm_admin_item` VALUES ('/debug/default/download-mail', '2', '', 'Marriage', '', '0', '1467628933', '1467628933');
-INSERT INTO `mm_admin_item` VALUES ('/debug/default/index', '2', '', 'Marriage', '', '0', '1467628933', '1467628933');
-INSERT INTO `mm_admin_item` VALUES ('/debug/default/toolbar', '2', '', 'Marriage', '', '0', '1467628933', '1467628933');
-INSERT INTO `mm_admin_item` VALUES ('/debug/default/view', '2', '', 'Marriage', '', '0', '1467628933', '1467628933');
-INSERT INTO `mm_admin_item` VALUES ('/gii', '2', null, null, null, '0', '1470292869', '1470292869');
-INSERT INTO `mm_admin_item` VALUES ('/gii/*', '2', '', 'Marriage', '', '0', '1467628933', '1467628933');
-INSERT INTO `mm_admin_item` VALUES ('/gii/model', '2', null, null, null, '0', '1470292825', '1470292825');
-INSERT INTO `mm_admin_item` VALUES ('/index/welcome', '2', '', 'Marriage', '', '0', '1467885038', '1467885038');
-INSERT INTO `mm_admin_item` VALUES ('/manager/*', '2', '', 'Marriage', '', '0', '1467626433', '1467626433');
-INSERT INTO `mm_admin_item` VALUES ('/manager/create', '2', '', 'Marriage', '', '0', '1467626433', '1467626433');
-INSERT INTO `mm_admin_item` VALUES ('/manager/del', '2', '', 'Marriage', '', '0', '1467626433', '1467626433');
-INSERT INTO `mm_admin_item` VALUES ('/manager/index', '2', '', 'Marriage', '', '0', '1467626433', '1467626433');
-INSERT INTO `mm_admin_item` VALUES ('/manager/list', '2', '', 'Marriage', '', '0', '1467684059', '1467684059');
-INSERT INTO `mm_admin_item` VALUES ('/manager/lock', '2', '', 'Marriage', '', '0', '1467626433', '1467626433');
-INSERT INTO `mm_admin_item` VALUES ('/manager/recover', '2', null, null, null, '0', '1470419627', '1470419627');
-INSERT INTO `mm_admin_item` VALUES ('/manager/search', '2', null, null, null, '0', '1470290134', '1470290134');
-INSERT INTO `mm_admin_item` VALUES ('/manager/update', '2', '', 'Marriage', '', '0', '1467626433', '1467626433');
-INSERT INTO `mm_admin_item` VALUES ('/manager/upload', '2', '', 'Marriage', '', '0', '1467626433', '1467626433');
-INSERT INTO `mm_admin_item` VALUES ('/site/*', '2', '', 'Marriage', '', '0', '1467628933', '1467628933');
-INSERT INTO `mm_admin_item` VALUES ('/site/error', '2', '', 'Marriage', '', '0', '1467628933', '1467628933');
-INSERT INTO `mm_admin_item` VALUES ('/site/index', '2', '', 'Marriage', '', '0', '1467628933', '1467628933');
-INSERT INTO `mm_admin_item` VALUES ('/site/login', '2', '', 'Marriage', '', '0', '1467628933', '1467628933');
-INSERT INTO `mm_admin_item` VALUES ('/site/logout', '2', '', 'Marriage', '', '0', '1467628933', '1467628933');
-INSERT INTO `mm_admin_item` VALUES ('/user/*', '2', null, null, null, '0', '1470450238', '1470450238');
-INSERT INTO `mm_admin_item` VALUES ('/user/index', '2', null, null, null, '0', '1470450249', '1470450249');
-INSERT INTO `mm_admin_item` VALUES ('/user/view', '2', null, null, null, '0', '1470450249', '1470450249');
-INSERT INTO `mm_admin_item` VALUES ('开发者', '1', '开发者拥有最高级别系统权限', 'Marriage', null, '1', '1467629059', '1470145899');
-INSERT INTO `mm_admin_item` VALUES ('开发者权限', '2', '开发者权限拥有最高级系统权限', 'Marriage', null, '0', '1467628984', '1470145931');
-INSERT INTO `mm_admin_item` VALUES ('普通权限', '2', '普通权限只能新增用户和查看用户信息', 'Marriage', null, '0', '1467626475', '1470146258');
-INSERT INTO `mm_admin_item` VALUES ('普通管理员', '1', '普通管理员', 'Marriage', null, '3', '1467626553', '1470145957');
-INSERT INTO `mm_admin_item` VALUES ('系统权限', '2', '系统权限可以查看除了权限控制以外的所有内容', 'Marriage', null, '0', '1470146099', '1470146099');
-INSERT INTO `mm_admin_item` VALUES ('系统管理员', '1', '系统管理员可看到除权限外的所有内容', 'Marriage', null, '2', '1470146041', '1470146041');
+INSERT INTO `wine_admin_item` VALUES ('/*', '2', '', 'SHANTE', '', '0', '1467628934', '1467628934');
+INSERT INTO `wine_admin_item` VALUES ('/admin/*', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/admin/assignment/*', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/assignment/assign', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/assignment/index', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/assignment/revoke', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/assignment/view', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/default/*', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/default/index', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/menu/*', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/menu/create', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/menu/delete', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/menu/index', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/menu/update', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/menu/view', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/permission/*', '2', '', 'SHANTE', '', '0', '1467628931', '1467628931');
+INSERT INTO `wine_admin_item` VALUES ('/admin/permission/assign', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/permission/create', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/permission/delete', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/permission/index', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/permission/remove', '2', '', 'SHANTE', '', '0', '1467628931', '1467628931');
+INSERT INTO `wine_admin_item` VALUES ('/admin/permission/update', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/permission/view', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/role/*', '2', '', 'SHANTE', '', '0', '1467628931', '1467628931');
+INSERT INTO `wine_admin_item` VALUES ('/admin/role/assign', '2', '', 'SHANTE', '', '0', '1467628931', '1467628931');
+INSERT INTO `wine_admin_item` VALUES ('/admin/role/create', '2', '', 'SHANTE', '', '0', '1467628931', '1467628931');
+INSERT INTO `wine_admin_item` VALUES ('/admin/role/delete', '2', '', 'SHANTE', '', '0', '1467628931', '1467628931');
+INSERT INTO `wine_admin_item` VALUES ('/admin/role/index', '2', '', 'SHANTE', '', '0', '1467628931', '1467628931');
+INSERT INTO `wine_admin_item` VALUES ('/admin/role/remove', '2', '', 'SHANTE', '', '0', '1467628931', '1467628931');
+INSERT INTO `wine_admin_item` VALUES ('/admin/role/update', '2', '', 'SHANTE', '', '0', '1467628931', '1467628931');
+INSERT INTO `wine_admin_item` VALUES ('/admin/role/view', '2', '', 'SHANTE', '', '0', '1467628931', '1467628931');
+INSERT INTO `wine_admin_item` VALUES ('/admin/route/*', '2', '', 'SHANTE', '', '0', '1467628931', '1467628931');
+INSERT INTO `wine_admin_item` VALUES ('/admin/route/assign', '2', '', 'SHANTE', '', '0', '1467628931', '1467628931');
+INSERT INTO `wine_admin_item` VALUES ('/admin/route/create', '2', '', 'SHANTE', '', '0', '1467628931', '1467628931');
+INSERT INTO `wine_admin_item` VALUES ('/admin/route/index', '2', '', 'SHANTE', '', '0', '1467628931', '1467628931');
+INSERT INTO `wine_admin_item` VALUES ('/admin/route/refresh', '2', '', 'SHANTE', '', '0', '1467628931', '1467628931');
+INSERT INTO `wine_admin_item` VALUES ('/admin/route/remove', '2', '', 'SHANTE', '', '0', '1467628931', '1467628931');
+INSERT INTO `wine_admin_item` VALUES ('/admin/rule/*', '2', '', 'SHANTE', '', '0', '1467628932', '1467628932');
+INSERT INTO `wine_admin_item` VALUES ('/admin/rule/create', '2', '', 'SHANTE', '', '0', '1467628932', '1467628932');
+INSERT INTO `wine_admin_item` VALUES ('/admin/rule/delete', '2', '', 'SHANTE', '', '0', '1467628932', '1467628932');
+INSERT INTO `wine_admin_item` VALUES ('/admin/rule/index', '2', '', 'SHANTE', '', '0', '1467628932', '1467628932');
+INSERT INTO `wine_admin_item` VALUES ('/admin/rule/update', '2', '', 'SHANTE', '', '0', '1467628932', '1467628932');
+INSERT INTO `wine_admin_item` VALUES ('/admin/rule/view', '2', '', 'SHANTE', '', '0', '1467628932', '1467628932');
+INSERT INTO `wine_admin_item` VALUES ('/admin/user/*', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/admin/user/activate', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/admin/user/change-password', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/admin/user/delete', '2', '', 'SHANTE', '', '0', '1467628932', '1467628932');
+INSERT INTO `wine_admin_item` VALUES ('/admin/user/index', '2', '', 'SHANTE', '', '0', '1467628932', '1467628932');
+INSERT INTO `wine_admin_item` VALUES ('/admin/user/login', '2', '', 'SHANTE', '', '0', '1467628932', '1467628932');
+INSERT INTO `wine_admin_item` VALUES ('/admin/user/logout', '2', '', 'SHANTE', '', '0', '1467628932', '1467628932');
+INSERT INTO `wine_admin_item` VALUES ('/admin/user/request-password-reset', '2', '', 'SHANTE', '', '0', '1467628932', '1467628932');
+INSERT INTO `wine_admin_item` VALUES ('/admin/user/reset-password', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/admin/user/signup', '2', '', 'SHANTE', '', '0', '1467628932', '1467628932');
+INSERT INTO `wine_admin_item` VALUES ('/admin/user/view', '2', '', 'SHANTE', '', '0', '1467628932', '1467628932');
+INSERT INTO `wine_admin_item` VALUES ('/debug/*', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/debug/default/*', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/debug/default/db-explain', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/debug/default/download-mail', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/debug/default/index', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/debug/default/toolbar', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/debug/default/view', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/gii', '2', null, null, null, '0', '1470292869', '1470292869');
+INSERT INTO `wine_admin_item` VALUES ('/gii/*', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/gii/default/*', '2', null, null, null, '0', '1471497526', '1471497526');
+INSERT INTO `wine_admin_item` VALUES ('/gii/default/action', '2', null, null, null, '0', '1471497526', '1471497526');
+INSERT INTO `wine_admin_item` VALUES ('/gii/default/diff', '2', null, null, null, '0', '1471497526', '1471497526');
+INSERT INTO `wine_admin_item` VALUES ('/gii/default/index', '2', null, null, null, '0', '1471497526', '1471497526');
+INSERT INTO `wine_admin_item` VALUES ('/gii/default/preview', '2', null, null, null, '0', '1471497526', '1471497526');
+INSERT INTO `wine_admin_item` VALUES ('/gii/default/view', '2', null, null, null, '0', '1471497526', '1471497526');
+INSERT INTO `wine_admin_item` VALUES ('/gii/model', '2', null, null, null, '0', '1470292825', '1470292825');
+INSERT INTO `wine_admin_item` VALUES ('/index/welcome', '2', '', 'SHANTE', '', '0', '1467885038', '1467885038');
+INSERT INTO `wine_admin_item` VALUES ('/manager/*', '2', '', 'SHANTE', '', '0', '1467626433', '1467626433');
+INSERT INTO `wine_admin_item` VALUES ('/manager/create', '2', '', 'SHANTE', '', '0', '1467626433', '1467626433');
+INSERT INTO `wine_admin_item` VALUES ('/manager/del', '2', '', 'SHANTE', '', '0', '1467626433', '1467626433');
+INSERT INTO `wine_admin_item` VALUES ('/manager/index', '2', '', 'SHANTE', '', '0', '1467626433', '1467626433');
+INSERT INTO `wine_admin_item` VALUES ('/manager/list', '2', '', 'SHANTE', '', '0', '1467684059', '1467684059');
+INSERT INTO `wine_admin_item` VALUES ('/manager/lock', '2', '', 'SHANTE', '', '0', '1467626433', '1467626433');
+INSERT INTO `wine_admin_item` VALUES ('/manager/recover', '2', null, null, null, '0', '1470419627', '1470419627');
+INSERT INTO `wine_admin_item` VALUES ('/manager/search', '2', null, null, null, '0', '1470290134', '1470290134');
+INSERT INTO `wine_admin_item` VALUES ('/manager/update', '2', '', 'SHANTE', '', '0', '1467626433', '1467626433');
+INSERT INTO `wine_admin_item` VALUES ('/manager/upload', '2', '', 'SHANTE', '', '0', '1467626433', '1467626433');
+INSERT INTO `wine_admin_item` VALUES ('/site/*', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/site/error', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/site/index', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/site/login', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/site/logout', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('开发者', '1', '开发者拥有最高级别系统权限', 'SHANTE', null, '1', '1467629059', '1470145899');
+INSERT INTO `wine_admin_item` VALUES ('开发者权限', '2', '开发者权限拥有最高级系统权限', 'SHANTE', null, '0', '1467628984', '1470145931');
+INSERT INTO `wine_admin_item` VALUES ('普通权限', '2', '普通权限只能新增用户和查看用户信息', 'SHANTE', null, '0', '1467626475', '1470146258');
+INSERT INTO `wine_admin_item` VALUES ('普通管理员', '1', '普通管理员', 'SHANTE', null, '3', '1467626553', '1470145957');
+INSERT INTO `wine_admin_item` VALUES ('系统权限', '2', '系统权限可以查看除了权限控制以外的所有内容', 'SHANTE', null, '0', '1470146099', '1470146099');
+INSERT INTO `wine_admin_item` VALUES ('系统管理员', '1', '系统管理员可看到除权限外的所有内容', 'SHANTE', null, '2', '1470146041', '1470146041');
 
 -- ----------------------------
--- Table structure for mm_admin_item_child
+-- Table structure for wine_admin_item_child
 -- ----------------------------
-DROP TABLE IF EXISTS `mm_admin_item_child`;
-CREATE TABLE `mm_admin_item_child` (
+DROP TABLE IF EXISTS `wine_admin_item_child`;
+CREATE TABLE `wine_admin_item_child` (
   `parent` varchar(64) NOT NULL,
   `child` varchar(64) NOT NULL,
   PRIMARY KEY (`parent`,`child`),
   KEY `child` (`child`),
-  CONSTRAINT `mm_admin_item_child_ibfk_1` FOREIGN KEY (`parent`) REFERENCES `mm_admin_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `mm_admin_item_child_ibfk_2` FOREIGN KEY (`child`) REFERENCES `mm_admin_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `wine_admin_item_child_ibfk_1` FOREIGN KEY (`parent`) REFERENCES `wine_admin_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `wine_admin_item_child_ibfk_2` FOREIGN KEY (`child`) REFERENCES `wine_admin_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of mm_admin_item_child
+-- Records of wine_admin_item_child
 -- ----------------------------
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/*');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/*');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/assignment/*');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/assignment/assign');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/assignment/index');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/assignment/revoke');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/assignment/view');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/default/*');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/default/index');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/menu/*');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/menu/create');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/menu/delete');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/menu/index');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/menu/update');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/menu/view');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/permission/*');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/permission/assign');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/permission/create');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/permission/delete');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/permission/index');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/permission/remove');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/permission/update');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/permission/view');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/role/*');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/role/assign');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/role/create');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/role/delete');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/role/index');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/role/remove');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/role/update');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/role/view');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/route/*');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/route/assign');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/route/create');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/route/index');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/route/refresh');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/route/remove');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/rule/*');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/rule/create');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/rule/delete');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/rule/index');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/rule/update');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/rule/view');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/user/*');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/user/activate');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/user/change-password');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/user/delete');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/user/index');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/user/login');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/user/logout');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/user/request-password-reset');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/user/reset-password');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/user/signup');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/admin/user/view');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/debug/*');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/debug/default/*');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/debug/default/db-explain');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/debug/default/download-mail');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/debug/default/index');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/debug/default/toolbar');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/debug/default/view');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/gii');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/gii/*');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/gii/model');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/index/welcome');
-INSERT INTO `mm_admin_item_child` VALUES ('系统权限', '/index/welcome');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/manager/*');
-INSERT INTO `mm_admin_item_child` VALUES ('系统权限', '/manager/*');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/manager/create');
-INSERT INTO `mm_admin_item_child` VALUES ('系统权限', '/manager/create');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/manager/del');
-INSERT INTO `mm_admin_item_child` VALUES ('系统权限', '/manager/del');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/manager/index');
-INSERT INTO `mm_admin_item_child` VALUES ('普通权限', '/manager/index');
-INSERT INTO `mm_admin_item_child` VALUES ('系统权限', '/manager/index');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/manager/list');
-INSERT INTO `mm_admin_item_child` VALUES ('系统权限', '/manager/list');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/manager/lock');
-INSERT INTO `mm_admin_item_child` VALUES ('系统权限', '/manager/lock');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/manager/recover');
-INSERT INTO `mm_admin_item_child` VALUES ('系统权限', '/manager/recover');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/manager/search');
-INSERT INTO `mm_admin_item_child` VALUES ('系统权限', '/manager/search');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/manager/update');
-INSERT INTO `mm_admin_item_child` VALUES ('普通权限', '/manager/update');
-INSERT INTO `mm_admin_item_child` VALUES ('系统权限', '/manager/update');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/manager/upload');
-INSERT INTO `mm_admin_item_child` VALUES ('普通权限', '/manager/upload');
-INSERT INTO `mm_admin_item_child` VALUES ('系统权限', '/manager/upload');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/site/*');
-INSERT INTO `mm_admin_item_child` VALUES ('系统权限', '/site/*');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/site/error');
-INSERT INTO `mm_admin_item_child` VALUES ('系统权限', '/site/error');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/site/index');
-INSERT INTO `mm_admin_item_child` VALUES ('系统权限', '/site/index');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/site/login');
-INSERT INTO `mm_admin_item_child` VALUES ('系统权限', '/site/login');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/site/logout');
-INSERT INTO `mm_admin_item_child` VALUES ('系统权限', '/site/logout');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/user/*');
-INSERT INTO `mm_admin_item_child` VALUES ('系统权限', '/user/*');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/user/index');
-INSERT INTO `mm_admin_item_child` VALUES ('普通权限', '/user/index');
-INSERT INTO `mm_admin_item_child` VALUES ('系统权限', '/user/index');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者权限', '/user/view');
-INSERT INTO `mm_admin_item_child` VALUES ('普通权限', '/user/view');
-INSERT INTO `mm_admin_item_child` VALUES ('系统权限', '/user/view');
-INSERT INTO `mm_admin_item_child` VALUES ('开发者', '开发者权限');
-INSERT INTO `mm_admin_item_child` VALUES ('普通管理员', '普通权限');
-INSERT INTO `mm_admin_item_child` VALUES ('系统管理员', '系统权限');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/*');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/*');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/assignment/*');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/assignment/assign');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/assignment/index');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/assignment/revoke');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/assignment/view');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/default/*');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/default/index');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/menu/*');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/menu/create');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/menu/delete');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/menu/index');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/menu/update');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/menu/view');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/permission/*');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/permission/assign');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/permission/create');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/permission/delete');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/permission/index');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/permission/remove');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/permission/update');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/permission/view');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/role/*');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/role/assign');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/role/create');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/role/delete');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/role/index');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/role/remove');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/role/update');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/role/view');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/route/*');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/route/assign');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/route/create');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/route/index');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/route/refresh');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/route/remove');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/rule/*');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/rule/create');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/rule/delete');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/rule/index');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/rule/update');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/rule/view');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/user/*');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/user/activate');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/user/change-password');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/user/delete');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/user/index');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/user/login');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/user/logout');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/user/request-password-reset');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/user/reset-password');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/user/signup');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/admin/user/view');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/debug/*');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/debug/default/*');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/debug/default/db-explain');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/debug/default/download-mail');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/debug/default/index');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/debug/default/toolbar');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/debug/default/view');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/gii');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/gii/*');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/gii/default/*');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/gii/default/action');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/gii/default/diff');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/gii/default/index');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/gii/default/preview');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/gii/default/view');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/gii/model');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/index/welcome');
+INSERT INTO `wine_admin_item_child` VALUES ('系统权限', '/index/welcome');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/manager/*');
+INSERT INTO `wine_admin_item_child` VALUES ('系统权限', '/manager/*');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/manager/create');
+INSERT INTO `wine_admin_item_child` VALUES ('系统权限', '/manager/create');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/manager/del');
+INSERT INTO `wine_admin_item_child` VALUES ('系统权限', '/manager/del');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/manager/index');
+INSERT INTO `wine_admin_item_child` VALUES ('普通权限', '/manager/index');
+INSERT INTO `wine_admin_item_child` VALUES ('系统权限', '/manager/index');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/manager/list');
+INSERT INTO `wine_admin_item_child` VALUES ('系统权限', '/manager/list');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/manager/lock');
+INSERT INTO `wine_admin_item_child` VALUES ('系统权限', '/manager/lock');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/manager/recover');
+INSERT INTO `wine_admin_item_child` VALUES ('系统权限', '/manager/recover');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/manager/search');
+INSERT INTO `wine_admin_item_child` VALUES ('系统权限', '/manager/search');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/manager/update');
+INSERT INTO `wine_admin_item_child` VALUES ('普通权限', '/manager/update');
+INSERT INTO `wine_admin_item_child` VALUES ('系统权限', '/manager/update');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/manager/upload');
+INSERT INTO `wine_admin_item_child` VALUES ('普通权限', '/manager/upload');
+INSERT INTO `wine_admin_item_child` VALUES ('系统权限', '/manager/upload');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/site/*');
+INSERT INTO `wine_admin_item_child` VALUES ('系统权限', '/site/*');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/site/error');
+INSERT INTO `wine_admin_item_child` VALUES ('系统权限', '/site/error');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/site/index');
+INSERT INTO `wine_admin_item_child` VALUES ('系统权限', '/site/index');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/site/login');
+INSERT INTO `wine_admin_item_child` VALUES ('系统权限', '/site/login');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/site/logout');
+INSERT INTO `wine_admin_item_child` VALUES ('系统权限', '/site/logout');
+INSERT INTO `wine_admin_item_child` VALUES ('开发者', '开发者权限');
+INSERT INTO `wine_admin_item_child` VALUES ('普通管理员', '普通权限');
+INSERT INTO `wine_admin_item_child` VALUES ('系统管理员', '系统权限');
 
 -- ----------------------------
--- Table structure for mm_admin_menu
+-- Table structure for wine_admin_menu
 -- ----------------------------
-DROP TABLE IF EXISTS `mm_admin_menu`;
-CREATE TABLE `mm_admin_menu` (
+DROP TABLE IF EXISTS `wine_admin_menu`;
+CREATE TABLE `wine_admin_menu` (
   `mam_id` int(11) NOT NULL AUTO_INCREMENT,
   `mam_name` varchar(128) NOT NULL DEFAULT '',
   `mam_parentid` int(11) DEFAULT '0',
@@ -297,29 +526,29 @@ CREATE TABLE `mm_admin_menu` (
   `mam_data` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`mam_id`),
   KEY `parent` (`mam_parentid`),
-  CONSTRAINT `mam_menu_ibfk_1` FOREIGN KEY (`mam_parentid`) REFERENCES `mm_admin_menu` (`mam_id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+  CONSTRAINT `mam_menu_ibfk_1` FOREIGN KEY (`mam_parentid`) REFERENCES `wine_admin_menu` (`mam_id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of mm_admin_menu
+-- Records of wine_admin_menu
 -- ----------------------------
-INSERT INTO `mm_admin_menu` VALUES ('1', '后台管理', null, '/manager/list', '1', '{\"icon\": \"fa fa-user-secret\"}');
-INSERT INTO `mm_admin_menu` VALUES ('2', '权限控制', null, '/admin/default/index', '2', '{\"icon\": \"fa fa-key\"}');
-INSERT INTO `mm_admin_menu` VALUES ('3', '路由列表', '2', '/admin/route/index', '2', '');
-INSERT INTO `mm_admin_menu` VALUES ('4', '菜单管理', '2', '/admin/menu/index', '7', '');
-INSERT INTO `mm_admin_menu` VALUES ('5', '权限管理', '2', '/admin/permission/index', '3', '');
-INSERT INTO `mm_admin_menu` VALUES ('8', '管理员列表', '1', '/manager/list', '1', '');
-INSERT INTO `mm_admin_menu` VALUES ('9', '规则管理', '2', '/admin/rule/index', '6', '');
-INSERT INTO `mm_admin_menu` VALUES ('10', 'Gii使用', null, '/gii', '3', '{\"icon\": \"fa fa-magnet\"}');
-INSERT INTO `mm_admin_menu` VALUES ('11', 'GiiModel', '10', '/gii/model', '10', ' ');
-INSERT INTO `mm_admin_menu` VALUES ('12', '客户管理', null, '/user/index', '0', '{\"icon\": \"fa fa-users\"}');
-INSERT INTO `mm_admin_menu` VALUES ('13', '客户表单', '12', '/user/index', '7', ' ');
+INSERT INTO `wine_admin_menu` VALUES ('1', '后台管理', null, '/manager/list', '1', '{\"icon\": \"fa fa-user-secret\"}');
+INSERT INTO `wine_admin_menu` VALUES ('2', '权限控制', null, '/admin/default/index', '2', '{\"icon\": \"fa fa-key\"}');
+INSERT INTO `wine_admin_menu` VALUES ('3', '路由列表', '2', '/admin/route/index', '2', '');
+INSERT INTO `wine_admin_menu` VALUES ('4', '菜单管理', '2', '/admin/menu/index', '7', '');
+INSERT INTO `wine_admin_menu` VALUES ('5', '权限管理', '2', '/admin/permission/index', '3', '');
+INSERT INTO `wine_admin_menu` VALUES ('6', '角色管理', '2', '/admin/role/index', '4', '');
+INSERT INTO `wine_admin_menu` VALUES ('7', '分配权限', '2', '/admin/assignment/index', '5', '');
+INSERT INTO `wine_admin_menu` VALUES ('8', '管理员列表', '1', '/manager/list', '1', '');
+INSERT INTO `wine_admin_menu` VALUES ('9', '规则管理', '2', '/admin/rule/index', '6', '');
+INSERT INTO `wine_admin_menu` VALUES ('10', 'Gii使用', null, '/gii', '3', '{\"icon\": \"fa fa-magnet\"}');
+INSERT INTO `wine_admin_menu` VALUES ('11', 'GiiModel', '10', '/gii/default/index', '10', ' ');
 
 -- ----------------------------
--- Table structure for mm_admin_rule
+-- Table structure for wine_admin_rule
 -- ----------------------------
-DROP TABLE IF EXISTS `mm_admin_rule`;
-CREATE TABLE `mm_admin_rule` (
+DROP TABLE IF EXISTS `wine_admin_rule`;
+CREATE TABLE `wine_admin_rule` (
   `name` varchar(64) NOT NULL,
   `data` text,
   `created_at` int(11) DEFAULT NULL,
@@ -328,301 +557,30 @@ CREATE TABLE `mm_admin_rule` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of mm_admin_rule
+-- Records of wine_admin_rule
 -- ----------------------------
-INSERT INTO `mm_admin_rule` VALUES ('Marriage', 'O:28:\"admin\\components\\ArticleRule\":3:{s:4:\"name\";s:8:\"Marriage\";s:9:\"createdAt\";i:1470144942;s:9:\"updatedAt\";i:1470144942;}', '1470144942', '1470144942');
+INSERT INTO `wine_admin_rule` VALUES ('SHANTE', 'O:28:\"admin\\components\\ArticleRule\":3:{s:4:\"name\";s:6:\"SHANTE\";s:9:\"createdAt\";i:1470144942;s:9:\"updatedAt\";i:1470797668;}', '1470144942', '1470797668');
 
 -- ----------------------------
--- Table structure for mm_admin_type
+-- Table structure for wine_admin_type
 -- ----------------------------
-DROP TABLE IF EXISTS `mm_admin_type`;
-CREATE TABLE `mm_admin_type` (
+DROP TABLE IF EXISTS `wine_admin_type`;
+CREATE TABLE `wine_admin_type` (
   `item_name` varchar(64) NOT NULL,
   `user_id` varchar(64) NOT NULL,
   `created_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`item_name`,`user_id`),
-  CONSTRAINT `mm_admin_type_ibfk_1` FOREIGN KEY (`item_name`) REFERENCES `mm_admin_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `wine_admin_type_ibfk_1` FOREIGN KEY (`item_name`) REFERENCES `wine_admin_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of mm_admin_type
+-- Records of wine_admin_type
 -- ----------------------------
-INSERT INTO `mm_admin_type` VALUES ('开发者', '1', '1467629090');
-INSERT INTO `mm_admin_type` VALUES ('普通管理员', '3', '1470145733');
-INSERT INTO `mm_admin_type` VALUES ('普通管理员', '4', '1467889410');
-INSERT INTO `mm_admin_type` VALUES ('系统管理员', '2', '1470146569');
-
--- ----------------------------
--- Table structure for mm_relation
--- ----------------------------
-DROP TABLE IF EXISTS `mm_relation`;
-CREATE TABLE `mm_relation` (
-  `mr_id` int(11) NOT NULL AUTO_INCREMENT,
-  `mu_id` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
-  `mr_type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '关系类型，1唯一，2多个',
-  `mr_name` varchar(20) NOT NULL DEFAULT '' COMMENT '关系名',
-  PRIMARY KEY (`mr_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of mm_relation
--- ----------------------------
-INSERT INTO `mm_relation` VALUES ('1', '0', '1', '父亲');
-INSERT INTO `mm_relation` VALUES ('2', '0', '1', '母亲');
-INSERT INTO `mm_relation` VALUES ('3', '0', '2', '兄弟姐妹');
-INSERT INTO `mm_relation` VALUES ('4', '0', '2', '儿子');
-INSERT INTO `mm_relation` VALUES ('5', '0', '2', '女儿');
-INSERT INTO `mm_relation` VALUES ('6', '0', '1', '爷爷');
-INSERT INTO `mm_relation` VALUES ('7', '0', '1', '奶奶');
-
--- ----------------------------
--- Table structure for mm_user_comment
--- ----------------------------
-DROP TABLE IF EXISTS `mm_user_comment`;
-CREATE TABLE `mm_user_comment` (
-  `mc_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '映象id',
-  `mu_id` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
-  `ma_id` int(11) NOT NULL DEFAULT '2' COMMENT '管理员id',
-  `mc_detail` varchar(255) NOT NULL DEFAULT '' COMMENT '印象',
-  PRIMARY KEY (`mc_id`),
-  KEY `mm_user_comment_id` (`mu_id`),
-  CONSTRAINT `mm_user_comment_id` FOREIGN KEY (`mu_id`) REFERENCES `mm_user_info` (`mi_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of mm_user_comment
--- ----------------------------
-
--- ----------------------------
--- Table structure for mm_user_detail
--- ----------------------------
-DROP TABLE IF EXISTS `mm_user_detail`;
-CREATE TABLE `mm_user_detail` (
-  `md_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '详细信息表id',
-  `mu_id` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
-  `md_work` varchar(255) NOT NULL DEFAULT '' COMMENT '工作单位',
-  `md_mon_salary` decimal(20,2) NOT NULL DEFAULT '0.00' COMMENT '月薪',
-  `md_year_salary` decimal(20,2) NOT NULL DEFAULT '0.00' COMMENT '年薪',
-  `md_hascar` enum('无','有') DEFAULT NULL COMMENT '是否有车',
-  `md_cartype` varchar(64) NOT NULL DEFAULT '' COMMENT '车型',
-  `md_isowner` enum('无','有') DEFAULT NULL COMMENT '是否有房',
-  `md_location` varchar(128) NOT NULL DEFAULT '' COMMENT '房屋地址',
-  `md_house_area` varchar(25) NOT NULL DEFAULT '' COMMENT '房屋面积',
-  `md_loan` enum('无','有') DEFAULT NULL COMMENT '有无贷款',
-  `md_marry` enum('丧偶','离异','未婚') DEFAULT NULL COMMENT '婚姻状态',
-  `md_child` enum('无','有') DEFAULT NULL COMMENT '有无小孩',
-  `md_child_belong` enum('他人','对方','己方') DEFAULT NULL COMMENT '小孩归属',
-  `md_selfdiscr` varchar(500) NOT NULL DEFAULT '' COMMENT '自我描述',
-  PRIMARY KEY (`md_id`),
-  KEY `fk_user_detail_id` (`mu_id`),
-  CONSTRAINT `fk_user_detail_id` FOREIGN KEY (`mu_id`) REFERENCES `mm_user_info` (`mi_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of mm_user_detail
--- ----------------------------
-INSERT INTO `mm_user_detail` VALUES ('1', '1', '常州宝丰信息技术有限公司', '5500.00', '70000.00', '无', '', '无', '', '', '无', '未婚', '无', null, '阳光帅气，幽默大方');
-INSERT INTO `mm_user_detail` VALUES ('2', '2', '常州宝丰信息技术有限公司', '5500.00', '70000.00', '有', 'aaa', '无', '', '', '无', '未婚', '无', '', '美丽温柔');
-
--- ----------------------------
--- Table structure for mm_user_experience
--- ----------------------------
-DROP TABLE IF EXISTS `mm_user_experience`;
-CREATE TABLE `mm_user_experience` (
-  `me_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '恋爱经历表',
-  `mu_id` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
-  `me_discription` varchar(255) NOT NULL DEFAULT '' COMMENT '恋爱经历描述',
-  PRIMARY KEY (`me_id`),
-  KEY `fk_mm_user_experience_id` (`mu_id`),
-  CONSTRAINT `fk_mm_user_experience_id` FOREIGN KEY (`mu_id`) REFERENCES `mm_user_info` (`mi_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of mm_user_experience
--- ----------------------------
-
--- ----------------------------
--- Table structure for mm_user_extra
--- ----------------------------
-DROP TABLE IF EXISTS `mm_user_extra`;
-CREATE TABLE `mm_user_extra` (
-  `me_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户其他信息id',
-  `mu_id` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
-  `me_phone` varchar(13) NOT NULL DEFAULT '' COMMENT '手机',
-  `me_qq` varchar(32) NOT NULL DEFAULT '' COMMENT 'QQ号',
-  `me_wx` varchar(32) NOT NULL DEFAULT '' COMMENT '微信号',
-  `me_livetype` enum('存量房','住房','商品房') DEFAULT NULL COMMENT '住房性质',
-  `me_postion` varchar(128) NOT NULL DEFAULT '' COMMENT '现住地址',
-  `me_env` enum('陌生人','父母','与朋友合租','独居') DEFAULT NULL COMMENT '居住环境',
-  PRIMARY KEY (`me_id`),
-  KEY `fk_mm_user_extra_id` (`mu_id`),
-  CONSTRAINT `fk_mm_user_extra_id` FOREIGN KEY (`mu_id`) REFERENCES `mm_user_info` (`mi_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of mm_user_extra
--- ----------------------------
-INSERT INTO `mm_user_extra` VALUES ('1', '1', '17701420032', '1163369723', 'Xiaoyu99-omg', '住房', '江苏省常州市新北区', '与朋友合租');
-INSERT INTO `mm_user_extra` VALUES ('2', '2', '13566677258', '135468723', 'aaa', '住房', '江苏省泰州市泰兴市', '与朋友合租');
-
--- ----------------------------
--- Table structure for mm_user_family
--- ----------------------------
-DROP TABLE IF EXISTS `mm_user_family`;
-CREATE TABLE `mm_user_family` (
-  `mf_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '家庭成员表id',
-  `mu_id` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
-  `mr_id` int(255) NOT NULL DEFAULT '0' COMMENT '关系id',
-  `mf_name` varchar(20) NOT NULL DEFAULT '' COMMENT '姓名',
-  `mf_age` int(3) NOT NULL DEFAULT '0' COMMENT '年纪',
-  `mf_type` varchar(20) NOT NULL DEFAULT '' COMMENT '工作类型',
-  `mf_phone` varchar(13) NOT NULL DEFAULT '' COMMENT '联系方式',
-  PRIMARY KEY (`mf_id`),
-  KEY `fk_mm_user_family_id` (`mu_id`),
-  CONSTRAINT `fk_mm_user_family_id` FOREIGN KEY (`mu_id`) REFERENCES `mm_user_info` (`mi_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of mm_user_family
--- ----------------------------
-
--- ----------------------------
--- Table structure for mm_user_health
--- ----------------------------
-DROP TABLE IF EXISTS `mm_user_health`;
-CREATE TABLE `mm_user_health` (
-  `mh_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '健康状态id',
-  `mu_id` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
-  `mh_state` enum('健康','亚健康','非健康') DEFAULT NULL COMMENT '健康状态',
-  `mh_history` enum('有','无') DEFAULT NULL COMMENT '有无病种',
-  `mh_syntrophus` enum('有','无') DEFAULT NULL COMMENT '有无遗传病',
-  PRIMARY KEY (`mh_id`),
-  KEY `fk_mm_user_health_id` (`mu_id`),
-  CONSTRAINT `fk_mm_user_health_id` FOREIGN KEY (`mu_id`) REFERENCES `mm_user_info` (`mi_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of mm_user_health
--- ----------------------------
-
--- ----------------------------
--- Table structure for mm_user_ill
--- ----------------------------
-DROP TABLE IF EXISTS `mm_user_ill`;
-CREATE TABLE `mm_user_ill` (
-  `mi_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '病史id',
-  `mu_id` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
-  `mi_type` varchar(128) NOT NULL DEFAULT '' COMMENT '病种类型',
-  `mi_cure` enum('已痊愈','未痊愈') DEFAULT NULL COMMENT '是否已痊愈',
-  PRIMARY KEY (`mi_id`),
-  KEY `fk_mm_user_ill_id` (`mu_id`),
-  CONSTRAINT `fk_mm_user_ill_id` FOREIGN KEY (`mu_id`) REFERENCES `mm_user_info` (`mi_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of mm_user_ill
--- ----------------------------
-
--- ----------------------------
--- Table structure for mm_user_info
--- ----------------------------
-DROP TABLE IF EXISTS `mm_user_info`;
-CREATE TABLE `mm_user_info` (
-  `mi_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户基本信息id',
-  `mo_id` int(11) NOT NULL DEFAULT '2' COMMENT '添加管理员id',
-  `mi_name` varchar(11) NOT NULL DEFAULT '' COMMENT '用户姓名',
-  `mi_sex` enum('女','男') DEFAULT NULL COMMENT '性别',
-  `mi_age` int(3) NOT NULL DEFAULT '20' COMMENT '年龄',
-  `mi_height` int(3) NOT NULL DEFAULT '0' COMMENT '身高',
-  `mi_weight` decimal(6,2) NOT NULL DEFAULT '0.00' COMMENT '体重',
-  `mi_birth` varchar(8) NOT NULL DEFAULT '' COMMENT '出生年月',
-  `mi_zodiac` enum('猪','狗','鸡','猴','羊','马','蛇','龙','兔','虎','牛','鼠') DEFAULT NULL COMMENT '属相',
-  `mi_root` varchar(32) NOT NULL DEFAULT '' COMMENT '籍贯',
-  `mi_edu` enum('博士','硕士','本科','大专','高中','初中','文盲') DEFAULT NULL COMMENT '学历',
-  `mi_sight` enum('远视','盲人','高度近视','近视','轻度近视','正常') DEFAULT '正常' COMMENT '视力状态',
-  `mi_cardid` varchar(18) NOT NULL DEFAULT '' COMMENT '身份证号',
-  `mi_status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态',
-  `created_time` datetime NOT NULL DEFAULT '1999-01-01 01:01:01',
-  `updated_time` datetime NOT NULL DEFAULT '1999-01-01 01:01:01',
-  PRIMARY KEY (`mi_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of mm_user_info
--- ----------------------------
-INSERT INTO `mm_user_info` VALUES ('1', '1', '沈中伟', '男', '25', '178', '80.00', '1992年04月', '猴', '江苏省泰州市', '本科', '轻度近视', '321283199103166619', '1', '1999-01-01 01:01:01', '1999-01-01 01:01:01');
-INSERT INTO `mm_user_info` VALUES ('2', '1', '周蓉', '女', '25', '168', '52.00', '1992年10月', '猴', '江苏省泰州市', '本科', '轻度近视', '321283199210215556', '1', '1999-01-01 01:01:01', '1999-01-01 01:01:01');
-
--- ----------------------------
--- Table structure for mm_user_meeting
--- ----------------------------
-DROP TABLE IF EXISTS `mm_user_meeting`;
-CREATE TABLE `mm_user_meeting` (
-  `mm_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '约会表id',
-  `mu_id` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
-  `mu_targrt` int(11) NOT NULL DEFAULT '0' COMMENT '对象id',
-  PRIMARY KEY (`mm_id`),
-  KEY `fk_mm_user_meeting_id` (`mu_id`),
-  KEY `fk_mm_user_target_id` (`mu_targrt`),
-  CONSTRAINT `fk_mm_user_meeting_id` FOREIGN KEY (`mu_id`) REFERENCES `mm_user_info` (`mi_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_mm_user_target_id` FOREIGN KEY (`mu_targrt`) REFERENCES `mm_user_info` (`mi_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of mm_user_meeting
--- ----------------------------
-
--- ----------------------------
--- Table structure for mm_user_photo
--- ----------------------------
-DROP TABLE IF EXISTS `mm_user_photo`;
-CREATE TABLE `mm_user_photo` (
-  `mp_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '相片id',
-  `mu_id` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
-  `mp_main` varchar(64) NOT NULL DEFAULT '' COMMENT '主要照片',
-  `mp_other` varchar(64) NOT NULL DEFAULT '' COMMENT '其他照片',
-  PRIMARY KEY (`mp_id`),
-  KEY `fk_user_photo_id` (`mu_id`),
-  CONSTRAINT `fk_user_photo_id` FOREIGN KEY (`mu_id`) REFERENCES `mm_user_info` (`mi_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of mm_user_photo
--- ----------------------------
-INSERT INTO `mm_user_photo` VALUES ('1', '1', 'photo/users/1/14700640821694.png', '');
-
--- ----------------------------
--- Table structure for mm_user_requirements
--- ----------------------------
-DROP TABLE IF EXISTS `mm_user_requirements`;
-CREATE TABLE `mm_user_requirements` (
-  `mr_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '择偶条件要求id',
-  `mu_id` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
-  `mr_work` varchar(255) NOT NULL DEFAULT '' COMMENT '工作要求',
-  `mr_ecom` varchar(255) NOT NULL DEFAULT '' COMMENT '经济要求',
-  `mr_home` varchar(255) NOT NULL DEFAULT '' COMMENT '家境要求',
-  `mr_edu` varchar(255) NOT NULL DEFAULT '' COMMENT '学历要求',
-  `mr_looks` varchar(255) NOT NULL DEFAULT '' COMMENT '外貌要求',
-  `mr_figure` varchar(255) NOT NULL DEFAULT '' COMMENT '身材要求',
-  `mr_house` varchar(255) NOT NULL DEFAULT '' COMMENT '房子要求',
-  `mr_car` varchar(255) NOT NULL DEFAULT '' COMMENT '车子要求',
-  `mr_notaccept` varchar(255) NOT NULL DEFAULT '' COMMENT '三不要',
-  `mr_isdissociated` enum('是','否') DEFAULT NULL COMMENT '是否接受离异、丧偶',
-  `mr_hadchild` enum('是','否') DEFAULT NULL COMMENT '是否接受有小孩',
-  `mr_issick` enum('是','否') DEFAULT NULL COMMENT '是否接受身体不良健康',
-  `mr_withparents` enum('是','否') DEFAULT NULL COMMENT '是否愿意与父母住一起',
-  `mr_wantchild` enum('是','否') DEFAULT NULL COMMENT '是否想要孩子',
-  `mr_quickmerry` enum('是','否') DEFAULT NULL COMMENT '是否接受闪婚',
-  `mr_merryperiod` enum('1年之内','1年~2年','2年~3年','3年以上') DEFAULT NULL COMMENT '计划多久结婚',
-  `mr_other` varchar(255) NOT NULL DEFAULT '' COMMENT '其他',
-  PRIMARY KEY (`mr_id`),
-  KEY `mm_user_requirements_id` (`mu_id`),
-  CONSTRAINT `mm_user_requirements_id` FOREIGN KEY (`mu_id`) REFERENCES `mm_user_info` (`mi_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of mm_user_requirements
--- ----------------------------
+INSERT INTO `wine_admin_type` VALUES ('开发者', '1', '1467629090');
+INSERT INTO `wine_admin_type` VALUES ('普通管理员', '3', '1470145733');
+INSERT INTO `wine_admin_type` VALUES ('普通管理员', '4', '1467889410');
+INSERT INTO `wine_admin_type` VALUES ('系统管理员', '2', '1470146569');
+INSERT INTO `wine_admin_type` VALUES ('系统管理员', '5', '1470798215');
 
 -- ----------------------------
 -- Table structure for zone
