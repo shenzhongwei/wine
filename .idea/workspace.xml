@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="576c0e94-dafd-422c-8651-9622db14828e" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/api/controllers/ProductController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/controllers/ManagerController.php" afterPath="$PROJECT_DIR$/admin/controllers/ManagerController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/controllers/AddressController.php" afterPath="$PROJECT_DIR$/api/controllers/AddressController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/controllers/ApiController.php" afterPath="$PROJECT_DIR$/api/controllers/ApiController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/models/UserAddress.php" afterPath="$PROJECT_DIR$/api/models/UserAddress.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/models/UserInfo.php" afterPath="$PROJECT_DIR$/api/models/UserInfo.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vendor/yiisoft/yii2/rbac/DbManager.php" afterPath="$PROJECT_DIR$/vendor/yiisoft/yii2/rbac/DbManager.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wine.sql" afterPath="$PROJECT_DIR$/wine.sql" />
-    </list>
+    <list default="true" id="576c0e94-dafd-422c-8651-9622db14828e" name="Default" comment="" />
     <ignored path="wine.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path=".idea/dataSources.local.xml" />
@@ -373,7 +363,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-5" y="0" width="1924" height="1068" extended-state="1" />
+    <frame x="-5" y="0" width="1924" height="1068" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22274633" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
