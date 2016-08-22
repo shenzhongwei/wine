@@ -483,9 +483,8 @@ class DbManager extends BaseManager
         }
 
         $query = (new Query)->select('b.*')
-            ->from(['a' => $this->assignmentTable, 'b' => $this->itemTable])
-            ->where('{{a}}.[[item_name]]={{b}}.[[name]]')
-            ->andWhere('{{b}}.[[level]]>='.$type)
+            ->from(['b' => $this->itemTable])
+            ->where('{{b}}.[[level]]>='.$type)
             ->andWhere(['b.type' => Item::TYPE_ROLE])
             ->orderBy(['b.level'=>SORT_ASC]);
 

@@ -14,14 +14,16 @@ use Yii;
  * @property string $birth
  * @property string $nickname
  * @property string $realname
- * @property string $invite_user_id
- * @property string $invite_code
+ * @property integer $invite_user_id
  * @property integer $is_vip
+ * @property string $invite_code
  * @property integer $status
  * @property string $created_time
  * @property string $updated_time
+ *
+ * @property ShoppingCert[] $shoppingCerts
  * @property UserAddress[] $userAddresses
- * @property UserLogin $userLogins
+ * @property UserLogin[] $userLogins
  */
 class UserInfo extends \yii\db\ActiveRecord
 {
@@ -39,13 +41,13 @@ class UserInfo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['sex','invite_code'], 'string'],
-            [['is_vip', 'status','invite_user_id'], 'integer'],
+            [['sex'], 'string'],
+            [['invite_user_id', 'is_vip', 'status'], 'integer'],
             [['created_time', 'updated_time'], 'safe'],
             [['phone'], 'string', 'max' => 13],
             [['head_url'], 'string', 'max' => 128],
             [['birth'], 'string', 'max' => 255],
-            [['nickname', 'realname','invite_code'], 'string', 'max' => 32],
+            [['nickname', 'realname', 'invite_code'], 'string', 'max' => 32],
         ];
     }
 
@@ -63,8 +65,8 @@ class UserInfo extends \yii\db\ActiveRecord
             'nickname' => '昵称',
             'realname' => '真实姓名',
             'invite_user_id' => '邀请人id',
-            'invite_code'=>'用户邀请码',
             'is_vip' => '是否为会员 0不是 1是',
+            'invite_code' => '邀请码(不可更改)',
             'status' => '状态 0删除 1正常',
             'created_time' => 'Created Time',
             'updated_time' => 'Updated Time',
@@ -74,14 +76,25 @@ class UserInfo extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUserLogin()
+    public function getShoppingCerts()
     {
-        return $this->hasOne(UserLogin::className(), ['uid' => 'id', 'status' => 'status']);
+        return $this->hasMany(ShoppingCert::className(), ['uid' => 'id']);
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getUserAddresses()
     {
         return $this->hasMany(UserAddress::className(), ['uid' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUserLogins()
+    {
+        return $this->hasMany(UserLogin::className(), ['uid' => 'id', 'status' => 'status']);
     }
 
     public static function getInfoByInviteCode($inviteCode){

@@ -11,6 +11,9 @@ use Yii;
  * @property integer $uid
  * @property string $get_person
  * @property string $get_phone
+ * @property string $province
+ * @property string $city
+ * @property string $district
  * @property string $region
  * @property string $address
  * @property integer $lat
@@ -41,7 +44,7 @@ class UserAddress extends \yii\db\ActiveRecord
         return [
             [['uid', 'lat', 'lng', 'is_default', 'status'], 'integer'],
             [['created_time', 'updated_time'], 'safe'],
-            [['get_person'], 'string', 'max' => 128],
+            [['get_person','province','city','district'], 'string', 'max' => 128],
             [['get_phone', 'tag'], 'string', 'max' => 32],
             [['region', 'address'], 'string', 'max' => 255],
             [['uid'], 'exist', 'skipOnError' => true, 'targetClass' => UserInfo::className(), 'targetAttribute' => ['uid' => 'id']],
@@ -58,6 +61,9 @@ class UserAddress extends \yii\db\ActiveRecord
             'uid' => '用户id',
             'get_person' => 'Get Person',
             'get_phone' => '手机号',
+            'province' => '省',
+            'city'=>'市',
+            'district'=>'区',
             'region' => '地区',
             'address' => '详细地址',
             'lat' => '纬度',

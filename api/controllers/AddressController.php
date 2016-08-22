@@ -21,7 +21,10 @@ class AddressController extends ApiController{
         //获取参数
         $receiver = Yii::$app->request->post('receiver');
         $phone = Yii::$app->request->post('phone');
-        $district = Yii::$app->request->post('area');
+        $province = Yii::$app->request->post('province');
+        $city = Yii::$app->request->post('city');
+        $district = Yii::$app->request->post('district');
+        $street = Yii::$app->request->post('street');
         $address = Yii::$app->request->post('address');
         $lat = Yii::$app->request->post('lat');
         $lng = Yii::$app->request->post('lng');
@@ -29,13 +32,16 @@ class AddressController extends ApiController{
         /**
          * 判断非空
          */
+        if(empty($province)||empty($city)||empty($district)){
+            return $this->showResult(301,'请选择省市区');
+        }
         if(empty($phone)||empty($receiver)){
             return $this->showResult(301,'未获取到收货人信息');
         }
         if(!$this->validateMobilePhone($phone)){
             return $this->showResult(301,'手机格式错误');
         }
-        if(empty($district)||empty($address)){
+        if(empty($street)||empty($address)){
             return $this->showResult(301,'未获取到收货地址信息');
         }
         if(empty($lng)||empty($lat)){
@@ -47,7 +53,10 @@ class AddressController extends ApiController{
             'uid'=>$user->id,
             'get_phone'=>$phone,
             'get_person'=>$receiver,
-            'region'=>$district,
+            'province'=>$province,
+            'city'=>$city,
+            'district'=>$district,
+            'region'=>$street,
             'address'=>$address,
             'lat'=>(int)($lat*1000000),
             'lng'=>(int)($lng*1000000),
@@ -143,7 +152,7 @@ class AddressController extends ApiController{
                     'address_id'=>$add->id,
                     'receiver'=>$add->get_person,
                     'phone'=>$add->get_phone,
-                    'address'=>$add->region.$add->address,
+                    'address'=>$add->province.$add->city.$add->district.$add->region.$add->address,
                     'lat'=>$add->lat,
                     'lng'=>$add->lng,
                     'tag'=>$add->tag,
@@ -172,7 +181,10 @@ class AddressController extends ApiController{
         //获取参数
         $receiver = Yii::$app->request->post('receiver');
         $phone = Yii::$app->request->post('phone');
-        $district = Yii::$app->request->post('area');
+        $province = Yii::$app->request->post('province');
+        $city = Yii::$app->request->post('city');
+        $district = Yii::$app->request->post('district');
+        $street = Yii::$app->request->post('street');
         $address = Yii::$app->request->post('address');
         $lat = Yii::$app->request->post('lat');
         $lng = Yii::$app->request->post('lng');
@@ -180,13 +192,16 @@ class AddressController extends ApiController{
         /**
          * 判断非空
          */
+        if(empty($province)||empty($city)||empty($district)){
+            return $this->showResult(301,'请选择省市区');
+        }
         if(empty($phone)||empty($receiver)){
             return $this->showResult(301,'未获取到收货人信息');
         }
         if(!$this->validateMobilePhone($phone)){
             return $this->showResult(301,'手机格式错误');
         }
-        if(empty($district)||empty($address)){
+        if(empty($street)||empty($address)){
             return $this->showResult(301,'未获取到收货地址信息');
         }
         if(empty($lng)||empty($lat)){
@@ -196,7 +211,10 @@ class AddressController extends ApiController{
         $userAddress->attributes = [
             'get_phone'=>$phone,
             'get_person'=>$receiver,
-            'region'=>$district,
+            'province'=>$province,
+            'city'=>$city,
+            'district'=>$district,
+            'region'=>$street,
             'address'=>$address,
             'lat'=>(int)($lat*1000000),
             'lng'=>(int)($lng*1000000),

@@ -10,10 +10,31 @@ Target Server Type    : MYSQL
 Target Server Version : 50540
 File Encoding         : 65001
 
-Date: 2016-08-18 13:41:46
+Date: 2016-08-22 17:22:57
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for account_inout
+-- ----------------------------
+DROP TABLE IF EXISTS `account_inout`;
+CREATE TABLE `account_inout` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `aid` int(11) NOT NULL DEFAULT '0' COMMENT '钱包id',
+  `aio_date` int(11) NOT NULL DEFAULT '0' COMMENT '生成时间',
+  `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '类型',
+  `target_id` int(11) NOT NULL DEFAULT '0' COMMENT '对象id',
+  `sum` decimal(11,2) NOT NULL DEFAULT '0.00' COMMENT '金额',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 0删除 1正常',
+  PRIMARY KEY (`id`),
+  KEY `account_inout_id` (`aid`),
+  CONSTRAINT `account_inout_id` FOREIGN KEY (`aid`) REFERENCES `user_account` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='充值明细';
+
+-- ----------------------------
+-- Records of account_inout
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for ad_list
@@ -32,6 +53,267 @@ CREATE TABLE `ad_list` (
 -- ----------------------------
 -- Records of ad_list
 -- ----------------------------
+
+-- ----------------------------
+-- Table structure for country
+-- ----------------------------
+DROP TABLE IF EXISTS `country`;
+CREATE TABLE `country` (
+  `id` smallint(4) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `zh_name` varchar(50) NOT NULL,
+  `code` varchar(5) NOT NULL DEFAULT '',
+  `code2` varchar(5) NOT NULL DEFAULT '',
+  `is_show` tinyint(2) NOT NULL DEFAULT '1' COMMENT '是否显示 1 显示 0 不显示',
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=243 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of country
+-- ----------------------------
+INSERT INTO `country` VALUES ('1', 'Afghanistan', '阿富汗', 'AF', '93', '1');
+INSERT INTO `country` VALUES ('2', 'Albania', '阿尔巴尼亚', 'AL', '355', '1');
+INSERT INTO `country` VALUES ('3', 'Algeria', '阿尔及利亚', 'DZ', '213', '1');
+INSERT INTO `country` VALUES ('4', 'American Samoa', '萨摩亚', 'AS', '684', '1');
+INSERT INTO `country` VALUES ('5', 'Andorra', '安道尔共和国', 'AD', '376', '1');
+INSERT INTO `country` VALUES ('6', 'Angola', '安哥拉', 'AO', '244', '1');
+INSERT INTO `country` VALUES ('7', 'Anguilla', '安圭拉', 'AI', '1-264', '1');
+INSERT INTO `country` VALUES ('8', 'Antarctica', '南极洲', 'AQ', '672', '1');
+INSERT INTO `country` VALUES ('9', 'Antigua and Barbuda', '安提瓜和巴布达', 'AG', '1-268', '1');
+INSERT INTO `country` VALUES ('10', 'Argentina', '阿根廷', 'AR', '54', '1');
+INSERT INTO `country` VALUES ('11', 'Armenia', '亚美尼亚', 'AM', '374', '1');
+INSERT INTO `country` VALUES ('12', 'Aruba', '阿鲁巴', 'AW', '297', '1');
+INSERT INTO `country` VALUES ('13', 'Australia', '澳大利亚', 'AU', '61', '1');
+INSERT INTO `country` VALUES ('14', 'Austria', '奥地利', 'AT', '43', '1');
+INSERT INTO `country` VALUES ('15', 'Azerbaijan', '阿塞拜疆', 'AZ', '994', '1');
+INSERT INTO `country` VALUES ('16', 'Bahamas', '巴哈马', 'BS', '1-242', '1');
+INSERT INTO `country` VALUES ('17', 'Bahrain', '巴林', 'BH', '973', '1');
+INSERT INTO `country` VALUES ('18', 'Bangladesh', '孟加拉国', 'BD', '880', '1');
+INSERT INTO `country` VALUES ('19', 'Barbados', '巴巴多斯', 'BB', '1-246', '1');
+INSERT INTO `country` VALUES ('20', 'Belarus', '白俄罗斯', 'BY', '375', '1');
+INSERT INTO `country` VALUES ('21', 'Belgium', '比利时', 'BE', '32', '1');
+INSERT INTO `country` VALUES ('22', 'Belize', '伯利兹城', 'BZ', '501', '1');
+INSERT INTO `country` VALUES ('23', 'Benin', '贝宁', 'BJ', '229', '1');
+INSERT INTO `country` VALUES ('24', 'Bermuda', '百慕大', 'BM', '1-441', '1');
+INSERT INTO `country` VALUES ('25', 'Bhutan', '不丹', 'BT', '975', '1');
+INSERT INTO `country` VALUES ('26', 'Bolivia', '玻利维亚', 'BO', '591', '1');
+INSERT INTO `country` VALUES ('27', 'Bosnia and Herzegovina', '波斯尼亚和黑塞哥维那', 'BA', '387', '1');
+INSERT INTO `country` VALUES ('28', 'Botswana', '博茨瓦纳', 'BW', '267', '1');
+INSERT INTO `country` VALUES ('29', 'Bouvet Island', '布维岛', 'BV', '', '1');
+INSERT INTO `country` VALUES ('30', 'Brazil', '巴西', 'BR', '55', '1');
+INSERT INTO `country` VALUES ('31', 'British Indian Ocean Territory', '英属印度洋领地', 'IO', '1-284', '1');
+INSERT INTO `country` VALUES ('32', 'Brunei Darussalam', '文莱达鲁萨兰国', 'BN', '673', '1');
+INSERT INTO `country` VALUES ('33', 'Bulgaria', '保加利亚', 'BG', '359', '1');
+INSERT INTO `country` VALUES ('34', 'Burkina Faso', '布基纳法索', 'BF', '226', '1');
+INSERT INTO `country` VALUES ('35', 'Burundi', '布隆迪', 'BI', '257', '1');
+INSERT INTO `country` VALUES ('36', 'Cambodia', '柬埔寨', 'KH', '855', '1');
+INSERT INTO `country` VALUES ('37', 'Cameroon', '喀麦隆', 'CM', '237', '1');
+INSERT INTO `country` VALUES ('38', 'Canada', '加拿大', 'CA', '1', '1');
+INSERT INTO `country` VALUES ('39', 'Cape Verde', '佛得角', 'CV', '238', '1');
+INSERT INTO `country` VALUES ('40', 'Cayman Islands', '开曼群岛', 'KY', '1-345', '1');
+INSERT INTO `country` VALUES ('41', 'Central African Republic', '中非共和国', 'CF', '236', '1');
+INSERT INTO `country` VALUES ('42', 'Chad', '乍得', 'TD', '235', '1');
+INSERT INTO `country` VALUES ('43', 'Chile', '智利', 'CL', '56', '1');
+INSERT INTO `country` VALUES ('44', 'China', '中国', 'CN', '86', '1');
+INSERT INTO `country` VALUES ('45', 'Christmas Island', '圣延岛', 'CX', '61', '1');
+INSERT INTO `country` VALUES ('46', 'Cocos (Keeling) Islands', '科科斯群岛', 'CC', '61', '1');
+INSERT INTO `country` VALUES ('47', 'Colombia', '哥伦比亚', 'CO', '57', '1');
+INSERT INTO `country` VALUES ('48', 'Comoros', '科摩罗', 'KM', '269', '1');
+INSERT INTO `country` VALUES ('49', 'Congo', '刚果', 'CG', '242', '1');
+INSERT INTO `country` VALUES ('50', 'Congo, The Democratic Republic Of The', '刚果民主共和国', 'ZR', '243', '1');
+INSERT INTO `country` VALUES ('51', 'Cook Islands', '库克群岛', 'CK', '682', '1');
+INSERT INTO `country` VALUES ('52', 'Costa Rica', '哥斯达黎加', 'CR', '506', '1');
+INSERT INTO `country` VALUES ('53', 'Cote D\'Ivoire', 'Cote D\'Ivoire', 'CI', '225', '1');
+INSERT INTO `country` VALUES ('54', 'Croatia (local name: Hrvatska)', '克罗地亚', 'HR', '385', '1');
+INSERT INTO `country` VALUES ('55', 'Cuba', '古巴', 'CU', '53', '1');
+INSERT INTO `country` VALUES ('56', 'Cyprus', '塞浦路斯', 'CY', '357', '1');
+INSERT INTO `country` VALUES ('57', 'Czech Republic', '捷克', 'CZ', '420', '1');
+INSERT INTO `country` VALUES ('58', 'Denmark', '丹麦', 'DK', '45', '1');
+INSERT INTO `country` VALUES ('59', 'Djibouti', '吉布提', 'DJ', '253', '1');
+INSERT INTO `country` VALUES ('60', 'Dominica', '多米尼克国', 'DM', '1-767', '1');
+INSERT INTO `country` VALUES ('61', 'Dominican Republic', '多米尼加共和国', 'DO', '1-809', '1');
+INSERT INTO `country` VALUES ('62', 'East Timor', '东帝汶', 'TP', '670', '1');
+INSERT INTO `country` VALUES ('63', 'Ecuador', '厄瓜多尔', 'EC', '593', '1');
+INSERT INTO `country` VALUES ('64', 'Egypt', '埃及', 'EG', '20', '1');
+INSERT INTO `country` VALUES ('65', 'El Salvador', '萨尔瓦多', 'SV', '503', '1');
+INSERT INTO `country` VALUES ('66', 'Equatorial Guinea', '赤道几内亚', 'GQ', '240', '1');
+INSERT INTO `country` VALUES ('67', 'Eritrea', '厄立特里亚国', 'ER', '291', '1');
+INSERT INTO `country` VALUES ('68', 'Estonia', '爱沙尼亚', 'EE', '372', '1');
+INSERT INTO `country` VALUES ('69', 'Ethiopia', '埃塞俄比亚', 'ET', '251', '1');
+INSERT INTO `country` VALUES ('70', 'Falkland Islands (Malvinas)', '福克兰群岛', 'FK', '500', '1');
+INSERT INTO `country` VALUES ('71', 'Faroe Islands', '法罗群岛', 'FO', '298', '1');
+INSERT INTO `country` VALUES ('72', 'Fiji', '斐济', 'FJ', '679', '1');
+INSERT INTO `country` VALUES ('73', 'Finland', '芬兰', 'FI', '358', '1');
+INSERT INTO `country` VALUES ('74', 'France', '法国', 'FR', '33', '1');
+INSERT INTO `country` VALUES ('75', 'France Metropolitan', '法国大都会', 'FX', '33', '1');
+INSERT INTO `country` VALUES ('76', 'French Guiana', '法属圭亚那', 'GF', '594', '1');
+INSERT INTO `country` VALUES ('77', 'French Polynesia', '法属玻里尼西亚', 'PF', '689', '1');
+INSERT INTO `country` VALUES ('78', 'French Southern Territories', 'French Southern Territories', 'TF', '', '1');
+INSERT INTO `country` VALUES ('79', 'Gabon', '加蓬', 'GA', '241', '1');
+INSERT INTO `country` VALUES ('80', 'Gambia', ' 冈比亚', 'GM', '220', '1');
+INSERT INTO `country` VALUES ('81', 'Georgia', '格鲁吉亚', 'GE', '995', '1');
+INSERT INTO `country` VALUES ('82', 'Germany', '德国', 'DE', '49', '1');
+INSERT INTO `country` VALUES ('83', 'Ghana', '加纳', 'GH', '233', '1');
+INSERT INTO `country` VALUES ('84', 'Gibraltar', '直布罗陀', 'GI', '350', '1');
+INSERT INTO `country` VALUES ('85', 'Greece', '希腊', 'GR', '30', '1');
+INSERT INTO `country` VALUES ('86', 'Greenland', '格陵兰', 'GL', '299', '1');
+INSERT INTO `country` VALUES ('87', 'Grenada', '格林纳达', 'GD', '1-473', '1');
+INSERT INTO `country` VALUES ('88', 'Guadeloupe', '瓜德罗普岛', 'GP', '590', '1');
+INSERT INTO `country` VALUES ('89', 'Guam', '关岛', 'GU', '1-671', '1');
+INSERT INTO `country` VALUES ('90', 'Guatemala', '危地马拉', 'GT', '502', '1');
+INSERT INTO `country` VALUES ('91', 'Guinea', '几内亚', 'GN', '224', '1');
+INSERT INTO `country` VALUES ('92', 'Guinea-Bissau', '几内亚比绍', 'GW', '245', '1');
+INSERT INTO `country` VALUES ('93', 'Guyana', '圭亚那', 'GY', '592', '1');
+INSERT INTO `country` VALUES ('94', 'Haiti', '海地', 'HT', '509', '1');
+INSERT INTO `country` VALUES ('95', 'Heard and Mc Donald Islands', 'Heard and Mc Donald Islands', 'HM', '', '1');
+INSERT INTO `country` VALUES ('96', 'Honduras', '洪都拉斯', 'HN', '504', '1');
+INSERT INTO `country` VALUES ('97', 'Hong Kong', '香港', 'HK', '852', '1');
+INSERT INTO `country` VALUES ('98', 'Hungary', '匈牙利', 'HU', '36', '1');
+INSERT INTO `country` VALUES ('99', 'Iceland', '冰岛', 'IS', '354', '1');
+INSERT INTO `country` VALUES ('100', 'India', '印度', 'IN', '91', '1');
+INSERT INTO `country` VALUES ('101', 'Indonesia', '印度尼西亚', 'ID', '62', '1');
+INSERT INTO `country` VALUES ('102', 'Iran (Islamic Republic of)', 'Iran (Islamic Republic of)', 'IR', '98', '1');
+INSERT INTO `country` VALUES ('103', 'Iraq', '伊拉克', 'IQ', '964', '1');
+INSERT INTO `country` VALUES ('104', 'Ireland', '爱尔兰', 'IE', '353', '1');
+INSERT INTO `country` VALUES ('105', 'Isle of Man', '英国属地曼岛', 'IM', '', '1');
+INSERT INTO `country` VALUES ('106', 'Israel', '以色列', 'IL', '972', '1');
+INSERT INTO `country` VALUES ('107', 'Italy', '意大利', 'IT', '39', '1');
+INSERT INTO `country` VALUES ('108', 'Jamaica', '牙买加', 'JM', '1-876', '1');
+INSERT INTO `country` VALUES ('109', 'Japan', '日本', 'JP', '81', '1');
+INSERT INTO `country` VALUES ('110', 'Jordan', '约旦', 'JO', '962', '1');
+INSERT INTO `country` VALUES ('111', 'Kazakhstan', '哈萨克', 'KZ', '7', '1');
+INSERT INTO `country` VALUES ('112', 'Kenya', '肯尼亚', 'KE', '254', '1');
+INSERT INTO `country` VALUES ('113', 'Kiribati', '吉尔巴斯', 'KI', '686', '1');
+INSERT INTO `country` VALUES ('114', 'Kuwait', '科威特', 'KW', '965', '1');
+INSERT INTO `country` VALUES ('115', 'Kyrgyzstan', '吉尔吉斯', 'KG', '996', '1');
+INSERT INTO `country` VALUES ('116', 'Lao People\'s Democratic Republic', 'Lao People\'s Democratic Republic', 'LA', '', '1');
+INSERT INTO `country` VALUES ('117', 'Latvia', '拉脱维亚', 'LV', '371', '1');
+INSERT INTO `country` VALUES ('118', 'Lebanon', '黎巴嫩', 'LB', '961', '1');
+INSERT INTO `country` VALUES ('119', 'Lesotho', '莱索托', 'LS', '266', '1');
+INSERT INTO `country` VALUES ('120', 'Liberia', '利比里亚', 'LR', '231', '1');
+INSERT INTO `country` VALUES ('121', 'Libyan Arab Jamahiriya', '利比亚', 'LY', '218', '1');
+INSERT INTO `country` VALUES ('122', 'Liechtenstein', '列支敦士登', 'LI', '423', '1');
+INSERT INTO `country` VALUES ('123', 'Lithuania', '立陶宛', 'LT', '370', '1');
+INSERT INTO `country` VALUES ('124', 'Luxembourg', '卢森堡', 'LU', '352', '1');
+INSERT INTO `country` VALUES ('125', 'Macau', '澳门地区', 'MO', '853', '1');
+INSERT INTO `country` VALUES ('126', 'Madagascar', '马达加斯加', 'MG', '261', '1');
+INSERT INTO `country` VALUES ('127', 'Malawi', '马拉维', 'MW', '265', '1');
+INSERT INTO `country` VALUES ('128', 'Malaysia', '马来西亚', 'MY', '60', '1');
+INSERT INTO `country` VALUES ('129', 'Maldives', '马尔代夫', 'MV', '960', '1');
+INSERT INTO `country` VALUES ('130', 'Mali', '马里', 'ML', '223', '1');
+INSERT INTO `country` VALUES ('131', 'Malta', '马尔他', 'MT', '356', '1');
+INSERT INTO `country` VALUES ('132', 'Marshall Islands', '马绍尔群岛', 'MH', '692', '1');
+INSERT INTO `country` VALUES ('133', 'Martinique', '马提尼克岛', 'MQ', '596', '1');
+INSERT INTO `country` VALUES ('134', 'Mauritania', '毛里塔尼亚', 'MR', '222', '1');
+INSERT INTO `country` VALUES ('135', 'Mauritius', '毛里求斯', 'MU', '230', '1');
+INSERT INTO `country` VALUES ('136', 'Mayotte', '马约特', 'YT', '269', '1');
+INSERT INTO `country` VALUES ('137', 'Mexico', '墨西哥', 'MX', '52', '1');
+INSERT INTO `country` VALUES ('138', 'Micronesia', '密克罗尼西亚', 'FM', '691', '1');
+INSERT INTO `country` VALUES ('139', 'Moldova', '摩尔多瓦', 'MD', '373', '1');
+INSERT INTO `country` VALUES ('140', 'Monaco', '摩纳哥', 'MC', '377', '1');
+INSERT INTO `country` VALUES ('141', 'Mongolia', '外蒙古', 'MN', '976', '1');
+INSERT INTO `country` VALUES ('142', 'Montenegro', 'Montenegro', 'MNE', '382', '1');
+INSERT INTO `country` VALUES ('143', 'Montserrat', '蒙特色纳', 'MS', '1-664', '1');
+INSERT INTO `country` VALUES ('144', 'Morocco', '摩洛哥', 'MA', '212', '1');
+INSERT INTO `country` VALUES ('145', 'Mozambique', '莫桑比克', 'MZ', '258', '1');
+INSERT INTO `country` VALUES ('146', 'Myanmar', '缅甸', 'MM', '95', '1');
+INSERT INTO `country` VALUES ('147', 'Namibia', '那米比亚', 'NA', '264', '1');
+INSERT INTO `country` VALUES ('148', 'Nauru', '瑙鲁', 'NR', '674', '1');
+INSERT INTO `country` VALUES ('149', 'Nepal', '尼泊尔', 'NP', '977', '1');
+INSERT INTO `country` VALUES ('150', 'Netherlands', '荷兰', 'NL', '31', '1');
+INSERT INTO `country` VALUES ('151', 'Netherlands Antilles', '荷兰安的列斯群岛', 'AN', '599', '1');
+INSERT INTO `country` VALUES ('152', 'New Caledonia', '新加勒多尼亚', 'NC', '687', '1');
+INSERT INTO `country` VALUES ('153', 'New Zealand', '新西兰', 'NZ', '64', '1');
+INSERT INTO `country` VALUES ('154', 'Nicaragua', '尼加拉瓜', 'NI', '505', '1');
+INSERT INTO `country` VALUES ('155', 'Niger', '尼日尔', 'NE', '227', '1');
+INSERT INTO `country` VALUES ('156', 'Nigeria', '尼日利亚', 'NG', '234', '1');
+INSERT INTO `country` VALUES ('157', 'Niue', '纽鄂岛', 'NU', '683', '1');
+INSERT INTO `country` VALUES ('158', 'Norfolk Island', '诺福克岛', 'NF', '672', '1');
+INSERT INTO `country` VALUES ('159', 'North Korea', '朝鲜', 'KP', '850', '1');
+INSERT INTO `country` VALUES ('160', 'Northern Mariana Islands', '北马里亚纳群岛', 'MP', '1670', '1');
+INSERT INTO `country` VALUES ('161', 'Norway', '挪威', 'NO', '47', '1');
+INSERT INTO `country` VALUES ('162', 'Oman', '阿曼', 'OM', '968', '1');
+INSERT INTO `country` VALUES ('163', 'Pakistan', '巴基斯坦', 'PK', '92', '1');
+INSERT INTO `country` VALUES ('164', 'Palau', '帛琉', 'PW', '680', '1');
+INSERT INTO `country` VALUES ('165', 'Palestine', '巴勒斯坦', 'PS', '970', '1');
+INSERT INTO `country` VALUES ('166', 'Panama', '巴拿马', 'PA', '507', '1');
+INSERT INTO `country` VALUES ('167', 'Papua New Guinea', '巴布亚新几内亚', 'PG', '675', '1');
+INSERT INTO `country` VALUES ('168', 'Paraguay', '巴拉圭', 'PY', '595', '1');
+INSERT INTO `country` VALUES ('169', 'Peru', '秘鲁', 'PE', '51', '1');
+INSERT INTO `country` VALUES ('170', 'Philippines', '菲律宾共和国', 'PH', '63', '1');
+INSERT INTO `country` VALUES ('171', 'Pitcairn', '皮特凯恩岛', 'PN', '872', '1');
+INSERT INTO `country` VALUES ('172', 'Poland', '波兰', 'PL', '48', '1');
+INSERT INTO `country` VALUES ('173', 'Portugal', '葡萄牙', 'PT', '351', '1');
+INSERT INTO `country` VALUES ('174', 'Puerto Rico', '波多黎各', 'PR', '1-787', '1');
+INSERT INTO `country` VALUES ('175', 'Qatar', '卡塔尔', 'QA', '974', '1');
+INSERT INTO `country` VALUES ('176', 'Reunion', 'Reunion', 'RE', '262', '1');
+INSERT INTO `country` VALUES ('177', 'Romania', '罗马尼亚', 'RO', '40', '1');
+INSERT INTO `country` VALUES ('178', 'Russian Federation', '俄罗斯联邦', 'RU', '7', '1');
+INSERT INTO `country` VALUES ('179', 'Rwanda', '卢旺达', 'RW', '250', '1');
+INSERT INTO `country` VALUES ('180', 'Saint Kitts and Nevis', '圣吉斯和尼维斯', 'KN', '', '1');
+INSERT INTO `country` VALUES ('181', 'Saint Lucia', '圣卢西亚', 'LC', '', '1');
+INSERT INTO `country` VALUES ('182', 'Saint Vincent and the Grenadines', '圣文森和格林纳丁斯', 'VC', '', '1');
+INSERT INTO `country` VALUES ('183', 'Samoa', '美属萨摩亚', 'WS', '685', '1');
+INSERT INTO `country` VALUES ('184', 'San Marino', 'San Marino', 'SM', '378', '1');
+INSERT INTO `country` VALUES ('185', 'Sao Tome and Principe', '圣多美和普林西比', 'ST', '', '1');
+INSERT INTO `country` VALUES ('186', 'Saudi Arabia', '沙特阿拉伯', 'SA', '966', '1');
+INSERT INTO `country` VALUES ('187', 'Senegal', '塞内加尔', 'SN', '221', '1');
+INSERT INTO `country` VALUES ('188', 'Serbia', '塞尔维亚共和国', 'SRB', '381', '1');
+INSERT INTO `country` VALUES ('189', 'Seychelles', '塞锡尔群岛', 'SC', '248', '1');
+INSERT INTO `country` VALUES ('190', 'Sierra Leone', '塞拉利昂', 'SL', '232', '1');
+INSERT INTO `country` VALUES ('191', 'Singapore', '新加坡', 'SG', '65', '1');
+INSERT INTO `country` VALUES ('192', 'Slovakia (Slovak Republic)', '斯洛伐克（斯洛伐克人的共和国）', 'SK', '421', '1');
+INSERT INTO `country` VALUES ('193', 'Slovenia', '斯洛文尼亚', 'SI', '386', '1');
+INSERT INTO `country` VALUES ('194', 'Solomon Islands', '索罗门群岛', 'SB', '677', '1');
+INSERT INTO `country` VALUES ('195', 'Somalia', '索马里', 'SO', '252', '1');
+INSERT INTO `country` VALUES ('196', 'South Africa', '南非', 'ZA', '27', '1');
+INSERT INTO `country` VALUES ('197', 'South Korea', '韩国', 'KR', '82', '1');
+INSERT INTO `country` VALUES ('198', 'Spain', '西班牙', 'ES', '34', '1');
+INSERT INTO `country` VALUES ('199', 'Sri Lanka', '斯里兰卡', 'LK', '94', '1');
+INSERT INTO `country` VALUES ('200', 'St. Helena', '圣海伦娜', 'SH', '290', '1');
+INSERT INTO `country` VALUES ('201', 'St. Pierre and Miquelon', '圣皮埃尔和密克罗', 'PM', '508', '1');
+INSERT INTO `country` VALUES ('202', 'Sudan', '苏丹', 'SD', '249', '1');
+INSERT INTO `country` VALUES ('203', 'Suriname', '苏里南', 'SR', '597', '1');
+INSERT INTO `country` VALUES ('204', 'Svalbard and Jan Mayen Islands', '冷岸和央麦恩群岛', 'SJ', '', '1');
+INSERT INTO `country` VALUES ('205', 'Swaziland', '斯威士兰', 'SZ', '268', '1');
+INSERT INTO `country` VALUES ('206', 'Sweden', '瑞典', 'SE', '46', '1');
+INSERT INTO `country` VALUES ('207', 'Switzerland', '瑞士', 'CH', '41', '1');
+INSERT INTO `country` VALUES ('208', 'Syrian Arab Republic', '叙利亚', 'SY', '963', '1');
+INSERT INTO `country` VALUES ('209', 'Taiwan', '台湾地区', 'TW', '886', '1');
+INSERT INTO `country` VALUES ('210', 'Tajikistan', '塔吉克', 'TJ', '992', '1');
+INSERT INTO `country` VALUES ('211', 'Tanzania', '坦桑尼亚', 'TZ', '255', '1');
+INSERT INTO `country` VALUES ('212', 'Thailand', '泰国', 'TH', '66', '1');
+INSERT INTO `country` VALUES ('213', 'The former Yugoslav Republic of Macedonia', '前马其顿南斯拉夫共和国', 'MK', '389', '1');
+INSERT INTO `country` VALUES ('214', 'Togo', '多哥', 'TG', '228', '1');
+INSERT INTO `country` VALUES ('215', 'Tokelau', '托克劳', 'TK', '690', '1');
+INSERT INTO `country` VALUES ('216', 'Tonga', '汤加', 'TO', '676', '1');
+INSERT INTO `country` VALUES ('217', 'Trinidad and Tobago', '千里达托贝哥共和国', 'TT', '1-868', '1');
+INSERT INTO `country` VALUES ('218', 'Tunisia', '北非共和国', 'TN', '216', '1');
+INSERT INTO `country` VALUES ('219', 'Turkey', '土耳其', 'TR', '90', '1');
+INSERT INTO `country` VALUES ('220', 'Turkmenistan', '土库曼', 'TM', '993', '1');
+INSERT INTO `country` VALUES ('221', 'Turks and Caicos Islands', '土克斯和开科斯群岛', 'TC', '1-649', '1');
+INSERT INTO `country` VALUES ('222', 'Tuvalu', '图瓦卢', 'TV', '688', '1');
+INSERT INTO `country` VALUES ('223', 'Uganda', '乌干达', 'UG', '256', '1');
+INSERT INTO `country` VALUES ('224', 'Ukraine', '乌克兰', 'UA', '380', '1');
+INSERT INTO `country` VALUES ('225', 'United Arab Emirates', '阿拉伯联合酋长国', 'AE', '971', '1');
+INSERT INTO `country` VALUES ('226', 'United Kingdom', '英国', 'UK', '44', '1');
+INSERT INTO `country` VALUES ('227', 'United States', '美国', 'US', '1', '1');
+INSERT INTO `country` VALUES ('228', 'United States Minor Outlying Islands', '美国小离岛', 'UM', '', '1');
+INSERT INTO `country` VALUES ('229', 'Uruguay', '乌拉圭', 'UY', '598', '1');
+INSERT INTO `country` VALUES ('230', 'Uzbekistan', '乌兹别克斯坦', 'UZ', '998', '1');
+INSERT INTO `country` VALUES ('231', 'Vanuatu', '瓦努阿图', 'VU', '678', '1');
+INSERT INTO `country` VALUES ('232', 'Vatican City State (Holy See)', '梵蒂冈(罗马教廷)', 'VA', '39', '1');
+INSERT INTO `country` VALUES ('233', 'Venezuela', '委内瑞拉', 'VE', '58', '1');
+INSERT INTO `country` VALUES ('234', 'Vietnam', '越南', 'VN', '84', '1');
+INSERT INTO `country` VALUES ('235', 'Virgin Islands (British)', '维尔京群岛(英国)', 'VG', '1284', '1');
+INSERT INTO `country` VALUES ('236', 'Virgin Islands (U.S.)', '维尔京群岛(美国)', 'VI', '1340', '1');
+INSERT INTO `country` VALUES ('237', 'Wallis And Futuna Islands', '沃利斯和富图纳群岛', 'WF', '681', '1');
+INSERT INTO `country` VALUES ('238', 'Western Sahara', '西撒哈拉', 'EH', '685', '1');
+INSERT INTO `country` VALUES ('239', 'Yemen', '也门', 'YE', '967', '1');
+INSERT INTO `country` VALUES ('240', 'Yugoslavia', '南斯拉夫', 'YU', '381', '1');
+INSERT INTO `country` VALUES ('241', 'Zambia', '赞比亚', 'ZM', '260', '1');
+INSERT INTO `country` VALUES ('242', 'Zimbabwe', '津巴布韦', 'ZW', '263', '1');
 
 -- ----------------------------
 -- Table structure for dics
@@ -61,12 +343,85 @@ INSERT INTO `dics` VALUES ('消息跳转页面', '8', '购物车列表页');
 INSERT INTO `dics` VALUES ('消息类型', '4', '商品通知');
 INSERT INTO `dics` VALUES ('消息跳转页面', '9', '我的收藏列表页');
 INSERT INTO `dics` VALUES ('消息跳转页面', '10', '商品详情页');
-INSERT INTO `dics` VALUES ('广告图片类型', '1', '外部网页');
-INSERT INTO `dics` VALUES ('广告图片类型', '2', '产品广告');
-INSERT INTO `dics` VALUES ('广告图片类型', '3', '品牌广告');
-INSERT INTO `dics` VALUES ('广告图片类型', '4', '商家广告');
-INSERT INTO `dics` VALUES ('广告图片类型', '5', '香型广告');
-INSERT INTO `dics` VALUES ('广告图片类型', '6', '类型广告');
+INSERT INTO `dics` VALUES ('图片类型', '1', '外部网页');
+INSERT INTO `dics` VALUES ('图片类型', '2', '产品广告');
+INSERT INTO `dics` VALUES ('图片类型', '3', '品牌广告');
+INSERT INTO `dics` VALUES ('图片类型', '4', '商家广告');
+INSERT INTO `dics` VALUES ('图片类型', '5', '香型广告');
+INSERT INTO `dics` VALUES ('图片类型', '6', '类型广告');
+INSERT INTO `dics` VALUES ('订单状态', '0', '已取消');
+INSERT INTO `dics` VALUES ('订单状态', '1', '新订单');
+INSERT INTO `dics` VALUES ('订单状态', '2', '已付款');
+INSERT INTO `dics` VALUES ('订单状态', '3', '已装箱');
+INSERT INTO `dics` VALUES ('订单状态', '4', '配送中');
+INSERT INTO `dics` VALUES ('订单状态', '5', '已送达');
+INSERT INTO `dics` VALUES ('订单状态', '6', '已评价');
+INSERT INTO `dics` VALUES ('付款方式', '1', '余额支付');
+INSERT INTO `dics` VALUES ('付款方式', '2', '支付宝支付');
+INSERT INTO `dics` VALUES ('付款方式', '3', '微信支付');
+INSERT INTO `dics` VALUES ('图片类型', '7', '启动页');
+INSERT INTO `dics` VALUES ('钱包类型', '1', '余额');
+INSERT INTO `dics` VALUES ('钱包类型', '2', '支付宝');
+INSERT INTO `dics` VALUES ('钱包类型', '3', '微信');
+INSERT INTO `dics` VALUES ('钱包明细类型', '1', '订单支出');
+INSERT INTO `dics` VALUES ('钱包明细类型', '2', '订单收入');
+INSERT INTO `dics` VALUES ('钱包明细类型', '3', '活动奖励');
+INSERT INTO `dics` VALUES ('优惠适用对象', '2', '商家通用');
+INSERT INTO `dics` VALUES ('优惠适用对象', '1', '平台通用');
+INSERT INTO `dics` VALUES ('钱包明细类型', '4', ' 充值余额增加');
+INSERT INTO `dics` VALUES ('优惠适用对象', '3', '店铺通用');
+INSERT INTO `dics` VALUES ('优惠适用对象', '4', '某产品可用');
+
+-- ----------------------------
+-- Table structure for employee_info
+-- ----------------------------
+DROP TABLE IF EXISTS `employee_info`;
+CREATE TABLE `employee_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `name` varchar(25) NOT NULL DEFAULT '' COMMENT '姓名',
+  `phone` varchar(11) NOT NULL DEFAULT '' COMMENT '手机号',
+  `type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '类型，0商家配送员，1店铺配送员',
+  `owner_id` int(11) NOT NULL DEFAULT '0' COMMENT '上级id',
+  `register_at` int(11) NOT NULL DEFAULT '0' COMMENT '登记时间',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态，0删除，1正常，2繁忙，3下岗',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='配送员表';
+
+-- ----------------------------
+-- Records of employee_info
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for good_boot
+-- ----------------------------
+DROP TABLE IF EXISTS `good_boot`;
+CREATE TABLE `good_boot` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '产地名',
+  `type` int(11) NOT NULL DEFAULT '0' COMMENT '类型id',
+  `regist_at` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否上架',
+  `active_at` int(11) NOT NULL DEFAULT '0' COMMENT '上架状态更改时间',
+  PRIMARY KEY (`id`),
+  KEY `type_boot_id` (`type`),
+  CONSTRAINT `type_boot_id` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COMMENT='产地';
+
+-- ----------------------------
+-- Records of good_boot
+-- ----------------------------
+INSERT INTO `good_boot` VALUES ('1', '四川', '1', '0', '1', '0');
+INSERT INTO `good_boot` VALUES ('2', '贵州', '1', '0', '1', '0');
+INSERT INTO `good_boot` VALUES ('3', '陕西', '1', '0', '1', '0');
+INSERT INTO `good_boot` VALUES ('4', '北京', '1', '0', '1', '0');
+INSERT INTO `good_boot` VALUES ('5', '湖北', '1', '0', '1', '0');
+INSERT INTO `good_boot` VALUES ('6', '山西', '1', '0', '1', '0');
+INSERT INTO `good_boot` VALUES ('7', '新疆', '1', '0', '1', '0');
+INSERT INTO `good_boot` VALUES ('8', '河南', '1', '0', '1', '0');
+INSERT INTO `good_boot` VALUES ('9', '浙江', '1', '0', '1', '0');
+INSERT INTO `good_boot` VALUES ('10', '江苏', '1', '0', '1', '0');
+INSERT INTO `good_boot` VALUES ('11', '湖南', '1', '0', '1', '0');
+INSERT INTO `good_boot` VALUES ('12', '吉林', '1', '0', '1', '0');
 
 -- ----------------------------
 -- Table structure for good_brand
@@ -75,12 +430,175 @@ DROP TABLE IF EXISTS `good_brand`;
 CREATE TABLE `good_brand` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '品牌id',
   `name` varchar(50) NOT NULL DEFAULT '' COMMENT '品牌名',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='商品品牌表';
+  `logo` varchar(128) NOT NULL DEFAULT '' COMMENT '品牌log',
+  `type` int(11) NOT NULL DEFAULT '0' COMMENT '类型id',
+  `regist_at` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否上架',
+  `active_at` int(11) NOT NULL DEFAULT '0' COMMENT '上架状态更改时间',
+  PRIMARY KEY (`id`),
+  KEY `type_brand_id` (`type`),
+  CONSTRAINT `type_brand_id` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COMMENT='商品品牌表';
 
 -- ----------------------------
 -- Records of good_brand
 -- ----------------------------
+INSERT INTO `good_brand` VALUES ('1', '茅台', '', '1', '0', '1', '0');
+INSERT INTO `good_brand` VALUES ('2', '郎酒', '', '1', '0', '1', '0');
+INSERT INTO `good_brand` VALUES ('3', '五粮液', '', '1', '0', '1', '0');
+INSERT INTO `good_brand` VALUES ('4', '双沟酒', '', '1', '0', '1', '0');
+INSERT INTO `good_brand` VALUES ('5', '奔富', '', '2', '0', '1', '0');
+INSERT INTO `good_brand` VALUES ('6', '杰卡斯', '', '2', '0', '1', '0');
+INSERT INTO `good_brand` VALUES ('7', '拉菲', '', '2', '0', '1', '0');
+INSERT INTO `good_brand` VALUES ('8', '小企鹅', '', '2', '0', '1', '0');
+INSERT INTO `good_brand` VALUES ('9', '格兰菲迪', '', '5', '0', '1', '0');
+INSERT INTO `good_brand` VALUES ('10', '杰克丹尼', '', '5', '0', '1', '0');
+INSERT INTO `good_brand` VALUES ('11', '芝华士', '', '5', '0', '1', '0');
+INSERT INTO `good_brand` VALUES ('12', '尊尼获加', '', '5', '0', '1', '0');
+INSERT INTO `good_brand` VALUES ('13', '百威', '', '3', '0', '1', '0');
+INSERT INTO `good_brand` VALUES ('14', '菲德堡', '', '3', '0', '1', '0');
+INSERT INTO `good_brand` VALUES ('15', '哈尔博', '', '3', '0', '1', '0');
+INSERT INTO `good_brand` VALUES ('16', '科罗娜', '', '3', '0', '1', '0');
+INSERT INTO `good_brand` VALUES ('17', '古越龙山', '', '4', '0', '1', '0');
+INSERT INTO `good_brand` VALUES ('18', '古南丰', '', '4', '0', '1', '0');
+INSERT INTO `good_brand` VALUES ('19', '易龙康', '', '4', '0', '1', '0');
+
+-- ----------------------------
+-- Table structure for good_breed
+-- ----------------------------
+DROP TABLE IF EXISTS `good_breed`;
+CREATE TABLE `good_breed` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '品种名',
+  `type` int(11) NOT NULL DEFAULT '0' COMMENT '类型id',
+  `regist_at` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否上架',
+  `active_at` int(11) NOT NULL DEFAULT '0' COMMENT '上架状态更改时间',
+  PRIMARY KEY (`id`),
+  KEY `type_breed_id` (`type`),
+  CONSTRAINT `type_breed_id` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='品种';
+
+-- ----------------------------
+-- Records of good_breed
+-- ----------------------------
+INSERT INTO `good_breed` VALUES ('1', '赤霞珠', '2', '0', '1', '0');
+INSERT INTO `good_breed` VALUES ('2', '梅乐', '2', '0', '1', '0');
+INSERT INTO `good_breed` VALUES ('3', '西拉', '2', '0', '1', '0');
+INSERT INTO `good_breed` VALUES ('4', '品丽珠', '2', '0', '1', '0');
+INSERT INTO `good_breed` VALUES ('5', '长相思', '2', '0', '1', '0');
+INSERT INTO `good_breed` VALUES ('6', '霞多丽', '2', '0', '1', '0');
+INSERT INTO `good_breed` VALUES ('7', '其他', '2', '0', '1', '0');
+INSERT INTO `good_breed` VALUES ('8', '蛇龙珠', '2', '0', '1', '0');
+
+-- ----------------------------
+-- Table structure for good_collection
+-- ----------------------------
+DROP TABLE IF EXISTS `good_collection`;
+CREATE TABLE `good_collection` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `uid` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
+  `gid` int(11) NOT NULL DEFAULT '0' COMMENT '商品id',
+  `add_at` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 0已删除 1正常',
+  PRIMARY KEY (`id`),
+  KEY `wine_user_collection_id` (`uid`),
+  KEY `wine_good_collection_id` (`gid`),
+  CONSTRAINT `wine_user_collection_id` FOREIGN KEY (`uid`) REFERENCES `user_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `wine_good_collection_id` FOREIGN KEY (`gid`) REFERENCES `good_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='收藏表';
+
+-- ----------------------------
+-- Records of good_collection
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for good_color
+-- ----------------------------
+DROP TABLE IF EXISTS `good_color`;
+CREATE TABLE `good_color` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '颜色类型',
+  `type` int(11) NOT NULL DEFAULT '0' COMMENT '类型id',
+  `regist_at` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否上架',
+  `active_at` int(11) NOT NULL DEFAULT '0' COMMENT '上架状态更改时间',
+  PRIMARY KEY (`id`),
+  KEY `type_color_id` (`type`),
+  CONSTRAINT `type_color_id` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='颜色类型';
+
+-- ----------------------------
+-- Records of good_color
+-- ----------------------------
+INSERT INTO `good_color` VALUES ('1', '红葡萄酒', '1', '0', '1', '0');
+INSERT INTO `good_color` VALUES ('2', '白葡萄酒', '1', '0', '1', '0');
+INSERT INTO `good_color` VALUES ('3', '桃红葡萄酒', '1', '0', '1', '0');
+INSERT INTO `good_color` VALUES ('4', '气泡酒', '1', '0', '1', '0');
+INSERT INTO `good_color` VALUES ('5', '黑葡萄酒', '1', '0', '1', '0');
+
+-- ----------------------------
+-- Table structure for good_country
+-- ----------------------------
+DROP TABLE IF EXISTS `good_country`;
+CREATE TABLE `good_country` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '国家',
+  `type` int(11) NOT NULL DEFAULT '0' COMMENT '类型id',
+  `regist_at` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否上架',
+  `active_at` int(11) NOT NULL DEFAULT '0' COMMENT '上架状态更改时间',
+  PRIMARY KEY (`id`),
+  KEY `type_country_id` (`type`),
+  CONSTRAINT `type_country_id` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COMMENT='产品国家';
+
+-- ----------------------------
+-- Records of good_country
+-- ----------------------------
+INSERT INTO `good_country` VALUES ('1', '法国', '2', '0', '1', '0');
+INSERT INTO `good_country` VALUES ('2', '西班牙', '2', '0', '1', '0');
+INSERT INTO `good_country` VALUES ('3', '澳大利亚', '2', '0', '1', '0');
+INSERT INTO `good_country` VALUES ('4', '意大利', '2', '0', '1', '0');
+INSERT INTO `good_country` VALUES ('5', '智利', '2', '0', '1', '0');
+INSERT INTO `good_country` VALUES ('6', '中国', '2', '0', '1', '0');
+INSERT INTO `good_country` VALUES ('7', '葡萄牙', '2', '0', '1', '0');
+INSERT INTO `good_country` VALUES ('8', '美国', '2', '0', '1', '0');
+INSERT INTO `good_country` VALUES ('9', '南非', '2', '0', '1', '0');
+INSERT INTO `good_country` VALUES ('10', '加拿大', '2', '0', '1', '0');
+INSERT INTO `good_country` VALUES ('11', '阿根廷', '2', '0', '1', '0');
+INSERT INTO `good_country` VALUES ('12', '新西兰', '2', '0', '1', '0');
+INSERT INTO `good_country` VALUES ('13', '德国', '2', '0', '1', '0');
+INSERT INTO `good_country` VALUES ('14', '匈牙利', '2', '0', '1', '0');
+INSERT INTO `good_country` VALUES ('15', '中国', '3', '0', '1', '0');
+INSERT INTO `good_country` VALUES ('16', '德国', '3', '0', '1', '0');
+INSERT INTO `good_country` VALUES ('17', '墨西哥', '3', '0', '1', '0');
+INSERT INTO `good_country` VALUES ('18', '比利时', '3', '0', '1', '0');
+INSERT INTO `good_country` VALUES ('19', '法国', '3', '0', '1', '0');
+
+-- ----------------------------
+-- Table structure for good_dry
+-- ----------------------------
+DROP TABLE IF EXISTS `good_dry`;
+CREATE TABLE `good_dry` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '干型类型',
+  `type` int(11) NOT NULL DEFAULT '0' COMMENT '类型id',
+  `regist_at` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否上架',
+  `active_at` int(11) NOT NULL DEFAULT '0' COMMENT '上架状态更改时间',
+  PRIMARY KEY (`id`),
+  KEY `type_dry_id` (`type`),
+  CONSTRAINT `type_dry_id` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='干型类型';
+
+-- ----------------------------
+-- Records of good_dry
+-- ----------------------------
+INSERT INTO `good_dry` VALUES ('1', '干型', '2', '0', '1', '0');
+INSERT INTO `good_dry` VALUES ('2', '半干型', '2', '0', '1', '0');
+INSERT INTO `good_dry` VALUES ('3', '甜型', '2', '0', '1', '0');
+INSERT INTO `good_dry` VALUES ('4', '半甜型', '2', '0', '1', '0');
 
 -- ----------------------------
 -- Table structure for good_info
@@ -88,16 +606,93 @@ CREATE TABLE `good_brand` (
 DROP TABLE IF EXISTS `good_info`;
 CREATE TABLE `good_info` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `type` int(11) NOT NULL COMMENT '类型',
+  `merchant` int(11) NOT NULL DEFAULT '0' COMMENT '所属商户',
+  `type` int(11) NOT NULL DEFAULT '0' COMMENT '类型',
   `brand` int(11) NOT NULL DEFAULT '0' COMMENT '品牌',
   `smell` int(11) NOT NULL DEFAULT '0' COMMENT '香型',
+  `color` int(11) NOT NULL DEFAULT '0' COMMENT '颜色类型',
+  `dry` int(11) NOT NULL DEFAULT '0' COMMENT '干型id',
   `boot` int(11) NOT NULL DEFAULT '0' COMMENT '产地',
+  `breed` int(11) NOT NULL DEFAULT '0' COMMENT '品种',
+  `country` int(11) NOT NULL DEFAULT '0' COMMENT '国家',
+  `style` int(11) NOT NULL DEFAULT '0' COMMENT '类型',
   `name` varchar(50) NOT NULL DEFAULT '' COMMENT '商品名',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='商品表';
+  `volum` varchar(128) NOT NULL DEFAULT '' COMMENT '容量',
+  `price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '价格',
+  `unit` varchar(10) NOT NULL DEFAULT '' COMMENT '单位',
+  `detail` blob NOT NULL COMMENT '详情',
+  `regist_at` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否上架',
+  `active_at` int(11) NOT NULL DEFAULT '0' COMMENT '上架状态更改时间',
+  PRIMARY KEY (`id`),
+  KEY `wine_boot_good_id` (`boot`),
+  KEY `wine_brand_good_id` (`brand`),
+  KEY `wine_breed_good_id` (`breed`),
+  KEY `wine_color_good_id` (`color`),
+  KEY `wine_country_good_id` (`country`),
+  KEY `wine_dry_good_id` (`dry`),
+  KEY `wine_merchant_good_id` (`merchant`),
+  KEY `wine_smell_good_id` (`smell`),
+  KEY `wine_style_good_id` (`style`),
+  KEY `wine_type_good_id` (`type`),
+  CONSTRAINT `wine_boot_good_id` FOREIGN KEY (`boot`) REFERENCES `good_boot` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `wine_brand_good_id` FOREIGN KEY (`brand`) REFERENCES `good_brand` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `wine_breed_good_id` FOREIGN KEY (`breed`) REFERENCES `good_breed` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `wine_color_good_id` FOREIGN KEY (`color`) REFERENCES `good_color` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `wine_country_good_id` FOREIGN KEY (`country`) REFERENCES `good_country` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `wine_dry_good_id` FOREIGN KEY (`dry`) REFERENCES `good_dry` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `wine_merchant_good_id` FOREIGN KEY (`merchant`) REFERENCES `merchant_info` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `wine_smell_good_id` FOREIGN KEY (`smell`) REFERENCES `good_smell` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `wine_style_good_id` FOREIGN KEY (`style`) REFERENCES `good_style` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `wine_type_good_id` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品表';
 
 -- ----------------------------
 -- Records of good_info
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for good_model
+-- ----------------------------
+DROP TABLE IF EXISTS `good_model`;
+CREATE TABLE `good_model` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '规格',
+  `type` int(11) NOT NULL DEFAULT '0' COMMENT '类型id',
+  `regist_at` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否上架',
+  `active_at` int(11) NOT NULL DEFAULT '0' COMMENT '上架状态更改时间',
+  PRIMARY KEY (`id`),
+  KEY `type_model_id` (`type`),
+  CONSTRAINT `type_model_id` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='规格表';
+
+-- ----------------------------
+-- Records of good_model
+-- ----------------------------
+INSERT INTO `good_model` VALUES ('1', '330ml', '3', '0', '1', '0');
+INSERT INTO `good_model` VALUES ('2', '500ml', '3', '0', '1', '0');
+INSERT INTO `good_model` VALUES ('3', '5L', '3', '0', '1', '0');
+INSERT INTO `good_model` VALUES ('4', '250ml', '3', '0', '1', '0');
+INSERT INTO `good_model` VALUES ('5', '375ml', '3', '0', '1', '0');
+INSERT INTO `good_model` VALUES ('6', '296ml', '3', '0', '1', '0');
+
+-- ----------------------------
+-- Table structure for good_pic
+-- ----------------------------
+DROP TABLE IF EXISTS `good_pic`;
+CREATE TABLE `good_pic` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `gid` int(11) NOT NULL DEFAULT '0' COMMENT '产品id',
+  `pic` varchar(250) NOT NULL DEFAULT '' COMMENT '图片地址',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态',
+  PRIMARY KEY (`id`),
+  KEY `wine_good_pic_id` (`gid`),
+  CONSTRAINT `wine_good_pic_id` FOREIGN KEY (`gid`) REFERENCES `good_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='产品图片表';
+
+-- ----------------------------
+-- Records of good_pic
 -- ----------------------------
 
 -- ----------------------------
@@ -106,12 +701,57 @@ CREATE TABLE `good_info` (
 DROP TABLE IF EXISTS `good_price_field`;
 CREATE TABLE `good_price_field` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `discription` varchar(200) NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='价格区间表';
+  `type` int(11) NOT NULL DEFAULT '0' COMMENT '类型',
+  `discription` varchar(200) NOT NULL DEFAULT '' COMMENT '区间',
+  PRIMARY KEY (`id`),
+  KEY `type_field_id` (`type`),
+  CONSTRAINT `type_field_id` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COMMENT='价格区间表';
 
 -- ----------------------------
 -- Records of good_price_field
+-- ----------------------------
+INSERT INTO `good_price_field` VALUES ('1', '1', '[0,100]');
+INSERT INTO `good_price_field` VALUES ('2', '1', '[100,500]');
+INSERT INTO `good_price_field` VALUES ('3', '1', '[500,1000]');
+INSERT INTO `good_price_field` VALUES ('4', '1', '[1000,2000]');
+INSERT INTO `good_price_field` VALUES ('5', '1', '[2000,+oo]');
+INSERT INTO `good_price_field` VALUES ('6', '2', '[0,49]');
+INSERT INTO `good_price_field` VALUES ('7', '2', '[50,99]');
+INSERT INTO `good_price_field` VALUES ('8', '2', '[100,199]');
+INSERT INTO `good_price_field` VALUES ('9', '2', '[200,299]');
+INSERT INTO `good_price_field` VALUES ('10', '2', '[300,499]');
+INSERT INTO `good_price_field` VALUES ('11', '3', '[0,49]');
+INSERT INTO `good_price_field` VALUES ('12', '3', '[50,99]');
+INSERT INTO `good_price_field` VALUES ('13', '3', '[100,199]');
+INSERT INTO `good_price_field` VALUES ('14', '3', '[200,299]');
+INSERT INTO `good_price_field` VALUES ('15', '3', '[300,499]');
+INSERT INTO `good_price_field` VALUES ('16', '4', '[0,49]');
+INSERT INTO `good_price_field` VALUES ('17', '4', '[50,99]');
+INSERT INTO `good_price_field` VALUES ('18', '4', '[100,199]');
+INSERT INTO `good_price_field` VALUES ('19', '4', '[200,299]');
+INSERT INTO `good_price_field` VALUES ('20', '4', '[300,499]');
+
+-- ----------------------------
+-- Table structure for good_rush
+-- ----------------------------
+DROP TABLE IF EXISTS `good_rush`;
+CREATE TABLE `good_rush` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `gid` int(11) NOT NULL COMMENT '商品id',
+  `price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '会员专享价',
+  `limit` int(5) NOT NULL DEFAULT '0' COMMENT '单次购买最大数量',
+  `amount` int(11) NOT NULL DEFAULT '0' COMMENT '抢购数量',
+  `start_at` varchar(11) NOT NULL DEFAULT '0' COMMENT '开始时间',
+  `end_at` varchar(11) NOT NULL DEFAULT '0' COMMENT '结束时间',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否上架',
+  PRIMARY KEY (`id`),
+  KEY `wine_good_rush_id` (`gid`),
+  CONSTRAINT `wine_good_rush_id` FOREIGN KEY (`gid`) REFERENCES `good_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='限时抢购';
+
+-- ----------------------------
+-- Records of good_rush
 -- ----------------------------
 
 -- ----------------------------
@@ -120,13 +760,54 @@ CREATE TABLE `good_price_field` (
 DROP TABLE IF EXISTS `good_smell`;
 CREATE TABLE `good_smell` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '酒香id',
+  `type` int(11) NOT NULL DEFAULT '0' COMMENT '类型',
   `name` varchar(50) NOT NULL DEFAULT '' COMMENT '酒香名称',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='酒香类型';
+  `regist_at` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否上架',
+  `active_at` int(11) NOT NULL DEFAULT '0' COMMENT '上架状态更改时间',
+  PRIMARY KEY (`id`),
+  KEY `type_smell_id` (`type`),
+  CONSTRAINT `type_smell_id` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='酒香类型';
 
 -- ----------------------------
 -- Records of good_smell
 -- ----------------------------
+INSERT INTO `good_smell` VALUES ('1', '1', '浓香型', '0', '1', '0');
+INSERT INTO `good_smell` VALUES ('2', '1', '药香型', '0', '1', '0');
+INSERT INTO `good_smell` VALUES ('3', '1', '凤香型', '0', '1', '0');
+INSERT INTO `good_smell` VALUES ('4', '1', '清香型', '0', '1', '0');
+INSERT INTO `good_smell` VALUES ('5', '1', '董香型', '0', '1', '0');
+
+-- ----------------------------
+-- Table structure for good_style
+-- ----------------------------
+DROP TABLE IF EXISTS `good_style`;
+CREATE TABLE `good_style` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '类型',
+  `type` int(11) NOT NULL DEFAULT '0' COMMENT '类型id',
+  `regist_at` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否上架',
+  `active_at` int(11) NOT NULL DEFAULT '0' COMMENT '上架状态更改时间',
+  PRIMARY KEY (`id`),
+  KEY `type_style_id` (`type`),
+  CONSTRAINT `type_style_id` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COMMENT='类型表';
+
+-- ----------------------------
+-- Records of good_style
+-- ----------------------------
+INSERT INTO `good_style` VALUES ('1', '威士忌', '5', '0', '1', '0');
+INSERT INTO `good_style` VALUES ('2', '白兰地', '5', '0', '1', '0');
+INSERT INTO `good_style` VALUES ('3', '伏特加', '5', '0', '1', '0');
+INSERT INTO `good_style` VALUES ('4', '朗姆酒', '5', '0', '1', '0');
+INSERT INTO `good_style` VALUES ('5', '金酒', '5', '0', '1', '0');
+INSERT INTO `good_style` VALUES ('6', '龙舌兰', '5', '0', '1', '0');
+INSERT INTO `good_style` VALUES ('7', '预调酒', '5', '0', '1', '0');
+INSERT INTO `good_style` VALUES ('8', '清酒', '5', '0', '1', '0');
+INSERT INTO `good_style` VALUES ('9', '力娇酒', '5', '0', '1', '0');
+INSERT INTO `good_style` VALUES ('10', '鸡尾酒', '5', '0', '1', '0');
 
 -- ----------------------------
 -- Table structure for good_type
@@ -135,11 +816,89 @@ DROP TABLE IF EXISTS `good_type`;
 CREATE TABLE `good_type` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '类型id',
   `name` varchar(25) NOT NULL DEFAULT '' COMMENT '类型名称',
+  `regist_at` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `logo` varchar(255) NOT NULL DEFAULT '' COMMENT '酒类图标',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否上架',
+  `active_at` int(11) NOT NULL DEFAULT '0' COMMENT '上架状态更改时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='产品类型表';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='产品类型表';
 
 -- ----------------------------
 -- Records of good_type
+-- ----------------------------
+INSERT INTO `good_type` VALUES ('1', '白酒', '0', '', '1', '0');
+INSERT INTO `good_type` VALUES ('2', '葡萄酒', '0', '', '1', '0');
+INSERT INTO `good_type` VALUES ('3', '啤酒', '0', '', '1', '0');
+INSERT INTO `good_type` VALUES ('4', '黄酒', '0', '', '1', '0');
+INSERT INTO `good_type` VALUES ('5', '洋酒', '0', '', '1', '0');
+
+-- ----------------------------
+-- Table structure for good_vip
+-- ----------------------------
+DROP TABLE IF EXISTS `good_vip`;
+CREATE TABLE `good_vip` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `gid` int(11) NOT NULL DEFAULT '0' COMMENT '商品id',
+  `price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '会员专享价',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否上架',
+  PRIMARY KEY (`id`),
+  KEY `wine_good_vip_id` (`gid`),
+  CONSTRAINT `wine_good_vip_id` FOREIGN KEY (`gid`) REFERENCES `good_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员专享';
+
+-- ----------------------------
+-- Records of good_vip
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for inout_pay
+-- ----------------------------
+DROP TABLE IF EXISTS `inout_pay`;
+CREATE TABLE `inout_pay` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `inout_id` int(11) NOT NULL DEFAULT '0' COMMENT '明细id',
+  `uid` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
+  `pay_date` int(11) NOT NULL DEFAULT '0' COMMENT '付款时间',
+  `pay_id` tinyint(1) NOT NULL DEFAULT '0' COMMENT '付款方式',
+  `account` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '' COMMENT '用户支付帐户（如微信openid,支付宝id)',
+  `out_trade_no` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '' COMMENT '返回的第三方订单号',
+  `transaction_id` varchar(32) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '' COMMENT '支付通道返回的交易流水号',
+  `money` decimal(8,2) NOT NULL DEFAULT '0.00' COMMENT '实际支付金额',
+  `status` tinyint(3) unsigned NOT NULL DEFAULT '1' COMMENT '状态',
+  PRIMARY KEY (`id`),
+  KEY `inout_retail_id` (`inout_id`),
+  CONSTRAINT `inout_retail_id` FOREIGN KEY (`inout_id`) REFERENCES `account_inout` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='充值付款记录';
+
+-- ----------------------------
+-- Records of inout_pay
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for merchant_info
+-- ----------------------------
+DROP TABLE IF EXISTS `merchant_info`;
+CREATE TABLE `merchant_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `name` varchar(128) NOT NULL DEFAULT '' COMMENT '商户名',
+  `wa_id` int(11) DEFAULT NULL COMMENT '后台管理员id',
+  `region` varchar(50) NOT NULL DEFAULT '' COMMENT '所在地区',
+  `address` varchar(128) NOT NULL DEFAULT '' COMMENT '详细地址',
+  `lat` int(11) NOT NULL DEFAULT '0' COMMENT '纬度',
+  `lng` int(11) NOT NULL DEFAULT '0' COMMENT '经度',
+  `registe_at` int(11) NOT NULL DEFAULT '0' COMMENT '入驻时间',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否激活',
+  `active_at` int(11) NOT NULL DEFAULT '0' COMMENT '激活状态更改时间',
+  `province` varchar(128) NOT NULL DEFAULT '' COMMENT '省',
+  `city` varchar(128) NOT NULL DEFAULT '' COMMENT '市',
+  `district` varchar(128) NOT NULL DEFAULT '' COMMENT '区',
+  PRIMARY KEY (`id`),
+  KEY `wine_admin_merchant_id` (`wa_id`),
+  CONSTRAINT `wine_admin_merchant_id` FOREIGN KEY (`wa_id`) REFERENCES `wine_admin` (`wa_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商户表';
+
+-- ----------------------------
+-- Records of merchant_info
 -- ----------------------------
 
 -- ----------------------------
@@ -164,6 +923,228 @@ CREATE TABLE `message_list` (
 INSERT INTO `message_list` VALUES ('1', '2', '新用户消息', '感谢您注册成为双天酒客户，这里好酒多多，开通会员更有专享活动，赶紧来看看吧!', '9', '1', '0', '2016-08-11');
 
 -- ----------------------------
+-- Table structure for order_comment
+-- ----------------------------
+DROP TABLE IF EXISTS `order_comment`;
+CREATE TABLE `order_comment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `oid` int(11) NOT NULL DEFAULT '0' COMMENT '订单',
+  `uid` int(11) NOT NULL DEFAULT '0' COMMENT '用户',
+  `send_star` tinyint(1) NOT NULL DEFAULT '0' COMMENT '送货评价',
+  `good_star` tinyint(1) NOT NULL DEFAULT '0' COMMENT '商品评价',
+  `content` varchar(250) NOT NULL DEFAULT '' COMMENT '评价内容',
+  `add_at` int(11) NOT NULL DEFAULT '0' COMMENT '提交时间',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 0删除 1正常',
+  PRIMARY KEY (`id`),
+  KEY `wine_order_comment_id` (`oid`),
+  KEY `wine_user_comment_id` (`uid`),
+  CONSTRAINT `wine_order_comment_id` FOREIGN KEY (`oid`) REFERENCES `order_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `wine_user_comment_id` FOREIGN KEY (`uid`) REFERENCES `user_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单评论';
+
+-- ----------------------------
+-- Records of order_comment
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for order_detail
+-- ----------------------------
+DROP TABLE IF EXISTS `order_detail`;
+CREATE TABLE `order_detail` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `oid` int(11) NOT NULL DEFAULT '0' COMMENT '订单id',
+  `gid` int(11) NOT NULL DEFAULT '0' COMMENT '产品',
+  `amount` int(11) NOT NULL DEFAULT '0' COMMENT '数量',
+  `single_price` decimal(11,2) NOT NULL DEFAULT '0.00' COMMENT '单价',
+  `total_price` decimal(11,2) NOT NULL DEFAULT '0.00' COMMENT '总价',
+  PRIMARY KEY (`id`),
+  KEY `wine_order_detail_id` (`oid`),
+  KEY `wine_order_good_id` (`gid`),
+  CONSTRAINT `wine_order_detail_id` FOREIGN KEY (`oid`) REFERENCES `order_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `wine_order_good_id` FOREIGN KEY (`gid`) REFERENCES `good_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单详细';
+
+-- ----------------------------
+-- Records of order_detail
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for order_info
+-- ----------------------------
+DROP TABLE IF EXISTS `order_info`;
+CREATE TABLE `order_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `sid` int(11) NOT NULL DEFAULT '0' COMMENT '店铺id',
+  `uid` int(11) NOT NULL DEFAULT '0' COMMENT '用户',
+  `order_date` int(11) NOT NULL DEFAULT '0' COMMENT '下单时间',
+  `order_code` varchar(16) NOT NULL DEFAULT '' COMMENT '订单编码',
+  `pay_id` tinyint(1) NOT NULL DEFAULT '1' COMMENT '支付方式',
+  `pay_date` int(11) NOT NULL DEFAULT '0' COMMENT '付款时间',
+  `total` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '总价',
+  `discount` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '优惠金额',
+  `send_bill` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '运费',
+  `pay_bill` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '付款金额',
+  `order_rate` tinyint(2) NOT NULL DEFAULT '0' COMMENT '订单进度',
+  `send_date` int(11) NOT NULL DEFAULT '0' COMMENT '送达时间',
+  `is_del` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否已被用户删除',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 1正常 0后台删除',
+  PRIMARY KEY (`id`),
+  KEY `wine_user_order_id` (`uid`),
+  KEY `wine_shop_order_id` (`sid`),
+  CONSTRAINT `wine_shop_order_id` FOREIGN KEY (`sid`) REFERENCES `shop_info` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `wine_user_order_id` FOREIGN KEY (`uid`) REFERENCES `user_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单表';
+
+-- ----------------------------
+-- Records of order_info
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for order_pay
+-- ----------------------------
+DROP TABLE IF EXISTS `order_pay`;
+CREATE TABLE `order_pay` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `oid` int(11) NOT NULL DEFAULT '0' COMMENT '订单id',
+  `uid` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
+  `pay_date` int(11) NOT NULL DEFAULT '0' COMMENT '付款时间',
+  `pay_id` tinyint(1) NOT NULL DEFAULT '0' COMMENT '付款方式',
+  `account` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '' COMMENT '用户支付帐户（如微信openid,支付宝id)',
+  `out_trade_no` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '' COMMENT '返回的第三方订单号',
+  `transaction_id` varchar(32) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '' COMMENT '支付通道返回的交易流水号',
+  `money` decimal(8,2) NOT NULL DEFAULT '0.00' COMMENT '实际支付金额',
+  `status` tinyint(3) unsigned NOT NULL DEFAULT '1' COMMENT '状态',
+  PRIMARY KEY (`id`),
+  KEY `wine_order_pay_id` (`oid`),
+  CONSTRAINT `wine_order_pay_id` FOREIGN KEY (`oid`) REFERENCES `order_info` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='付款信息表';
+
+-- ----------------------------
+-- Records of order_pay
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for promotion_info
+-- ----------------------------
+DROP TABLE IF EXISTS `promotion_info`;
+CREATE TABLE `promotion_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `pt_id` int(11) NOT NULL DEFAULT '0' COMMENT '优惠类型',
+  `limit` tinyint(1) NOT NULL DEFAULT '1' COMMENT '适用范围',
+  `target_id` int(11) NOT NULL DEFAULT '0' COMMENT '类型对应的id',
+  `name` varchar(128) NOT NULL DEFAULT '' COMMENT '活动名称',
+  `condition` decimal(11,2) NOT NULL DEFAULT '0.00' COMMENT '条件',
+  `discount` decimal(11,2) NOT NULL DEFAULT '0.00' COMMENT '优惠',
+  `valid_circle` int(3) NOT NULL DEFAULT '0' COMMENT '有效期限 0表示永久有效',
+  `start_at` int(11) NOT NULL DEFAULT '0' COMMENT '开始时间',
+  `end_at` int(11) NOT NULL DEFAULT '0' COMMENT '结束时间',
+  `time` int(3) NOT NULL DEFAULT '0' COMMENT '使用次数 0表示无限制',
+  `regist_at` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否上架',
+  `active_at` int(11) NOT NULL DEFAULT '0' COMMENT '上架状态更改时间',
+  PRIMARY KEY (`id`),
+  KEY `wine_promotion_type_id` (`pt_id`),
+  CONSTRAINT `wine_promotion_type_id` FOREIGN KEY (`pt_id`) REFERENCES `promotion_type` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='促销活动表';
+
+-- ----------------------------
+-- Records of promotion_info
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for promotion_type
+-- ----------------------------
+DROP TABLE IF EXISTS `promotion_type`;
+CREATE TABLE `promotion_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `class` tinyint(1) NOT NULL DEFAULT '0' COMMENT '类别 1有券  2无券',
+  `group` tinyint(1) NOT NULL DEFAULT '1' COMMENT '组 1满减 2折扣',
+  `name` varchar(128) NOT NULL DEFAULT '' COMMENT '优惠名称',
+  `regist_at` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否上架',
+  `active_at` int(11) NOT NULL DEFAULT '0' COMMENT '上架状态更改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='活动类型';
+
+-- ----------------------------
+-- Records of promotion_type
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for shop_info
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_info`;
+CREATE TABLE `shop_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '门店名称',
+  `wa_id` int(11) NOT NULL DEFAULT '0' COMMENT '后台管理员id',
+  `merchant` int(11) NOT NULL DEFAULT '0' COMMENT '所属商户',
+  `region` varchar(50) NOT NULL DEFAULT '' COMMENT '所在地区',
+  `address` varchar(128) NOT NULL DEFAULT '' COMMENT '详细地址',
+  `lat` int(11) NOT NULL DEFAULT '0' COMMENT '纬度',
+  `lng` int(11) NOT NULL DEFAULT '0' COMMENT '经度',
+  `limit` int(11) NOT NULL DEFAULT '0' COMMENT '配送范围',
+  `send_bill` decimal(11,2) NOT NULL DEFAULT '0.00' COMMENT '配送金额',
+  `bus_pic` varchar(128) NOT NULL DEFAULT '' COMMENT '营业执照',
+  `logo` varchar(128) NOT NULL DEFAULT '' COMMENT '门店logo',
+  `regist_at` int(11) NOT NULL DEFAULT '0' COMMENT '入驻时间',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否激活',
+  `active_at` int(11) NOT NULL DEFAULT '0' COMMENT '激活状态更改时间',
+  `province` varchar(128) NOT NULL DEFAULT '' COMMENT '省',
+  `city` varchar(128) NOT NULL DEFAULT '' COMMENT '市',
+  `district` varchar(128) NOT NULL DEFAULT '' COMMENT '区',
+  PRIMARY KEY (`id`),
+  KEY `wine_admin_shop_id` (`wa_id`),
+  KEY `wine_merchant_shop_id` (`merchant`),
+  CONSTRAINT `wine_admin_shop_id` FOREIGN KEY (`wa_id`) REFERENCES `wine_admin` (`wa_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `wine_merchant_shop_id` FOREIGN KEY (`merchant`) REFERENCES `merchant_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商家表';
+
+-- ----------------------------
+-- Records of shop_info
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for shopping_cert
+-- ----------------------------
+DROP TABLE IF EXISTS `shopping_cert`;
+CREATE TABLE `shopping_cert` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `uid` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
+  `gid` int(11) NOT NULL DEFAULT '0' COMMENT '产品id',
+  `amount` int(11) NOT NULL DEFAULT '1' COMMENT '数量',
+  `total_price` decimal(11,2) NOT NULL DEFAULT '0.00' COMMENT '总价',
+  PRIMARY KEY (`id`),
+  KEY `wine_shopping_detail_id` (`uid`) USING BTREE COMMENT '用户购物车',
+  CONSTRAINT `wine_shopping_detail_id` FOREIGN KEY (`uid`) REFERENCES `user_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='购物车列表';
+
+-- ----------------------------
+-- Records of shopping_cert
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for user_account
+-- ----------------------------
+DROP TABLE IF EXISTS `user_account`;
+CREATE TABLE `user_account` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `target` int(11) NOT NULL DEFAULT '0' COMMENT '对象',
+  `level` tinyint(1) NOT NULL DEFAULT '2' COMMENT '钱包级别，1管理员 2用户',
+  `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '钱包类型 1余额 2支付宝 3微信',
+  `start` decimal(11,2) NOT NULL DEFAULT '0.00' COMMENT '开始金额',
+  `end` decimal(11,2) NOT NULL DEFAULT '0.00' COMMENT '最终金额',
+  `create_at` int(11) NOT NULL DEFAULT '0' COMMENT '开通时间',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否激活',
+  `update_at` int(11) NOT NULL DEFAULT '0' COMMENT '状态更改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='钱包账户';
+
+-- ----------------------------
+-- Records of user_account
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for user_address
 -- ----------------------------
 DROP TABLE IF EXISTS `user_address`;
@@ -172,6 +1153,9 @@ CREATE TABLE `user_address` (
   `uid` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
   `get_person` varchar(128) NOT NULL DEFAULT '',
   `get_phone` varchar(32) NOT NULL DEFAULT '' COMMENT '手机号',
+  `province` varchar(128) NOT NULL DEFAULT '' COMMENT '省',
+  `city` varchar(128) NOT NULL DEFAULT '' COMMENT '市',
+  `district` varchar(128) NOT NULL DEFAULT '' COMMENT '区',
   `region` varchar(255) NOT NULL DEFAULT '' COMMENT '地区',
   `address` varchar(255) NOT NULL DEFAULT '' COMMENT '详细地址',
   `lat` int(10) NOT NULL DEFAULT '0' COMMENT '纬度',
@@ -243,6 +1227,48 @@ CREATE TABLE `user_login` (
 INSERT INTO `user_login` VALUES ('5', '9', '17701420032', 'c84eedb44f19c6a8b335f6bbdb64989c', 'zGXCCBrVQAmD9H2MeJJIWeHB9FZnRPMs', '2016-08-11 17:30:34', '', '1', '1');
 
 -- ----------------------------
+-- Table structure for user_promotion
+-- ----------------------------
+DROP TABLE IF EXISTS `user_promotion`;
+CREATE TABLE `user_promotion` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `uid` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
+  `type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '类型 1订单 2充值 3邀请',
+  `target_id` int(11) NOT NULL DEFAULT '0' COMMENT '对象id',
+  `add_at` int(11) NOT NULL DEFAULT '0' COMMENT '使用时间',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 1正常 0删除',
+  PRIMARY KEY (`id`),
+  KEY `wine_user_promotion_id` (`uid`),
+  CONSTRAINT `wine_user_promotion_id` FOREIGN KEY (`uid`) REFERENCES `user_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户使用套餐表';
+
+-- ----------------------------
+-- Records of user_promotion
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for user_ticket
+-- ----------------------------
+DROP TABLE IF EXISTS `user_ticket`;
+CREATE TABLE `user_ticket` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `uid` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
+  `pid` int(11) NOT NULL DEFAULT '0' COMMENT '促销id',
+  `start_at` int(11) NOT NULL DEFAULT '0' COMMENT '有效开始时间',
+  `end_at` int(11) NOT NULL DEFAULT '0' COMMENT '结束时间',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1正常 0过期 2已使用',
+  PRIMARY KEY (`id`),
+  KEY `wine_user_ticket_id` (`uid`),
+  KEY `wine_promotion_ticket_id` (`pid`),
+  CONSTRAINT `wine_user_ticket_id` FOREIGN KEY (`uid`) REFERENCES `user_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `wine_promotion_ticket_id` FOREIGN KEY (`pid`) REFERENCES `promotion_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='优惠券表';
+
+-- ----------------------------
+-- Records of user_ticket
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for wine_admin
 -- ----------------------------
 DROP TABLE IF EXISTS `wine_admin`;
@@ -262,16 +1288,14 @@ CREATE TABLE `wine_admin` (
   `created_time` datetime NOT NULL DEFAULT '1999-01-01 01:01:01',
   `updated_time` datetime NOT NULL DEFAULT '1999-01-01 01:01:01',
   PRIMARY KEY (`wa_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of wine_admin
 -- ----------------------------
-INSERT INTO `wine_admin` VALUES ('1', 'szw', 'ebb2fda117935a983a78becd4e6508ab', '1', '17701420032', '沈中伟', '75DnZhI3h41vI1gU-a7ze2f1Jb9s_b1m', '/logo/14708160181764.png', '2016-08-18 13:18:01', '::1', '0', '1', '2016-07-26 01:01:01', '2016-08-18 13:18:01');
-INSERT INTO `wine_admin` VALUES ('2', 'admin', 'ebb2fda117935a983a78becd4e6508ab', '2', '17701420032', '沈中伟', 'epySlNQRxzQ6afVFIV3f8VjJlJpe7URW', '', '2016-08-10 10:26:06', '::1', '0', '1', '2016-08-01 23:47:08', '2016-08-10 11:16:34');
-INSERT INTO `wine_admin` VALUES ('3', 'test1', 'ebb2fda117935a983a78becd4e6508ab', '3', '17701420032', 'szw', 'tc7pYvhhf6_cazT4KuhVpR4HX75PQVks', '', '2016-08-06 11:22:06', '::1', '0', '1', '2016-08-01 23:49:13', '2016-08-10 11:16:40');
-INSERT INTO `wine_admin` VALUES ('4', 'test2', 'ebb2fda117935a983a78becd4e6508ab', '3', '17701420032', '沈中伟', 'VhHBXkAaQNPeXSKYPFK7WQkFrSiyV92c', '', '2016-08-02 22:01:25', '::1', '0', '1', '2016-08-02 00:16:04', '2016-08-05 09:26:23');
-INSERT INTO `wine_admin` VALUES ('5', 'test3', 'ebb2fda117935a983a78becd4e6508ab', '2', '15383228828', '小鱼思密达', 'O1nIxdkycR3kX67KvrHJAr38gzQ-aXyY', '', '1999-01-01 01:01:01', '', '0', '1', '2016-08-10 11:03:22', '2016-08-11 14:58:56');
+INSERT INTO `wine_admin` VALUES ('1', 'szw', 'ebb2fda117935a983a78becd4e6508ab', '1', '17701420032', '沈中伟', '56iP_emQGOGHNsM_zKU1NQMwWq2qWspk', '/logo/14708160181764.png', '2016-08-19 16:02:38', '::1', '0', '1', '2016-07-26 01:01:01', '2016-08-19 16:02:38');
+INSERT INTO `wine_admin` VALUES ('2', 'admin', 'ebb2fda117935a983a78becd4e6508ab', '2', '17701420032', '沈中伟', 'oJBDItnVy2bYOdNLTXqTFVwDrCniBdro', '', '2016-08-19 13:04:34', '::1', '0', '1', '2016-08-01 23:47:08', '2016-08-19 13:04:34');
+INSERT INTO `wine_admin` VALUES ('3', 'test', 'ebb2fda117935a983a78becd4e6508ab', '2', '', 'test', 'Cv0T5IHvn36XQV6YnRKulEHohZ3fW_O-', '', '2016-08-19 13:05:26', '::1', '0', '1', '2016-08-19 13:05:14', '2016-08-19 13:05:26');
 
 -- ----------------------------
 -- Table structure for wine_admin_item
@@ -381,12 +1405,14 @@ INSERT INTO `wine_admin_item` VALUES ('/site/error', '2', '', 'SHANTE', '', '0',
 INSERT INTO `wine_admin_item` VALUES ('/site/index', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
 INSERT INTO `wine_admin_item` VALUES ('/site/login', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
 INSERT INTO `wine_admin_item` VALUES ('/site/logout', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('商家权限', '2', '商家管理员可以添加自己的产品和下属门店以及订单的处理等', 'SHANTE', null, '0', '1467626475', '1470146258');
+INSERT INTO `wine_admin_item` VALUES ('商家管理员', '1', '商家管理员', 'SHANTE', null, '3', '1467626553', '1470145957');
 INSERT INTO `wine_admin_item` VALUES ('开发者', '1', '开发者拥有最高级别系统权限', 'SHANTE', null, '1', '1467629059', '1470145899');
 INSERT INTO `wine_admin_item` VALUES ('开发者权限', '2', '开发者权限拥有最高级系统权限', 'SHANTE', null, '0', '1467628984', '1470145931');
-INSERT INTO `wine_admin_item` VALUES ('普通权限', '2', '普通权限只能新增用户和查看用户信息', 'SHANTE', null, '0', '1467626475', '1470146258');
-INSERT INTO `wine_admin_item` VALUES ('普通管理员', '1', '普通管理员', 'SHANTE', null, '3', '1467626553', '1470145957');
 INSERT INTO `wine_admin_item` VALUES ('系统权限', '2', '系统权限可以查看除了权限控制以外的所有内容', 'SHANTE', null, '0', '1470146099', '1470146099');
 INSERT INTO `wine_admin_item` VALUES ('系统管理员', '1', '系统管理员可看到除权限外的所有内容', 'SHANTE', null, '2', '1470146041', '1470146041');
+INSERT INTO `wine_admin_item` VALUES ('门店权限', '2', '门店管理员可以进行订单的处理等', 'SHANTE', null, '0', '1467626475', '1470146258');
+INSERT INTO `wine_admin_item` VALUES ('门店管理员', '1', '门店管理员', 'SHANTE', null, '4', '1467626553', '1470145957');
 
 -- ----------------------------
 -- Table structure for wine_admin_item_child
@@ -509,9 +1535,10 @@ INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/site/login');
 INSERT INTO `wine_admin_item_child` VALUES ('系统权限', '/site/login');
 INSERT INTO `wine_admin_item_child` VALUES ('开发者权限', '/site/logout');
 INSERT INTO `wine_admin_item_child` VALUES ('系统权限', '/site/logout');
+INSERT INTO `wine_admin_item_child` VALUES ('商家管理员', '商家权限');
 INSERT INTO `wine_admin_item_child` VALUES ('开发者', '开发者权限');
-INSERT INTO `wine_admin_item_child` VALUES ('普通管理员', '普通权限');
 INSERT INTO `wine_admin_item_child` VALUES ('系统管理员', '系统权限');
+INSERT INTO `wine_admin_item_child` VALUES ('门店管理员', '门店权限');
 
 -- ----------------------------
 -- Table structure for wine_admin_menu
@@ -576,6 +1603,7 @@ CREATE TABLE `wine_admin_type` (
 -- ----------------------------
 -- Records of wine_admin_type
 -- ----------------------------
+INSERT INTO `wine_admin_type` VALUES ('商家管理员', '3', '1471583114');
 INSERT INTO `wine_admin_type` VALUES ('开发者', '1', '1467629090');
 INSERT INTO `wine_admin_type` VALUES ('普通管理员', '3', '1470145733');
 INSERT INTO `wine_admin_type` VALUES ('普通管理员', '4', '1467889410');

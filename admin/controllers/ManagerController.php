@@ -69,8 +69,6 @@ use yii\web\NotFoundHttpException;
          $auth = Yii::$app->authManager;
          $item = $auth->getRolesByType(Yii::$app->user->identity->wa_type);
          $itemArr = ArrayHelper::map($item,'level','name');
-//         var_dump($pages->limit);
-//         exit;
          if(empty($searchArr)){
              return $this->render('list',[
                  'admin'=>$admin,
