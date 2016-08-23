@@ -21,9 +21,14 @@ use Yii;
  * @property string $created_time
  * @property string $updated_time
  *
+ * @property GoodCollection[] $goodCollections
+ * @property OrderComment[] $orderComments
+ * @property OrderInfo[] $orderInfos
  * @property ShoppingCert[] $shoppingCerts
  * @property UserAddress[] $userAddresses
  * @property UserLogin[] $userLogins
+ * @property UserPromotion[] $userPromotions
+ * @property UserTicket[] $userTickets
  */
 class UserInfo extends \yii\db\ActiveRecord
 {
@@ -76,6 +81,30 @@ class UserInfo extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getGoodCollections()
+    {
+        return $this->hasMany(GoodCollection::className(), ['uid' => 'id'])->where(['order_collection.status'=>1]);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOrderComments()
+    {
+        return $this->hasMany(OrderComment::className(), ['uid' => 'id'])->where(['order_comment.status'=>1]);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOrderInfos()
+    {
+        return $this->hasMany(OrderInfo::className(), ['uid' => 'id'])->where(['order_info.is_del'=>0]);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getShoppingCerts()
     {
         return $this->hasMany(ShoppingCert::className(), ['uid' => 'id']);
@@ -86,7 +115,7 @@ class UserInfo extends \yii\db\ActiveRecord
      */
     public function getUserAddresses()
     {
-        return $this->hasMany(UserAddress::className(), ['uid' => 'id']);
+        return $this->hasMany(UserAddress::className(), ['uid' => 'id'])->where(['user_address.status'=>1]);
     }
 
     /**
@@ -95,6 +124,22 @@ class UserInfo extends \yii\db\ActiveRecord
     public function getUserLogins()
     {
         return $this->hasMany(UserLogin::className(), ['uid' => 'id', 'status' => 'status']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUserPromotions()
+    {
+        return $this->hasMany(UserPromotion::className(), ['uid' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUserTickets()
+    {
+        return $this->hasMany(UserTicket::className(), ['uid' => 'id']);
     }
 
     public static function getInfoByInviteCode($inviteCode){

@@ -14,7 +14,6 @@ $user = Yii::$app->user->identity;
             <h1><?= Html::encode($this->title) ?></h1>
             <div class="auth-item-form col-sm-4">
                 <?php $form = ActiveForm::begin(); ?>
-
                 <?= $form->field($model, 'wa_username')->textInput()->label('用户名') ?>
                 <?= $form->field($model, 'wa_password')->passwordInput()->label('密码') ?>
                 <?= $form->field($model, 'confirm_password')->passwordInput()->label('确认密码')?>

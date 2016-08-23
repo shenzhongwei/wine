@@ -5,23 +5,23 @@ namespace api\models;
 use Yii;
 
 /**
- * This is the model class for table "good_vip".
+ * This is the model class for table "good_pic".
  *
  * @property integer $id
  * @property integer $gid
- * @property string $price
- * @property integer $is_active
+ * @property string $pic
+ * @property integer $status
  *
  * @property GoodInfo $g
  */
-class GoodVip extends \yii\db\ActiveRecord
+class GoodPic extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'good_vip';
+        return 'good_pic';
     }
 
     /**
@@ -30,8 +30,8 @@ class GoodVip extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['gid', 'is_active'], 'integer'],
-            [['price'], 'number'],
+            [['gid', 'status'], 'integer'],
+            [['pic'], 'string', 'max' => 250],
             [['gid'], 'exist', 'skipOnError' => true, 'targetClass' => GoodInfo::className(), 'targetAttribute' => ['gid' => 'id']],
         ];
     }
@@ -43,9 +43,9 @@ class GoodVip extends \yii\db\ActiveRecord
     {
         return [
             'id' => '主键',
-            'gid' => '商品id',
-            'price' => '会员专享价',
-            'is_active' => '是否上架',
+            'gid' => '产品id',
+            'pic' => '图片地址',
+            'status' => '状态',
         ];
     }
 
@@ -54,6 +54,6 @@ class GoodVip extends \yii\db\ActiveRecord
      */
     public function getG()
     {
-        return $this->hasOne(GoodInfo::className(), ['id' => 'gid']);
+        return $this->hasOne(GoodInfo::className(), ['id' => 'gid'])->where(['good_info.is_active'=>1]);
     }
 }

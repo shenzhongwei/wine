@@ -5,24 +5,26 @@ namespace api\models;
 use Yii;
 
 /**
- * This is the model class for table "good_smell".
+ * This is the model class for table "good_country".
  *
  * @property integer $id
  * @property string $name
+ * @property integer $type
  * @property integer $regist_at
  * @property integer $is_active
  * @property integer $active_at
  *
+ * @property GoodType $type0
  * @property GoodInfo[] $goodInfos
  */
-class GoodSmell extends \yii\db\ActiveRecord
+class GoodCountry extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'good_smell';
+        return 'good_country';
     }
 
     /**
@@ -31,8 +33,9 @@ class GoodSmell extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['regist_at', 'is_active', 'active_at'], 'integer'],
+            [['type', 'regist_at', 'is_active', 'active_at'], 'integer'],
             [['name'], 'string', 'max' => 50],
+            [['type'], 'exist', 'skipOnError' => true, 'targetClass' => GoodType::className(), 'targetAttribute' => ['type' => 'id']],
         ];
     }
 
@@ -42,8 +45,9 @@ class GoodSmell extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => '酒香id',
-            'name' => '酒香名称',
+            'id' => '主键',
+            'name' => '国家',
+            'type' => '类型id',
             'regist_at' => '添加时间',
             'is_active' => '是否上架',
             'active_at' => '上架状态更改时间',
@@ -53,8 +57,16 @@ class GoodSmell extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getType0()
+    {
+        return $this->hasOne(GoodType::className(), ['id' => 'type'])->where(['good_type.is_active'=>1]);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getGoodInfos()
     {
-        return $this->hasMany(GoodInfo::className(), ['smell' => 'id']);
+        return $this->hasMany(GoodInfo::className(), ['boot' => 'id'])->where(['good_info.is_active'=>1]);
     }
 }

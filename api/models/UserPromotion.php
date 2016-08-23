@@ -5,24 +5,25 @@ namespace api\models;
 use Yii;
 
 /**
- * This is the model class for table "shopping_cert".
+ * This is the model class for table "user_promotion".
  *
  * @property integer $id
  * @property integer $uid
- * @property integer $gid
- * @property integer $amount
- * @property string $total_price
+ * @property integer $type
+ * @property integer $target_id
+ * @property integer $add_at
+ * @property integer $status
  *
  * @property UserInfo $u
  */
-class ShoppingCert extends \yii\db\ActiveRecord
+class UserPromotion extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'shopping_cert';
+        return 'user_promotion';
     }
 
     /**
@@ -31,8 +32,7 @@ class ShoppingCert extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['uid', 'gid', 'amount'], 'integer'],
-            [['total_price'], 'number'],
+            [['uid', 'type', 'target_id', 'add_at', 'status'], 'integer'],
             [['uid'], 'exist', 'skipOnError' => true, 'targetClass' => UserInfo::className(), 'targetAttribute' => ['uid' => 'id']],
         ];
     }
@@ -45,9 +45,10 @@ class ShoppingCert extends \yii\db\ActiveRecord
         return [
             'id' => '主键',
             'uid' => '用户id',
-            'gid' => '产品id',
-            'amount' => '数量',
-            'total_price' => '总价',
+            'type' => '类型 1订单 2充值 3邀请',
+            'target_id' => '对象id',
+            'add_at' => '使用时间',
+            'status' => '状态 1正常 0删除',
         ];
     }
 

@@ -5,24 +5,26 @@ namespace api\models;
 use Yii;
 
 /**
- * This is the model class for table "good_type".
+ * This is the model class for table "promotion_type".
  *
  * @property integer $id
+ * @property integer $class
+ * @property integer $group
  * @property string $name
  * @property integer $regist_at
  * @property integer $is_active
  * @property integer $active_at
  *
- * @property GoodInfo[] $goodInfos
+ * @property PromotionInfo[] $promotionInfos
  */
-class GoodType extends \yii\db\ActiveRecord
+class PromotionType extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'good_type';
+        return 'promotion_type';
     }
 
     /**
@@ -31,8 +33,8 @@ class GoodType extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['regist_at', 'is_active', 'active_at'], 'integer'],
-            [['name'], 'string', 'max' => 25],
+            [['class', 'group', 'regist_at', 'is_active', 'active_at'], 'integer'],
+            [['name'], 'string', 'max' => 128],
         ];
     }
 
@@ -42,8 +44,10 @@ class GoodType extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => '类型id',
-            'name' => '类型名称',
+            'id' => 'ID',
+            'class' => '类别 1有券  2无券',
+            'group' => '组 1满减 2折扣',
+            'name' => '优惠名称',
             'regist_at' => '添加时间',
             'is_active' => '是否上架',
             'active_at' => '上架状态更改时间',
@@ -53,8 +57,8 @@ class GoodType extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getGoodInfos()
+    public function getPromotionInfos()
     {
-        return $this->hasMany(GoodInfo::className(), ['type' => 'id']);
+        return $this->hasMany(PromotionInfo::className(), ['pt_id' => 'id']);
     }
 }

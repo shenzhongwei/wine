@@ -49,4 +49,8 @@ class AdList extends \yii\db\ActiveRecord
             'is_show' => '是否显示,1是，0否',
         ];
     }
+
+    public static function Search($colum=[]){
+        return self::find()->select($colum)->where(['is_show'=>1]);
+    }
 }

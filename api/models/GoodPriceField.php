@@ -8,9 +8,12 @@ use Yii;
  * This is the model class for table "good_price_field".
  *
  * @property integer $id
+ * @property integer $type
  * @property string $discription
+ *
+ * @property GoodType $type0
  */
-class PriceField extends \yii\db\ActiveRecord
+class GoodPriceField extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
@@ -26,7 +29,9 @@ class PriceField extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['type'], 'integer'],
             [['discription'], 'string', 'max' => 200],
+            [['type'], 'exist', 'skipOnError' => true, 'targetClass' => GoodType::className(), 'targetAttribute' => ['type' => 'id']],
         ];
     }
 
@@ -37,7 +42,16 @@ class PriceField extends \yii\db\ActiveRecord
     {
         return [
             'id' => '主键id',
+            'type' => '类型',
             'discription' => '区间',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getType0()
+    {
+        return $this->hasOne(GoodType::className(), ['id' => 'type'])->where(['good_type.is_active'=>1]);
     }
 }

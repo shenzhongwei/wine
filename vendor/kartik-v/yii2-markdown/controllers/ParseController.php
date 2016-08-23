@@ -18,6 +18,8 @@ use kartik\markdown\Markdown;
 
 class ParseController extends \yii\web\Controller
 {
+
+
     /**
      * Convert markdown text to HTML for preview
      *

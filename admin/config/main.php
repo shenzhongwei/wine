@@ -15,7 +15,6 @@ return [
             'downloadAction' => 'gridview/export/download',
             'datecontrol' =>  [
                 'class' => 'kartik\datecontrol\Module',
-
                 // format settings for displaying each date attribute
                 'displaySettings' => [
                     'date' => 'd-m-Y',
@@ -36,8 +35,8 @@ return [
                 'autoWidget' => true,
 
             ]
-        ]
-    ],
+        ],
+        ],
 
     "aliases" => [
         "@mdm/admin" => "@vendor/mdmsoft/yii2-admin",
