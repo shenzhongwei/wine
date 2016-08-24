@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8a9e53249717e91bcd701943e673429d",
-    "content-hash": "67a692b699bc69beecb7b66e1f5cf470",
+    "hash": "6bb8d7b8e683c02f7bf988121702b41a",
+    "content-hash": "61d2cbec0416ebd49e19068661d0db34",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -2605,6 +2605,39 @@
                 "xlsx"
             ],
             "time": "2016-08-13 11:16:51"
+        },
+        {
+            "name": "pjkui/kindeditor",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pjkui/kindeditor.git",
+                "reference": "a1122cdf94b3fe7fe2b952cd9b5e868bee097b99"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pjkui/kindeditor/zipball/a1122cdf94b3fe7fe2b952cd9b5e868bee097b99",
+                "reference": "a1122cdf94b3fe7fe2b952cd9b5e868bee097b99",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "pjkui\\kindeditor\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Quinn Pan",
+                    "email": "pjkui@qq.com"
+                }
+            ],
+            "description": "desc",
+            "time": "2016-01-15 03:31:14"
         },
         {
             "name": "swiftmailer/swiftmailer",

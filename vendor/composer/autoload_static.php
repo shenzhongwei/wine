@@ -28,6 +28,10 @@ class ComposerStaticInite4343f3ad7d2ea8db509f2e66bb8db83
         array (
             'warrence\\kartikgii\\' => 19,
         ),
+        'p' => 
+        array (
+            'pjkui\\kindeditor\\' => 17,
+        ),
         'k' => 
         array (
             'kartik\\widgets\\' => 15,
@@ -124,6 +128,10 @@ class ComposerStaticInite4343f3ad7d2ea8db509f2e66bb8db83
         'warrence\\kartikgii\\' => 
         array (
             0 => __DIR__ . '/..' . '/warrence/yii2-kartikgii',
+        ),
+        'pjkui\\kindeditor\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/pjkui/kindeditor',
         ),
         'kartik\\widgets\\' => 
         array (

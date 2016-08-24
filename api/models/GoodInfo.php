@@ -25,12 +25,13 @@ use Yii;
  * @property string $unit
  * @property string $number
  * @property string $pic
- * @property resource $detail
+ * @property string $detail
  * @property integer $order
  * @property integer $regist_at
  * @property integer $is_active
  * @property integer $active_at
  *
+ * @property CommentDetail[] $commentDetails
  * @property GoodCollection[] $goodCollections
  * @property GoodBoot $boot0
  * @property GoodBrand $brand0
@@ -43,8 +44,8 @@ use Yii;
  * @property GoodStyle $style0
  * @property GoodType $type0
  * @property GoodPic[] $goodPics
- * @property GoodRush[] $goodRushes
- * @property GoodVip[] $goodVips
+ * @property GoodRush $goodRush
+ * @property GoodVip $goodVip
  * @property OrderDetail[] $orderDetails
  */
 class GoodInfo extends \yii\db\ActiveRecord
@@ -114,6 +115,14 @@ class GoodInfo extends \yii\db\ActiveRecord
             'is_active' => '是否上架',
             'active_at' => '上架状态更改时间',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCommentDetails()
+    {
+        return $this->hasMany(CommentDetail::className(), ['gid' => 'id'])->where(['status'=>1]);
     }
 
     /**
@@ -215,17 +224,17 @@ class GoodInfo extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getGoodRushes()
+    public function getGoodRush()
     {
-        return $this->hasMany(GoodRush::className(), ['gid' => 'id'])->where(['and','good_rush.is_active=1',"good_rush.start_at<='".date('H:i:s')."'","good_rush.end_at>='".date('H:i:s')."'"]);
+        return $this->hasOne(GoodRush::className(), ['gid' => 'id'])->where(['and','good_rush.is_active=1',"good_rush.start_at<='".date('H:i:s')."'","good_rush.end_at>='".date('H:i:s')."'"]);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getGoodVips()
+    public function getGoodVip()
     {
-        return $this->hasMany(GoodVip::className(), ['gid' => 'id'])->where(['good_vip.is_active'=>1]);
+        return $this->hasOne(GoodVip::className(), ['gid' => 'id'])->where(['good_vip.is_active'=>1]);
     }
 
     /**
@@ -246,7 +255,7 @@ class GoodInfo extends \yii\db\ActiveRecord
         $query = self::find()->where('is_active=1');
         $count = $query->count();
         $query->joinWith('orderDetails');
-        $query->select(['*','sum(order_detail.amount) as sum'])->groupBy(['order_detail.gid'])->orderBy(['sum'=>SORT_DESC,'order'=>SORT_ASC]);
+        $query->select(['good_info.*','sum(order_detail.amount) as sum'])->groupBy(['order_detail.gid'])->orderBy(['sum'=>SORT_DESC,'order'=>SORT_ASC]);
         $query->offset(($page-1)*$pageSize)->limit($pageSize);
         $res = $query->all();
         $result = self::data($res);
@@ -260,14 +269,27 @@ class GoodInfo extends \yii\db\ActiveRecord
      */
     public static function data($arr=[]){
         $res = ArrayHelper::getColumn($arr,function($element){
+            $is_rush = empty($element->goodRush) ? 0:1;
+            $is_vip = empty($element->goodVip) ? 0:1;
+            if($is_rush == 1){
+                $salePrice = $element->goodRush->price;
+            }elseif($is_vip == 1){
+                $salePrice = $element->goodVip->price;
+            }else{
+                $salePrice = $element->price;
+            }
             return [
                 'good_id'=>$element->id,
-                'pic'=>$element->pic,
+                'pic'=>Yii::$app->params['img_path'].$element->pic,
                 'name'=>$element->name,
                 'volum'=>$element->volum,
                 'number'=>$element->number,
+                'sale_price'=>$salePrice,
+                'end_at' => $is_rush==1 ? $element->goodRush->end_at : '',
                 'original_price'=>$element->price,
                 'unit'=>$element->unit,
+                'is_rush'=>$is_rush,
+                'is_vip'=>$is_vip,
             ];
         });
         return $res;

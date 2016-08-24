@@ -22,6 +22,7 @@ use Yii;
  * @property string $updated_time
  *
  * @property GoodCollection[] $goodCollections
+ * @property UserPayPassword $userPayPassword
  * @property OrderComment[] $orderComments
  * @property OrderInfo[] $orderInfos
  * @property ShoppingCert[] $shoppingCerts
@@ -92,6 +93,14 @@ class UserInfo extends \yii\db\ActiveRecord
     public function getOrderComments()
     {
         return $this->hasMany(OrderComment::className(), ['uid' => 'id'])->where(['order_comment.status'=>1]);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPayPassword()
+    {
+        return $this->hasOne(UserPayPassword::className(), ['uid' => 'id']);
     }
 
     /**

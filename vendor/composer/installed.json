@@ -3422,5 +3422,40 @@
             "widget",
             "yii2"
         ]
+    },
+    {
+        "name": "pjkui/kindeditor",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/pjkui/kindeditor.git",
+            "reference": "a1122cdf94b3fe7fe2b952cd9b5e868bee097b99"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/pjkui/kindeditor/zipball/a1122cdf94b3fe7fe2b952cd9b5e868bee097b99",
+            "reference": "a1122cdf94b3fe7fe2b952cd9b5e868bee097b99",
+            "shasum": ""
+        },
+        "time": "2016-01-15 03:31:14",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "pjkui\\kindeditor\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Quinn Pan",
+                "email": "pjkui@qq.com"
+            }
+        ],
+        "description": "desc"
     }
 ]

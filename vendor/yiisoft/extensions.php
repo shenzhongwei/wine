@@ -399,4 +399,13 @@ return array (
       '@kartik/label' => $vendorDir . '/kartik-v/yii2-label-inplace',
     ),
   ),
+  'yiidoc/yii2-redactor' => 
+  array (
+    'name' => 'yiidoc/yii2-redactor',
+    'version' => '9999999-dev',
+    'alias' => 
+    array (
+      '@yii/redactor' => '/',
+    ),
+  ),
 );

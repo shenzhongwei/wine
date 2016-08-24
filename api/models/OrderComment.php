@@ -11,11 +11,10 @@ use Yii;
  * @property integer $oid
  * @property integer $uid
  * @property integer $send_star
- * @property integer $good_star
- * @property string $content
  * @property integer $add_at
  * @property integer $status
  *
+ * @property CommentDetail[] $commentDetails
  * @property OrderInfo $o
  * @property UserInfo $u
  */
@@ -35,8 +34,7 @@ class OrderComment extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['oid', 'uid', 'send_star', 'good_star', 'add_at', 'status'], 'integer'],
-            [['content'], 'string', 'max' => 250],
+            [['oid', 'uid', 'send_star', 'add_at', 'status'], 'integer'],
             [['oid'], 'exist', 'skipOnError' => true, 'targetClass' => OrderInfo::className(), 'targetAttribute' => ['oid' => 'id']],
             [['uid'], 'exist', 'skipOnError' => true, 'targetClass' => UserInfo::className(), 'targetAttribute' => ['uid' => 'id']],
         ];
@@ -52,11 +50,17 @@ class OrderComment extends \yii\db\ActiveRecord
             'oid' => '订单',
             'uid' => '用户',
             'send_star' => '送货评价',
-            'good_star' => '商品评价',
-            'content' => '评价内容',
             'add_at' => '提交时间',
             'status' => '状态 0删除 1正常',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCommentDetails()
+    {
+        return $this->hasMany(CommentDetail::className(), ['cid' => 'id']);
     }
 
     /**

@@ -137,7 +137,7 @@ class AddressController extends ApiController{
     /**
      * 地址列表api
      */
-    public function actionList(){
+    public function actionAddList(){
         //获取用户id
         $user_id = Yii::$app->user->identity->getId();
         $adds = UserAddress::find()->where(['and','uid='.$user_id,'status<>0','lat>0','lng>0'])->all();

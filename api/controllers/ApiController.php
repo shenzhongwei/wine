@@ -13,7 +13,8 @@ class ApiController extends Controller
     	$behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
             'class' => QueryParamAuth::className(),
-            'except'=>['register','is-exist','send-message','login','reset-pwd','search-list','home','boot-pic','ad-list','rush-list','vip-list','hot-list']
+            'except'=>['register','is-exist','send-message','login','reset-pwd','search-list','home','boot-pic','ad-list','rush-list',
+					'vip-list','hot-list','good-list','good-detail','comment-list']
         ];
     	$behaviors['verbs'] = [
     			'class'=> \yii\filters\VerbFilter::className(),
