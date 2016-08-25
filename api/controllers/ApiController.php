@@ -14,7 +14,7 @@ class ApiController extends Controller
         $behaviors['authenticator'] = [
             'class' => QueryParamAuth::className(),
             'except'=>['register','is-exist','send-message','login','reset-pwd','search-list','home','boot-pic','ad-list','rush-list',
-					'vip-list','hot-list','good-list','good-detail','comment-list']
+					'vip-list','hot-list','good-list','good-detail','comment-list','shop-spread']
         ];
     	$behaviors['verbs'] = [
     			'class'=> \yii\filters\VerbFilter::className(),
@@ -80,7 +80,7 @@ class ApiController extends Controller
 		if ($val === null) {
 			$val = '';
 		}
-		if (gettype($val) == 'integer') {
+		if (gettype($val) != 'array') {
 			$val = (string)$val;
 		}
 	}

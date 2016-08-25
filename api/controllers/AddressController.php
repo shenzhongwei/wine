@@ -153,8 +153,8 @@ class AddressController extends ApiController{
                     'receiver'=>$add->get_person,
                     'phone'=>$add->get_phone,
                     'address'=>$add->province.$add->city.$add->district.$add->region.$add->address,
-                    'lat'=>$add->lat,
-                    'lng'=>$add->lng,
+                    'lat'=>$add->lat/1000000,
+                    'lng'=>$add->lng/1000000,
                     'tag'=>$add->tag,
                     'default'=>$add->is_default,
                 ];

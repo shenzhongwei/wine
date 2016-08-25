@@ -11,8 +11,8 @@ use Yii;
  * @property integer $uid
  * @property integer $gid
  * @property integer $amount
- * @property string $total_price
  *
+ * @property GoodInfo $g
  * @property UserInfo $u
  */
 class ShoppingCert extends \yii\db\ActiveRecord
@@ -32,7 +32,7 @@ class ShoppingCert extends \yii\db\ActiveRecord
     {
         return [
             [['uid', 'gid', 'amount'], 'integer'],
-            [['total_price'], 'number'],
+            [['gid'], 'exist', 'skipOnError' => true, 'targetClass' => GoodInfo::className(), 'targetAttribute' => ['gid' => 'id']],
             [['uid'], 'exist', 'skipOnError' => true, 'targetClass' => UserInfo::className(), 'targetAttribute' => ['uid' => 'id']],
         ];
     }
@@ -47,8 +47,15 @@ class ShoppingCert extends \yii\db\ActiveRecord
             'uid' => '用户id',
             'gid' => '产品id',
             'amount' => '数量',
-            'total_price' => '总价',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getG()
+    {
+        return $this->hasOne(GoodInfo::className(), ['id' => 'gid']);
     }
 
     /**

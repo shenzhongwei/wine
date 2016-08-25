@@ -47,6 +47,7 @@ use Yii;
  * @property GoodRush $goodRush
  * @property GoodVip $goodVip
  * @property OrderDetail[] $orderDetails
+ * @property ShoppingCert[] $shoppingCerts
  */
 class GoodInfo extends \yii\db\ActiveRecord
 {
@@ -243,6 +244,13 @@ class GoodInfo extends \yii\db\ActiveRecord
     public function getOrderDetails()
     {
         return $this->hasMany(OrderDetail::className(), ['gid' => 'id']);
+    }
+    /**
+     * * @return \yii\db\ActiveQuery
+     */
+    public function getShoppingCerts()
+    {
+        return $this->hasMany(ShoppingCert::className(), ['gid' => 'id']);
     }
 
     /**

@@ -164,10 +164,10 @@ class ProductController extends ApiController{
      * 产品列表接口
      */
     public function actionGoodList(){
-        //列表入口来源 0大类 1商店
+        //列表入口来源 0大类 1商店 2搜索产品
         $from = Yii::$app->request->post('from',0);
         //来源值
-        $from_id = Yii::$app->request->post('from_id',1);
+        $from_val = Yii::$app->request->post('from_val',1);
         //大类下的小分类，先获取key
         $key = Yii::$app->request->post('key','');
         //获取小分类的value
@@ -184,18 +184,23 @@ class ProductController extends ApiController{
             $value = explode('~',$value);
         }
         if($from == 0){//为0表示大类下列表
-            $query->andWhere(['type'=>$from_id]);
+            $query->andWhere(['type'=>$from_val]);
             if(!empty($key)&&!empty($value)){
                 $query->andWhere(['and',$key=='price' ? "$key between $value[0] and $value[1]":"$key=$value"]);
             }else{
                 return $this->showResult(301,'获取数据异常');
             }
         }elseif($from == 1){//为1表示店铺上架下的列表
-            $shop = ShopInfo::findOne($from_id);
+            $shop = ShopInfo::findOne($from_val);
             if(empty($shop)){
                 return $this->showResult(303,'未获取到店铺信息');
             }
             $query->andWhere(['merchant'=>$shop->merchant]);
+        }elseif($from == 2){
+            if(empty($from_val)){
+                return $this->showResult(301,'获取数据异常');
+            }
+            $query->andFilterWhere(['like','name',$from_val]);
         }else{//其他值不识别
             return $this->showResult(301,'获取数据异常');
         }
@@ -226,6 +231,7 @@ class ProductController extends ApiController{
         }
         return $this->showList(200,'成功',$count,$data);
     }
+
 
     /**
      * 产品详情
@@ -258,7 +264,8 @@ class ProductController extends ApiController{
             $limit = $goodInfo->goodRush->limit;
         }elseif($is_vip == 1){
             $salePrice = $goodInfo->goodVip->price;
-            $limit = $goodInfo->goodVip->limit;
+            $limit = 0;
+//            $limit = $goodInfo->goodVip->limit;
         }else{
             $limit = 0;
             $salePrice = $goodInfo->price;
