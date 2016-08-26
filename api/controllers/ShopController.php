@@ -8,7 +8,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Created by PhpStorm.
- * User: me
+ * User: szw
  * Date: 2016/8/23
  * Time: 10:43
  */
@@ -85,6 +85,9 @@ class ShopController extends ApiController{
                     'distance'=>$element['distance'],
                     'lat'=>$element['lat']/1000000,
                     'lng'=>$element['lng']/1000000,
+                    'least_price'=>$element['least_money'],
+                    'send_bill'=>$element['send_bill'],
+                    'no_send_need'=>$element['no_send_need'],
                     'tips'=>$element['distance']<=3000 ? '19分钟内送达':($element['distance']<5000 ? '29分钟内送达':'您的配送距离较长，请耐心等待'),
                 ];
             });

@@ -48,11 +48,10 @@ class ShoppingController extends ApiController{
                     'name'=>$element->g->name,
                     'volum'=>$element->g->volum,
                     'number'=>$element->g->number,
-                    'amount'=>$element->amount,
                     'is_active'=>$element->g->is_active,
+                    'amount'=>$element->amount,
                     'sale_price'=>$price,
                     'original_price'=>$element->g->price,
-                    'total_price'=>$element->amount*$price,
                 ];
             });
         }

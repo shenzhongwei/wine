@@ -17,17 +17,18 @@ use Yii;
  * @property integer $lng
  * @property integer $limit
  * @property string $send_bill
+ * @property string $least_money
  * @property string $bus_pic
  * @property string $logo
  * @property integer $regist_at
  * @property integer $is_active
  * @property integer $active_at
  * @property string $province
+ * @peoperty string $no_send_need
  * @property string $city
  * @property string $district
  *
  * @property OrderInfo[] $orderInfos
- * @property WineAdmin $wa
  * @property MerchantInfo $merchant0
  */
 class ShopInfo extends \yii\db\ActiveRecord
@@ -47,7 +48,7 @@ class ShopInfo extends \yii\db\ActiveRecord
     {
         return [
             [['wa_id', 'merchant', 'lat', 'lng', 'limit', 'regist_at', 'is_active', 'active_at'], 'integer'],
-            [['send_bill'], 'number'],
+            [['send_bill','no_send_need','least_money'], 'number'],
             [['name', 'region'], 'string', 'max' => 50],
             [['address', 'bus_pic', 'logo', 'province', 'city', 'district'], 'string', 'max' => 128],
             [['merchant'], 'exist', 'skipOnError' => true, 'targetClass' => MerchantInfo::className(), 'targetAttribute' => ['merchant' => 'id']],
@@ -66,6 +67,8 @@ class ShopInfo extends \yii\db\ActiveRecord
             'merchant' => '所属商户',
             'region' => '所在地区',
             'address' => '详细地址',
+            'least_money'=>'订单最低金额',
+            'no_send_need' => '免配送满足条件',
             'lat' => '纬度',
             'lng' => '经度',
             'limit' => '配送范围',

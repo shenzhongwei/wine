@@ -2,15 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="576c0e94-dafd-422c-8651-9622db14828e" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/api/controllers/OrderController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/api/controllers/ShopController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/api/controllers/ShoppingController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/controllers/AddressController.php" afterPath="$PROJECT_DIR$/api/controllers/AddressController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/controllers/ApiController.php" afterPath="$PROJECT_DIR$/api/controllers/ApiController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/controllers/CollectController.php" afterPath="$PROJECT_DIR$/api/controllers/CollectController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/controllers/CommentController.php" afterPath="$PROJECT_DIR$/api/controllers/CommentController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/controllers/OrderController.php" afterPath="$PROJECT_DIR$/api/controllers/OrderController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/controllers/PicController.php" afterPath="$PROJECT_DIR$/api/controllers/PicController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/controllers/ProductController.php" afterPath="$PROJECT_DIR$/api/controllers/ProductController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/controllers/ShopController.php" afterPath="$PROJECT_DIR$/api/controllers/ShopController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/controllers/ShoppingController.php" afterPath="$PROJECT_DIR$/api/controllers/ShoppingController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/controllers/UserController.php" afterPath="$PROJECT_DIR$/api/controllers/UserController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/models/GoodInfo.php" afterPath="$PROJECT_DIR$/api/models/GoodInfo.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/models/ShoppingCert.php" afterPath="$PROJECT_DIR$/api/models/ShoppingCert.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/models/OrderDetail.php" afterPath="$PROJECT_DIR$/api/models/OrderDetail.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/models/OrderInfo.php" afterPath="$PROJECT_DIR$/api/models/OrderInfo.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/models/ShopInfo.php" afterPath="$PROJECT_DIR$/api/models/ShopInfo.php" />
     </list>
     <ignored path="wine.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -35,16 +40,19 @@
       <file leaf-file-name="ProductController.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/api/controllers/ProductController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-11.625">
-              <caret line="229" column="31" selection-start-line="229" selection-start-column="31" selection-end-line="229" selection-end-column="31" />
+            <state vertical-scroll-proportion="-24.884615">
+              <caret line="165" column="37" selection-start-line="165" selection-start-column="37" selection-end-line="165" selection-end-column="37" />
               <folding>
                 <element signature="e#35#64#0#PHP" expanded="true" />
-                <element signature="e#453#1710#0#PHP" expanded="false" />
-                <element signature="e#1716#1760#0#PHP" expanded="false" />
-                <element signature="e#1765#3465#0#PHP" expanded="false" />
-                <element signature="e#3502#4089#0#PHP" expanded="false" />
-                <element signature="e#4125#4710#0#PHP" expanded="false" />
-                <element signature="e#4746#4980#0#PHP" expanded="false" />
+                <element signature="e#454#1711#0#PHP" expanded="false" />
+                <element signature="e#1717#1761#0#PHP" expanded="false" />
+                <element signature="e#1766#3466#0#PHP" expanded="false" />
+                <element signature="e#3503#4090#0#PHP" expanded="false" />
+                <element signature="e#4126#4711#0#PHP" expanded="false" />
+                <element signature="e#4747#4981#0#PHP" expanded="false" />
+                <element signature="e#4987#5012#0#PHP" expanded="false" />
+                <element signature="e#5017#7769#0#PHP" expanded="false" />
+                <element signature="e#7804#10510#0#PHP" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -53,12 +61,11 @@
       <file leaf-file-name="PicController.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/api/controllers/PicController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-12.423077">
-              <caret line="19" column="36" selection-start-line="0" selection-start-column="0" selection-end-line="42" selection-end-column="1" />
+            <state vertical-scroll-proportion="-4.576923">
+              <caret line="9" column="12" selection-start-line="9" selection-start-column="12" selection-end-line="9" selection-end-column="12" />
               <folding>
-                <element signature="e#34#42#0#PHP" expanded="true" />
-                <element signature="e#252#532#0#PHP" expanded="false" />
-                <element signature="e#568#1059#0#PHP" expanded="false" />
+                <element signature="e#253#533#0#PHP" expanded="false" />
+                <element signature="e#569#1060#0#PHP" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -67,10 +74,11 @@
       <file leaf-file-name="ShopController.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/api/controllers/ShopController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-12.232142">
-              <caret line="87" column="86" selection-start-line="87" selection-start-column="86" selection-end-line="87" selection-end-column="86" />
+            <state vertical-scroll-proportion="-4.576923">
+              <caret line="10" column="12" selection-start-line="10" selection-start-column="12" selection-end-line="10" selection-end-column="12" />
               <folding>
-                <element signature="e#34#58#0#PHP" expanded="true" />
+                <element signature="e#283#1575#0#PHP" expanded="false" />
+                <element signature="e#1616#3701#0#PHP" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -79,14 +87,32 @@
       <file leaf-file-name="ShoppingController.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/api/controllers/ShoppingController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-10.714286">
-              <caret line="139" column="37" selection-start-line="139" selection-start-column="37" selection-end-line="139" selection-end-column="37" />
+            <state vertical-scroll-proportion="-12.423077">
+              <caret line="24" column="45" selection-start-line="24" selection-start-column="45" selection-end-line="24" selection-end-column="45" />
               <folding>
-                <element signature="e#34#58#0#PHP" expanded="true" />
-                <marker date="1472109984989" expanded="true" signature="2476:2512" placeholder="DELETE FROM ..." />
-                <marker date="1472109984989" expanded="true" signature="2476:2513" placeholder="DELETE FROM ..." />
-                <marker date="1472109984989" expanded="true" signature="2476:2531" placeholder="DELETE FROM ..." />
-                <marker date="1472109984989" expanded="true" signature="2476:2532" placeholder="DELETE FROM ..." />
+                <element signature="e#354#1827#0#PHP" expanded="false" />
+                <element signature="e#1865#2704#0#PHP" expanded="false" />
+                <element signature="e#2742#3725#0#PHP" expanded="false" />
+                <element signature="e#3760#4997#0#PHP" expanded="false" />
+                <marker date="1472177722696" expanded="true" signature="2416:2471" placeholder="DELETE FROM ..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UserController.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/api/controllers/UserController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-18.346153">
+              <caret line="231" column="0" selection-start-line="231" selection-start-column="0" selection-end-line="231" selection-end-column="0" />
+              <folding>
+                <element signature="e#328#818#0#PHP" expanded="false" />
+                <element signature="e#855#1113#0#PHP" expanded="false" />
+                <element signature="e#1147#5379#0#PHP" expanded="false" />
+                <element signature="e#5435#7480#0#PHP" expanded="false" />
+                <element signature="e#7517#8177#0#PHP" expanded="false" />
+                <element signature="e#8213#8938#0#PHP" expanded="false" />
+                <element signature="e#8974#10526#0#PHP" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -95,21 +121,14 @@
       <file leaf-file-name="OrderController.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/api/controllers/OrderController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.94009215">
-              <caret line="48" column="10" selection-start-line="48" selection-start-column="10" selection-end-line="48" selection-end-column="10" />
+            <state vertical-scroll-proportion="0.49284008">
+              <caret line="134" column="101" selection-start-line="134" selection-start-column="101" selection-end-line="134" selection-end-column="101" />
               <folding>
-                <element signature="e#34#59#0#PHP" expanded="true" />
+                <element signature="e#34#61#0#PHP" expanded="true" />
+                <element signature="e#362#441#0#PHP" expanded="false" />
+                <element signature="e#446#4494#0#PHP" expanded="false" />
+                <marker date="1472199821038" expanded="true" signature="3788:3844" placeholder="DELETE FROM ..." />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ShoppingCert.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/api/models/ShoppingCert.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="2.6153846">
-              <caret line="17" column="6" selection-start-line="17" selection-start-column="6" selection-end-line="17" selection-end-column="6" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -117,10 +136,15 @@
       <file leaf-file-name="AddressController.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/api/controllers/AddressController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-12.730769">
-              <caret line="156" column="44" selection-start-line="156" selection-start-column="44" selection-end-line="156" selection-end-column="44" />
+            <state vertical-scroll-proportion="-6.5384617">
+              <caret line="12" column="3" selection-start-line="12" selection-start-column="3" selection-end-line="12" selection-end-column="3" />
               <folding>
-                <marker date="1472091433828" expanded="true" signature="3291:3383" placeholder="UPDATE mm_us..." />
+                <element signature="e#257#2243#0#PHP" expanded="false" />
+                <element signature="e#2282#3721#0#PHP" expanded="false" />
+                <element signature="e#3758#4433#0#PHP" expanded="false" />
+                <element signature="e#4470#5424#0#PHP" expanded="false" />
+                <element signature="e#5461#7726#0#PHP" expanded="false" />
+                <marker date="1472178273492" expanded="true" signature="3292:3384" placeholder="UPDATE mm_us..." />
               </folding>
             </state>
           </provider>
@@ -129,31 +153,42 @@
       <file leaf-file-name="ApiController.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/api/controllers/ApiController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-16.346153">
-              <caret line="60" column="26" selection-start-line="60" selection-start-column="26" selection-end-line="60" selection-end-column="26" />
+            <state vertical-scroll-proportion="-0.65384614">
+              <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GoodInfo.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/api/models/GoodInfo.php">
+      <file leaf-file-name="CollectController.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/api/controllers/CollectController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-11.153846">
-              <caret line="277" column="27" selection-start-line="277" selection-start-column="27" selection-end-line="277" selection-end-column="27" />
+            <state vertical-scroll-proportion="-12.423077">
+              <caret line="19" column="32" selection-start-line="19" selection-start-column="32" selection-end-line="19" selection-end-column="32" />
               <folding>
-                <element signature="e#30#61#0#PHP" expanded="true" />
+                <element signature="e#33#63#0#PHP" expanded="true" />
+                <element signature="e#291#1347#0#PHP" expanded="false" />
+                <element signature="e#1353#1375#0#PHP" expanded="false" />
+                <element signature="e#1380#3042#0#PHP" expanded="false" />
+                <element signature="e#3076#3918#0#PHP" expanded="false" />
+                <marker date="1472178257870" expanded="true" signature="3610:3650" placeholder="DELETE FROM ..." />
+                <marker date="1472178257870" expanded="true" signature="3610:3651" placeholder="DELETE FROM ..." />
+                <marker date="1472178257870" expanded="true" signature="3610:3673" placeholder="DELETE FROM ..." />
+                <marker date="1472178257870" expanded="true" signature="3610:3674" placeholder="DELETE FROM ..." />
+                <marker date="1472178257870" expanded="true" signature="3610:3694" placeholder="DELETE FROM ..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="UserInfo.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/api/models/UserInfo.php">
+      <file leaf-file-name="CommentController.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/api/controllers/CommentController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-11.115385">
-              <caret line="33" column="6" selection-start-line="33" selection-start-column="6" selection-end-line="33" selection-end-column="6" />
-              <folding />
+            <state vertical-scroll-proportion="-9.807693">
+              <caret line="17" column="40" selection-start-line="17" selection-start-column="40" selection-end-line="17" selection-end-column="40" />
+              <folding>
+                <element signature="e#260#1203#0#PHP" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -169,7 +204,6 @@
         <option value="$PROJECT_DIR$/api/ext/auth/QueryParamAuth.php" />
         <option value="$PROJECT_DIR$/api/models/UserLogin.php" />
         <option value="$PROJECT_DIR$/api/models/MessageList.php" />
-        <option value="$PROJECT_DIR$/api/controllers/UserController.php" />
         <option value="$PROJECT_DIR$/admin/assets/AppAsset.php" />
         <option value="$PROJECT_DIR$/admin/views/site/login.php" />
         <option value="$PROJECT_DIR$/admin/config/main-local.php" />
@@ -177,10 +211,8 @@
         <option value="$PROJECT_DIR$/vendor/yiisoft/yii2/rbac/DbManager.php" />
         <option value="$PROJECT_DIR$/api/controllers/MenuController.php" />
         <option value="$PROJECT_DIR$/api/models/UserAddress.php" />
-        <option value="$PROJECT_DIR$/api/models/OrderInfo.php" />
         <option value="$PROJECT_DIR$/api/config/main.php" />
         <option value="$PROJECT_DIR$/api/models/MerchantInfo.php" />
-        <option value="$PROJECT_DIR$/api/models/ShopInfo.php" />
         <option value="$PROJECT_DIR$/api/models/AccountInout.php" />
         <option value="$PROJECT_DIR$/api/models/GoodBoot.php" />
         <option value="$PROJECT_DIR$/api/models/GoodBrand.php" />
@@ -198,24 +230,27 @@
         <option value="$PROJECT_DIR$/api/models/AdList.php" />
         <option value="$PROJECT_DIR$/admin/config/params.php" />
         <option value="$PROJECT_DIR$/admin/views/manager/list.php" />
-        <option value="$PROJECT_DIR$/api/controllers/PicController.php" />
         <option value="$PROJECT_DIR$/api/models/GoodRush.php" />
         <option value="$PROJECT_DIR$/api/models/GoodVip.php" />
-        <option value="$PROJECT_DIR$/api/models/OrderDetail.php" />
         <option value="$PROJECT_DIR$/api/config/params-local.php" />
         <option value="$PROJECT_DIR$/vendor/kartik-v/yii2-markdown/controllers/ParseController.php" />
         <option value="$PROJECT_DIR$/admin/config/main.php" />
         <option value="$PROJECT_DIR$/admin/views/manager/create.php" />
         <option value="$PROJECT_DIR$/api/models/UserInfo.php" />
         <option value="$PROJECT_DIR$/api/models/CommentDetail.php" />
+        <option value="$PROJECT_DIR$/api/controllers/ApiController.php" />
+        <option value="$PROJECT_DIR$/api/models/ShopInfo.php" />
+        <option value="$PROJECT_DIR$/api/controllers/ShoppingController.php" />
+        <option value="$PROJECT_DIR$/api/controllers/UserController.php" />
+        <option value="$PROJECT_DIR$/api/controllers/ShopController.php" />
+        <option value="$PROJECT_DIR$/api/controllers/ProductController.php" />
+        <option value="$PROJECT_DIR$/api/controllers/PicController.php" />
         <option value="$PROJECT_DIR$/api/controllers/CommentController.php" />
         <option value="$PROJECT_DIR$/api/controllers/CollectController.php" />
         <option value="$PROJECT_DIR$/api/controllers/AddressController.php" />
-        <option value="$PROJECT_DIR$/api/controllers/ShopController.php" />
+        <option value="$PROJECT_DIR$/api/models/OrderDetail.php" />
         <option value="$PROJECT_DIR$/api/models/GoodInfo.php" />
-        <option value="$PROJECT_DIR$/api/controllers/ProductController.php" />
-        <option value="$PROJECT_DIR$/api/controllers/ShoppingController.php" />
-        <option value="$PROJECT_DIR$/api/controllers/ApiController.php" />
+        <option value="$PROJECT_DIR$/api/models/OrderInfo.php" />
         <option value="$PROJECT_DIR$/api/controllers/OrderController.php" />
       </list>
     </option>
@@ -266,8 +301,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -408,30 +441,14 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="models" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wine" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wine" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="api" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="controllers" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -488,12 +505,12 @@
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20362474" sideWeight="0.6793066" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20575693" sideWeight="0.6738895" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32980973" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20362474" sideWeight="0.3206934" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20575693" sideWeight="0.3261105" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32980973" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22654584" sideWeight="0.503792" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3382046" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -512,29 +529,11 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="7" />
+      <option name="time" value="11" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/vendor/yiisoft/yii2/helpers/ArrayHelper.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.8461537">
-          <caret line="16" column="32" selection-start-line="16" selection-start-column="32" selection-end-line="16" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/api/models/GoodType.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-29.5">
-          <caret line="155" column="26" selection-start-line="155" selection-start-column="26" selection-end-line="155" selection-end-column="26" />
-          <folding>
-            <element signature="e#30#38#0#PHP" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/api/models/AdList.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-28.192308">
@@ -621,13 +620,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/api/config/params-local.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.6153846">
-          <caret line="4" column="18" selection-start-line="4" selection-start-column="18" selection-end-line="4" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/api/models/GoodSmell.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-9.115385">
@@ -635,20 +627,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/api/models/OrderDetail.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="12" column="28" selection-start-line="12" selection-start-column="22" selection-end-line="12" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/vendor/kartik-v/yii2-markdown/Markdown.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="24" column="14" selection-start-line="24" selection-start-column="6" selection-end-line="24" selection-end-column="14" />
-          <folding>
-            <element signature="e#214#222#0#PHP" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -664,7 +646,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-1.1295681">
           <caret line="26" column="3" selection-start-line="26" selection-start-column="3" selection-end-line="26" selection-end-column="3" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -733,16 +714,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/api/models/CommentDetail.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="82" column="58" selection-start-line="82" selection-start-column="58" selection-end-line="82" selection-end-column="58" />
-          <folding>
-            <element signature="e#30#38#0#PHP" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/vendor/yiisoft/yii2/helpers/BaseArrayHelper.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -756,32 +727,6 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="65" column="26" selection-start-line="65" selection-start-column="26" selection-end-line="65" selection-end-column="26" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/api/controllers/CommentController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="17" column="30" selection-start-line="17" selection-start-column="30" selection-end-line="17" selection-end-column="30" />
-          <folding>
-            <element signature="e#33#62#0#PHP" expanded="true" />
-            <element signature="e#259#1202#0#PHP" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/api/controllers/CollectController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="94" column="11" selection-start-line="94" selection-start-column="11" selection-end-line="94" selection-end-column="11" />
-          <folding>
-            <element signature="e#33#63#0#PHP" expanded="true" />
-            <marker date="1472029043427" expanded="true" signature="3609:3649" placeholder="DELETE FROM ..." />
-            <marker date="1472029043427" expanded="true" signature="3609:3650" placeholder="DELETE FROM ..." />
-            <marker date="1472029043427" expanded="true" signature="3609:3672" placeholder="DELETE FROM ..." />
-            <marker date="1472029043427" expanded="true" signature="3609:3673" placeholder="DELETE FROM ..." />
-            <marker date="1472029043427" expanded="true" signature="3609:3693" placeholder="DELETE FROM ..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -805,7 +750,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -813,7 +757,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-2.6153846">
           <caret line="4" column="8" selection-start-line="4" selection-start-column="8" selection-end-line="4" selection-end-column="8" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -821,15 +764,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-11.115385">
           <caret line="21" column="6" selection-start-line="21" selection-start-column="6" selection-end-line="21" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/api/models/ShopInfo.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="15.653846">
-          <caret line="32" column="6" selection-start-line="32" selection-start-column="6" selection-end-line="32" selection-end-column="6" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -837,37 +771,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-8.5">
           <caret line="13" column="14" selection-start-line="13" selection-start-column="14" selection-end-line="13" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/api/controllers/PicController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-12.423077">
-          <caret line="19" column="36" selection-start-line="0" selection-start-column="0" selection-end-line="42" selection-end-column="1" />
-          <folding>
-            <element signature="e#34#42#0#PHP" expanded="true" />
-            <element signature="e#252#532#0#PHP" expanded="false" />
-            <element signature="e#568#1059#0#PHP" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/api/controllers/AddressController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-12.730769">
-          <caret line="156" column="44" selection-start-line="156" selection-start-column="44" selection-end-line="156" selection-end-column="44" />
-          <folding>
-            <marker date="1472091433828" expanded="true" signature="3291:3383" placeholder="UPDATE mm_us..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/api/models/UserInfo.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.115385">
-          <caret line="33" column="6" selection-start-line="33" selection-start-column="6" selection-end-line="33" selection-end-column="6" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -879,78 +782,204 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/api/controllers/ProductController.php">
+    <entry file="file://$PROJECT_DIR$/api/models/ShoppingCert.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.625">
-          <caret line="229" column="31" selection-start-line="229" selection-start-column="31" selection-end-line="229" selection-end-column="31" />
-          <folding>
-            <element signature="e#35#64#0#PHP" expanded="true" />
-            <element signature="e#453#1710#0#PHP" expanded="false" />
-            <element signature="e#1716#1760#0#PHP" expanded="false" />
-            <element signature="e#1765#3465#0#PHP" expanded="false" />
-            <element signature="e#3502#4089#0#PHP" expanded="false" />
-            <element signature="e#4125#4710#0#PHP" expanded="false" />
-            <element signature="e#4746#4980#0#PHP" expanded="false" />
-          </folding>
+        <state vertical-scroll-proportion="0.0">
+          <caret line="17" column="6" selection-start-line="17" selection-start-column="6" selection-end-line="17" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/models/ShopInfo.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-19.961538">
+          <caret line="69" column="36" selection-start-line="69" selection-start-column="36" selection-end-line="69" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/models/UserInfo.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-27.5">
+          <caret line="164" column="21" selection-start-line="158" selection-start-column="8" selection-end-line="164" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/config/params-local.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-2.6153846">
+          <caret line="4" column="18" selection-start-line="4" selection-start-column="18" selection-end-line="4" selection-end-column="18" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/api/models/GoodInfo.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.153846">
-          <caret line="277" column="27" selection-start-line="277" selection-start-column="27" selection-end-line="277" selection-end-column="27" />
+        <state vertical-scroll-proportion="-24.961538">
+          <caret line="296" column="31" selection-start-line="296" selection-start-column="31" selection-end-line="296" selection-end-column="31" />
           <folding>
             <element signature="e#30#61#0#PHP" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/api/models/ShoppingCert.php">
+    <entry file="file://$PROJECT_DIR$/api/models/CommentDetail.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="2.6153846">
-          <caret line="17" column="6" selection-start-line="17" selection-start-column="6" selection-end-line="17" selection-end-column="6" />
+        <state vertical-scroll-proportion="-28.807692">
+          <caret line="80" column="27" selection-start-line="80" selection-start-column="27" selection-end-line="80" selection-end-column="27" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/api/controllers/ShopController.php">
+    <entry file="file://$PROJECT_DIR$/api/models/OrderDetail.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-12.232142">
-          <caret line="87" column="86" selection-start-line="87" selection-start-column="86" selection-end-line="87" selection-end-column="86" />
+        <state vertical-scroll-proportion="2.6153846">
+          <caret line="19" column="6" selection-start-line="19" selection-start-column="6" selection-end-line="19" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/models/OrderInfo.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.25">
+          <caret line="107" column="37" selection-start-line="107" selection-start-column="37" selection-end-line="107" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/controllers/AddressController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-6.5384617">
+          <caret line="12" column="3" selection-start-line="12" selection-start-column="3" selection-end-line="12" selection-end-column="3" />
           <folding>
-            <element signature="e#34#58#0#PHP" expanded="true" />
+            <element signature="e#257#2243#0#PHP" expanded="false" />
+            <element signature="e#2282#3721#0#PHP" expanded="false" />
+            <element signature="e#3758#4433#0#PHP" expanded="false" />
+            <element signature="e#4470#5424#0#PHP" expanded="false" />
+            <element signature="e#5461#7726#0#PHP" expanded="false" />
+            <marker date="1472178273492" expanded="true" signature="3292:3384" placeholder="UPDATE mm_us..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/api/controllers/ApiController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-16.346153">
-          <caret line="60" column="26" selection-start-line="60" selection-start-column="26" selection-end-line="60" selection-end-column="26" />
+        <state vertical-scroll-proportion="-0.65384614">
+          <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/controllers/CollectController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-12.423077">
+          <caret line="19" column="32" selection-start-line="19" selection-start-column="32" selection-end-line="19" selection-end-column="32" />
+          <folding>
+            <element signature="e#33#63#0#PHP" expanded="true" />
+            <element signature="e#291#1347#0#PHP" expanded="false" />
+            <element signature="e#1353#1375#0#PHP" expanded="false" />
+            <element signature="e#1380#3042#0#PHP" expanded="false" />
+            <element signature="e#3076#3918#0#PHP" expanded="false" />
+            <marker date="1472178257870" expanded="true" signature="3610:3650" placeholder="DELETE FROM ..." />
+            <marker date="1472178257870" expanded="true" signature="3610:3651" placeholder="DELETE FROM ..." />
+            <marker date="1472178257870" expanded="true" signature="3610:3673" placeholder="DELETE FROM ..." />
+            <marker date="1472178257870" expanded="true" signature="3610:3674" placeholder="DELETE FROM ..." />
+            <marker date="1472178257870" expanded="true" signature="3610:3694" placeholder="DELETE FROM ..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/controllers/CommentController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-9.807693">
+          <caret line="17" column="40" selection-start-line="17" selection-start-column="40" selection-end-line="17" selection-end-column="40" />
+          <folding>
+            <element signature="e#260#1203#0#PHP" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/controllers/PicController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.576923">
+          <caret line="9" column="12" selection-start-line="9" selection-start-column="12" selection-end-line="9" selection-end-column="12" />
+          <folding>
+            <element signature="e#253#533#0#PHP" expanded="false" />
+            <element signature="e#569#1060#0#PHP" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/controllers/ProductController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-24.884615">
+          <caret line="165" column="37" selection-start-line="165" selection-start-column="37" selection-end-line="165" selection-end-column="37" />
+          <folding>
+            <element signature="e#35#64#0#PHP" expanded="true" />
+            <element signature="e#454#1711#0#PHP" expanded="false" />
+            <element signature="e#1717#1761#0#PHP" expanded="false" />
+            <element signature="e#1766#3466#0#PHP" expanded="false" />
+            <element signature="e#3503#4090#0#PHP" expanded="false" />
+            <element signature="e#4126#4711#0#PHP" expanded="false" />
+            <element signature="e#4747#4981#0#PHP" expanded="false" />
+            <element signature="e#4987#5012#0#PHP" expanded="false" />
+            <element signature="e#5017#7769#0#PHP" expanded="false" />
+            <element signature="e#7804#10510#0#PHP" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/controllers/ShopController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.576923">
+          <caret line="10" column="12" selection-start-line="10" selection-start-column="12" selection-end-line="10" selection-end-column="12" />
+          <folding>
+            <element signature="e#283#1575#0#PHP" expanded="false" />
+            <element signature="e#1616#3701#0#PHP" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/api/controllers/ShoppingController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-10.714286">
-          <caret line="139" column="37" selection-start-line="139" selection-start-column="37" selection-end-line="139" selection-end-column="37" />
+        <state vertical-scroll-proportion="-12.423077">
+          <caret line="24" column="45" selection-start-line="24" selection-start-column="45" selection-end-line="24" selection-end-column="45" />
           <folding>
-            <element signature="e#34#58#0#PHP" expanded="true" />
-            <marker date="1472109984989" expanded="true" signature="2476:2512" placeholder="DELETE FROM ..." />
-            <marker date="1472109984989" expanded="true" signature="2476:2513" placeholder="DELETE FROM ..." />
-            <marker date="1472109984989" expanded="true" signature="2476:2531" placeholder="DELETE FROM ..." />
-            <marker date="1472109984989" expanded="true" signature="2476:2532" placeholder="DELETE FROM ..." />
+            <element signature="e#354#1827#0#PHP" expanded="false" />
+            <element signature="e#1865#2704#0#PHP" expanded="false" />
+            <element signature="e#2742#3725#0#PHP" expanded="false" />
+            <element signature="e#3760#4997#0#PHP" expanded="false" />
+            <marker date="1472177722696" expanded="true" signature="2416:2471" placeholder="DELETE FROM ..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/controllers/UserController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-18.346153">
+          <caret line="231" column="0" selection-start-line="231" selection-start-column="0" selection-end-line="231" selection-end-column="0" />
+          <folding>
+            <element signature="e#328#818#0#PHP" expanded="false" />
+            <element signature="e#855#1113#0#PHP" expanded="false" />
+            <element signature="e#1147#5379#0#PHP" expanded="false" />
+            <element signature="e#5435#7480#0#PHP" expanded="false" />
+            <element signature="e#7517#8177#0#PHP" expanded="false" />
+            <element signature="e#8213#8938#0#PHP" expanded="false" />
+            <element signature="e#8974#10526#0#PHP" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/api/controllers/OrderController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.94009215">
-          <caret line="48" column="10" selection-start-line="48" selection-start-column="10" selection-end-line="48" selection-end-column="10" />
+        <state vertical-scroll-proportion="0.49284008">
+          <caret line="134" column="101" selection-start-line="134" selection-start-column="101" selection-end-line="134" selection-end-column="101" />
           <folding>
-            <element signature="e#34#59#0#PHP" expanded="true" />
+            <element signature="e#34#61#0#PHP" expanded="true" />
+            <element signature="e#362#441#0#PHP" expanded="false" />
+            <element signature="e#446#4494#0#PHP" expanded="false" />
+            <marker date="1472199821038" expanded="true" signature="3788:3844" placeholder="DELETE FROM ..." />
           </folding>
         </state>
       </provider>

@@ -60,7 +60,7 @@ class OrderDetail extends \yii\db\ActiveRecord
      */
     public function getO()
     {
-        return $this->hasOne(OrderInfo::className(), ['id' => 'oid']);
+        return $this->hasOne(OrderInfo::className(), ['id' => 'oid'])->where('order_info.id>0');
     }
 
     /**
@@ -68,6 +68,6 @@ class OrderDetail extends \yii\db\ActiveRecord
      */
     public function getG()
     {
-        return $this->hasOne(GoodInfo::className(), ['id' => 'gid'])->where(['is_active'=>1]);
+        return $this->hasOne(GoodInfo::className(), ['id' => 'gid'])->where('good_info.id>0');
     }
 }
