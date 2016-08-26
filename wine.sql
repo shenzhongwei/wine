@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50540
 File Encoding         : 65001
 
-Date: 2016-08-24 17:00:03
+Date: 2016-08-26 17:17:37
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -71,8 +71,8 @@ CREATE TABLE `comment_detail` (
   PRIMARY KEY (`id`),
   KEY `order_comment_detail_id` (`cid`),
   KEY `good_comment_id` (`gid`),
-  CONSTRAINT `order_comment_detail_id` FOREIGN KEY (`cid`) REFERENCES `order_comment` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `good_comment_id` FOREIGN KEY (`gid`) REFERENCES `good_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `good_comment_id` FOREIGN KEY (`gid`) REFERENCES `good_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `order_comment_detail_id` FOREIGN KEY (`cid`) REFERENCES `order_comment` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='评价详情表';
 
 -- ----------------------------
@@ -343,6 +343,66 @@ INSERT INTO `country` VALUES ('239', 'Yemen', '也门', 'YE', '967', '1');
 INSERT INTO `country` VALUES ('240', 'Yugoslavia', '南斯拉夫', 'YU', '381', '1');
 INSERT INTO `country` VALUES ('241', 'Zambia', '赞比亚', 'ZM', '260', '1');
 INSERT INTO `country` VALUES ('242', 'Zimbabwe', '津巴布韦', 'ZW', '263', '1');
+
+-- ----------------------------
+-- Table structure for dics
+-- ----------------------------
+DROP TABLE IF EXISTS `dics`;
+CREATE TABLE `dics` (
+  `type` varchar(128) NOT NULL DEFAULT '' COMMENT '类型',
+  `id` tinyint(2) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `name` varchar(128) NOT NULL DEFAULT '' COMMENT '名称',
+  PRIMARY KEY (`type`,`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='字典表';
+
+-- ----------------------------
+-- Records of dics
+-- ----------------------------
+INSERT INTO `dics` VALUES ('消息类型', '1', '系统通知');
+INSERT INTO `dics` VALUES ('消息类型', '2', '用户通知');
+INSERT INTO `dics` VALUES ('消息类型', '3', '订单通知');
+INSERT INTO `dics` VALUES ('消息跳转页面', '1', '首页');
+INSERT INTO `dics` VALUES ('消息跳转页面', '2', '开通会员页面');
+INSERT INTO `dics` VALUES ('消息跳转页面', '3', '订单物流页');
+INSERT INTO `dics` VALUES ('消息跳转页面', '4', '订单详情页');
+INSERT INTO `dics` VALUES ('消息跳转页面', '5', '商品分类列表页');
+INSERT INTO `dics` VALUES ('消息跳转页面', '6', '商品抢购列表页');
+INSERT INTO `dics` VALUES ('消息跳转页面', '7', '商品会员列表页');
+INSERT INTO `dics` VALUES ('消息跳转页面', '8', '购物车列表页');
+INSERT INTO `dics` VALUES ('消息类型', '4', '商品通知');
+INSERT INTO `dics` VALUES ('消息跳转页面', '9', '我的收藏列表页');
+INSERT INTO `dics` VALUES ('消息跳转页面', '10', '商品详情页');
+INSERT INTO `dics` VALUES ('图片类型', '1', '外部网页');
+INSERT INTO `dics` VALUES ('图片类型', '2', '产品广告');
+INSERT INTO `dics` VALUES ('图片类型', '3', '品牌广告');
+INSERT INTO `dics` VALUES ('图片类型', '4', '商家广告');
+INSERT INTO `dics` VALUES ('图片类型', '5', '香型广告');
+INSERT INTO `dics` VALUES ('图片类型', '6', '类型广告');
+INSERT INTO `dics` VALUES ('订单状态', '100', '已取消');
+INSERT INTO `dics` VALUES ('订单状态', '1', '新订单');
+INSERT INTO `dics` VALUES ('订单状态', '2', '已付款');
+INSERT INTO `dics` VALUES ('订单状态', '3', '已装箱');
+INSERT INTO `dics` VALUES ('订单状态', '4', '配送中');
+INSERT INTO `dics` VALUES ('订单状态', '5', '已送达');
+INSERT INTO `dics` VALUES ('订单状态', '6', '已收货');
+INSERT INTO `dics` VALUES ('付款方式', '1', '余额支付');
+INSERT INTO `dics` VALUES ('付款方式', '2', '支付宝支付');
+INSERT INTO `dics` VALUES ('付款方式', '3', '微信支付');
+INSERT INTO `dics` VALUES ('图片类型', '7', '启动页限一张');
+INSERT INTO `dics` VALUES ('钱包类型', '1', '余额');
+INSERT INTO `dics` VALUES ('钱包类型', '2', '支付宝');
+INSERT INTO `dics` VALUES ('钱包类型', '3', '微信');
+INSERT INTO `dics` VALUES ('钱包明细类型', '1', '订单支出');
+INSERT INTO `dics` VALUES ('钱包明细类型', '2', '订单收入');
+INSERT INTO `dics` VALUES ('钱包明细类型', '3', '活动奖励');
+INSERT INTO `dics` VALUES ('优惠适用对象', '2', '商家通用');
+INSERT INTO `dics` VALUES ('优惠适用对象', '1', '平台通用');
+INSERT INTO `dics` VALUES ('钱包明细类型', '4', ' 充值余额增加');
+INSERT INTO `dics` VALUES ('优惠适用对象', '3', '店铺通用');
+INSERT INTO `dics` VALUES ('优惠适用对象', '4', '某产品可用');
+INSERT INTO `dics` VALUES ('图片类型', '8', '充值广告');
+INSERT INTO `dics` VALUES ('订单状态', '99', '已退款');
+INSERT INTO `dics` VALUES ('订单状态', '7', '已评价');
 
 -- ----------------------------
 -- Table structure for employee_info
@@ -944,8 +1004,8 @@ INSERT INTO `order_comment` VALUES ('2', '2', '1', '5', '1472020079', '1');
 DROP TABLE IF EXISTS `order_detail`;
 CREATE TABLE `order_detail` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `oid` int(11) NOT NULL DEFAULT '0' COMMENT '订单id',
-  `gid` int(11) NOT NULL DEFAULT '0' COMMENT '产品',
+  `oid` int(11) DEFAULT '0' COMMENT '订单id',
+  `gid` int(11) DEFAULT '0' COMMENT '产品',
   `amount` int(11) NOT NULL DEFAULT '0' COMMENT '数量',
   `single_price` decimal(11,2) NOT NULL DEFAULT '0.00' COMMENT '单价',
   `total_price` decimal(11,2) NOT NULL DEFAULT '0.00' COMMENT '总价',
@@ -954,7 +1014,7 @@ CREATE TABLE `order_detail` (
   KEY `wine_order_good_id` (`gid`),
   CONSTRAINT `wine_order_detail_id` FOREIGN KEY (`oid`) REFERENCES `order_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `wine_order_good_id` FOREIGN KEY (`gid`) REFERENCES `good_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='订单详细';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='订单详细';
 
 -- ----------------------------
 -- Records of order_detail
@@ -962,7 +1022,8 @@ CREATE TABLE `order_detail` (
 INSERT INTO `order_detail` VALUES ('1', '1', '1', '1', '1450.00', '1450.00');
 INSERT INTO `order_detail` VALUES ('2', '1', '2', '4', '245.00', '980.00');
 INSERT INTO `order_detail` VALUES ('3', '2', '2', '2', '245.00', '490.00');
-INSERT INTO `order_detail` VALUES ('4', '2', '1', '3', '1500.00', '4500.00');
+INSERT INTO `order_detail` VALUES ('4', '2', '3', '3', '1500.00', '4500.00');
+INSERT INTO `order_detail` VALUES ('5', '3', '1', '3', '1500.00', '4500.00');
 
 -- ----------------------------
 -- Table structure for order_info
@@ -978,10 +1039,11 @@ CREATE TABLE `order_info` (
   `pay_date` int(11) NOT NULL DEFAULT '0' COMMENT '付款时间',
   `total` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '总价',
   `discount` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '优惠金额',
+  `ticket_id` int(11) NOT NULL COMMENT '优惠券',
   `send_bill` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '运费',
   `send_id` int(11) DEFAULT '0' COMMENT '配送人id',
   `pay_bill` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '付款金额',
-  `order_rate` tinyint(2) NOT NULL DEFAULT '0' COMMENT '订单进度',
+  `state` tinyint(2) NOT NULL DEFAULT '0' COMMENT '订单进度',
   `send_date` int(11) NOT NULL DEFAULT '0' COMMENT '送达时间',
   `is_del` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否已被用户删除',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 1正常 0后台删除',
@@ -992,13 +1054,14 @@ CREATE TABLE `order_info` (
   CONSTRAINT `wine_employee_order_id` FOREIGN KEY (`send_id`) REFERENCES `employee_info` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `wine_shop_order_id` FOREIGN KEY (`sid`) REFERENCES `shop_info` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `wine_user_order_id` FOREIGN KEY (`uid`) REFERENCES `user_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='订单表';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='订单表';
 
 -- ----------------------------
 -- Records of order_info
 -- ----------------------------
-INSERT INTO `order_info` VALUES ('1', null, '1', '1462020079', '46446464', '1', '0', '1450.00', '0.00', '20.00', null, '1470.00', '0', '0', '0', '1');
-INSERT INTO `order_info` VALUES ('2', null, '1', '1472020079', '98413244', '1', '0', '1400.00', '0.00', '0.00', null, '1400.00', '0', '0', '0', '1');
+INSERT INTO `order_info` VALUES ('1', '1', '1', '1470910079', '46446464', '1', '0', '1450.00', '0.00', '0', '5.00', null, '1475.00', '1', '0', '0', '1');
+INSERT INTO `order_info` VALUES ('2', '2', '1', '1472020070', '98413244', '1', '0', '1400.00', '0.00', '0', '5.00', null, '1405.00', '1', '0', '0', '1');
+INSERT INTO `order_info` VALUES ('3', '2', '1', '1472030070', '98413244', '1', '0', '1400.00', '0.00', '0', '5.00', null, '1405.00', '1', '0', '0', '1');
 
 -- ----------------------------
 -- Table structure for order_pay
@@ -1072,6 +1135,29 @@ CREATE TABLE `promotion_type` (
 -- ----------------------------
 
 -- ----------------------------
+-- Table structure for shopping_cert
+-- ----------------------------
+DROP TABLE IF EXISTS `shopping_cert`;
+CREATE TABLE `shopping_cert` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `uid` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
+  `gid` int(11) DEFAULT '0' COMMENT '产品id',
+  `amount` int(11) NOT NULL DEFAULT '1' COMMENT '数量',
+  PRIMARY KEY (`id`),
+  KEY `wine_shopping_detail_id` (`uid`) USING BTREE COMMENT '用户购物车',
+  KEY `wine_shopping_good_id` (`gid`),
+  CONSTRAINT `wine_shopping_detail_id` FOREIGN KEY (`uid`) REFERENCES `user_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `wine_shopping_good_id` FOREIGN KEY (`gid`) REFERENCES `good_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='购物车列表';
+
+-- ----------------------------
+-- Records of shopping_cert
+-- ----------------------------
+INSERT INTO `shopping_cert` VALUES ('2', '1', '2', '2');
+INSERT INTO `shopping_cert` VALUES ('3', '1', '3', '3');
+INSERT INTO `shopping_cert` VALUES ('4', '1', '1', '1');
+
+-- ----------------------------
 -- Table structure for shop_info
 -- ----------------------------
 DROP TABLE IF EXISTS `shop_info`;
@@ -1085,7 +1171,9 @@ CREATE TABLE `shop_info` (
   `lat` int(11) NOT NULL DEFAULT '0' COMMENT '纬度',
   `lng` int(11) NOT NULL DEFAULT '0' COMMENT '经度',
   `limit` int(11) NOT NULL DEFAULT '0' COMMENT '配送范围',
-  `send_bill` decimal(11,2) NOT NULL DEFAULT '0.00' COMMENT '配送金额',
+  `least_money` decimal(11,2) NOT NULL DEFAULT '30.00' COMMENT '订单最低金额',
+  `send_bill` decimal(11,2) NOT NULL DEFAULT '5.00' COMMENT '配送金额',
+  `no_send_need` decimal(11,2) NOT NULL DEFAULT '30.00' COMMENT '免配送条件',
   `bus_pic` varchar(128) NOT NULL DEFAULT '' COMMENT '营业执照',
   `logo` varchar(128) NOT NULL DEFAULT '' COMMENT '门店logo',
   `regist_at` int(11) NOT NULL DEFAULT '0' COMMENT '入驻时间',
@@ -1097,33 +1185,15 @@ CREATE TABLE `shop_info` (
   PRIMARY KEY (`id`),
   KEY `wine_admin_shop_id` (`wa_id`),
   KEY `wine_merchant_shop_id` (`merchant`),
-  CONSTRAINT `wine_merchant_shop_id` FOREIGN KEY (`merchant`) REFERENCES `merchant_info` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `wine_admin_shop_id` FOREIGN KEY (`wa_id`) REFERENCES `wine_admin` (`wa_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='商家表';
+  CONSTRAINT `wine_admin_shop_id` FOREIGN KEY (`wa_id`) REFERENCES `wine_admin` (`wa_id`) ON UPDATE CASCADE,
+  CONSTRAINT `wine_merchant_shop_id` FOREIGN KEY (`merchant`) REFERENCES `merchant_info` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='商家表';
 
 -- ----------------------------
 -- Records of shop_info
 -- ----------------------------
-INSERT INTO `shop_info` VALUES ('1', '测试', null, '1', '太湖东路9-3', '软件园E栋728', '119888756', '31987456', '3000', '0.00', '', '', '0', '1', '0', '江苏省', '常州市', '新北区');
-
--- ----------------------------
--- Table structure for shopping_cert
--- ----------------------------
-DROP TABLE IF EXISTS `shopping_cert`;
-CREATE TABLE `shopping_cert` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `uid` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
-  `gid` int(11) NOT NULL DEFAULT '0' COMMENT '产品id',
-  `amount` int(11) NOT NULL DEFAULT '1' COMMENT '数量',
-  `total_price` decimal(11,2) NOT NULL DEFAULT '0.00' COMMENT '总价',
-  PRIMARY KEY (`id`),
-  KEY `wine_shopping_detail_id` (`uid`) USING BTREE COMMENT '用户购物车',
-  CONSTRAINT `wine_shopping_detail_id` FOREIGN KEY (`uid`) REFERENCES `user_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='购物车列表';
-
--- ----------------------------
--- Records of shopping_cert
--- ----------------------------
+INSERT INTO `shop_info` VALUES ('1', '测试', null, '1', '太湖东路9-3', '软件园E栋728', '119887756', '31987356', '3000', '30.00', '5.00', '30.00', '', '', '0', '1', '0', '江苏省', '常州市', '新北区');
+INSERT INTO `shop_info` VALUES ('2', '测试2', null, '1', '太湖东路9-3', '软件园E栋728', '119887756', '31987456', '3000', '30.00', '5.00', '30.00', '', '', '0', '1', '0', '江苏省', '常州市', '新北区');
 
 -- ----------------------------
 -- Table structure for user_account
@@ -1170,11 +1240,12 @@ CREATE TABLE `user_address` (
   PRIMARY KEY (`id`),
   KEY `fk_user_address_id` (`uid`),
   CONSTRAINT `fk_user_address_id` FOREIGN KEY (`uid`) REFERENCES `user_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='收货地址表';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='收货地址表';
 
 -- ----------------------------
 -- Records of user_address
 -- ----------------------------
+INSERT INTO `user_address` VALUES ('1', '1', '沈中伟', '17701420032', '江苏省', '常州市', '新北区', '爱湖东路9-3', 'E栋728', '119787756', '31887456', '', '0', '1', '1999-01-01 01:01:01', '1999-01-01 01:01:01');
 
 -- ----------------------------
 -- Table structure for user_info
@@ -1202,7 +1273,7 @@ CREATE TABLE `user_info` (
 -- ----------------------------
 -- Records of user_info
 -- ----------------------------
-INSERT INTO `user_info` VALUES ('1', '17701420032', '保密', '/logo/12111396429.jpg', '', '沈小鱼', '沈中伟', '0', '0', 'W6SB9873', '1', '2016-08-11 17:12:35', '2016-08-11 17:30:27');
+INSERT INTO `user_info` VALUES ('1', '17701420032', '保密', '/logo/12111396429.jpg', '', '沈小鱼', '沈中伟', '0', '1', 'W6SB9873', '1', '2016-08-11 17:12:35', '2016-08-11 17:30:27');
 
 -- ----------------------------
 -- Table structure for user_login
@@ -1312,9 +1383,126 @@ CREATE TABLE `wine_admin` (
 -- ----------------------------
 -- Records of wine_admin
 -- ----------------------------
-INSERT INTO `wine_admin` VALUES ('1', 'szw', 'ebb2fda117935a983a78becd4e6508ab', '1', '17701420032', '沈中伟', 'DUR6SMqCRyeeklfb0fgFylwIXv_AGp4N', '/logo/14708160181764.png', '2016-08-24 09:24:00', '::1', '0', '1', '2016-07-26 01:01:01', '2016-08-24 09:24:00');
+INSERT INTO `wine_admin` VALUES ('1', 'szw', 'ebb2fda117935a983a78becd4e6508ab', '1', '17701420032', '沈中伟', 'S_UpxnjlmrFrrj_Yv3x2tK4kIbguVWGL', '/logo/14708160181764.png', '2016-08-25 13:04:52', '::1', '0', '1', '2016-07-26 01:01:01', '2016-08-25 13:04:52');
 INSERT INTO `wine_admin` VALUES ('2', 'admin', 'ebb2fda117935a983a78becd4e6508ab', '2', '17701420032', '沈中伟', 'oJBDItnVy2bYOdNLTXqTFVwDrCniBdro', '', '2016-08-19 13:04:34', '::1', '0', '1', '2016-08-01 23:47:08', '2016-08-19 13:04:34');
 INSERT INTO `wine_admin` VALUES ('3', 'test', 'ebb2fda117935a983a78becd4e6508ab', '3', '', 'test', 'Cv0T5IHvn36XQV6YnRKulEHohZ3fW_O-', '', '2016-08-19 13:05:26', '::1', '0', '1', '2016-08-19 13:05:14', '2016-08-23 15:54:50');
+
+-- ----------------------------
+-- Table structure for wine_admin_item
+-- ----------------------------
+DROP TABLE IF EXISTS `wine_admin_item`;
+CREATE TABLE `wine_admin_item` (
+  `name` varchar(64) NOT NULL,
+  `type` int(11) NOT NULL,
+  `description` text,
+  `rule_name` varchar(64) DEFAULT NULL,
+  `data` text,
+  `level` tinyint(1) NOT NULL DEFAULT '0' COMMENT '等级',
+  `created_at` int(11) DEFAULT NULL,
+  `updated_at` int(11) DEFAULT NULL,
+  PRIMARY KEY (`name`),
+  KEY `rule_name` (`rule_name`),
+  KEY `type` (`type`),
+  CONSTRAINT `wine_admin_item_ibfk_1` FOREIGN KEY (`rule_name`) REFERENCES `wine_admin_rule` (`name`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wine_admin_item
+-- ----------------------------
+INSERT INTO `wine_admin_item` VALUES ('/*', '2', '', 'SHANTE', '', '0', '1467628934', '1467628934');
+INSERT INTO `wine_admin_item` VALUES ('/admin/*', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/admin/assignment/*', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/assignment/assign', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/assignment/index', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/assignment/revoke', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/assignment/view', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/default/*', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/default/index', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/menu/*', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/menu/create', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/menu/delete', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/menu/index', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/menu/update', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/menu/view', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/permission/*', '2', '', 'SHANTE', '', '0', '1467628931', '1467628931');
+INSERT INTO `wine_admin_item` VALUES ('/admin/permission/assign', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/permission/create', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/permission/delete', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/permission/index', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/permission/remove', '2', '', 'SHANTE', '', '0', '1467628931', '1467628931');
+INSERT INTO `wine_admin_item` VALUES ('/admin/permission/update', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/permission/view', '2', '', 'SHANTE', '', '0', '1467628930', '1467628930');
+INSERT INTO `wine_admin_item` VALUES ('/admin/role/*', '2', '', 'SHANTE', '', '0', '1467628931', '1467628931');
+INSERT INTO `wine_admin_item` VALUES ('/admin/role/assign', '2', '', 'SHANTE', '', '0', '1467628931', '1467628931');
+INSERT INTO `wine_admin_item` VALUES ('/admin/role/create', '2', '', 'SHANTE', '', '0', '1467628931', '1467628931');
+INSERT INTO `wine_admin_item` VALUES ('/admin/role/delete', '2', '', 'SHANTE', '', '0', '1467628931', '1467628931');
+INSERT INTO `wine_admin_item` VALUES ('/admin/role/index', '2', '', 'SHANTE', '', '0', '1467628931', '1467628931');
+INSERT INTO `wine_admin_item` VALUES ('/admin/role/remove', '2', '', 'SHANTE', '', '0', '1467628931', '1467628931');
+INSERT INTO `wine_admin_item` VALUES ('/admin/role/update', '2', '', 'SHANTE', '', '0', '1467628931', '1467628931');
+INSERT INTO `wine_admin_item` VALUES ('/admin/role/view', '2', '', 'SHANTE', '', '0', '1467628931', '1467628931');
+INSERT INTO `wine_admin_item` VALUES ('/admin/route/*', '2', '', 'SHANTE', '', '0', '1467628931', '1467628931');
+INSERT INTO `wine_admin_item` VALUES ('/admin/route/assign', '2', '', 'SHANTE', '', '0', '1467628931', '1467628931');
+INSERT INTO `wine_admin_item` VALUES ('/admin/route/create', '2', '', 'SHANTE', '', '0', '1467628931', '1467628931');
+INSERT INTO `wine_admin_item` VALUES ('/admin/route/index', '2', '', 'SHANTE', '', '0', '1467628931', '1467628931');
+INSERT INTO `wine_admin_item` VALUES ('/admin/route/refresh', '2', '', 'SHANTE', '', '0', '1467628931', '1467628931');
+INSERT INTO `wine_admin_item` VALUES ('/admin/route/remove', '2', '', 'SHANTE', '', '0', '1467628931', '1467628931');
+INSERT INTO `wine_admin_item` VALUES ('/admin/rule/*', '2', '', 'SHANTE', '', '0', '1467628932', '1467628932');
+INSERT INTO `wine_admin_item` VALUES ('/admin/rule/create', '2', '', 'SHANTE', '', '0', '1467628932', '1467628932');
+INSERT INTO `wine_admin_item` VALUES ('/admin/rule/delete', '2', '', 'SHANTE', '', '0', '1467628932', '1467628932');
+INSERT INTO `wine_admin_item` VALUES ('/admin/rule/index', '2', '', 'SHANTE', '', '0', '1467628932', '1467628932');
+INSERT INTO `wine_admin_item` VALUES ('/admin/rule/update', '2', '', 'SHANTE', '', '0', '1467628932', '1467628932');
+INSERT INTO `wine_admin_item` VALUES ('/admin/rule/view', '2', '', 'SHANTE', '', '0', '1467628932', '1467628932');
+INSERT INTO `wine_admin_item` VALUES ('/admin/user/*', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/admin/user/activate', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/admin/user/change-password', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/admin/user/delete', '2', '', 'SHANTE', '', '0', '1467628932', '1467628932');
+INSERT INTO `wine_admin_item` VALUES ('/admin/user/index', '2', '', 'SHANTE', '', '0', '1467628932', '1467628932');
+INSERT INTO `wine_admin_item` VALUES ('/admin/user/login', '2', '', 'SHANTE', '', '0', '1467628932', '1467628932');
+INSERT INTO `wine_admin_item` VALUES ('/admin/user/logout', '2', '', 'SHANTE', '', '0', '1467628932', '1467628932');
+INSERT INTO `wine_admin_item` VALUES ('/admin/user/request-password-reset', '2', '', 'SHANTE', '', '0', '1467628932', '1467628932');
+INSERT INTO `wine_admin_item` VALUES ('/admin/user/reset-password', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/admin/user/signup', '2', '', 'SHANTE', '', '0', '1467628932', '1467628932');
+INSERT INTO `wine_admin_item` VALUES ('/admin/user/view', '2', '', 'SHANTE', '', '0', '1467628932', '1467628932');
+INSERT INTO `wine_admin_item` VALUES ('/debug/*', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/debug/default/*', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/debug/default/db-explain', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/debug/default/download-mail', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/debug/default/index', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/debug/default/toolbar', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/debug/default/view', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/gii', '2', null, null, null, '0', '1470292869', '1470292869');
+INSERT INTO `wine_admin_item` VALUES ('/gii/*', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/gii/default/*', '2', null, null, null, '0', '1471497526', '1471497526');
+INSERT INTO `wine_admin_item` VALUES ('/gii/default/action', '2', null, null, null, '0', '1471497526', '1471497526');
+INSERT INTO `wine_admin_item` VALUES ('/gii/default/diff', '2', null, null, null, '0', '1471497526', '1471497526');
+INSERT INTO `wine_admin_item` VALUES ('/gii/default/index', '2', null, null, null, '0', '1471497526', '1471497526');
+INSERT INTO `wine_admin_item` VALUES ('/gii/default/preview', '2', null, null, null, '0', '1471497526', '1471497526');
+INSERT INTO `wine_admin_item` VALUES ('/gii/default/view', '2', null, null, null, '0', '1471497526', '1471497526');
+INSERT INTO `wine_admin_item` VALUES ('/gii/model', '2', null, null, null, '0', '1470292825', '1470292825');
+INSERT INTO `wine_admin_item` VALUES ('/index/welcome', '2', '', 'SHANTE', '', '0', '1467885038', '1467885038');
+INSERT INTO `wine_admin_item` VALUES ('/manager/*', '2', '', 'SHANTE', '', '0', '1467626433', '1467626433');
+INSERT INTO `wine_admin_item` VALUES ('/manager/create', '2', '', 'SHANTE', '', '0', '1467626433', '1467626433');
+INSERT INTO `wine_admin_item` VALUES ('/manager/del', '2', '', 'SHANTE', '', '0', '1467626433', '1467626433');
+INSERT INTO `wine_admin_item` VALUES ('/manager/index', '2', '', 'SHANTE', '', '0', '1467626433', '1467626433');
+INSERT INTO `wine_admin_item` VALUES ('/manager/list', '2', '', 'SHANTE', '', '0', '1467684059', '1467684059');
+INSERT INTO `wine_admin_item` VALUES ('/manager/lock', '2', '', 'SHANTE', '', '0', '1467626433', '1467626433');
+INSERT INTO `wine_admin_item` VALUES ('/manager/recover', '2', null, null, null, '0', '1470419627', '1470419627');
+INSERT INTO `wine_admin_item` VALUES ('/manager/search', '2', null, null, null, '0', '1470290134', '1470290134');
+INSERT INTO `wine_admin_item` VALUES ('/manager/update', '2', '', 'SHANTE', '', '0', '1467626433', '1467626433');
+INSERT INTO `wine_admin_item` VALUES ('/manager/upload', '2', '', 'SHANTE', '', '0', '1467626433', '1467626433');
+INSERT INTO `wine_admin_item` VALUES ('/site/*', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/site/error', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/site/index', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/site/login', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('/site/logout', '2', '', 'SHANTE', '', '0', '1467628933', '1467628933');
+INSERT INTO `wine_admin_item` VALUES ('商家权限', '2', '商家管理员可以添加自己的产品和下属门店以及订单的处理等', 'SHANTE', null, '0', '1467626475', '1470146258');
+INSERT INTO `wine_admin_item` VALUES ('商家管理员', '1', '商家管理员', 'SHANTE', null, '3', '1467626553', '1470145957');
+INSERT INTO `wine_admin_item` VALUES ('开发者', '1', '开发者拥有最高级别系统权限', 'SHANTE', null, '1', '1467629059', '1470145899');
+INSERT INTO `wine_admin_item` VALUES ('开发者权限', '2', '开发者权限拥有最高级系统权限', 'SHANTE', null, '0', '1467628984', '1470145931');
+INSERT INTO `wine_admin_item` VALUES ('系统权限', '2', '系统权限可以查看除了权限控制以外的所有内容', 'SHANTE', null, '0', '1470146099', '1470146099');
+INSERT INTO `wine_admin_item` VALUES ('系统管理员', '1', '系统管理员可看到除权限外的所有内容', 'SHANTE', null, '2', '1470146041', '1470146041');
+INSERT INTO `wine_admin_item` VALUES ('门店权限', '2', '门店管理员可以进行订单的处理等', 'SHANTE', null, '0', '1467626475', '1470146258');
+INSERT INTO `wine_admin_item` VALUES ('门店管理员', '1', '门店管理员', 'SHANTE', null, '4', '1467626553', '1470145957');
 
 -- ----------------------------
 -- Table structure for wine_admin_item_child
