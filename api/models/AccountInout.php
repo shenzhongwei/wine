@@ -13,6 +13,7 @@ use Yii;
  * @property integer $type
  * @property integer $target_id
  * @property string $sum
+ * @property string $discount
  * @property integer $status
  *
  * @property UserAccount $a
@@ -35,7 +36,7 @@ class AccountInout extends \yii\db\ActiveRecord
     {
         return [
             [['aid', 'aio_date', 'type', 'target_id', 'status'], 'integer'],
-            [['sum'], 'number'],
+            [['sum','discount'], 'number'],
             [['aid'], 'exist', 'skipOnError' => true, 'targetClass' => UserAccount::className(), 'targetAttribute' => ['aid' => 'id']],
         ];
     }
@@ -52,6 +53,7 @@ class AccountInout extends \yii\db\ActiveRecord
             'type' => '类型',
             'target_id' => '对象id',
             'sum' => '金额',
+            'discount' => '赠送金额',
             'status' => '状态 0删除 1正常',
         ];
     }

@@ -2,7 +2,10 @@
 
 namespace api\models;
 
+use common\pay\alipay\helpers\AlipayHelper;
+use common\pay\wepay\helpers\Log;
 use Yii;
+use yii\base\Exception;
 
 /**
  * This is the model class for table "order_pay".
@@ -69,5 +72,76 @@ class OrderPay extends \yii\db\ActiveRecord
     public function getO()
     {
         return $this->hasOne(OrderInfo::className(), ['id' => 'oid']);
+    }
+
+    public static function Pay($params){
+        $params = [
+            'order_code' => $callback['out_trade_no'],
+            'pay_code' => $callback['transaction_id'],
+            'pay_date' => $callback['time_end'],
+            'pay_money' => $callback['total_fee'],
+            'mch_id' => $callback['mch_id'],
+            'pay_id' => 3,
+        ];
+        //根据付款id调用log
+        if($params['pay_id']==3){
+            $log = new Log();
+        }elseif($params['pay_id==2']){
+            $log = new AlipayHelper();
+        }else{
+            return false;
+        }
+        $log->log_result('开启事务');
+        //开始事务
+        $transaction = Yii::$app->db->beginTransaction();
+        try{
+            //判断订单状态
+            $orderInfo = OrderInfo::findOne(['order_code'=>$params['order_code'],'state'=>1,'is_del'=>0]);
+            if(empty($orderInfo)){
+                throw new Exception('订单不存在',301);
+            }
+            //判断是否已付款
+            $orderPay = self::findOne(['oid'=>$orderInfo->id,'status'=>1]);
+            if(!empty($orderPay)){
+                throw new Exception('该订单已付款',200);
+            }
+            //判断金额是否正确
+            if(($params['pay_money']/100) !=$orderInfo->pay_bill){
+                throw new Exception('付款金额错误',304);
+            }
+            //数据库操作 1修改订单状态 2存入付款信息
+            $orderInfo->state=2;
+            $orderInfo->pay_date = time();
+            $orderInfo->pauy_id = $params['pay_id'];
+            if(!$orderInfo->save()){
+                throw new Exception('更新订单状态出错',400);
+            }
+            $payInfo = new OrderPay();
+            $payInfo->attributes=[
+                'oid' => $orderInfo->id,
+                'uid' => $orderInfo->uid,
+                'pay_date' => time(),
+                'pay_id' => $params['pay_id'],
+                'account' => $params['mch_id'],
+                'out_trade_no' => $params['order_code'],
+                'transaction_id' => $params['pay_code'],
+                'money' => $params['pay_money'],
+                'status' => 1,
+            ];
+            if(!$orderPay->save()){
+                throw new Exception('保存付款信息出错',400);
+            }
+            $transaction->commit();
+            $log->log_result('成功');
+            return true;
+        }catch (Exception $e){
+            $transaction->rollBack();
+            $log->log_result($e->getMessage());
+            if($e->getCode() == '200'){
+                return true;
+            }else{
+                return false;
+            }
+        }
     }
 }

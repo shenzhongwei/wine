@@ -182,6 +182,98 @@ class OrderController extends ApiController{
         if(empty($order_id)){//判断是否获取到id
             return $this->showResult(301,'读取订单信息失败');
         }
-
+        $userOrder = OrderInfo::findOne(['uid'=>$user_id,'id'=>$order_id]);//查找订单
+        if(empty($userOrder)||$userOrder->state<6){
+            return $this->showResult(304,'订单数据异常，请重试');
+        }
+        $userOrder->is_del = 1;//修改字段
+        if(!$userOrder->save()){
+            return $this->showResult(400,'删除失败');
+        }else{
+            return $this->showResult(200,'删除成功');
+        }
     }
+
+    /**
+     * 取消订单接口
+     */
+    public function actionCancel(){
+        $user_id = Yii::$app->user->identity->getId();
+        $order_id = Yii::$app->request->post('order_id');//获取订单id
+        if(empty($order_id)){//判断是否获取到id
+            return $this->showResult(301,'读取订单信息失败');
+        }
+        $userOrder = OrderInfo::findOne(['uid'=>$user_id,'id'=>$order_id]);//查找订单
+        if(empty($userOrder)||$userOrder->state>1){//判断订单状态
+            return $this->showResult(304,'订单数据异常，请重试');
+        }
+        $transaction = Yii::$app->db->beginTransaction();
+        try{
+            //还原优惠券
+            if(!empty($userOrder->ticket_id)){
+                $ticket_id = $userOrder->ticket_id;
+                $user_ticket = UserTicket::findOne(['id'=>$ticket_id,'uid'=>$user_id]);
+                if(!empty($user_ticket)){
+                    $user_ticket->status = 1;
+                    if(!$user_ticket->save()){
+                        throw new Exception('修改订单状态失败');
+                    }
+                }
+            }
+            $userOrder->state = 100;//修改字段
+            $userOrder->ticket_id = 0;
+            if(!$userOrder->save()){
+                throw new Exception('取消订单失败');
+            }
+            $transaction->commit();
+            return $this->showList(200,'取消订单成功');
+        }catch (Exception $e){
+            $transaction->rollBack();
+            return $this->showResult(400,$e->getMessage());
+        }
+    }
+
+    /**
+     * 订单详情接口
+     * 暂无
+     */
+
+
+    /**
+     * 订单物流状态接口
+     */
+    public function actionSendStatus(){
+        $user_id = Yii::$app->user->identity->getId();
+        $order_id = Yii::$app->request->post('order_id');
+        if(empty($order_id)){//判断是否获取到id
+            return $this->showResult(301,'读取订单信息失败');
+        }
+        $userOrder = OrderInfo::findOne(['uid'=>$user_id,'id'=>$order_id]);//查找订单
+        if(empty($userOrder)||$userOrder->state<3||$userOrder->state>6||empty($userOrder->orderDetails)){//判断订单状态
+            return $this->showResult(304,'订单数据异常，请重试');
+        }
+        //数据处理
+        $data =  [
+                'order_id'=>$userOrder->id,
+                'state'=>$userOrder->state,
+                'send_code'=>$userOrder->send_code,
+                'send_person'=>empty($userOrder->send_id) ? '未配送':(empty($userOrder->send) ? '数据丢失':$userOrder->send->name),
+                'send_phone'=>empty($userOrder->send_id) ? '未配送':(empty($userOrder->send) ? '数据丢失':$userOrder->send->phone),
+                'detail'=>ArrayHelper::getColumn($userOrder->orderDetails,function($detail){
+                    return [
+                        'good_id'=>$detail->gid,
+                        'name'=>$detail->g->name,
+                        'volum'=>$detail->g->volum,
+                        'number'=>$detail->g->number,
+                        'unit_price'=>$detail->single_price,
+                        'original_price'=>$detail->g->price,
+                        'unit'=>$detail->g->unit,
+                        'amount'=>$detail->amount,
+                        'total_price'=>$detail->total_price,
+                    ];
+                }),
+            ];
+        return $this->showResult(200,'订单物流状态如下',$data);
+    }
+
 }
