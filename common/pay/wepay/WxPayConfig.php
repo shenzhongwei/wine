@@ -30,10 +30,7 @@ class WxPayConfig
 	const APPSECRET = '';
 	const NOTIFY_URL_ORDER = '';
 	const NOTIFY_URL_BILL = '';
-	const NOTIFY_URL_VAT = '';
-	const NOTIFY_NEW_URL_BILL = '';
-	const NOTIFY_NEW_URL_BILL2 = '';
-	const NOTIFY_URL_TICKET = '';
+	const NOTIFY_URL_VIP = '';
 	
 	//=======【证书路径设置】=====================================
 	/**

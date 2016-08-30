@@ -15,6 +15,9 @@ use Yii;
  * @property integer $target
  * @property integer $status
  * @property string $publish_at
+ *
+ * @property OrderInfo $order
+ * @property UserInfo $user
  */
 class MessageList extends \yii\db\ActiveRecord
 {
@@ -54,5 +57,13 @@ class MessageList extends \yii\db\ActiveRecord
             'status' => '状态 1未读 0已读',
             'publish_at' => '发布时间',
         ];
+    }
+
+    public function getOrder(){
+        return $this->hasOne(OrderInfo::className(),['id'=>'own_id']);
+    }
+
+    public function getUser(){
+        return $this->hasOne(UserInfo::className(),['id'=>'own_id']);
     }
 }

@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50540
 File Encoding         : 65001
 
-Date: 2016-08-26 17:17:37
+Date: 2016-08-30 17:02:36
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -23,10 +23,11 @@ CREATE TABLE `account_inout` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `aid` int(11) NOT NULL DEFAULT '0' COMMENT '钱包id',
   `aio_date` int(11) NOT NULL DEFAULT '0' COMMENT '生成时间',
-  `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '类型',
-  `target_id` int(11) NOT NULL DEFAULT '0' COMMENT '对象id',
+  `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '类型 1订单支付 2订单收入 3活动奖励 4余额充值',
+  `target_id` int(11) NOT NULL DEFAULT '0' COMMENT '发起对象id',
   `sum` decimal(11,2) NOT NULL DEFAULT '0.00' COMMENT '金额',
-  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 0删除 1正常',
+  `discount` decimal(11,2) NOT NULL DEFAULT '0.00' COMMENT '赠送金额',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 0删除 1正常 2待付款',
   PRIMARY KEY (`id`),
   KEY `account_inout_id` (`aid`),
   CONSTRAINT `account_inout_id` FOREIGN KEY (`aid`) REFERENCES `user_account` (`id`) ON UPDATE CASCADE
@@ -73,7 +74,7 @@ CREATE TABLE `comment_detail` (
   KEY `good_comment_id` (`gid`),
   CONSTRAINT `good_comment_id` FOREIGN KEY (`gid`) REFERENCES `good_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `order_comment_detail_id` FOREIGN KEY (`cid`) REFERENCES `order_comment` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='评价详情表';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='评价详情表';
 
 -- ----------------------------
 -- Records of comment_detail
@@ -82,6 +83,7 @@ INSERT INTO `comment_detail` VALUES ('1', '1', '1', '5', '啊啊啊啊啊啊啊'
 INSERT INTO `comment_detail` VALUES ('2', '1', '2', '5', '啊啊啊啊啊啊啊', '1');
 INSERT INTO `comment_detail` VALUES ('3', null, '1', '5', '啊啊啊啊啊啊啊', '1');
 INSERT INTO `comment_detail` VALUES ('4', '2', '1', '5', '啊啊啊啊啊啊啊', '1');
+INSERT INTO `comment_detail` VALUES ('5', '1', '1', '5', 'ok', '1');
 
 -- ----------------------------
 -- Table structure for country
@@ -364,7 +366,7 @@ INSERT INTO `dics` VALUES ('消息类型', '3', '订单通知');
 INSERT INTO `dics` VALUES ('消息跳转页面', '1', '首页');
 INSERT INTO `dics` VALUES ('消息跳转页面', '2', '开通会员页面');
 INSERT INTO `dics` VALUES ('消息跳转页面', '3', '订单物流页');
-INSERT INTO `dics` VALUES ('消息跳转页面', '4', '订单详情页');
+INSERT INTO `dics` VALUES ('消息跳转页面', '4', '订单列表页');
 INSERT INTO `dics` VALUES ('消息跳转页面', '5', '商品分类列表页');
 INSERT INTO `dics` VALUES ('消息跳转页面', '6', '商品抢购列表页');
 INSERT INTO `dics` VALUES ('消息跳转页面', '7', '商品会员列表页');
@@ -397,12 +399,16 @@ INSERT INTO `dics` VALUES ('钱包明细类型', '2', '订单收入');
 INSERT INTO `dics` VALUES ('钱包明细类型', '3', '活动奖励');
 INSERT INTO `dics` VALUES ('优惠适用对象', '2', '商家通用');
 INSERT INTO `dics` VALUES ('优惠适用对象', '1', '平台通用');
-INSERT INTO `dics` VALUES ('钱包明细类型', '4', ' 充值余额增加');
+INSERT INTO `dics` VALUES ('钱包明细类型', '4', '充值余额增加');
 INSERT INTO `dics` VALUES ('优惠适用对象', '3', '店铺通用');
 INSERT INTO `dics` VALUES ('优惠适用对象', '4', '某产品可用');
 INSERT INTO `dics` VALUES ('图片类型', '8', '充值广告');
 INSERT INTO `dics` VALUES ('订单状态', '99', '已退款');
 INSERT INTO `dics` VALUES ('订单状态', '7', '已评价');
+INSERT INTO `dics` VALUES ('消息跳转页面', '11', '优惠券列表页');
+INSERT INTO `dics` VALUES ('消息跳转页面', '12', '账户余额充值页');
+INSERT INTO `dics` VALUES ('消息跳转页面', '13', '我的推荐人列表页');
+INSERT INTO `dics` VALUES ('消息跳转页面', '14', '个人中心页');
 
 -- ----------------------------
 -- Table structure for employee_info
@@ -417,11 +423,12 @@ CREATE TABLE `employee_info` (
   `register_at` int(11) NOT NULL DEFAULT '0' COMMENT '登记时间',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态，0删除，1正常，2繁忙，3下岗',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='配送员表';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='配送员表';
 
 -- ----------------------------
 -- Records of employee_info
 -- ----------------------------
+INSERT INTO `employee_info` VALUES ('1', '沈中伟', '17701420032', '1', '0', '0', '1');
 
 -- ----------------------------
 -- Table structure for good_boot
@@ -965,14 +972,17 @@ CREATE TABLE `message_list` (
   `own_id` int(11) NOT NULL DEFAULT '0' COMMENT '所属id，根据消息类型id判断',
   `target` int(2) NOT NULL DEFAULT '0' COMMENT '目标id 跳转页面',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 1未读 0已读',
-  `publish_at` varchar(20) NOT NULL DEFAULT '' COMMENT '生成时间',
+  `publish_at` date NOT NULL DEFAULT '2016-08-11' COMMENT '生成时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='消息表';
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='消息表';
 
 -- ----------------------------
 -- Records of message_list
 -- ----------------------------
-INSERT INTO `message_list` VALUES ('1', '2', '新用户消息', '感谢您注册成为双天酒客户，这里好酒多多，开通会员更有专享活动，赶紧来看看吧!', '9', '1', '0', '2016-08-11');
+INSERT INTO `message_list` VALUES ('1', '2', '新用户消息', '感谢您注册成为双天酒客户，这里好酒多多，开通会员更有专享活动，赶紧来看看吧!', '1', '1', '0', '2016-08-11');
+INSERT INTO `message_list` VALUES ('2', '1', '系统消息消息', '感谢您注册成为双天酒客户，这里好酒多多，开通会员更有专享活动，赶紧来看看吧!', '2', '5', '1', '2016-08-10');
+INSERT INTO `message_list` VALUES ('3', '4', '商品消息', '感谢您注册成为双天酒客户，这里好酒多多，开通会员更有专享活动，赶紧来看看吧!', '3', '10', '1', '2016-08-13');
+INSERT INTO `message_list` VALUES ('4', '3', '订单消息', '感谢您注册成为双天酒客户，这里好酒多多，开通会员更有专享活动，赶紧来看看吧!', '3', '3', '1', '2016-08-12');
 
 -- ----------------------------
 -- Table structure for order_comment
@@ -990,13 +1000,14 @@ CREATE TABLE `order_comment` (
   KEY `wine_order_comment_id` (`oid`),
   CONSTRAINT `wine_order_comment_id` FOREIGN KEY (`oid`) REFERENCES `order_info` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `wine_user_comment_id` FOREIGN KEY (`uid`) REFERENCES `user_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='订单评论';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='订单评论';
 
 -- ----------------------------
 -- Records of order_comment
 -- ----------------------------
 INSERT INTO `order_comment` VALUES ('1', '1', '1', '5', '1462020079', '1');
 INSERT INTO `order_comment` VALUES ('2', '2', '1', '5', '1472020079', '1');
+INSERT INTO `order_comment` VALUES ('3', '3', '1', '0', '1472452207', '1');
 
 -- ----------------------------
 -- Table structure for order_detail
@@ -1042,6 +1053,7 @@ CREATE TABLE `order_info` (
   `ticket_id` int(11) NOT NULL COMMENT '优惠券',
   `send_bill` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '运费',
   `send_id` int(11) DEFAULT '0' COMMENT '配送人id',
+  `send_code` varchar(12) NOT NULL DEFAULT '' COMMENT '物流编号',
   `pay_bill` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '付款金额',
   `state` tinyint(2) NOT NULL DEFAULT '0' COMMENT '订单进度',
   `send_date` int(11) NOT NULL DEFAULT '0' COMMENT '送达时间',
@@ -1059,9 +1071,9 @@ CREATE TABLE `order_info` (
 -- ----------------------------
 -- Records of order_info
 -- ----------------------------
-INSERT INTO `order_info` VALUES ('1', '1', '1', '1470910079', '46446464', '1', '0', '1450.00', '0.00', '0', '5.00', null, '1475.00', '1', '0', '0', '1');
-INSERT INTO `order_info` VALUES ('2', '2', '1', '1472020070', '98413244', '1', '0', '1400.00', '0.00', '0', '5.00', null, '1405.00', '1', '0', '0', '1');
-INSERT INTO `order_info` VALUES ('3', '2', '1', '1472030070', '98413244', '1', '0', '1400.00', '0.00', '0', '5.00', null, '1405.00', '1', '0', '0', '1');
+INSERT INTO `order_info` VALUES ('1', '1', '1', '1470910079', '46446464', '1', '0', '1450.00', '0.00', '0', '5.00', '1', 'A98764613', '1475.00', '4', '1470910079', '0', '1');
+INSERT INTO `order_info` VALUES ('2', '2', '1', '1472020070', '98413244', '1', '0', '1400.00', '0.00', '0', '5.00', null, '', '1405.00', '7', '0', '0', '1');
+INSERT INTO `order_info` VALUES ('3', '2', '1', '1472030070', '98413244', '1', '0', '1400.00', '0.00', '0', '5.00', null, '', '1405.00', '7', '0', '0', '1');
 
 -- ----------------------------
 -- Table structure for order_pay
@@ -1099,7 +1111,7 @@ CREATE TABLE `promotion_info` (
   `name` varchar(128) NOT NULL DEFAULT '' COMMENT '活动名称',
   `condition` decimal(11,2) NOT NULL DEFAULT '0.00' COMMENT '条件',
   `discount` decimal(11,2) NOT NULL DEFAULT '0.00' COMMENT '优惠',
-  `valid_circle` int(3) NOT NULL DEFAULT '0' COMMENT '有效期限 0表示永久有效',
+  `valid_circle` int(3) NOT NULL DEFAULT '0' COMMENT '有效期限 0表示永久有效 大于0表示天数',
   `start_at` int(11) NOT NULL DEFAULT '0' COMMENT '开始时间',
   `end_at` int(11) NOT NULL DEFAULT '0' COMMENT '结束时间',
   `time` int(3) NOT NULL DEFAULT '0' COMMENT '使用次数 0表示无限制',
@@ -1109,11 +1121,19 @@ CREATE TABLE `promotion_info` (
   PRIMARY KEY (`id`),
   KEY `wine_promotion_type_id` (`pt_id`),
   CONSTRAINT `wine_promotion_type_id` FOREIGN KEY (`pt_id`) REFERENCES `promotion_type` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='促销活动表';
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='促销活动表';
 
 -- ----------------------------
 -- Records of promotion_info
 -- ----------------------------
+INSERT INTO `promotion_info` VALUES ('1', '1', '1', '1', '新用户注册红包', '0.00', '30.00', '15', '1472452615', '1482452615', '1', '0', '1', '0');
+INSERT INTO `promotion_info` VALUES ('2', '1', '1', '1', '满200减30', '200.00', '30.00', '15', '0', '0', '0', '0', '1', '0');
+INSERT INTO `promotion_info` VALUES ('3', '2', '1', '1', '充值活动', '5000.00', '200.00', '0', '1472452615', '1482452615', '5', '0', '1', '0');
+INSERT INTO `promotion_info` VALUES ('4', '2', '1', '1', '充值活动', '10000.00', '500.00', '0', '1472452615', '1482452615', '5', '0', '1', '0');
+INSERT INTO `promotion_info` VALUES ('5', '3', '1', '1', '充值2000开通会员', '2000.00', '0.00', '0', '0', '0', '1', '0', '1', '0');
+INSERT INTO `promotion_info` VALUES ('6', '1', '1', '1', '新用户注册红包', '100.00', '20.00', '15', '1472452615', '1482452615', '2', '0', '1', '0');
+INSERT INTO `promotion_info` VALUES ('7', '5', '1', '1', '推荐成功红包', '100.00', '30.00', '0', '1472452615', '1482452615', '1', '0', '1', '0');
+INSERT INTO `promotion_info` VALUES ('8', '6', '1', '1', '推荐成功送余额', '0.00', '30.00', '0', '1472452615', '1482452615', '1', '0', '1', '0');
 
 -- ----------------------------
 -- Table structure for promotion_type
@@ -1122,17 +1142,23 @@ DROP TABLE IF EXISTS `promotion_type`;
 CREATE TABLE `promotion_type` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `class` tinyint(1) NOT NULL DEFAULT '0' COMMENT '类别 1有券  2无券',
-  `group` tinyint(1) NOT NULL DEFAULT '1' COMMENT '组 1满减 2折扣',
+  `group` tinyint(1) NOT NULL DEFAULT '1' COMMENT '组 1优惠 2特权  3赠送',
   `name` varchar(128) NOT NULL DEFAULT '' COMMENT '优惠名称',
   `regist_at` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间',
   `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否上架',
   `active_at` int(11) NOT NULL DEFAULT '0' COMMENT '上架状态更改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='活动类型';
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='活动类型';
 
 -- ----------------------------
 -- Records of promotion_type
 -- ----------------------------
+INSERT INTO `promotion_type` VALUES ('1', '1', '3', '下单分享', '0', '1', '0');
+INSERT INTO `promotion_type` VALUES ('2', '2', '1', '充值', '0', '1', '0');
+INSERT INTO `promotion_type` VALUES ('3', '2', '2', '开通会员', '0', '1', '0');
+INSERT INTO `promotion_type` VALUES ('4', '1', '3', '新开户送红包', '0', '1', '0');
+INSERT INTO `promotion_type` VALUES ('5', '1', '3', '推荐人送优惠券', '0', '1', '0');
+INSERT INTO `promotion_type` VALUES ('6', '2', '3', '推荐人送余额', '0', '1', '0');
 
 -- ----------------------------
 -- Table structure for shopping_cert
@@ -1268,12 +1294,13 @@ CREATE TABLE `user_info` (
   PRIMARY KEY (`id`),
   KEY `status` (`status`),
   KEY `id` (`id`,`status`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='用户信息表';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='用户信息表';
 
 -- ----------------------------
 -- Records of user_info
 -- ----------------------------
 INSERT INTO `user_info` VALUES ('1', '17701420032', '保密', '/logo/12111396429.jpg', '', '沈小鱼', '沈中伟', '0', '1', 'W6SB9873', '1', '2016-08-11 17:12:35', '2016-08-11 17:30:27');
+INSERT INTO `user_info` VALUES ('2', '17701420033', '保密', '/logo/12111396429.jpg', '', '沈小鱼', '沈中伟', '0', '1', 'W6SB9879', '1', '2016-08-11 17:12:35', '2016-08-11 17:30:27');
 
 -- ----------------------------
 -- Table structure for user_login
@@ -1297,6 +1324,7 @@ CREATE TABLE `user_login` (
 -- ----------------------------
 -- Records of user_login
 -- ----------------------------
+INSERT INTO `user_login` VALUES ('1', '2', '17701420033', 'c84eedb44f19c6a8b335f6bbdb64989c', 'zGXCCBrVQAmD9H2MeJJIWeHB9FZnRPM', '2016-08-11 17:30:34', '', '1', '1');
 INSERT INTO `user_login` VALUES ('5', '1', '17701420032', 'c84eedb44f19c6a8b335f6bbdb64989c', 'zGXCCBrVQAmD9H2MeJJIWeHB9FZnRPMs', '2016-08-11 17:30:34', '', '1', '1');
 
 -- ----------------------------
@@ -1325,6 +1353,7 @@ CREATE TABLE `user_promotion` (
   `uid` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
   `type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '类型 1订单 2充值 3邀请',
   `target_id` int(11) NOT NULL DEFAULT '0' COMMENT '对象id',
+  `pid` int(11) NOT NULL,
   `add_at` int(11) NOT NULL DEFAULT '0' COMMENT '使用时间',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 1正常 0删除',
   PRIMARY KEY (`id`),
@@ -1352,11 +1381,15 @@ CREATE TABLE `user_ticket` (
   KEY `wine_promotion_ticket_id` (`pid`),
   CONSTRAINT `wine_promotion_ticket_id` FOREIGN KEY (`pid`) REFERENCES `promotion_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `wine_user_ticket_id` FOREIGN KEY (`uid`) REFERENCES `user_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='优惠券表';
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='优惠券表';
 
 -- ----------------------------
 -- Records of user_ticket
 -- ----------------------------
+INSERT INTO `user_ticket` VALUES ('1', '1', '1', '0', '0', '1');
+INSERT INTO `user_ticket` VALUES ('2', '1', '1', '0', '0', '1');
+INSERT INTO `user_ticket` VALUES ('3', '1', '1', '1472452615', '1482452615', '1');
+INSERT INTO `user_ticket` VALUES ('4', '1', '2', '1472452615', '1482452615', '1');
 
 -- ----------------------------
 -- Table structure for wine_admin
@@ -1383,7 +1416,7 @@ CREATE TABLE `wine_admin` (
 -- ----------------------------
 -- Records of wine_admin
 -- ----------------------------
-INSERT INTO `wine_admin` VALUES ('1', 'szw', 'ebb2fda117935a983a78becd4e6508ab', '1', '17701420032', '沈中伟', 'S_UpxnjlmrFrrj_Yv3x2tK4kIbguVWGL', '/logo/14708160181764.png', '2016-08-25 13:04:52', '::1', '0', '1', '2016-07-26 01:01:01', '2016-08-25 13:04:52');
+INSERT INTO `wine_admin` VALUES ('1', 'sante', 'ebb2fda117935a983a78becd4e6508ab', '1', '17701420032', '沈中伟', 'S_UpxnjlmrFrrj_Yv3x2tK4kIbguVWGL', '/logo/14708160181764.png', '2016-08-25 13:04:52', '::1', '0', '1', '2016-07-26 01:01:01', '2016-08-25 13:04:52');
 INSERT INTO `wine_admin` VALUES ('2', 'admin', 'ebb2fda117935a983a78becd4e6508ab', '2', '17701420032', '沈中伟', 'oJBDItnVy2bYOdNLTXqTFVwDrCniBdro', '', '2016-08-19 13:04:34', '::1', '0', '1', '2016-08-01 23:47:08', '2016-08-19 13:04:34');
 INSERT INTO `wine_admin` VALUES ('3', 'test', 'ebb2fda117935a983a78becd4e6508ab', '3', '', 'test', 'Cv0T5IHvn36XQV6YnRKulEHohZ3fW_O-', '', '2016-08-19 13:05:26', '::1', '0', '1', '2016-08-19 13:05:14', '2016-08-23 15:54:50');
 

@@ -26,6 +26,10 @@ class OrderController extends ApiController{
      */
     public function actionOrder(){
         $user_id = Yii::$app->user->identity->getId();
+        $userInfo = UserInfo::findOne($user_id);
+        if(empty($userInfo)){
+            return $this->showResult(302,'未找到该用户');
+        }
         $from = Yii::$app->request->post('from');//订单入口 1直接购买 2购物车购买
         //订单产品参数[{"good_id":3,"amount":3,"unit_price":100.00},{"good_id":3,"amount":3,"unit_price":100.00}]
         $from_val = json_decode(Yii::$app->request->post('from_val',''),true);
@@ -78,7 +82,7 @@ class OrderController extends ApiController{
                 'pay_id'=>$pay_mode,
                 'total'=>$total_price,
                 'discount'=>$total_price-$pay_price+$send_bill,
-                'send_bill'=>$send_bill,
+                'send_bill'=>$userInfo->is_vip ? 0:$send_bill,
                 'ticket_id'=>$ticket_id,
                 'pay_bill'=>$pay_price,
                 'state'=>1,
@@ -130,47 +134,52 @@ class OrderController extends ApiController{
         $state = Yii::$app->request->post('state',0);//订单状态，0全部 1未付款 2待收货 6待评价
         $page = Yii::$app->request->post('page',1);//页数
         $pageSize = Yii::$app->params['pageSize'];
-        //找用户订单
-        $query = OrderInfo::find()->joinWith('orderDetails')->where([
-            'and','uid='.$user_id,'is_del=0','order_date+2592000>'.time(),'state in (1,2,3,4,5,6,7,99)']);
-        if(!empty($state)){//筛选
-            if($state == 2){
-                $query->andWhere(['and','state between 2 and 5']);
-            }else{
-                $query->andWhere(['and','state='.$state]);
+        $res = OrderInfo::AutoCancelOrder($user_id);
+        if($res){
+            //找用户订单
+            $query = OrderInfo::find()->joinWith('orderDetails')->where([
+                'and','uid='.$user_id,'is_del=0','order_date+2592000>'.time(),'state in (1,2,3,4,5,6,7,99)']);
+            if(!empty($state)){//筛选
+                if($state == 2){
+                    $query->andWhere(['and','state between 2 and 5']);
+                }else{
+                    $query->andWhere(['and','state='.$state]);
+                }
             }
+            $count = $query->groupBy(['oid'])->count();//总数
+            $query->orderBy(['order_info.order_date'=>SORT_DESC]);
+            $query->offset(($page-1)*$pageSize)->limit($pageSize);
+            $orders = $query->all();
+            $data = [];
+            //处理查找到的数据
+            if(!empty($orders)){
+                $data = ArrayHelper::getColumn($orders,function($element){
+                    return [
+                        'order_id'=>$element->id,
+                        'state'=>$element->state,
+                        'pay_price'=>$element->pay_bill,
+                        'order_date'=>date('Y-m-d H:i:s',$element->order_date),
+                        'order_code'=>$element->order_code,
+                        'detail'=>ArrayHelper::getColumn($element->orderDetails,function($detail){
+                            return [
+                                'good_id'=>$detail->gid,
+                                'name'=>$detail->g->name,
+                                'volum'=>$detail->g->volum,
+                                'number'=>$detail->g->number,
+                                'unit_price'=>$detail->single_price,
+                                'original_price'=>$detail->g->price,
+                                'unit'=>$detail->g->unit,
+                                'amount'=>$detail->amount,
+                                'total_price'=>$detail->total_price,
+                            ];
+                        }),
+                    ];
+                });
+            }
+            return $this->showList(200,'订单列表如下',$count,$data);
+        }else{
+            return $this->showResult(400,'服务器异常');
         }
-        $count = $query->groupBy(['oid'])->count();//总数
-        $query->orderBy(['order_info.order_date'=>SORT_DESC]);
-        $query->offset(($page-1)*$pageSize)->limit($pageSize);
-        $orders = $query->all();
-        $data = [];
-        //处理查找到的数据
-        if(!empty($orders)){
-            $data = ArrayHelper::getColumn($orders,function($element){
-                return [
-                    'order_id'=>$element->id,
-                    'state'=>$element->state,
-                    'pay_price'=>$element->pay_bill,
-                    'order_date'=>date('Y-m-d H:i:s',$element->order_date),
-                    'order_code'=>$element->order_code,
-                    'detail'=>ArrayHelper::getColumn($element->orderDetails,function($detail){
-                        return [
-                            'good_id'=>$detail->gid,
-                            'name'=>$detail->g->name,
-                            'volum'=>$detail->g->volum,
-                            'number'=>$detail->g->number,
-                            'unit_price'=>$detail->single_price,
-                            'original_price'=>$detail->g->price,
-                            'unit'=>$detail->g->unit,
-                            'amount'=>$detail->amount,
-                            'total_price'=>$detail->total_price,
-                        ];
-                    }),
-                ];
-            });
-        }
-        return $this->showList(200,'订单列表如下',$count,$data);
     }
 
     /**

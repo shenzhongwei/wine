@@ -2,8 +2,12 @@
 namespace api\controllers;
 
 use api\models\MessageList;
+use api\models\PromotionInfo;
+use api\models\UserAccount;
 use api\models\UserInfo;
 use api\models\UserLogin;
+use api\models\UserTicket;
+use common\helpers\ArrayHelper;
 use Yii;
 use \Exception;
 use yii\web\UploadedFile;
@@ -116,6 +120,22 @@ class UserController extends ApiController{
             if(!$userInfo->save()){
                 throw new Exception('生成用户信息出错');
             }
+            if(!empty($invitedUser)){
+                //存入消息
+                $Invitemessage = new MessageList();
+                $Invitemessage->attributes = [
+                    'type_id'=>2,
+                    'title'=>'推荐成功',
+                    'content'=>"手机号为$phone 的用户成功使用您的邀请码注册",
+                    'own_id'=>$invitedUser->id,
+                    'target'=>13,
+                    'status'=>0,
+                    'publish_at'=>date('Y-m-d')
+                ];
+                if(!$Invitemessage->save()){
+                    throw new Exception('生成邀请消息出错');
+                }
+            }
 
             //存登录信息
             $userLogin = new UserLogin();
@@ -143,6 +163,25 @@ class UserController extends ApiController{
             if(!$userInfo->save()){
                 throw new Exception('生成用户邀请码出错');
             }
+            //判断是否有新用户活动
+            $promotions = PromotionInfo::find()->where(['and','pt_id=1','is_active=1','start_at<='.time(),'end_at>='.time(),'time>0'])->all();
+            if(!empty($promotions)){
+                $data = [];
+                foreach($promotions as $promotion){
+                    $start = empty($promotion->valid_circle) ? 0:time();
+                    $end = empty($promotion->valid_circle) ? 0:time()+($promotion->valid_circle*86400);
+                    for($i=0;$i<$promotion->time;$i++){
+                        $data [] = [
+                            $userInfo->id,$promotion->id,$start,$end,1
+                        ];
+                    }
+                }
+                $row = Yii::$app->db->createCommand()->batchInsert(UserTicket::tableName(),['uid','pid','start_at','end_at','status'],$data)->execute();
+                if(empty($row)){
+                    throw new Exception('保存新用户优惠券出错');
+                }
+            }
+            //存入消息
             $message = new MessageList();
             $message->attributes = [
                 'type_id'=>2,
@@ -327,11 +366,46 @@ class UserController extends ApiController{
         }
     }
 
+
+
     /**
-     *我的消息列表接口
+     * 我的推荐人列表
      */
-    public function actionMessageList(){
-        $user_id = Yii::$app->user->identity->uid;
-//        $messageLists
+    public function actionRecommendList(){
+        $user_id = Yii::$app->user->identity->getId();
+        $page = Yii::$app->request->post('page',1);//页数
+        $pageSize = Yii::$app->params['pageSize'];
+        $query = UserInfo::find()->where(['status'=>1,'invite_user_id'=>$user_id]);//查
+        $query->orderBy(['created_time'=>SORT_DESC]);//排序
+        $count = $query->count();
+        $recommentUsers = $query->offset(($page-1)*$pageSize)->limit($pageSize);//分页
+        $data = ArrayHelper::getColumn($recommentUsers,function($element){
+            return [
+                'user_id'=>$element->id,
+                'nickName'=>$element->nickname,
+                'phone'=>$element->phone,
+            ];
+        });
+        return $this->showList(200,'列表如下',$count,$data);
+    }
+
+    /**
+     * 我的账户余额api
+     */
+    public function actionAccount(){
+        $user_id = Yii::$app->user->identity->getId();
+        //查找账户
+        $account = UserAccount::findOne(['target'=>$user_id,'type'=>1,'level'=>2,'is_active'=>1]);
+        //没有返回0
+        if(empty($account)){
+            $lastbill = 0;
+        }else{
+            //有返回剩余金额
+            $lastbill = $account->end>0 ? $account->end:0;
+        }
+        $data = [
+            'last_bill'=>$lastbill,
+        ];
+        return $this->showResult(200,'成功',$data);
     }
 }
