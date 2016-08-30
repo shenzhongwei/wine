@@ -39,26 +39,22 @@
      * @return 验证结果
      */
 	function verifyNotify(){
-		AlipayHelper::logResult(777);
 		if(empty($_POST)) {//判断POST来的数组是否为空
 			return false;
-			AlipayHelper::logResult(66666);
 		}
 		else {
-			AlipayHelper::logResult(888);
+			$log = new AlipayHelper();
 			//生成签名结果
 			$isSign = $this->getSignVeryfy($_POST, $_POST["sign"]);
-			AlipayHelper::logResult($isSign ? 1:0);
 			//获取支付宝远程服务器ATN结果（验证是否是支付宝发来的消息）
 			$responseTxt = 'true';
 			if (! empty($_POST["notify_id"])) 
 			{
 				$responseTxt = $this->getResponse($_POST["notify_id"]);
-				AlipayHelper::logResult($responseTxt);
 			}
 			
 			//写日志记录
-			/*if ($isSign) {
+			if ($isSign) {
 				$isSignStr = 'true';
 			}
 			else {
@@ -66,7 +62,7 @@
 			}
 			$log_text = "responseTxt=".$responseTxt."\n notify_url_log:isSign=".$isSignStr.",";
 			$log_text = $log_text.createLinkString($_POST);
-			logResult($log_text);*/
+			$log->log_result($log_text);
 			
 			//验证
 			//$responsetTxt的结果不是true，与服务器设置问题、合作身份者ID、notify_id一分钟失效有关

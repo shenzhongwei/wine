@@ -11,6 +11,7 @@ use Yii;
  * @property integer $uid
  * @property integer $type
  * @property integer $target_id
+ * @property integer $pid
  * @property integer $add_at
  * @property integer $status
  *
@@ -32,7 +33,7 @@ class UserPromotion extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['uid', 'type', 'target_id', 'add_at', 'status'], 'integer'],
+            [['uid', 'type', 'target_id', 'add_at', 'status','pid'], 'integer'],
             [['uid'], 'exist', 'skipOnError' => true, 'targetClass' => UserInfo::className(), 'targetAttribute' => ['uid' => 'id']],
         ];
     }
