@@ -139,7 +139,7 @@ class OrderPay extends \yii\db\ActiveRecord
                                 }
                                 $content = '用户'.$userInfo->phone.'通过您的邀请成功下单，特此赠送您'.$promotion->discount.'元面值优惠券，点击此处查看';
                                 $target = 11;
-                            }elseif($promotion->pt_id==6){
+                            }else{
                                 $userAccount = UserAccount::findOne(['target'=>$userInfo->invite_user_id,'type'=>1,'level'=>2]);
                                 if(empty($userAccount)){
                                     $userAccount = new UserAccount();
