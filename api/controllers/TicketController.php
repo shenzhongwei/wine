@@ -17,7 +17,7 @@ class TicketController extends ApiController{
     /**
      * 优惠券列表接口
      */
-    public function actionList(){
+    public function actionTicketList(){
         $user_id = Yii::$app->user->identity->getId();
         $page = Yii::$app->request->post('page',1);//页数
         $type = Yii::$app->request->post('type',1);//类型，优惠券列表1 下单页面选择优惠券2

@@ -265,7 +265,9 @@ class OrderController extends ApiController{
         $data =  [
                 'order_id'=>$userOrder->id,
                 'state'=>$userOrder->state,
+                'service_phone'=>Yii::$app->params['servicePhone'],
                 'send_code'=>$userOrder->send_code,
+                'order_code'=>$userOrder->order_code,
                 'send_person'=>empty($userOrder->send_id) ? '未配送':(empty($userOrder->send) ? '数据丢失':$userOrder->send->name),
                 'send_phone'=>empty($userOrder->send_id) ? '未配送':(empty($userOrder->send) ? '数据丢失':$userOrder->send->phone),
                 'detail'=>ArrayHelper::getColumn($userOrder->orderDetails,function($detail){
