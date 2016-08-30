@@ -1,10 +1,13 @@
 <?php
 namespace api\controllers;
 
+use api\models\AccountInout;
 use api\models\OrderDetail;
 use api\models\OrderInfo;
+use api\models\PromotionInfo;
 use api\models\ShoppingCert;
 use api\models\UserInfo;
+use api\models\UserPromotion;
 use api\models\UserTicket;
 use Yii;
 use yii\base\Exception;
@@ -285,6 +288,73 @@ class OrderController extends ApiController{
                 }),
             ];
         return $this->showResult(200,'订单物流状态如下',$data);
+    }
+
+    /**
+     * 充值接口
+     */
+    public function actionAccount(){
+        $user_id = Yii::$app->user->identity->getId();
+        $bill = Yii::$app->request->post('bill');
+        $billPromotions = PromotionInfo::find()->where(
+            'pt_id=2 and condition>0 and discount>0 and is_active=1 start_at<='.time().' and end_at>='.time().' and condition<='.$bill)
+            ->orderBy(['condition'=>SORT_DESC])->all();
+        $discount = 0;
+        if(!empty($billPromotions)){
+            foreach($billPromotions as $promotion){
+                $count = UserPromotion::find()->where(['uid'=>$user_id,'type'=>2,'pid'=>$promotion->id,'status'=>1])->count();
+                if($promotion->time==0||$count<$promotion->time){
+                    $discount = $promotion->discount;
+                    break;
+                }else{
+                    continue;
+                }
+            }
+        }
+        $inout = new AccountInout();
+        $inout->attributes = [
+            'aio_date'=>time(),
+            'type'=>4,
+            'target_id'=>$user_id,
+            'sum'=>$bill,
+            'discount'=>$discount,
+            'status'=>2,
+        ];
+        if($inout->save()){
+            return $this->showResult(200,'下单成功',time().$inout->id);
+        }else{
+            return $this->showResult(400,'系统异常，下单失败');
+        }
+    }
+
+
+    /**
+     * 充值页面优惠描述接口
+     */
+    public function actionActivity(){
+        $vipPromotion = PromotionInfo::find()->where('pt_id=3 and is_active=1 and condition>0')->one();
+        if(empty($vipPromotion)){
+            $vip_des = '';
+        }else{
+            $vip_des = '充值满'.$vipPromotion->condition.'元，获得终生会员资格';
+        }
+        $billPromotions = PromotionInfo::find()->where(
+            'pt_id=2 and condition>0 and discount>0 and is_active=1 start_at<='.time().' and end_at>='.time())
+            ->orderBy(['condition'=>SORT_ASC])->all();
+        $bill_des = [];
+        if(!empty($billPromotions)){
+            $bill_des = ArrayHelper::getColumn($billPromotions,function($element){
+                return "充值$element->condition 送$element->discount ，实际到账".$element->condition+$element->discount."元";
+            });
+        }
+        if(empty($bill_des)&&empty($vip_des)){
+            return $this->showResult(301,'暂无充值活动');
+        }
+        $data = [
+            'vip'=>$vip_des,
+            'bill'=>$bill_des,
+        ];
+        return $this->showResult(200,'充值活动如下',$data);
     }
 
 }

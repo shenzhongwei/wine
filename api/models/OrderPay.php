@@ -122,8 +122,8 @@ class OrderPay extends \yii\db\ActiveRecord
                     $promotion = PromotionInfo::find()->where('
                     pt_id in (5,6) and ((start_at<='.time().' and end_at>='.time().') or (start_at=0 and end_at=0)) and is_active=1')->one();
                     if(!empty($promotion)){
-                        $count = UserPromotion::find()->where(['pid'=>$promotion->id,'uid'=>$userInfo->id,'status'=>1])->count();
-                        if($count<$promotion->time){
+                        $count = UserPromotion::find()->where(['pid'=>$promotion->id,'uid'=>$userInfo->invite_user_id,'status'=>1,'type'=>3])->count();
+                        if($count<$promotion->time||$promotion->time=0){
                             $message = new MessageList();
                             if($promotion->pt_id==5){
                                 $userTicket = new UserTicket();

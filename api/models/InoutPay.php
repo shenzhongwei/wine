@@ -197,7 +197,10 @@ class InoutPay extends \yii\db\ActiveRecord
                 }
             }
             if($inout->discount>0){
-                $usedPromotion = PromotionInfo::find()->where(['and','discount='.$inout->discount,'condition<='.$params['pay_money']])->one();
+                $usedPromotion = PromotionInfo::find()->where([
+                    'and','discount='.$inout->discount,'condition<='.$params['pay_money'],
+                    'pt_id=2','is_active=1','start_at<='.time(),'end_at>='.time()
+                ])->one();
                 if(!empty($usedPromotion)){
                     $userPromotion = new UserPromotion();
                     $userPromotion->attributes = [
