@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-<<<<<<< HEAD
-    <list default="true" id="576c0e94-dafd-422c-8651-9622db14828e" name="Default" comment="" />
-=======
     <list default="true" id="576c0e94-dafd-422c-8651-9622db14828e" name="Default" comment="">
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/api/controllers/MessageController.php" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/common/models/PromotionInfo.php" afterPath="" />
@@ -19,7 +16,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/pay/alipay/AlipayNotify.php" afterPath="$PROJECT_DIR$/common/pay/alipay/AlipayNotify.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/pay/wepay/WxPayConfig.php" afterPath="$PROJECT_DIR$/common/pay/wepay/WxPayConfig.php" />
     </list>
->>>>>>> ac68d2ddad69f8507204895aa170d83e2a7f6471
     <ignored path="wine.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path=".idea/dataSources.local.xml" />
@@ -39,14 +35,6 @@
     <favorites_list name="wine" />
   </component>
   <component name="FileEditorManager">
-<<<<<<< HEAD
-    <leaf>
-      <file leaf-file-name="PayController.php" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/api/controllers/PayController.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.0706278">
-              <caret line="101" column="15" selection-start-line="101" selection-start-column="15" selection-end-line="101" selection-end-column="15" />
-=======
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file leaf-file-name="PayController.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/api/controllers/PayController.php">
@@ -80,7 +68,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.843318">
               <caret line="285" column="5" selection-start-line="285" selection-start-column="5" selection-end-line="285" selection-end-column="5" />
->>>>>>> ac68d2ddad69f8507204895aa170d83e2a7f6471
               <folding>
                 <element signature="e#7227#7883#0#PHP" expanded="false" />
                 <element signature="e#7919#9319#0#PHP" expanded="false" />
@@ -91,29 +78,11 @@
           </provider>
         </entry>
       </file>
-<<<<<<< HEAD
-      <file leaf-file-name="AccountInout.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/api/models/AccountInout.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-10.833333">
-              <caret line="55" column="29" selection-start-line="55" selection-start-column="29" selection-end-line="55" selection-end-column="29" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="OrderPay.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/api/models/OrderPay.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-32.533333">
-              <caret line="142" column="12" selection-start-line="142" selection-start-column="12" selection-end-line="142" selection-end-column="12" />
-=======
       <file leaf-file-name="OrderPay.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/api/models/OrderPay.php">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="-15.846154">
               <caret line="197" column="12" selection-start-line="197" selection-start-column="12" selection-end-line="202" selection-end-column="13" />
->>>>>>> ac68d2ddad69f8507204895aa170d83e2a7f6471
               <folding>
                 <element signature="e#30#73#0#PHP" expanded="true" />
                 <element signature="e#2993#7979#0#PHP" expanded="false" />
@@ -122,8 +91,6 @@
           </provider>
         </entry>
       </file>
-<<<<<<< HEAD
-=======
       <file leaf-file-name="InoutPay.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/api/models/InoutPay.php">
           <provider selected="true" editor-type-id="text-editor">
@@ -134,7 +101,6 @@
           </provider>
         </entry>
       </file>
->>>>>>> ac68d2ddad69f8507204895aa170d83e2a7f6471
     </leaf>
   </component>
   <component name="Git.Settings">
@@ -202,9 +168,6 @@
   <component name="JsGulpfileManager">
     <detection-done>true</detection-done>
   </component>
-  <component name="NamedScopeManager">
-    <order />
-  </component>
   <component name="PhpServers">
     <servers />
   </component>
@@ -228,8 +191,8 @@
     <OptionsSetting value="true" id="更新" />
     <OptionsSetting value="true" id="状态" />
     <OptionsSetting value="true" id="编辑" />
-    <ConfirmationsSetting value="0" id="添加" />
-    <ConfirmationsSetting value="0" id="移除" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -242,6 +205,8 @@
       <autoscrollToSource />
       <autoscrollFromSource />
       <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
       <pane id="Scope" />
@@ -386,7 +351,6 @@
     <property name="php.override.implement.member.chooser.php.doc" value="NONE" />
     <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
-    <property name="FullScreen" value="false" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -413,7 +377,12 @@
       <gulpfile />
       <tasks />
       <arguments />
-      <pass-parent-envs>true</pass-parent-envs>
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="js.build_tools.npm" factoryName="npm">
+      <command value="run-script" />
+      <scripts />
       <envs />
       <method />
     </configuration>
@@ -433,29 +402,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
-<<<<<<< HEAD
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.15364583" sideWeight="0.66280293" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="版本控制" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32980973" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.15364583" sideWeight="0.33719704" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32980973" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22654584" sideWeight="0.503792" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3382046" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-=======
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21002132" sideWeight="0.66305524" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32980973" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
@@ -465,7 +413,6 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21002132" sideWeight="0.33694476" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32980973" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22654584" sideWeight="0.503792" order="0" side_tool="true" content_ui="tabs" />
->>>>>>> ac68d2ddad69f8507204895aa170d83e2a7f6471
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -486,179 +433,10 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-<<<<<<< HEAD
-    <entry file="file://$PROJECT_DIR$/api/models/OrderInfo.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="148" column="27" selection-start-line="148" selection-start-column="27" selection-end-line="148" selection-end-column="27" />
-          <folding>
-            <element signature="e#30#38#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/api/controllers/OrderController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="155" column="54" selection-start-line="155" selection-start-column="44" selection-end-line="155" selection-end-column="54" />
-          <folding>
-            <element signature="e#34#61#0#PHP" expanded="true" />
-            <element signature="e#362#441#0#PHP" expanded="false" />
-            <element signature="e#446#4494#0#PHP" expanded="false" />
-            <element signature="e#4909#5015#1#PHP" expanded="false" />
-            <element signature="e#6753#7409#0#PHP" expanded="false" />
-            <element signature="e#7445#8845#0#PHP" expanded="false" />
-            <element signature="e#8925#10595#0#PHP" expanded="false" />
-            <marker date="1472466082605" expanded="true" signature="-1:-1" placeholder="DELETE FROM ..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/api/controllers/TicketController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="50" column="1" selection-start-line="50" selection-start-column="1" selection-end-line="50" selection-end-column="1" />
-          <folding>
-            <element signature="e#113#139#0#PHP" expanded="true" />
-            <element signature="e#264#1703#0#PHP" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/api/controllers/PayController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="95" column="12" selection-start-line="95" selection-start-column="12" selection-end-line="102" selection-end-column="14" />
-          <folding>
-            <element signature="e#112#140#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common/pay/alipay/helpers/AlipayHelper.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="80" column="41" selection-start-line="80" selection-start-column="41" selection-end-line="80" selection-end-column="41" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common/pay/wepay/WxPayConfig.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="31" column="25" selection-start-line="31" selection-start-column="10" selection-end-line="31" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/api/models/AccountInout.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="55" column="29" selection-start-line="55" selection-start-column="29" selection-end-line="55" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/api/models/OrderPay.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#30#73#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vendor/yiisoft/yii2/base/Exception.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="15" column="27" selection-start-line="15" selection-start-column="27" selection-end-line="15" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/php/lib/php.jar!/com/jetbrains/php/lang/psi/stubs/data/Core_c.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="253" column="6" selection-start-line="253" selection-start-column="6" selection-end-line="253" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vendor/kartik-v/yii2-markdown/Markdown.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="24" column="14" selection-start-line="24" selection-start-column="6" selection-end-line="24" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vendor/kartik-v/yii2-markdown/Module.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.28460687">
-          <caret line="45" column="25" selection-start-line="45" selection-start-column="25" selection-end-line="45" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vendor/kartik-v/yii2-markdown/MarkdownEditor.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.1295681">
-          <caret line="26" column="3" selection-start-line="26" selection-start-column="3" selection-end-line="26" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/controllers/SiteController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.65384614">
-          <caret line="22" column="44" selection-start-line="22" selection-start-column="7" selection-end-line="22" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/web/index.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.03765227">
-          <caret line="2" column="44" selection-start-line="2" selection-start-column="41" selection-end-line="2" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vendor/kartik-v/yii2-markdown/controllers/ParseController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.021040974">
-          <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/config/main.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.13178295">
-          <caret line="31" column="0" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/views/manager/create.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-9.807693">
-          <caret line="15" column="53" selection-start-line="15" selection-start-column="53" selection-end-line="15" selection-end-column="53" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vendor/yiisoft/yii2/helpers/BaseArrayHelper.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="809" column="27" selection-start-line="809" selection-start-column="27" selection-end-line="809" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/api/config/main.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="14.115385">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-=======
     <entry file="file://$PROJECT_DIR$/api/models/GoodCollection.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="65" column="26" selection-start-line="65" selection-start-column="26" selection-end-line="65" selection-end-column="26" />
->>>>>>> ac68d2ddad69f8507204895aa170d83e2a7f6471
         </state>
       </provider>
     </entry>
@@ -683,6 +461,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/api/config/main-local.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-8.5">
+          <caret line="13" column="14" selection-start-line="13" selection-start-column="14" selection-end-line="13" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/vendor/yiisoft/yii2/web/Application.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.2937788">
@@ -691,20 +476,6 @@
         </state>
       </provider>
     </entry>
-<<<<<<< HEAD
-    <entry file="file://$PROJECT_DIR$/api/models/UserInfo.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-27.5">
-          <caret line="164" column="21" selection-start-line="158" selection-start-column="8" selection-end-line="164" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/api/controllers/ApiController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
-=======
     <entry file="file://$PROJECT_DIR$/api/models/ShoppingCert.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -742,60 +513,68 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="2.6153846">
           <caret line="19" column="6" selection-start-line="19" selection-start-column="6" selection-end-line="19" selection-end-column="6" />
->>>>>>> ac68d2ddad69f8507204895aa170d83e2a7f6471
           <folding />
         </state>
       </provider>
     </entry>
-<<<<<<< HEAD
-    <entry file="file://$PROJECT_DIR$/api/controllers/UserController.php">
-=======
     <entry file="file://$PROJECT_DIR$/api/controllers/CollectController.php">
->>>>>>> ac68d2ddad69f8507204895aa170d83e2a7f6471
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-13.769231">
-          <caret line="231" column="0" selection-start-line="231" selection-start-column="0" selection-end-line="231" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="19" column="32" selection-start-line="19" selection-start-column="32" selection-end-line="19" selection-end-column="32" />
+          <folding>
+            <element signature="e#33#63#0#PHP" expanded="false" />
+            <element signature="e#291#1347#0#PHP" expanded="false" />
+            <element signature="e#1353#1375#0#PHP" expanded="false" />
+            <element signature="e#1380#3042#0#PHP" expanded="false" />
+            <element signature="e#3076#3918#0#PHP" expanded="false" />
+            <marker date="1472178257870" expanded="true" signature="3610:3650" placeholder="DELETE FROM ..." />
+            <marker date="1472178257870" expanded="true" signature="3610:3651" placeholder="DELETE FROM ..." />
+            <marker date="1472178257870" expanded="true" signature="3610:3673" placeholder="DELETE FROM ..." />
+            <marker date="1472178257870" expanded="true" signature="3610:3674" placeholder="DELETE FROM ..." />
+            <marker date="1472178257870" expanded="true" signature="3610:3694" placeholder="DELETE FROM ..." />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/api/controllers/CommentController.php">
+    <entry file="file://$PROJECT_DIR$/api/controllers/ShopController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-14.053572">
-          <caret line="84" column="12" selection-start-line="84" selection-start-column="12" selection-end-line="84" selection-end-column="12" />
+        <state vertical-scroll-proportion="0.13709678">
+          <caret line="10" column="12" selection-start-line="10" selection-start-column="12" selection-end-line="10" selection-end-column="12" />
+          <folding>
+            <element signature="e#283#1575#0#PHP" expanded="false" />
+            <element signature="e#1616#3701#0#PHP" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/api/models/UserTicket.php">
+    <entry file="file://$PROJECT_DIR$/api/controllers/AddressController.php">
       <provider selected="true" editor-type-id="text-editor">
-<<<<<<< HEAD
-        <state vertical-scroll-proportion="-22.923077">
-          <caret line="77" column="14" selection-start-line="77" selection-start-column="14" selection-end-line="77" selection-end-column="14" />
-          <folding />
-=======
         <state vertical-scroll-proportion="-6.5384617">
           <caret line="12" column="3" selection-start-line="12" selection-start-column="3" selection-end-line="12" selection-end-column="3" />
->>>>>>> ac68d2ddad69f8507204895aa170d83e2a7f6471
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/common/pay/alipay/alipay.config.php">
+    <entry file="file://$PROJECT_DIR$/api/controllers/ProductController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state vertical-scroll-proportion="-7.8846154">
+          <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+          <folding>
+            <element signature="e#35#64#0#PHP" expanded="false" />
+            <element signature="e#454#1711#0#PHP" expanded="false" />
+            <element signature="e#1717#1761#0#PHP" expanded="false" />
+            <element signature="e#1766#3466#0#PHP" expanded="false" />
+            <element signature="e#3503#4090#0#PHP" expanded="false" />
+            <element signature="e#4126#4711#0#PHP" expanded="false" />
+            <element signature="e#4747#4981#0#PHP" expanded="false" />
+            <element signature="e#4987#5012#0#PHP" expanded="false" />
+            <element signature="e#5017#7769#0#PHP" expanded="false" />
+            <element signature="e#7804#10510#0#PHP" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/common/pay/wepay/AppUnifiedOrder.php">
+    <entry file="file://$PROJECT_DIR$/api/config/params-local.php">
       <provider selected="true" editor-type-id="text-editor">
-<<<<<<< HEAD
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common/pay/wepay/helpers/Log.php">
-=======
         <state vertical-scroll-proportion="-3.2692308">
           <caret line="5" column="32" selection-start-line="5" selection-start-column="32" selection-end-line="5" selection-end-column="32" />
         </state>
@@ -810,107 +589,58 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/api/controllers/PicController.php">
->>>>>>> ac68d2ddad69f8507204895aa170d83e2a7f6471
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.23502304">
-          <caret line="17" column="29" selection-start-line="17" selection-start-column="29" selection-end-line="17" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-<<<<<<< HEAD
-    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/php/lib/php.jar!/com/jetbrains/php/lang/psi/stubs/data/Core_c.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="253" column="6" selection-start-line="253" selection-start-column="6" selection-end-line="253" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vendor/yiisoft/yii2/base/Exception.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.25896862">
-          <caret line="15" column="27" selection-start-line="15" selection-start-column="27" selection-end-line="15" selection-end-column="27" />
-          <folding />
-=======
-    <entry file="file://$PROJECT_DIR$/api/models/OrderComment.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-13.076923">
-          <caret line="20" column="6" selection-start-line="20" selection-start-column="6" selection-end-line="20" selection-end-column="6" />
->>>>>>> ac68d2ddad69f8507204895aa170d83e2a7f6471
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/api/models/OrderPay.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-32.533333">
-          <caret line="142" column="12" selection-start-line="142" selection-start-column="12" selection-end-line="142" selection-end-column="12" />
+        <state vertical-scroll-proportion="-4.576923">
+          <caret line="9" column="12" selection-start-line="9" selection-start-column="12" selection-end-line="9" selection-end-column="12" />
           <folding>
-            <element signature="e#30#73#0#PHP" expanded="true" />
+            <element signature="e#253#533#0#PHP" expanded="false" />
+            <element signature="e#569#1060#0#PHP" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/api/models/AccountInout.php">
+    <entry file="file://$PROJECT_DIR$/api/models/OrderComment.php">
       <provider selected="true" editor-type-id="text-editor">
-<<<<<<< HEAD
-        <state vertical-scroll-proportion="-10.833333">
-          <caret line="55" column="29" selection-start-line="55" selection-start-column="29" selection-end-line="55" selection-end-column="29" />
-=======
+        <state vertical-scroll-proportion="-13.076923">
+          <caret line="20" column="6" selection-start-line="20" selection-start-column="6" selection-end-line="20" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/controllers/CommentController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-14.053572">
+          <caret line="84" column="12" selection-start-line="84" selection-start-column="12" selection-end-line="84" selection-end-column="12" />
+          <folding>
+            <element signature="e#367#1310#0#PHP" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/models/UserTicket.php">
+      <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-22.923077">
           <caret line="77" column="14" selection-start-line="77" selection-start-column="14" selection-end-line="77" selection-end-column="14" />
->>>>>>> ac68d2ddad69f8507204895aa170d83e2a7f6471
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/common/pay/wepay/WxPayConfig.php">
+    <entry file="file://$PROJECT_DIR$/common/pay/alipay/alipay.config.php">
       <provider selected="true" editor-type-id="text-editor">
-<<<<<<< HEAD
-        <state vertical-scroll-proportion="0.49439463">
-          <caret line="34" column="36" selection-start-line="34" selection-start-column="36" selection-end-line="34" selection-end-column="36" />
-          <folding />
-=======
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
->>>>>>> ac68d2ddad69f8507204895aa170d83e2a7f6471
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/common/pay/alipay/helpers/AlipayHelper.php">
+    <entry file="file://$PROJECT_DIR$/common/pay/wepay/AppUnifiedOrder.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="80" column="41" selection-start-line="80" selection-start-column="41" selection-end-line="80" selection-end-column="41" />
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/common/pay/wepay/helpers/Log.php">
       <provider selected="true" editor-type-id="text-editor">
-<<<<<<< HEAD
-        <state vertical-scroll-proportion="0.47085202">
-          <caret line="50" column="1" selection-start-line="50" selection-start-column="1" selection-end-line="50" selection-end-column="1" />
-          <folding>
-            <element signature="e#113#139#0#PHP" expanded="true" />
-            <element signature="e#264#1703#0#PHP" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/api/controllers/OrderController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.27017936">
-          <caret line="171" column="9" selection-start-line="171" selection-start-column="9" selection-end-line="171" selection-end-column="9" />
-          <folding>
-            <element signature="e#34#61#0#PHP" expanded="true" />
-            <element signature="e#362#441#0#PHP" expanded="false" />
-            <element signature="e#446#4494#0#PHP" expanded="false" />
-            <element signature="e#4909#5015#1#PHP" expanded="false" />
-            <element signature="e#6753#7409#0#PHP" expanded="false" />
-            <element signature="e#7445#8845#0#PHP" expanded="false" />
-            <element signature="e#8925#10595#0#PHP" expanded="false" />
-            <marker date="1472466082605" expanded="true" signature="-1:-1" placeholder="DELETE FROM ..." />
-=======
         <state vertical-scroll-proportion="0.23502304">
           <caret line="17" column="29" selection-start-line="17" selection-start-column="29" selection-end-line="17" selection-end-column="29" />
           <folding />
@@ -971,19 +701,10 @@
           <caret line="64" column="40" selection-start-line="64" selection-start-column="40" selection-end-line="64" selection-end-column="40" />
           <folding>
             <element signature="e#37#45#0#PHP" expanded="true" />
->>>>>>> ac68d2ddad69f8507204895aa170d83e2a7f6471
           </folding>
         </state>
       </provider>
     </entry>
-<<<<<<< HEAD
-    <entry file="file://$PROJECT_DIR$/api/models/OrderInfo.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.18834081">
-          <caret line="156" column="53" selection-start-line="156" selection-start-column="53" selection-end-line="156" selection-end-column="53" />
-          <folding>
-            <element signature="e#30#38#0#PHP" expanded="true" />
-=======
     <entry file="file://$PROJECT_DIR$/api/models/AccountInout.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.13824885">
@@ -1030,19 +751,10 @@
           <caret line="156" column="42" selection-start-line="156" selection-start-column="27" selection-end-line="156" selection-end-column="42" />
           <folding>
             <element signature="e#30#38#0#PHP" expanded="false" />
->>>>>>> ac68d2ddad69f8507204895aa170d83e2a7f6471
           </folding>
         </state>
       </provider>
     </entry>
-<<<<<<< HEAD
-    <entry file="file://$PROJECT_DIR$/api/controllers/PayController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.0706278">
-          <caret line="101" column="15" selection-start-line="101" selection-start-column="15" selection-end-line="101" selection-end-column="15" />
-          <folding>
-            <element signature="e#112#140#0#PHP" expanded="true" />
-=======
     <entry file="file://$PROJECT_DIR$/api/controllers/TicketController.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-27.5">
@@ -1168,7 +880,6 @@
             <element signature="e#7919#9319#0#PHP" expanded="false" />
             <element signature="e#9399#11069#0#PHP" expanded="false" />
             <marker date="1472538545988" expanded="true" signature="3951:4007" placeholder="DELETE FROM ..." />
->>>>>>> ac68d2ddad69f8507204895aa170d83e2a7f6471
           </folding>
         </state>
       </provider>
