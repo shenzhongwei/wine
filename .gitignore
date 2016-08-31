@@ -10,3 +10,6 @@ themes/classic/views/
 /admin/config/params-local.php
 /admin/web/index.php
 /.idea
+/wine.php
+/git.log
+/gitConfig.php
