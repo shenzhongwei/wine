@@ -120,11 +120,26 @@ class ProductController extends ApiController{
         $query->where('good_info.is_active=1');
         $count = $query->count();
         $query->offset(($page-1)*$pageSize)->limit($pageSize);
-        $goods = $query->all();
+        $goods = $query->asArray()->all();
+        var_dump($goods);
+        exit;
         $data = [];
         //处理获取到得数据
         if(!empty($goods)){
-            $data = GoodInfo::data($goods);
+            $data = ArrayHelper::getColumn($goods,function($element){
+                return [
+                    'good_id'=>$element->id,
+                    'pic'=>Yii::$app->params['img_path'].$element->pic,
+                    'name'=>$element->name,
+                    'volum'=>$element->volum,
+                    'number'=>$element->number,
+                    'sale_price'=>$element->goodRush->price,
+                    'end_at' => $element->goodRush->end_at,
+                    'original_price'=>$element->price,
+                    'limit'=>$element->goodRush->limit,
+                    'unit'=>$element->unit,
+                ];
+            });
         }
         return $this->showList(200,'成功',$count,$data);
     }
@@ -145,7 +160,18 @@ class ProductController extends ApiController{
         $data = [];
         //处理获取到得数据
         if(!empty($goods)){
-            $data = GoodInfo::data($goods);
+            $data = ArrayHelper::getColumn($goods,function($element){
+                return [
+                    'good_id'=>$element->id,
+                    'pic'=>Yii::$app->params['img_path'].$element->pic,
+                    'name'=>$element->name,
+                    'volum'=>$element->volum,
+                    'number'=>$element->number,
+                    'sale_price'=>$element->goodVip->price,
+                    'original_price'=>$element->price,
+                    'unit'=>$element->unit,
+                ];
+            });
         }
         return $this->showList(200,'成功',$count,$data);
     }
