@@ -9,3 +9,4 @@ themes/classic/views/
 /admin/config/main-local.php
 /admin/config/params-local.php
 /admin/web/index.php
+/.idea
