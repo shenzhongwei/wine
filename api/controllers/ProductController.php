@@ -245,7 +245,7 @@ class ProductController extends ApiController{
         //判断产品信息是否存在
         $goodInfo = GoodInfo::findOne(['id'=>$good_id,'is_active'=>1]);
         if(empty($goodInfo)){
-            return $this->showResult(303,'未获取到产品信息');
+            return $this->showResult(304,'未获取到产品信息');
         }
         //产品轮播图;
         $pics = ArrayHelper::getColumn($goodInfo->goodPics,function($element){

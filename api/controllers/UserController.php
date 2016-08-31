@@ -306,7 +306,7 @@ class UserController extends ApiController{
         }
         $user = $login->userInfo;
         if(empty($user)){
-            return $this->showResult(305,'未找到您的用户信息，请联系客服解决');
+            return $this->showResult(302,'未找到您的用户信息，请联系客服解决');
         }
         $user->attributes = [
             $key=>$value,

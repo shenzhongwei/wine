@@ -63,7 +63,7 @@ class ShopController extends ApiController{
         //判断地址是否是该用户的,如果不是怎返回错误信息
         $userAddress = UserAddress::find()->where("lat>0 and lng>0 and id=$address_id and uid=$user_id and status=1")->one();
         if(empty($userAddress)){
-            return $this->showResult(303,'未获取到您的地址信息');
+            return $this->showResult(304,'未获取到您的地址信息');
         }
         //如果是的，则查出所有的商家
         $lat = $userAddress->lat/1000000;

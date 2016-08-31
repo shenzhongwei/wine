@@ -28,7 +28,7 @@ class ShoppingController extends ApiController{
         $shopCerts = ShoppingCert::find()->joinWith('g')->where(['uid'=>$user_id,'is_active'=>1])->all();
         $userInfo = UserInfo::findOne($user_id);
         if(empty($userInfo)){
-            return $this->showResult(304,'未获取到您的用户信息');
+            return $this->showResult(302,'未获取到您的用户信息');
         }
         $data = [];
         //队购物车内产品数据处理

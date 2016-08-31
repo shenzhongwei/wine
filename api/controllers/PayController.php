@@ -39,7 +39,7 @@ class PayController extends ApiController{
         if($type==1){
             $orderInfo = OrderInfo::findOne(['order_code'=>$orderCode,'uid'=>$user_id,'state'=>1,'is_del'=>0]);
             if(empty($orderInfo)){
-                return $this->showResult(303,'订单信息错误，请重试');
+                return $this->showResult(304,'订单信息错误，请重试');
             }
             $wxUnified->setParameter('body','APP订单付款');
 //            $wxUnified->setParameter('total_fee',1);
@@ -49,7 +49,7 @@ class PayController extends ApiController{
             $inout_id = substr($orderCode,10);
             $inout = AccountInout::findOne(['target_id'=>$user_id,'id'=>$inout_id,'type'=>4,'status'=>2]);
             if(empty($inout)){
-                return $this->showResult(303,'充值信息错误，请重试');
+                return $this->showResult(304,'充值信息错误，请重试');
             }
             $wxUnified->setParameter('body','APP充值支付');
 //            $wxUnified->setParameter('total_fee',1);
@@ -275,12 +275,12 @@ class PayController extends ApiController{
         }
         $orderInfo = OrderInfo::findOne(['uid'=>$user_id,'order_code'=>$orderCode,'state'=>1,'is_del'=>0]);//查找订单，炸不到返回错误
         if(empty($orderInfo)){
-            return $this->showResult(303,'订单信息错误，请重试');
+            return $this->showResult(304,'订单信息错误，请重试');
         }
         //查找账户余额，不足则提示
         $account = UserAccount::findOne(['target'=>$user_id,'type'=>1,'level'=>2,'is_active'=>1]);
         if(empty($account)||$account->end<$orderInfo->pay_bill){
-            return $this->showResult(304,'账户余额不足，请先充值');
+            return $this->showResult(305,'账户余额不足，请先充值');
         }
         /**
          * 开启事务

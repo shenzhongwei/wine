@@ -36,7 +36,7 @@ class MessageController extends ApiController{
         $pageSize = Yii::$app->params['pageSize'];
         $userInfo = UserInfo::findOne($user_id);
         if(empty($userInfo)){
-            return $this->showResult(401,'用户信息异常');
+            return $this->showResult(302,'用户信息异常');
         }
         //查找 用户，订单 系统和商户
         $query = MessageList::find()->joinWith('user')->joinWith('order');
