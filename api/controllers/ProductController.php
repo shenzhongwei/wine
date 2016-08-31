@@ -119,13 +119,8 @@ class ProductController extends ApiController{
         $query = GoodInfo::find()->joinWith('goodRush');
         $query->where('good_info.is_active=1');
         $count = $query->count();
-        var_dump(date('Y-m-d H:i:s'));
-        var_dump($query);
-        exit;
         $query->offset(($page-1)*$pageSize)->limit($pageSize);
         $goods = $query->asArray()->all();
-        var_dump($goods);
-        exit;
         $data = [];
         //处理获取到得数据
         if(!empty($goods)){
