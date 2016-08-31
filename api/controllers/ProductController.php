@@ -327,7 +327,7 @@ class ProductController extends ApiController{
             'limit'=>$limit,
             'comments'=>$comment,
             'is_collected'=>$is_collected,
-            'dateal'=>stripcslashes($goodInfo->detail),
+            'detail'=>stripcslashes($goodInfo->detail),
         ];
         return $this->showResult(200,'详情如下',$data);
     }
