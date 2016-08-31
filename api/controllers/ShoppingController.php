@@ -24,8 +24,13 @@ class ShoppingController extends ApiController{
      */
     public function actionShoppingCertList(){
         $user_id = Yii::$app->user->identity->getId();
+        $page = Yii::$app->request->post('page',1);//页数
+        $pageSize = Yii::$app->params['pageSize'];
         //找出购物车内的产品
-        $shopCerts = ShoppingCert::find()->joinWith('g')->where(['uid'=>$user_id,'is_active'=>1])->all();
+        $query = ShoppingCert::find()->joinWith('g')->where("uid=$user_id and good_info.id>0");
+        $count = $query->count();
+        $query->offset(($page-1)*$pageSize)->limit($pageSize);
+        $shopCerts = $query->all();
         $userInfo = UserInfo::findOne($user_id);
         if(empty($userInfo)){
             return $this->showResult(302,'未获取到您的用户信息');
@@ -55,7 +60,7 @@ class ShoppingController extends ApiController{
                 ];
             });
         }
-        return $this->showResult(200,'列表如下',$data);
+        return $this->showList(200,'列表如下',$count,$data);
     }
 
     /**
@@ -93,8 +98,11 @@ class ShoppingController extends ApiController{
         $good_id = Yii::$app->request->post('good_id');
         $amount = Yii::$app->request->post('amount');
         //判断是否为空
-        if(empty($good_id)||empty($amount)||empty(GoodInfo::findOne($good_id))){
-            return $this->showResult(301,'获取商品信息失败');
+        if(empty($good_id)||empty($amount)){
+            return $this->showResult(301,'获取数据失败');
+        }
+        if(empty(GoodInfo::findOne($good_id))){
+            return $this->showResult(304,'商品信息异常');
         }
         //判断购物车中是否有该商品,若是有则直接加上数量，若没有，则新增
         $userCert = ShoppingCert::findOne(['gid'=>$good_id,'uid'=>$user_id]);
@@ -137,7 +145,7 @@ class ShoppingController extends ApiController{
                 }
                 $userCert = ShoppingCert::findOne(['uid'=>$user_id,'id'=>$value['cert_id']]);
                 if(empty($userCert)){
-                    throw new Exception('数据信息读取失败');
+                    throw new Exception('购物车信息读取失败');
                 }
                 $userCert->amount = $value['amount'];
                 if(!$userCert->save()){

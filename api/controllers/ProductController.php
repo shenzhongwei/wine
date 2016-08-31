@@ -45,13 +45,13 @@ class ProductController extends ApiController{
                 'brand'=>$brand,
                 'smell'=>$smell,
                 'boot'=>$boot,
-                'priceField'=>$priceField,
+                'price'=>$priceField,
                 'color'=>$color,
                 'dry'=>$dry,
                 'breed'=>$breed,
                 'country'=>$country,
                 'style'=>$style,
-                'model'=>$model,
+                'volum'=>$model,
             ];
         }
         return $this->showResult(200,'成功',$data);
@@ -74,7 +74,9 @@ class ProductController extends ApiController{
                 'end_at'=>$rushList->end_at,
                 'name'=>$rushList->g->name,
                 'volum'=>$rushList->g->volum,
-                'rush_price'=>$rushList->price,
+                'number'=>$rushList->g->number,
+                'limit'=>$rushList->limit,
+                'sale_price'=>$rushList->price,
                 'original_price'=>$rushList->g->price,
                 'unit'=>$rushList->g->unit,
             ];
@@ -88,9 +90,8 @@ class ProductController extends ApiController{
                 'pic'=>Yii::$app->params['img_path'].$vipList->g->pic,
                 'name'=>$vipList->g->name,
                 'number'=>$vipList->g->number,
-                'limit'=>$vipList->limit,
                 'volum'=>$vipList->g->volum,
-                'vip_price'=>$vipList->price,
+                'sale_price'=>$vipList->price,
                 'original_price'=>$vipList->g->price,
                 'unit'=>$vipList->g->unit,
             ];
@@ -185,12 +186,7 @@ class ProductController extends ApiController{
         }
         if($from == 0){//为0表示大类下列表
             $query->andWhere(['type'=>$from_val]);
-            if(!empty($key)&&!empty($value)){
-                $query->andWhere(['and',$key=='price' ? "$key between $value[0] and $value[1]":"$key=$value"]);
-            }else{
-                return $this->showResult(301,'获取数据异常');
-            }
-        }elseif($from == 1){//为1表示店铺上架下的列表
+        }elseif($from == 1){//为1表示店铺商家下的列表
             $shop = ShopInfo::findOne($from_val);
             if(empty($shop)){
                 return $this->showResult(303,'未获取到店铺信息');
@@ -203,6 +199,10 @@ class ProductController extends ApiController{
             $query->andFilterWhere(['like','name',$from_val]);
         }else{//其他值不识别
             return $this->showResult(301,'获取数据异常');
+        }
+        if(!empty($key)&&!empty($value)){
+            $query->andWhere(['and',$key=='price' ? "$key >= $value[0] ".(empty($value[1]) ? '' :
+                    "and $key <=$value[1]") : "$key=$value"]);
         }
         $count = $query->count();
         //排序

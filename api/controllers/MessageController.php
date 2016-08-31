@@ -22,9 +22,7 @@ class MessageController extends ApiController{
         //判断
         $count = MessageList::find()->joinWith('user')->joinWith('order')->where(
             "((own_id=$user_id and type_id=2 and user_info.id>0) or (uid=$user_id and type_id=3 and order_info.id>0) )and message_list.status=0")->count();
-        if($count>0){
-            return $this->showResult(200,'成功',$count);
-        }
+        return $this->showResult(200,'成功',$count);
     }
 
     /**
@@ -40,8 +38,10 @@ class MessageController extends ApiController{
         }
         //查找 用户，订单 系统和商户
         $query = MessageList::find()->joinWith('user')->joinWith('order');
-        $query->where("((own_id=$user_id and type_id=2 and user_info.id>0) or (uid=$user_id and type_id=3 and order_info.id>0)) or (type_id in (1,4))");
-        $query->andWhere("unix_timestamp(publish_at)>=".(strtotime($userInfo->created_time)-86400));
+        $query->where("
+        ((own_id=$user_id and type_id=2 and user_info.id>0) or
+        (uid=$user_id and type_id=3 and order_info.id>0)) or
+        (type_id in (1,4) and unix_timestamp(publish_at)+86400>=".strtotime($userInfo->created_time).")");
         $query->orderBy(['publish_at'=>SORT_DESC]);
         $count = $query->count();
         $query->offset(($page-1)*$pageSize)->limit($pageSize);

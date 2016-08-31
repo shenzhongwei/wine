@@ -109,7 +109,7 @@ class CollectController extends  ApiController{
         $collection_id = '('.implode(',',$collection_id).')';
         $isExist = GoodCollection::find()->where("id in $collection_id and status=1 and uid=$user_id")->all();
         if(empty($isExist)){
-            return $this->showResult(303,'未获取到收藏信息');
+            return $this->showResult(304,'未获取到收藏信息');
         }
         $sql = "DELETE FROM good_collection WHERE id IN $collection_id AND uid=$user_id AND status=1";
         $row = Yii::$app->db->createCommand($sql)->execute();

@@ -105,6 +105,8 @@ class AddressController extends ApiController{
                     throw new Exception('修改其他地址状态出错');
                 }
             }
+            $transaction->commit();
+            return $this->showResult(200,'设置成功');
         }catch (Exception $e){
             $transaction->rollBack();
             return $this->showResult(400,$e->getMessage());
@@ -140,7 +142,11 @@ class AddressController extends ApiController{
     public function actionAddList(){
         //获取用户id
         $user_id = Yii::$app->user->identity->getId();
-        $adds = UserAddress::find()->where(['and','uid='.$user_id,'status<>0','lat>0','lng>0'])->all();
+        $page = Yii::$app->request->post('page',1);
+        $pageSize = Yii::$app->params['pageSize'];
+        $query = UserAddress::find()->where(['and','uid='.$user_id,'status<>0','lat>0','lng>0']);
+        $count = $query->count();
+        $adds = $query->offset(($page-1)*$pageSize)->limit($pageSize)->all();
         //判断是否有地址
         if(empty($adds)){
             return $this->showResult(303,'尚未添加收货地址');
@@ -159,7 +165,7 @@ class AddressController extends ApiController{
                     'default'=>$add->is_default,
                 ];
             }
-            return $this->showResult(200,'获取成功',$data);
+            return $this->showList(200,'获取成功',$count,$data);
         }
     }
 
@@ -223,9 +229,9 @@ class AddressController extends ApiController{
             'updated_time'=>date('Y-m-d H:i:s'),
         ];
         if(!$userAddress->save()){
-            return $this->showResult(400,'新增地址信息出错');
+            return $this->showResult(400,'编辑地址信息出错');
         }else{
-            return $this->showResult(200,'新增地址成功');
+            return $this->showResult(200,'编辑地址成功');
         }
     }
 }
