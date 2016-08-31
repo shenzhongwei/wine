@@ -329,13 +329,15 @@ class OrderController extends ApiController{
 
 
     /**
-     * 充值页面优惠描述接口
+     * 充值页面充值金额选项以及优惠描述接口
      */
     public function actionActivity(){
         $vipPromotion = PromotionInfo::find()->where('pt_id=3 and is_active=1 and condition>0')->one();
+        $billLabels = [];
         if(empty($vipPromotion)){
             $vip_des = '';
         }else{
+            $billLabels [] = $vipPromotion->condition;
             $vip_des = '充值满'.$vipPromotion->condition.'元，获得终生会员资格';
         }
         $billPromotions = PromotionInfo::find()->where(
@@ -343,14 +345,16 @@ class OrderController extends ApiController{
             ->orderBy(['condition'=>SORT_ASC])->all();
         $bill_des = [];
         if(!empty($billPromotions)){
-            $bill_des = ArrayHelper::getColumn($billPromotions,function($element){
-                return "充值$element->condition 送$element->discount ，实际到账".$element->condition+$element->discount."元";
-            });
+            foreach($billPromotions as $promotion){
+                $bill_des[] = "充值$promotion->condition 送$promotion->discount ，实际到账".$promotion->condition+$promotion->discount."元";
+                $billLabels [] = $vipPromotion->condition;
+            }
         }
         if(empty($bill_des)&&empty($vip_des)){
             return $this->showResult(301,'暂无充值活动');
         }
         $data = [
+            'bill_label'=>$billLabels,
             'vip'=>$vip_des,
             'bill'=>$bill_des,
         ];

@@ -2,6 +2,7 @@
 namespace api\controllers;
 use api\models\GoodCollection;
 use api\models\GoodInfo;
+use api\models\UserInfo;
 use Yii;
 use yii\helpers\ArrayHelper;
 
@@ -27,7 +28,7 @@ class CollectController extends  ApiController{
         //判断产品信息是否存在
         $goodInfo = GoodInfo::findOne(['id'=>$good_id,'is_active'=>1]);
         if(empty($goodInfo)){
-            return $this->showResult(303,'未获取到产品信息');
+            return $this->showResult(304,'未获取到产品信息');
         }
         //判断该商品是否已收藏
         $collectedGood = GoodCollection::find()->where(['uid'=>$user_id,'gid'=>$good_id,'status'=>1])->one();
@@ -57,37 +58,42 @@ class CollectController extends  ApiController{
         //页数；
         $page = Yii::$app->request->post('page',1);
         $pageSize = Yii::$app->params['pageSize'];
+        $userInfo = UserInfo::findOne($user_id);
+        if(empty($userInfo)){
+            return $this->showResult(302,'用户信息异常');
+        }
         //找出收藏数据
         $query = GoodCollection::find()->joinWith('g')->where(['status'=>1,'uid'=>$user_id])->orderBy(['add_at'=>SORT_DESC]);
         $count = $query->count();
         $query->offset(($page-1)*$pageSize)->limit($pageSize);
         $collections = $query->all();
         //对数据进行处理并返回
-        $data = ArrayHelper::getColumn($collections,function($element){
-            $is_rush = empty($element->g->goodRush) ? 0:1;
-            $is_vip = empty($element->g->goodVip) ? 0:1;
+        $data = [];
+        foreach($collections as $collection){
+            $is_rush = empty($collection->g->goodRush) ? 0:1;
+            $is_vip = !empty($collection->g->goodVip)&&$userInfo->is_vip == 1 ? 1:0;
             if($is_rush == 1){
-                $salePrice = $element->g->goodRush->price;
+                $salePrice = $collection->g->goodRush->price;
             }elseif($is_vip == 1){
-                $salePrice = $element->g->goodVip->price;
+                $salePrice = $collection->g->goodVip->price;
             }else{
-                $salePrice = $element->g->price;
+                $salePrice = $collection->g->price;
             }
-            return [
-                'collection_id'=>$element->id,
-                'good_id'=>$element->g->id,
-                'pic'=>Yii::$app->params['img_path'].$element->g->pic,
-                'name'=>$element->g->name,
-                'volum'=>$element->g->volum,
-                'number'=>$element->g->number,
+            $data[] = [
+                'collection_id'=>$collection->id,
+                'good_id'=>$collection->g->id,
+                'pic'=>Yii::$app->params['img_path'].$collection->g->pic,
+                'name'=>$collection->g->name,
+                'volum'=>$collection->g->volum,
+                'number'=>$collection->g->number,
                 'sale_price'=>$salePrice,
-                'end_at' => $is_rush==1 ? $element->g->goodRush->end_at : '',
-                'original_price'=>$element->g->price,
-                'unit'=>$element->g->unit,
+                'end_at' => $is_rush==1 ? $collection->g->goodRush->end_at : '',
+                'original_price'=>$collection->g->price,
+                'unit'=>$collection->g->unit,
                 'is_rush'=>$is_rush,
                 'is_vip'=>$is_vip,
             ];
-        });
+        }
         return $this->showList(200,'收藏列表如下',$count,$data);
     }
 
