@@ -378,7 +378,8 @@ class UserController extends ApiController{
         $query = UserInfo::find()->where(['status'=>1,'invite_user_id'=>$user_id]);//查
         $query->orderBy(['created_time'=>SORT_DESC]);//排序
         $count = $query->count();
-        $recommentUsers = $query->offset(($page-1)*$pageSize)->limit($pageSize);//分页
+        $query->offset(($page-1)*$pageSize)->limit($pageSize);//分页
+        $recommentUsers = $query->all();
         $data = ArrayHelper::getColumn($recommentUsers,function($element){
             return [
                 'user_id'=>$element->id,
