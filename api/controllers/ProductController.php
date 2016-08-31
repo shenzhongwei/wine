@@ -126,8 +126,6 @@ class ProductController extends ApiController{
         if(!empty($goods)){
             $data = GoodInfo::data($goods);
         }
-        var_dump($data);
-        exit;
         return $this->showList(200,'成功',$count,$data);
     }
 
