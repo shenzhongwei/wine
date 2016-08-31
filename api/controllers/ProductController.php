@@ -120,7 +120,7 @@ class ProductController extends ApiController{
         $query->where('good_info.is_active=1');
         $count = $query->count();
         $query->offset(($page-1)*$pageSize)->limit($pageSize);
-        $goods = $query->asArray()->all();
+        $goods = $query->all();
         $data = [];
         //处理获取到得数据
         if(!empty($goods)){
