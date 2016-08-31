@@ -6,3 +6,5 @@ protected/data/*.db
 themes/classic/views/
 /.svn
 /api/web/wx_notify.txt
+/admin/config/main-local.php
+/admin/config/params-local.php
