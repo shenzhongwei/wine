@@ -121,6 +121,8 @@ class ProductController extends ApiController{
         $count = $query->count();
         $query->offset(($page-1)*$pageSize)->limit($pageSize);
         $goods = $query->all();
+        var_dump($goods);
+        exit;
         $data = [];
         //处理获取到得数据
         if(!empty($goods)){
