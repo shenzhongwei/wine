@@ -329,7 +329,7 @@ class OrderController extends ApiController{
 
 
     /**
-     * 充值页面优惠描述接口
+     * 充值页面优惠描述api
      */
     public function actionActivity(){
         $vipPromotion = PromotionInfo::find()->where('pt_id=3 and is_active=1 and condition>0')->one();
