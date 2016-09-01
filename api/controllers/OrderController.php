@@ -346,7 +346,8 @@ class OrderController extends ApiController{
             $vip_des = '';
         }else{
             $billLabels [] = $vipPromotion->condition;
-            $vip_des = '充值满'.$vipPromotion->condition.'元，获得终生会员资格';
+            $condition =  (int)($vipPromotion->condition);
+            $vip_des = '充值满'.$condition.'元，获得终生会员资格';
         }
         $billPromotions = PromotionInfo::find()->where(
             'pt_id=2 and `condition`>0 and discount>0 and is_active=1 and start_at<='.time().' and end_at>='.time())
@@ -354,12 +355,12 @@ class OrderController extends ApiController{
         $bill_des = [];
         if(!empty($billPromotions)){
             foreach($billPromotions as $promotion){
-                $bill_des[] = "充值$promotion->condition 送$promotion->discount ，实际到账".$promotion->condition+$promotion->discount."元";
-                $billLabels [] = $vipPromotion->condition;
+                $condition = (int)($promotion->condition);
+                $discount = (int)($promotion->discount);
+                $bill_des[] = "充值$condition 送$discount ，实际到账".($condition+$discount)."元";
+                $billLabels [] = $condition;
             }
         }
-        var_dump($bill_des);
-        exit;
         if(empty($bill_des)&&empty($vip_des)){
             return $this->showResult(301,'暂无充值活动');
         }
