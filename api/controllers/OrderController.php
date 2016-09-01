@@ -345,8 +345,8 @@ class OrderController extends ApiController{
         if(empty($vipPromotion)){
             $vip_des = '';
         }else{
-            $billLabels [] = $vipPromotion->condition;
             $condition =  (int)($vipPromotion->condition);
+            $billLabels [] = $condition;
             $vip_des = '充值满'.$condition.'元，获得终生会员资格';
         }
         $billPromotions = PromotionInfo::find()->where(
