@@ -199,7 +199,7 @@ class UserController extends ApiController{
             Yii::$app->cache->delete('message_'.$phone);
             $data = [
                 'phone'=>$phone,
-                'password'=>$phone,
+                'password'=>$password,
             ];
             return $this->showResult(200,'注册成功',$data);
         }catch (Exception $e){
