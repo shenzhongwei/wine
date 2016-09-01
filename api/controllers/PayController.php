@@ -328,6 +328,8 @@ class PayController extends ApiController{
             if(!$message->save()){
                 throw new Exception('生成用户余额变更消息出错');
             }
+            $transaction->commit();
+            return $this->showResult(200,'余额付款成功');
         }catch (Exception $e){
             $transaction->rollBack();
             return $this->showResult(400,$e->getMessage());
