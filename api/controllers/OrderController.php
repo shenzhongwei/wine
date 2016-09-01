@@ -340,7 +340,7 @@ class OrderController extends ApiController{
      * 充值页面充值金额选项以及优惠描述接口
      */
     public function actionActivity(){
-        $vipPromotion = PromotionInfo::find()->where('pt_id=3 and is_active=1 and condition>0')->one();
+        $vipPromotion = PromotionInfo::find()->where('pt_id=3 and is_active=1 and `condition`>0')->one();
         $billLabels = [];
         if(empty($vipPromotion)){
             $vip_des = '';
