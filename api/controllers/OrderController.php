@@ -349,7 +349,7 @@ class OrderController extends ApiController{
             $vip_des = '充值满'.$vipPromotion->condition.'元，获得终生会员资格';
         }
         $billPromotions = PromotionInfo::find()->where(
-            'pt_id=2 and `condition`>0 and discount>0 and is_active=1 start_at<='.time().' and end_at>='.time())
+            'pt_id=2 and `condition`>0 and discount>0 and is_active=1 and start_at<='.time().' and end_at>='.time())
             ->orderBy(['`condition`'=>SORT_ASC])->all();
         $bill_des = [];
         if(!empty($billPromotions)){
