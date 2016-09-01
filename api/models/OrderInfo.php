@@ -11,6 +11,7 @@ use yii\base\Exception;
  * @property integer $id
  * @property integer $sid
  * @property integer $uid
+ * @property string $aid
  * @property integer $order_date
  * @property string $order_code
  * @property integer $pay_id
@@ -33,6 +34,7 @@ use yii\base\Exception;
  * @property ShopInfo $s
  * @property UserTicket $ticket
  * @property UserInfo $u
+ * @property UserAddress $a
  * @property OrderPay $orderPay
  */
 class OrderInfo extends \yii\db\ActiveRecord
@@ -51,13 +53,14 @@ class OrderInfo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['sid', 'uid', 'order_date', 'pay_id', 'pay_date', 'send_id', 'state', 'send_date', 'is_del', 'status','ticket_id'], 'integer'],
+            [['sid', 'uid', 'order_date', 'pay_id', 'pay_date', 'send_id', 'state', 'send_date', 'is_del', 'status','ticket_id','aid'], 'integer'],
             [['total', 'discount', 'send_bill', 'pay_bill'], 'number'],
             [['order_code'], 'string', 'max' => 16],
             [['send_code'],'string','max'=>12],
             [['send_id'], 'exist', 'skipOnError' => true, 'targetClass' => EmployeeInfo::className(), 'targetAttribute' => ['send_id' => 'id']],
             [['sid'], 'exist', 'skipOnError' => true, 'targetClass' => ShopInfo::className(), 'targetAttribute' => ['sid' => 'id']],
             [['uid'], 'exist', 'skipOnError' => true, 'targetClass' => UserInfo::className(), 'targetAttribute' => ['uid' => 'id']],
+            [['aid'], 'exist', 'skipOnError' => true, 'targetClass' => UserAddress::className(), 'targetAttribute' => ['aid' => 'id']],
         ];
     }
 
@@ -76,6 +79,7 @@ class OrderInfo extends \yii\db\ActiveRecord
             'pay_date' => '付款时间',
             'total' => '总价',
             'discount' => '优惠金额',
+            'aid'=>'收货地址',
             'send_bill' => '运费',
             'send_code'=>'物流编号',
             'ticket_id'=>'优惠券',
@@ -135,6 +139,14 @@ class OrderInfo extends \yii\db\ActiveRecord
     public function getU()
     {
         return $this->hasOne(UserInfo::className(), ['id' => 'uid']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getA()
+    {
+        return $this->hasOne(UserAddress::className(), ['id' => 'aid']);
     }
 
     /**

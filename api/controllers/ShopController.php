@@ -3,6 +3,7 @@ namespace api\controllers;
 
 use api\models\ShopInfo;
 use api\models\UserAddress;
+use api\models\UserInfo;
 use Yii;
 use yii\helpers\ArrayHelper;
 
@@ -55,6 +56,11 @@ class ShopController extends ApiController{
         $user_id = Yii::$app->user->identity->getId();
         $page = Yii::$app->request->post('page');
         $pageSize = Yii::$app->params['pageSize'];
+        //判断用户
+        $userInfo = UserInfo::findOne($user_id);
+        if(empty($userInfo)){
+            return $this->showResult(302,'用户信息异常，请重试');
+        }
         //获取地址id
         $address_id = Yii::$app->request->post('address_id');
         if(empty($address_id)){
@@ -78,19 +84,19 @@ class ShopController extends ApiController{
         $shops = $query->asArray()->all();
         $data = [];
         if(!empty($shops)){
-            $data = ArrayHelper::getColumn($shops,function($element){
-                return [
+           foreach($shops as $element){
+                $data[] = [
                     'shop_id'=>$element['id'],
                     'name'=>$element['name'],
                     'distance'=>$element['distance'],
                     'lat'=>$element['lat']/1000000,
                     'lng'=>$element['lng']/1000000,
                     'least_price'=>$element['least_money'],
-                    'send_bill'=>$element['send_bill'],
+                    'send_bill'=>$userInfo->is_vip ? 0:$element['send_bill'],
                     'no_send_need'=>$element['no_send_need'],
                     'tips'=>$element['distance']<=3000 ? '19分钟内送达':($element['distance']<5000 ? '29分钟内送达':'您的配送距离较长，请耐心等待'),
                 ];
-            });
+            }
         }
         return $this->showList(200,'成功',$count,$data);
     }

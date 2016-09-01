@@ -267,7 +267,7 @@ class ProductController extends ApiController{
             return $this->showResult(301,'获取数据异常');
         }
         //判断产品信息是否存在
-        $goodInfo = GoodInfo::findOne(['id'=>$good_id,'is_active'=>1]);
+        $goodInfo = GoodInfo::findOne(['id'=>$good_id]);
         if(empty($goodInfo)){
             return $this->showResult(304,'未获取到产品信息');
         }
@@ -327,6 +327,7 @@ class ProductController extends ApiController{
             'limit'=>$limit,
             'comments'=>$comment,
             'is_collected'=>$is_collected,
+            'is_active'=>$goodInfo->is_active,
             'detail'=>stripcslashes($goodInfo->detail),
         ];
         return $this->showResult(200,'详情如下',$data);

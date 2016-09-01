@@ -6,6 +6,7 @@ use api\models\OrderDetail;
 use api\models\OrderInfo;
 use api\models\PromotionInfo;
 use api\models\ShoppingCert;
+use api\models\UserAddress;
 use api\models\UserInfo;
 use api\models\UserPromotion;
 use api\models\UserTicket;
@@ -42,9 +43,15 @@ class OrderController extends ApiController{
         $ticket_id = Yii::$app->request->post('ticket_id',0);//优惠券id
         $pay_mode = Yii::$app->request->post('pay_mode');//付款方式1余额 2支付宝 3微信
         $pay_price = Yii::$app->request->post('pay_price');//付款价格
+        $address_id = Yii::$app->request->post('address_id');//收货地址id
         //验证参数
-        if(empty($from_val)||empty($shop_id)||empty($total_price)||empty($pay_mode)||empty($pay_price)||empty($from)){
+        if(empty($from_val)||empty($shop_id)||empty($total_price)||empty($pay_mode)||empty($pay_price)||empty($from)||empty($address_id)){
             return $this->showResult(301,'读取订单信息失败');
+        }
+        //验证地址
+        $userAddress = UserAddress::find()->where("lat>0 and lng>0 and uid=$user_id and aid=$address_id and status=1")->one();
+        if(empty($userAddress)){
+            return $this->showResult(303,'用户地址信息异常');
         }
         //验证商品总价格和付款价格以及购物车信息是否有效
         $total=0;
@@ -80,6 +87,7 @@ class OrderController extends ApiController{
             $order->attributes = [
                 'sid'=>$shop_id,
                 'uid'=>$user_id,
+                'aid'=>$address_id,
                 'order_date'=>time(),
                 'order_code'=>OrderInfo::generateCode().date('YmdHis').$user_id,
                 'pay_id'=>$pay_mode,
