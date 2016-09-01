@@ -358,6 +358,8 @@ class OrderController extends ApiController{
                 $billLabels [] = $vipPromotion->condition;
             }
         }
+        var_dump(11);
+        exit;
         if(empty($bill_des)&&empty($vip_des)){
             return $this->showResult(301,'暂无充值活动');
         }
