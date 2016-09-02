@@ -185,8 +185,8 @@ use yii\web\NotFoundHttpException;
              }
              $data['wa_username'] = empty($data['wa_username']) ? $model->wa_username:$data['wa_username'];
              $data['wa_password'] = (empty(str_replace('*','',$data['wa_password']))) ? $model->wa_password:md5(Yii::$app->params['pwd_pre'].$data['wa_password']);
-             $data['wa_phone'] = empty($data['wa_phone']) ? $model->wa_phone:$data['wa_phone'];
-             $data['wa_name'] = empty($data['wa_name']) ? $model->wa_name:$data['wa_name'];
+             $data['wa_phone'] = empty($data['wa_phone']) ? '':$data['wa_phone'];
+             $data['wa_name'] = empty($data['wa_name']) ? '':$data['wa_name'];
              $data['item_name'] = empty($data['item_name']) ? $model->admingroup->item_name:$data['item_name'];
              if($data['wa_username']!=$model->wa_username){
                  $message = '用户名不可修改';
