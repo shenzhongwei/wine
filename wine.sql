@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : localhost
-Source Server Version : 50540
-Source Host           : 127.0.0.1:3306
+Source Server         : glavesoft
+Source Server Version : 50543
+Source Host           : 120.25.144.153:3306
 Source Database       : wine
 
 Target Server Type    : MYSQL
-Target Server Version : 50540
+Target Server Version : 50543
 File Encoding         : 65001
 
-Date: 2016-08-30 17:02:36
+Date: 2016-09-02 08:55:25
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -29,8 +29,8 @@ CREATE TABLE `account_inout` (
   `discount` decimal(11,2) NOT NULL DEFAULT '0.00' COMMENT '赠送金额',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 0删除 1正常 2待付款',
   PRIMARY KEY (`id`),
-  KEY `account_inout_id` (`aid`),
-  CONSTRAINT `account_inout_id` FOREIGN KEY (`aid`) REFERENCES `user_account` (`id`) ON UPDATE CASCADE
+  KEY `account_inout_id` (`aid`) USING BTREE,
+  CONSTRAINT `account_inout_ibfk_1` FOREIGN KEY (`aid`) REFERENCES `user_account` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='充值明细';
 
 -- ----------------------------
@@ -70,10 +70,10 @@ CREATE TABLE `comment_detail` (
   `content` varchar(250) NOT NULL DEFAULT '' COMMENT '评价',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态0删除 1正常',
   PRIMARY KEY (`id`),
-  KEY `order_comment_detail_id` (`cid`),
-  KEY `good_comment_id` (`gid`),
-  CONSTRAINT `good_comment_id` FOREIGN KEY (`gid`) REFERENCES `good_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `order_comment_detail_id` FOREIGN KEY (`cid`) REFERENCES `order_comment` (`id`) ON UPDATE CASCADE
+  KEY `order_comment_detail_id` (`cid`) USING BTREE,
+  KEY `good_comment_id` (`gid`) USING BTREE,
+  CONSTRAINT `comment_detail_ibfk_1` FOREIGN KEY (`gid`) REFERENCES `good_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `comment_detail_ibfk_2` FOREIGN KEY (`cid`) REFERENCES `order_comment` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='评价详情表';
 
 -- ----------------------------
@@ -97,7 +97,7 @@ CREATE TABLE `country` (
   `code2` varchar(5) NOT NULL DEFAULT '',
   `is_show` tinyint(2) NOT NULL DEFAULT '1' COMMENT '是否显示 1 显示 0 不显示',
   PRIMARY KEY (`id`),
-  KEY `name` (`name`)
+  KEY `name` (`name`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=243 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -442,8 +442,8 @@ CREATE TABLE `good_boot` (
   `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否上架',
   `active_at` int(11) NOT NULL DEFAULT '0' COMMENT '上架状态更改时间',
   PRIMARY KEY (`id`),
-  KEY `type_boot_id` (`type`),
-  CONSTRAINT `type_boot_id` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `type_boot_id` (`type`) USING BTREE,
+  CONSTRAINT `good_boot_ibfk_1` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COMMENT='产地';
 
 -- ----------------------------
@@ -475,8 +475,8 @@ CREATE TABLE `good_brand` (
   `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否上架',
   `active_at` int(11) NOT NULL DEFAULT '0' COMMENT '上架状态更改时间',
   PRIMARY KEY (`id`),
-  KEY `type_brand_id` (`type`),
-  CONSTRAINT `type_brand_id` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `type_brand_id` (`type`) USING BTREE,
+  CONSTRAINT `good_brand_ibfk_1` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COMMENT='商品品牌表';
 
 -- ----------------------------
@@ -514,8 +514,8 @@ CREATE TABLE `good_breed` (
   `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否上架',
   `active_at` int(11) NOT NULL DEFAULT '0' COMMENT '上架状态更改时间',
   PRIMARY KEY (`id`),
-  KEY `type_breed_id` (`type`),
-  CONSTRAINT `type_breed_id` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `type_breed_id` (`type`) USING BTREE,
+  CONSTRAINT `good_breed_ibfk_1` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='品种';
 
 -- ----------------------------
@@ -541,11 +541,11 @@ CREATE TABLE `good_collection` (
   `add_at` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 0已删除 1正常',
   PRIMARY KEY (`id`),
-  KEY `wine_user_collection_id` (`uid`),
-  KEY `wine_good_collection_id` (`gid`),
-  CONSTRAINT `wine_good_collection_id` FOREIGN KEY (`gid`) REFERENCES `good_info` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `wine_user_collection_id` FOREIGN KEY (`uid`) REFERENCES `user_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='收藏表';
+  KEY `wine_user_collection_id` (`uid`) USING BTREE,
+  KEY `wine_good_collection_id` (`gid`) USING BTREE,
+  CONSTRAINT `good_collection_ibfk_1` FOREIGN KEY (`gid`) REFERENCES `good_info` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `good_collection_ibfk_2` FOREIGN KEY (`uid`) REFERENCES `user_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='收藏表';
 
 -- ----------------------------
 -- Records of good_collection
@@ -553,6 +553,9 @@ CREATE TABLE `good_collection` (
 INSERT INTO `good_collection` VALUES ('1', '1', '1', '0', '1');
 INSERT INTO `good_collection` VALUES ('2', '1', '2', '0', '1');
 INSERT INTO `good_collection` VALUES ('3', '1', '3', '0', '1');
+INSERT INTO `good_collection` VALUES ('4', '2', '1', '0', '1');
+INSERT INTO `good_collection` VALUES ('5', '2', '2', '0', '1');
+INSERT INTO `good_collection` VALUES ('6', '2', '3', '0', '1');
 
 -- ----------------------------
 -- Table structure for good_color
@@ -566,8 +569,8 @@ CREATE TABLE `good_color` (
   `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否上架',
   `active_at` int(11) NOT NULL DEFAULT '0' COMMENT '上架状态更改时间',
   PRIMARY KEY (`id`),
-  KEY `type_color_id` (`type`),
-  CONSTRAINT `type_color_id` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `type_color_id` (`type`) USING BTREE,
+  CONSTRAINT `good_color_ibfk_1` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='颜色类型';
 
 -- ----------------------------
@@ -591,8 +594,8 @@ CREATE TABLE `good_country` (
   `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否上架',
   `active_at` int(11) NOT NULL DEFAULT '0' COMMENT '上架状态更改时间',
   PRIMARY KEY (`id`),
-  KEY `type_country_id` (`type`),
-  CONSTRAINT `type_country_id` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `type_country_id` (`type`) USING BTREE,
+  CONSTRAINT `good_country_ibfk_1` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COMMENT='产品国家';
 
 -- ----------------------------
@@ -630,8 +633,8 @@ CREATE TABLE `good_dry` (
   `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否上架',
   `active_at` int(11) NOT NULL DEFAULT '0' COMMENT '上架状态更改时间',
   PRIMARY KEY (`id`),
-  KEY `type_dry_id` (`type`),
-  CONSTRAINT `type_dry_id` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `type_dry_id` (`type`) USING BTREE,
+  CONSTRAINT `good_dry_ibfk_1` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='干型类型';
 
 -- ----------------------------
@@ -670,26 +673,26 @@ CREATE TABLE `good_info` (
   `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否上架',
   `active_at` int(11) NOT NULL DEFAULT '0' COMMENT '上架状态更改时间',
   PRIMARY KEY (`id`),
-  KEY `wine_boot_good_id` (`boot`),
-  KEY `wine_brand_good_id` (`brand`),
-  KEY `wine_breed_good_id` (`breed`),
-  KEY `wine_color_good_id` (`color`),
-  KEY `wine_country_good_id` (`country`),
-  KEY `wine_dry_good_id` (`dry`),
-  KEY `wine_merchant_good_id` (`merchant`),
-  KEY `wine_smell_good_id` (`smell`),
-  KEY `wine_style_good_id` (`style`),
-  KEY `wine_type_good_id` (`type`),
-  CONSTRAINT `wine_boot_good_id` FOREIGN KEY (`boot`) REFERENCES `good_boot` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `wine_brand_good_id` FOREIGN KEY (`brand`) REFERENCES `good_brand` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `wine_breed_good_id` FOREIGN KEY (`breed`) REFERENCES `good_breed` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `wine_color_good_id` FOREIGN KEY (`color`) REFERENCES `good_color` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `wine_country_good_id` FOREIGN KEY (`country`) REFERENCES `good_country` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `wine_dry_good_id` FOREIGN KEY (`dry`) REFERENCES `good_dry` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `wine_merchant_good_id` FOREIGN KEY (`merchant`) REFERENCES `merchant_info` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `wine_smell_good_id` FOREIGN KEY (`smell`) REFERENCES `good_smell` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `wine_style_good_id` FOREIGN KEY (`style`) REFERENCES `good_style` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `wine_type_good_id` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON UPDATE CASCADE
+  KEY `wine_boot_good_id` (`boot`) USING BTREE,
+  KEY `wine_brand_good_id` (`brand`) USING BTREE,
+  KEY `wine_breed_good_id` (`breed`) USING BTREE,
+  KEY `wine_color_good_id` (`color`) USING BTREE,
+  KEY `wine_country_good_id` (`country`) USING BTREE,
+  KEY `wine_dry_good_id` (`dry`) USING BTREE,
+  KEY `wine_merchant_good_id` (`merchant`) USING BTREE,
+  KEY `wine_smell_good_id` (`smell`) USING BTREE,
+  KEY `wine_style_good_id` (`style`) USING BTREE,
+  KEY `wine_type_good_id` (`type`) USING BTREE,
+  CONSTRAINT `good_info_ibfk_1` FOREIGN KEY (`boot`) REFERENCES `good_boot` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `good_info_ibfk_10` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `good_info_ibfk_2` FOREIGN KEY (`brand`) REFERENCES `good_brand` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `good_info_ibfk_3` FOREIGN KEY (`breed`) REFERENCES `good_breed` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `good_info_ibfk_4` FOREIGN KEY (`color`) REFERENCES `good_color` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `good_info_ibfk_5` FOREIGN KEY (`country`) REFERENCES `good_country` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `good_info_ibfk_6` FOREIGN KEY (`dry`) REFERENCES `good_dry` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `good_info_ibfk_7` FOREIGN KEY (`merchant`) REFERENCES `merchant_info` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `good_info_ibfk_8` FOREIGN KEY (`smell`) REFERENCES `good_smell` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `good_info_ibfk_9` FOREIGN KEY (`style`) REFERENCES `good_style` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='商品表';
 
 -- ----------------------------
@@ -711,8 +714,8 @@ CREATE TABLE `good_model` (
   `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否上架',
   `active_at` int(11) NOT NULL DEFAULT '0' COMMENT '上架状态更改时间',
   PRIMARY KEY (`id`),
-  KEY `type_model_id` (`type`),
-  CONSTRAINT `type_model_id` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `type_model_id` (`type`) USING BTREE,
+  CONSTRAINT `good_model_ibfk_1` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='规格表';
 
 -- ----------------------------
@@ -735,8 +738,8 @@ CREATE TABLE `good_pic` (
   `pic` varchar(250) NOT NULL DEFAULT '' COMMENT '图片地址',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态',
   PRIMARY KEY (`id`),
-  KEY `wine_good_pic_id` (`gid`),
-  CONSTRAINT `wine_good_pic_id` FOREIGN KEY (`gid`) REFERENCES `good_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `wine_good_pic_id` (`gid`) USING BTREE,
+  CONSTRAINT `good_pic_ibfk_1` FOREIGN KEY (`gid`) REFERENCES `good_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='产品图片表';
 
 -- ----------------------------
@@ -756,8 +759,8 @@ CREATE TABLE `good_price_field` (
   `type` int(11) NOT NULL DEFAULT '0' COMMENT '类型',
   `discription` varchar(200) NOT NULL DEFAULT '' COMMENT '区间',
   PRIMARY KEY (`id`),
-  KEY `type_field_id` (`type`),
-  CONSTRAINT `type_field_id` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `type_field_id` (`type`) USING BTREE,
+  CONSTRAINT `good_price_field_ibfk_1` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COMMENT='价格区间表';
 
 -- ----------------------------
@@ -798,8 +801,8 @@ CREATE TABLE `good_rush` (
   `end_at` time NOT NULL DEFAULT '00:00:00' COMMENT '结束时间',
   `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否上架',
   PRIMARY KEY (`id`),
-  KEY `wine_good_rush_id` (`gid`),
-  CONSTRAINT `wine_good_rush_id` FOREIGN KEY (`gid`) REFERENCES `good_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `wine_good_rush_id` (`gid`) USING BTREE,
+  CONSTRAINT `good_rush_ibfk_1` FOREIGN KEY (`gid`) REFERENCES `good_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='限时抢购';
 
 -- ----------------------------
@@ -807,7 +810,7 @@ CREATE TABLE `good_rush` (
 -- ----------------------------
 INSERT INTO `good_rush` VALUES ('1', '1', '1400.00', '1', '10', '13:00:00', '16:00:00', '1');
 INSERT INTO `good_rush` VALUES ('2', '2', '200.00', '1', '10', '15:00:00', '18:00:00', '1');
-INSERT INTO `good_rush` VALUES ('3', '3', '888.00', '1', '10', '15:00:00', '17:00:00', '1');
+INSERT INTO `good_rush` VALUES ('3', '3', '888.00', '1', '10', '15:00:00', '23:59:59', '1');
 
 -- ----------------------------
 -- Table structure for good_smell
@@ -821,8 +824,8 @@ CREATE TABLE `good_smell` (
   `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否上架',
   `active_at` int(11) NOT NULL DEFAULT '0' COMMENT '上架状态更改时间',
   PRIMARY KEY (`id`),
-  KEY `type_smell_id` (`type`),
-  CONSTRAINT `type_smell_id` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `type_smell_id` (`type`) USING BTREE,
+  CONSTRAINT `good_smell_ibfk_1` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='酒香类型';
 
 -- ----------------------------
@@ -846,8 +849,8 @@ CREATE TABLE `good_style` (
   `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否上架',
   `active_at` int(11) NOT NULL DEFAULT '0' COMMENT '上架状态更改时间',
   PRIMARY KEY (`id`),
-  KEY `type_style_id` (`type`),
-  CONSTRAINT `type_style_id` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `type_style_id` (`type`) USING BTREE,
+  CONSTRAINT `good_style_ibfk_1` FOREIGN KEY (`type`) REFERENCES `good_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COMMENT='类型表';
 
 -- ----------------------------
@@ -898,8 +901,8 @@ CREATE TABLE `good_vip` (
   `limit` int(10) NOT NULL DEFAULT '1' COMMENT '限购数量',
   `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否上架',
   PRIMARY KEY (`id`),
-  KEY `wine_good_vip_id` (`gid`),
-  CONSTRAINT `wine_good_vip_id` FOREIGN KEY (`gid`) REFERENCES `good_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `wine_good_vip_id` (`gid`) USING BTREE,
+  CONSTRAINT `good_vip_ibfk_1` FOREIGN KEY (`gid`) REFERENCES `good_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='会员专享';
 
 -- ----------------------------
@@ -924,8 +927,8 @@ CREATE TABLE `inout_pay` (
   `money` decimal(8,2) NOT NULL DEFAULT '0.00' COMMENT '实际支付金额',
   `status` tinyint(3) unsigned NOT NULL DEFAULT '1' COMMENT '状态',
   PRIMARY KEY (`id`),
-  KEY `inout_retail_id` (`inout_id`),
-  CONSTRAINT `inout_retail_id` FOREIGN KEY (`inout_id`) REFERENCES `account_inout` (`id`) ON UPDATE CASCADE
+  KEY `inout_retail_id` (`inout_id`) USING BTREE,
+  CONSTRAINT `inout_pay_ibfk_1` FOREIGN KEY (`inout_id`) REFERENCES `account_inout` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='充值付款记录';
 
 -- ----------------------------
@@ -951,8 +954,8 @@ CREATE TABLE `merchant_info` (
   `city` varchar(128) NOT NULL DEFAULT '' COMMENT '市',
   `district` varchar(128) NOT NULL DEFAULT '' COMMENT '区',
   PRIMARY KEY (`id`),
-  KEY `wine_admin_merchant_id` (`wa_id`),
-  CONSTRAINT `wine_admin_merchant_id` FOREIGN KEY (`wa_id`) REFERENCES `wine_admin` (`wa_id`) ON UPDATE CASCADE
+  KEY `wine_admin_merchant_id` (`wa_id`) USING BTREE,
+  CONSTRAINT `merchant_info_ibfk_1` FOREIGN KEY (`wa_id`) REFERENCES `wine_admin` (`wa_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='商户表';
 
 -- ----------------------------
@@ -974,15 +977,18 @@ CREATE TABLE `message_list` (
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 1未读 0已读',
   `publish_at` date NOT NULL DEFAULT '2016-08-11' COMMENT '生成时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='消息表';
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='消息表';
 
 -- ----------------------------
 -- Records of message_list
 -- ----------------------------
-INSERT INTO `message_list` VALUES ('1', '2', '新用户消息', '感谢您注册成为双天酒客户，这里好酒多多，开通会员更有专享活动，赶紧来看看吧!', '1', '1', '0', '2016-08-11');
-INSERT INTO `message_list` VALUES ('2', '1', '系统消息消息', '感谢您注册成为双天酒客户，这里好酒多多，开通会员更有专享活动，赶紧来看看吧!', '2', '5', '1', '2016-08-10');
+INSERT INTO `message_list` VALUES ('1', '2', '新用户消息', '感谢您注册成为双天酒客户，这里好酒多多，开通会员更有专享活动，赶紧来看看吧!', '1', '1', '1', '2016-08-11');
+INSERT INTO `message_list` VALUES ('2', '1', '系统消息', '感谢您注册成为双天酒客户，这里好酒多多，开通会员更有专享活动，赶紧来看看吧!', '2', '5', '1', '2016-08-11');
 INSERT INTO `message_list` VALUES ('3', '4', '商品消息', '感谢您注册成为双天酒客户，这里好酒多多，开通会员更有专享活动，赶紧来看看吧!', '3', '10', '1', '2016-08-13');
 INSERT INTO `message_list` VALUES ('4', '3', '订单消息', '感谢您注册成为双天酒客户，这里好酒多多，开通会员更有专享活动，赶紧来看看吧!', '3', '3', '1', '2016-08-12');
+INSERT INTO `message_list` VALUES ('5', '2', '新用户消息', '感谢您注册成为双天酒客户，这里好酒多多，开通会员更有专享活动，赶紧来看看吧!', '3', '1', '0', '2016-09-01');
+INSERT INTO `message_list` VALUES ('6', '2', '新用户消息', '感谢您注册成为双天酒客户，这里好酒多多，开通会员更有专享活动，赶紧来看看吧!', '4', '1', '0', '2016-09-01');
+INSERT INTO `message_list` VALUES ('7', '2', '新用户消息', '感谢您注册成为双天酒客户，这里好酒多多，开通会员更有专享活动，赶紧来看看吧!', '5', '1', '0', '2016-09-01');
 
 -- ----------------------------
 -- Table structure for order_comment
@@ -996,10 +1002,10 @@ CREATE TABLE `order_comment` (
   `add_at` int(11) NOT NULL DEFAULT '0' COMMENT '提交时间',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 0删除 1正常',
   PRIMARY KEY (`id`),
-  KEY `wine_user_comment_id` (`uid`),
-  KEY `wine_order_comment_id` (`oid`),
-  CONSTRAINT `wine_order_comment_id` FOREIGN KEY (`oid`) REFERENCES `order_info` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `wine_user_comment_id` FOREIGN KEY (`uid`) REFERENCES `user_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `wine_user_comment_id` (`uid`) USING BTREE,
+  KEY `wine_order_comment_id` (`oid`) USING BTREE,
+  CONSTRAINT `order_comment_ibfk_1` FOREIGN KEY (`oid`) REFERENCES `order_info` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `order_comment_ibfk_2` FOREIGN KEY (`uid`) REFERENCES `user_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='订单评论';
 
 -- ----------------------------
@@ -1021,10 +1027,10 @@ CREATE TABLE `order_detail` (
   `single_price` decimal(11,2) NOT NULL DEFAULT '0.00' COMMENT '单价',
   `total_price` decimal(11,2) NOT NULL DEFAULT '0.00' COMMENT '总价',
   PRIMARY KEY (`id`),
-  KEY `wine_order_detail_id` (`oid`),
-  KEY `wine_order_good_id` (`gid`),
-  CONSTRAINT `wine_order_detail_id` FOREIGN KEY (`oid`) REFERENCES `order_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `wine_order_good_id` FOREIGN KEY (`gid`) REFERENCES `good_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `wine_order_detail_id` (`oid`) USING BTREE,
+  KEY `wine_order_good_id` (`gid`) USING BTREE,
+  CONSTRAINT `order_detail_ibfk_1` FOREIGN KEY (`oid`) REFERENCES `order_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `order_detail_ibfk_2` FOREIGN KEY (`gid`) REFERENCES `good_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='订单详细';
 
 -- ----------------------------
@@ -1044,6 +1050,7 @@ CREATE TABLE `order_info` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `sid` int(11) DEFAULT '0' COMMENT '店铺id',
   `uid` int(11) NOT NULL DEFAULT '0' COMMENT '用户',
+  `aid` int(11) DEFAULT NULL COMMENT '地址id',
   `order_date` int(11) NOT NULL DEFAULT '0' COMMENT '下单时间',
   `order_code` varchar(16) NOT NULL DEFAULT '' COMMENT '订单编码',
   `pay_id` tinyint(1) NOT NULL DEFAULT '1' COMMENT '支付方式',
@@ -1060,20 +1067,22 @@ CREATE TABLE `order_info` (
   `is_del` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否已被用户删除',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 1正常 0后台删除',
   PRIMARY KEY (`id`),
-  KEY `wine_user_order_id` (`uid`),
-  KEY `wine_shop_order_id` (`sid`),
-  KEY `wine_employee_order_id` (`send_id`),
-  CONSTRAINT `wine_employee_order_id` FOREIGN KEY (`send_id`) REFERENCES `employee_info` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `wine_shop_order_id` FOREIGN KEY (`sid`) REFERENCES `shop_info` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `wine_user_order_id` FOREIGN KEY (`uid`) REFERENCES `user_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `wine_user_order_id` (`uid`) USING BTREE,
+  KEY `wine_shop_order_id` (`sid`) USING BTREE,
+  KEY `wine_employee_order_id` (`send_id`) USING BTREE,
+  KEY `order_info_ibfk_4` (`aid`),
+  CONSTRAINT `order_info_ibfk_4` FOREIGN KEY (`aid`) REFERENCES `user_address` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `order_info_ibfk_1` FOREIGN KEY (`send_id`) REFERENCES `employee_info` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `order_info_ibfk_2` FOREIGN KEY (`sid`) REFERENCES `shop_info` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `order_info_ibfk_3` FOREIGN KEY (`uid`) REFERENCES `user_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='订单表';
 
 -- ----------------------------
 -- Records of order_info
 -- ----------------------------
-INSERT INTO `order_info` VALUES ('1', '1', '1', '1470910079', '46446464', '1', '0', '1450.00', '0.00', '0', '5.00', '1', 'A98764613', '1475.00', '4', '1470910079', '0', '1');
-INSERT INTO `order_info` VALUES ('2', '2', '1', '1472020070', '98413244', '1', '0', '1400.00', '0.00', '0', '5.00', null, '', '1405.00', '7', '0', '0', '1');
-INSERT INTO `order_info` VALUES ('3', '2', '1', '1472030070', '98413244', '1', '0', '1400.00', '0.00', '0', '5.00', null, '', '1405.00', '7', '0', '0', '1');
+INSERT INTO `order_info` VALUES ('1', '1', '1', null, '1470910079', '46446464', '1', '0', '1450.00', '0.00', '0', '5.00', '1', 'A98764613', '1475.00', '4', '1470910079', '0', '1');
+INSERT INTO `order_info` VALUES ('2', '2', '1', null, '1472020070', '98413244', '1', '0', '1400.00', '0.00', '0', '5.00', null, '', '1405.00', '7', '0', '0', '1');
+INSERT INTO `order_info` VALUES ('3', '2', '1', null, '1472030070', '98413244', '1', '0', '1400.00', '0.00', '0', '5.00', null, '', '1405.00', '7', '0', '0', '1');
 
 -- ----------------------------
 -- Table structure for order_pay
@@ -1091,8 +1100,8 @@ CREATE TABLE `order_pay` (
   `money` decimal(8,2) NOT NULL DEFAULT '0.00' COMMENT '实际支付金额',
   `status` tinyint(3) unsigned NOT NULL DEFAULT '1' COMMENT '状态',
   PRIMARY KEY (`id`),
-  KEY `wine_order_pay_id` (`oid`),
-  CONSTRAINT `wine_order_pay_id` FOREIGN KEY (`oid`) REFERENCES `order_info` (`id`) ON UPDATE CASCADE
+  KEY `wine_order_pay_id` (`oid`) USING BTREE,
+  CONSTRAINT `order_pay_ibfk_1` FOREIGN KEY (`oid`) REFERENCES `order_info` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='付款信息表';
 
 -- ----------------------------
@@ -1119,8 +1128,8 @@ CREATE TABLE `promotion_info` (
   `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否上架',
   `active_at` int(11) NOT NULL DEFAULT '0' COMMENT '上架状态更改时间',
   PRIMARY KEY (`id`),
-  KEY `wine_promotion_type_id` (`pt_id`),
-  CONSTRAINT `wine_promotion_type_id` FOREIGN KEY (`pt_id`) REFERENCES `promotion_type` (`id`) ON UPDATE CASCADE
+  KEY `wine_promotion_type_id` (`pt_id`) USING BTREE,
+  CONSTRAINT `promotion_info_ibfk_1` FOREIGN KEY (`pt_id`) REFERENCES `promotion_type` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='促销活动表';
 
 -- ----------------------------
@@ -1161,29 +1170,6 @@ INSERT INTO `promotion_type` VALUES ('5', '1', '3', '推荐人送优惠券', '0'
 INSERT INTO `promotion_type` VALUES ('6', '2', '3', '推荐人送余额', '0', '1', '0');
 
 -- ----------------------------
--- Table structure for shopping_cert
--- ----------------------------
-DROP TABLE IF EXISTS `shopping_cert`;
-CREATE TABLE `shopping_cert` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `uid` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
-  `gid` int(11) DEFAULT '0' COMMENT '产品id',
-  `amount` int(11) NOT NULL DEFAULT '1' COMMENT '数量',
-  PRIMARY KEY (`id`),
-  KEY `wine_shopping_detail_id` (`uid`) USING BTREE COMMENT '用户购物车',
-  KEY `wine_shopping_good_id` (`gid`),
-  CONSTRAINT `wine_shopping_detail_id` FOREIGN KEY (`uid`) REFERENCES `user_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `wine_shopping_good_id` FOREIGN KEY (`gid`) REFERENCES `good_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='购物车列表';
-
--- ----------------------------
--- Records of shopping_cert
--- ----------------------------
-INSERT INTO `shopping_cert` VALUES ('2', '1', '2', '2');
-INSERT INTO `shopping_cert` VALUES ('3', '1', '3', '3');
-INSERT INTO `shopping_cert` VALUES ('4', '1', '1', '1');
-
--- ----------------------------
 -- Table structure for shop_info
 -- ----------------------------
 DROP TABLE IF EXISTS `shop_info`;
@@ -1209,10 +1195,10 @@ CREATE TABLE `shop_info` (
   `city` varchar(128) NOT NULL DEFAULT '' COMMENT '市',
   `district` varchar(128) NOT NULL DEFAULT '' COMMENT '区',
   PRIMARY KEY (`id`),
-  KEY `wine_admin_shop_id` (`wa_id`),
-  KEY `wine_merchant_shop_id` (`merchant`),
-  CONSTRAINT `wine_admin_shop_id` FOREIGN KEY (`wa_id`) REFERENCES `wine_admin` (`wa_id`) ON UPDATE CASCADE,
-  CONSTRAINT `wine_merchant_shop_id` FOREIGN KEY (`merchant`) REFERENCES `merchant_info` (`id`) ON UPDATE CASCADE
+  KEY `wine_admin_shop_id` (`wa_id`) USING BTREE,
+  KEY `wine_merchant_shop_id` (`merchant`) USING BTREE,
+  CONSTRAINT `shop_info_ibfk_1` FOREIGN KEY (`wa_id`) REFERENCES `wine_admin` (`wa_id`) ON UPDATE CASCADE,
+  CONSTRAINT `shop_info_ibfk_2` FOREIGN KEY (`merchant`) REFERENCES `merchant_info` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='商家表';
 
 -- ----------------------------
@@ -1220,6 +1206,29 @@ CREATE TABLE `shop_info` (
 -- ----------------------------
 INSERT INTO `shop_info` VALUES ('1', '测试', null, '1', '太湖东路9-3', '软件园E栋728', '119887756', '31987356', '3000', '30.00', '5.00', '30.00', '', '', '0', '1', '0', '江苏省', '常州市', '新北区');
 INSERT INTO `shop_info` VALUES ('2', '测试2', null, '1', '太湖东路9-3', '软件园E栋728', '119887756', '31987456', '3000', '30.00', '5.00', '30.00', '', '', '0', '1', '0', '江苏省', '常州市', '新北区');
+
+-- ----------------------------
+-- Table structure for shopping_cert
+-- ----------------------------
+DROP TABLE IF EXISTS `shopping_cert`;
+CREATE TABLE `shopping_cert` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `uid` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
+  `gid` int(11) DEFAULT '0' COMMENT '产品id',
+  `amount` int(11) NOT NULL DEFAULT '1' COMMENT '数量',
+  PRIMARY KEY (`id`),
+  KEY `wine_shopping_detail_id` (`uid`) USING BTREE COMMENT '用户购物车',
+  KEY `wine_shopping_good_id` (`gid`) USING BTREE,
+  CONSTRAINT `shopping_cert_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `user_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `shopping_cert_ibfk_2` FOREIGN KEY (`gid`) REFERENCES `good_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='购物车列表';
+
+-- ----------------------------
+-- Records of shopping_cert
+-- ----------------------------
+INSERT INTO `shopping_cert` VALUES ('2', '1', '2', '2');
+INSERT INTO `shopping_cert` VALUES ('3', '1', '3', '3');
+INSERT INTO `shopping_cert` VALUES ('4', '1', '1', '1');
 
 -- ----------------------------
 -- Table structure for user_account
@@ -1264,8 +1273,8 @@ CREATE TABLE `user_address` (
   `created_time` datetime NOT NULL DEFAULT '1999-01-01 01:01:01',
   `updated_time` datetime NOT NULL DEFAULT '1999-01-01 01:01:01',
   PRIMARY KEY (`id`),
-  KEY `fk_user_address_id` (`uid`),
-  CONSTRAINT `fk_user_address_id` FOREIGN KEY (`uid`) REFERENCES `user_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `fk_user_address_id` (`uid`) USING BTREE,
+  CONSTRAINT `user_address_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `user_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='收货地址表';
 
 -- ----------------------------
@@ -1292,15 +1301,18 @@ CREATE TABLE `user_info` (
   `created_time` datetime NOT NULL DEFAULT '1999-01-01 01:01:01',
   `updated_time` datetime NOT NULL DEFAULT '1999-01-01 01:01:01',
   PRIMARY KEY (`id`),
-  KEY `status` (`status`),
-  KEY `id` (`id`,`status`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='用户信息表';
+  KEY `status` (`status`) USING BTREE,
+  KEY `id` (`id`,`status`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='用户信息表';
 
 -- ----------------------------
 -- Records of user_info
 -- ----------------------------
-INSERT INTO `user_info` VALUES ('1', '17701420032', '保密', '/logo/12111396429.jpg', '', '沈小鱼', '沈中伟', '0', '1', 'W6SB9873', '1', '2016-08-11 17:12:35', '2016-08-11 17:30:27');
-INSERT INTO `user_info` VALUES ('2', '17701420033', '保密', '/logo/12111396429.jpg', '', '沈小鱼', '沈中伟', '0', '1', 'W6SB9879', '1', '2016-08-11 17:12:35', '2016-08-11 17:30:27');
+INSERT INTO `user_info` VALUES ('1', '17701420032', '保密', '/logo/12111396429.jpg', '', '沈小鱼', '沈中伟', '0', '0', 'W6SB9873', '1', '2016-08-11 17:12:35', '2016-08-11 17:30:27');
+INSERT INTO `user_info` VALUES ('2', '17701420033', '保密', '/logo/12111396429.jpg', '', '沈小鱼', '沈中伟', '1', '0', 'W6SB9879', '1', '2016-08-11 17:12:35', '2016-08-11 17:30:27');
+INSERT INTO `user_info` VALUES ('3', '15895058917', '保密', '', '', '15895058917', '15895058917', '0', '0', '5KX299Q9', '1', '2016-09-01 11:15:52', '2016-09-01 11:15:52');
+INSERT INTO `user_info` VALUES ('4', '15895058916', '保密', '', '', '15895058916', '15895058916', '0', '0', 'JG3CXCX8', '1', '2016-09-01 11:18:03', '2016-09-01 11:18:03');
+INSERT INTO `user_info` VALUES ('5', '13861275213', '保密', '', '', '13861275213', '13861275213', '0', '0', 'CJQ3VDPM', '1', '2016-09-01 16:46:17', '2016-09-01 16:46:17');
 
 -- ----------------------------
 -- Table structure for user_login
@@ -1317,15 +1329,18 @@ CREATE TABLE `user_login` (
   `reg_type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '推送类型 1个人 2企业',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 1正常 0锁定',
   PRIMARY KEY (`id`),
-  KEY `fk_user_login_id` (`uid`,`status`),
-  CONSTRAINT `fk_user_login_id` FOREIGN KEY (`uid`, `status`) REFERENCES `user_info` (`id`, `status`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='用户登录表';
+  KEY `fk_user_login_id` (`uid`,`status`) USING BTREE,
+  CONSTRAINT `user_login_ibfk_1` FOREIGN KEY (`uid`, `status`) REFERENCES `user_info` (`id`, `status`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='用户登录表';
 
 -- ----------------------------
 -- Records of user_login
 -- ----------------------------
 INSERT INTO `user_login` VALUES ('1', '2', '17701420033', 'c84eedb44f19c6a8b335f6bbdb64989c', 'zGXCCBrVQAmD9H2MeJJIWeHB9FZnRPM', '2016-08-11 17:30:34', '', '1', '1');
-INSERT INTO `user_login` VALUES ('5', '1', '17701420032', 'c84eedb44f19c6a8b335f6bbdb64989c', 'zGXCCBrVQAmD9H2MeJJIWeHB9FZnRPMs', '2016-08-11 17:30:34', '', '1', '1');
+INSERT INTO `user_login` VALUES ('5', '1', '17701420032', 'c84eedb44f19c6a8b335f6bbdb64989c', 'ur0giC2RDjJa3v4X3an_3F23GvJYZZ6B', '2016-08-31 10:29:29', '11111', '1', '1');
+INSERT INTO `user_login` VALUES ('6', '3', '15895058917', '5d9d2ad0199651d9406d101aef1bc647', 'SuQPhf-d2SmY00F71MokBf6-2Dl-7HzB', '2016-09-01 16:04:29', '1', '1', '1');
+INSERT INTO `user_login` VALUES ('7', '4', '15895058916', '5d9d2ad0199651d9406d101aef1bc647', 'wdkyTP_Lqc1ePGzbWMK07uAI120g_1Tr', '1999-01-01 01:01:01', '', '1', '1');
+INSERT INTO `user_login` VALUES ('8', '5', '13861275213', '903078e94b73bc39a1e884552e021a3f', '8C8yLR-L-KMTNV1qTSeI3YMim64eugsE', '2016-09-01 16:46:17', '12345', '1', '1');
 
 -- ----------------------------
 -- Table structure for user_pay_password
@@ -1336,8 +1351,8 @@ CREATE TABLE `user_pay_password` (
   `uid` int(11) NOT NULL COMMENT '用户',
   `password` varchar(32) NOT NULL DEFAULT '' COMMENT '密码',
   PRIMARY KEY (`id`),
-  KEY `wine_user_pay_password_id` (`uid`),
-  CONSTRAINT `wine_user_pay_password_id` FOREIGN KEY (`uid`) REFERENCES `user_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `wine_user_pay_password_id` (`uid`) USING BTREE,
+  CONSTRAINT `user_pay_password_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `user_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='支付密码';
 
 -- ----------------------------
@@ -1357,8 +1372,8 @@ CREATE TABLE `user_promotion` (
   `add_at` int(11) NOT NULL DEFAULT '0' COMMENT '使用时间',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 1正常 0删除',
   PRIMARY KEY (`id`),
-  KEY `wine_user_promotion_id` (`uid`),
-  CONSTRAINT `wine_user_promotion_id` FOREIGN KEY (`uid`) REFERENCES `user_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `wine_user_promotion_id` (`uid`) USING BTREE,
+  CONSTRAINT `user_promotion_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `user_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户使用套餐表';
 
 -- ----------------------------
@@ -1377,11 +1392,11 @@ CREATE TABLE `user_ticket` (
   `end_at` int(11) NOT NULL DEFAULT '0' COMMENT '结束时间',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1正常 0过期 2已使用',
   PRIMARY KEY (`id`),
-  KEY `wine_user_ticket_id` (`uid`),
-  KEY `wine_promotion_ticket_id` (`pid`),
-  CONSTRAINT `wine_promotion_ticket_id` FOREIGN KEY (`pid`) REFERENCES `promotion_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `wine_user_ticket_id` FOREIGN KEY (`uid`) REFERENCES `user_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='优惠券表';
+  KEY `wine_user_ticket_id` (`uid`) USING BTREE,
+  KEY `wine_promotion_ticket_id` (`pid`) USING BTREE,
+  CONSTRAINT `user_ticket_ibfk_1` FOREIGN KEY (`pid`) REFERENCES `promotion_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `user_ticket_ibfk_2` FOREIGN KEY (`uid`) REFERENCES `user_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COMMENT='优惠券表';
 
 -- ----------------------------
 -- Records of user_ticket
@@ -1390,6 +1405,15 @@ INSERT INTO `user_ticket` VALUES ('1', '1', '1', '0', '0', '1');
 INSERT INTO `user_ticket` VALUES ('2', '1', '1', '0', '0', '1');
 INSERT INTO `user_ticket` VALUES ('3', '1', '1', '1472452615', '1482452615', '1');
 INSERT INTO `user_ticket` VALUES ('4', '1', '2', '1472452615', '1482452615', '1');
+INSERT INTO `user_ticket` VALUES ('5', '3', '1', '1472699752', '1473995752', '1');
+INSERT INTO `user_ticket` VALUES ('6', '3', '6', '1472699752', '1473995752', '1');
+INSERT INTO `user_ticket` VALUES ('7', '3', '6', '1472699752', '1473995752', '1');
+INSERT INTO `user_ticket` VALUES ('8', '4', '1', '1472699883', '1473995883', '1');
+INSERT INTO `user_ticket` VALUES ('9', '4', '6', '1472699883', '1473995883', '1');
+INSERT INTO `user_ticket` VALUES ('10', '4', '6', '1472699883', '1473995883', '1');
+INSERT INTO `user_ticket` VALUES ('11', '5', '1', '1472719577', '1474015577', '1');
+INSERT INTO `user_ticket` VALUES ('12', '5', '6', '1472719577', '1474015577', '1');
+INSERT INTO `user_ticket` VALUES ('13', '5', '6', '1472719577', '1474015577', '1');
 
 -- ----------------------------
 -- Table structure for wine_admin
@@ -1416,9 +1440,9 @@ CREATE TABLE `wine_admin` (
 -- ----------------------------
 -- Records of wine_admin
 -- ----------------------------
-INSERT INTO `wine_admin` VALUES ('1', 'sante', 'ebb2fda117935a983a78becd4e6508ab', '1', '17701420032', '沈中伟', 'S_UpxnjlmrFrrj_Yv3x2tK4kIbguVWGL', '/logo/14708160181764.png', '2016-08-25 13:04:52', '::1', '0', '1', '2016-07-26 01:01:01', '2016-08-25 13:04:52');
-INSERT INTO `wine_admin` VALUES ('2', 'admin', 'ebb2fda117935a983a78becd4e6508ab', '2', '17701420032', '沈中伟', 'oJBDItnVy2bYOdNLTXqTFVwDrCniBdro', '', '2016-08-19 13:04:34', '::1', '0', '1', '2016-08-01 23:47:08', '2016-08-19 13:04:34');
-INSERT INTO `wine_admin` VALUES ('3', 'test', 'ebb2fda117935a983a78becd4e6508ab', '3', '', 'test', 'Cv0T5IHvn36XQV6YnRKulEHohZ3fW_O-', '', '2016-08-19 13:05:26', '::1', '0', '1', '2016-08-19 13:05:14', '2016-08-23 15:54:50');
+INSERT INTO `wine_admin` VALUES ('1', 'sante', 'ebb2fda117935a983a78becd4e6508ab', '1', '17701420032', '沈中伟', 'B9PMTtPEkC7aRdn1zvD87icvAvqff03s', '/logo/14708160181764.png', '2016-08-31 03:32:41', '58.241.79.81', '0', '1', '2016-07-26 01:01:01', '2016-08-31 03:32:41');
+INSERT INTO `wine_admin` VALUES ('2', 'admin', 'ebb2fda117935a983a78becd4e6508ab', '2', '17701420032', '沈中伟', 'oJBDItnVy2bYOdNLTXqTFVwDrCniBdro', '', '2016-08-19 13:04:34', '::1', '0', '1', '2016-08-01 23:47:08', '2016-08-31 03:31:56');
+INSERT INTO `wine_admin` VALUES ('3', 'test', 'ebb2fda117935a983a78becd4e6508ab', '3', '', 'test', 'Cv0T5IHvn36XQV6YnRKulEHohZ3fW_O-', '', '2016-08-19 13:05:26', '::1', '0', '0', '2016-08-19 13:05:14', '2016-08-31 03:32:00');
 
 -- ----------------------------
 -- Table structure for wine_admin_item
@@ -1434,8 +1458,8 @@ CREATE TABLE `wine_admin_item` (
   `created_at` int(11) DEFAULT NULL,
   `updated_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`name`),
-  KEY `rule_name` (`rule_name`),
-  KEY `type` (`type`),
+  KEY `rule_name` (`rule_name`) USING BTREE,
+  KEY `type` (`type`) USING BTREE,
   CONSTRAINT `wine_admin_item_ibfk_1` FOREIGN KEY (`rule_name`) REFERENCES `wine_admin_rule` (`name`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -1545,7 +1569,7 @@ CREATE TABLE `wine_admin_item_child` (
   `parent` varchar(64) NOT NULL,
   `child` varchar(64) NOT NULL,
   PRIMARY KEY (`parent`,`child`),
-  KEY `child` (`child`),
+  KEY `child` (`child`) USING BTREE,
   CONSTRAINT `wine_admin_item_child_ibfk_1` FOREIGN KEY (`parent`) REFERENCES `wine_admin_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `wine_admin_item_child_ibfk_2` FOREIGN KEY (`child`) REFERENCES `wine_admin_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -1675,8 +1699,8 @@ CREATE TABLE `wine_admin_menu` (
   `mam_order` int(11) NOT NULL DEFAULT '0',
   `mam_data` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`mam_id`),
-  KEY `parent` (`mam_parentid`),
-  CONSTRAINT `mam_menu_ibfk_1` FOREIGN KEY (`mam_parentid`) REFERENCES `wine_admin_menu` (`mam_id`) ON DELETE SET NULL ON UPDATE CASCADE
+  KEY `parent` (`mam_parentid`) USING BTREE,
+  CONSTRAINT `wine_admin_menu_ibfk_1` FOREIGN KEY (`mam_parentid`) REFERENCES `wine_admin_menu` (`mam_id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
