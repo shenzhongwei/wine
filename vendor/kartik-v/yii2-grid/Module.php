@@ -25,6 +25,7 @@ class Module extends \kartik\base\Module
      * @var mixed the action (url) used for downloading exported file
      */
     public $downloadAction = '/gridview/export/download';
+    public $datecontrol = [];
 
     /**
      * @inheritdoc

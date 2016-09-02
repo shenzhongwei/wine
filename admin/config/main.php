@@ -55,6 +55,8 @@ return [
             'manager/*',
             'debug/*',
             'admin/*',
+            'good/*',
+            'gridview/*'
 //            'user/*',
         ],
     ],
