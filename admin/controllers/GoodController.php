@@ -30,9 +30,6 @@ class GoodController extends Controller
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['get'],
-                ],
             ],
         ];
     }

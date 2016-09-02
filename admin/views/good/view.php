@@ -52,13 +52,10 @@ $this->params['breadcrumbs'][] = $this->title;
             'is_active',
             'active_at',
         ],
-        'deleteOptions'=>[
-            'url'=>['delete', 'id' => $model->id],
-            'data'=>[
-                'confirm'=>Yii::t('app', 'Are you sure you want to delete this item?'),
-            ],
-        ],
         'enableEditMode'=>true,
+        'deleteOptions'=>[
+            'url'=>'delete?id='.$model->id,
+        ]
     ]) ?>
 
 </div>
