@@ -47,7 +47,7 @@ return [
         'allowActions' => [
             'debug/*',
             'site/login',
-            'site/error'
+            'site/error',
         ],
     ],
 
