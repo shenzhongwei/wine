@@ -19,7 +19,7 @@ use yii\web\NotFoundHttpException;
  class ManagerController extends BaseController{
 
      public function actionIndex(){
-         $logo = empty(Yii::$app->user->identity->wa_logo) ? '':Yii::$app->params['img_path'].Yii::$app->user->identity->wa_logo;
+         $logo = empty(Yii::$app->user->identity->wa_logo) ? '':'../../../photo'.Yii::$app->user->identity->wa_logo;
          return $this->render('logo',[
              'logo'=>$logo,
          ]);
