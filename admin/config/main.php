@@ -9,19 +9,6 @@ return [
     "modules" => [
         "admin" => [
             "class" => 'mdm\admin\Module',
-            'controllerMap' => [
-                'assignment' => [
-                    'class' => 'mdm\admin\controllers\AssignmentController',
-                    'userClassName' => 'admin\models\Admin',
-                    'idField' => 'wa_id'
-                ]
-            ],
-            'menus' => [
-                'assignment' => [
-                    'label' => 'Grand Access' // change label
-                ],
-                //'route' => null, // disable menu route
-            ]
         ],
         'gridview' =>  [
             'class' => '\kartik\grid\Module',
@@ -49,8 +36,7 @@ return [
 
             ]
         ],
-        ],
-
+    ],
     "aliases" => [
         "@mdm/admin" => "@vendor/mdmsoft/yii2-admin",
     ],

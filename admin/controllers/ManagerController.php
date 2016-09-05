@@ -98,17 +98,17 @@ use yii\web\NotFoundHttpException;
              if(empty($pic_content)){
                  return $this->showResult(301,'未获取到图片数据');
              }
-             $pic =base64_decode($pic_content );
+             $pic =base64_decode($pic_content);
              if(empty($pic)){
                  return $this->showResult(301,'未获取到图片数据');
              }
              $logoPath = Yii::$app->params['img_path'].'/logo/';
-             if(!is_dir($logoPath)){
+             $pic_path = '../../photo/logo/';
+             if(!is_dir($pic_path)){
                  @mkdir($logoPath,0777,true);
              }
              $logo_name = 'admin_'.time().$user_id.rand(100,999).'.'.substr($type,6);
-             $pic_path = $logoPath.$logo_name;
-             if(file_put_contents($pic_path,$pic)){
+             if(file_put_contents($pic_path.$logo_name,$pic)){
                  $size = filesize($pic_path);
                  if($size > $max_file_size){
                      @unlink ($pic_path);
@@ -122,7 +122,7 @@ use yii\web\NotFoundHttpException;
                      if(!$admin->save()){
                          return $this->showResult(400,'保存失败，请重试');
                      }else{
-                         return $this->showResult(200,'修改头像成功',$pic_path);
+                         return $this->showResult(200,'修改头像成功',$logoPath.$logo_name);
                      }
                  }
              }else{
