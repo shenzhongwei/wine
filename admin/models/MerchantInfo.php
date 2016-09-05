@@ -18,6 +18,7 @@ use Yii;
  * @property integer $is_active
  * @property integer $active_at
  * @property string $province
+ * @property string $phone
  * @property string $city
  * @property string $district
  *
@@ -43,8 +44,9 @@ class MerchantInfo extends \yii\db\ActiveRecord
         return [
             [['wa_id', 'lat', 'lng', 'registe_at', 'is_active', 'active_at'], 'integer'],
             [['name', 'address', 'province', 'city', 'district'], 'string', 'max' => 128],
+            [['phone'], 'string', 'max' => 11],
             [['region'], 'string', 'max' => 50],
-            [['wa_id'], 'exist', 'skipOnError' => true, 'targetClass' => WineAdmin::className(), 'targetAttribute' => ['wa_id' => 'wa_id']],
+            [['wa_id'], 'exist', 'skipOnError' => true, 'targetClass' => Admin::className(), 'targetAttribute' => ['wa_id' => 'wa_id']],
         ];
     }
 
@@ -60,6 +62,7 @@ class MerchantInfo extends \yii\db\ActiveRecord
             'region' => '所在地区',
             'address' => '详细地址',
             'lat' => '纬度',
+            'phone'=>'手机号',
             'lng' => '经度',
             'registe_at' => '入驻时间',
             'is_active' => '是否激活',

@@ -15,6 +15,7 @@ use Yii;
  * @property integer $lat
  * @property integer $lng
  * @property integer $registe_at
+ * @property string $phone
  * @property integer $is_active
  * @property integer $active_at
  * @property string $province
@@ -42,7 +43,7 @@ class MerchantInfo extends \yii\db\ActiveRecord
     {
         return [
             [['wa_id', 'lat', 'lng', 'registe_at', 'is_active', 'active_at'], 'integer'],
-            [['name', 'address', 'province', 'city', 'district'], 'string', 'max' => 128],
+            [['name', 'address', 'province', 'city', 'district','phone'], 'string', 'max' => 128],
             [['region'], 'string', 'max' => 50],
         ];
     }

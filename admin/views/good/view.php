@@ -10,7 +10,7 @@ use kartik\datecontrol\DateControl;
  */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Good Infos', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => '信息列表', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="good-info-view">
@@ -54,7 +54,10 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
         'enableEditMode'=>true,
         'deleteOptions'=>[
-            'url'=>'delete?id='.$model->id,
+            'url'=>\yii\helpers\Url::toRoute(['good/delete','id'=>$model->id],true),
+            'label'=>$model->is_active ? '<i class="glyphicon glyphicon-arrow-down"></i>':'<i class="glyphicon glyphicon-arrow-up"></i>',
+            'title' => Yii::t('app', $model->is_active ? '下架':'上架'),
+            'confirm'=>$model->is_active ? '一旦下架，用户将看不到该产品信息，确认下架?':'上架后该产品变为显示状态，确认上架?',
         ]
     ]) ?>
 

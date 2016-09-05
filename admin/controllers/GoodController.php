@@ -30,6 +30,9 @@ class GoodController extends Controller
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
+                'actions'=>[
+                    'delete'=>['get','post'],
+                ]
             ],
         ];
     }
@@ -40,7 +43,7 @@ class GoodController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new GoodSearch;
+        $searchModel = new GoodSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
         return $this->render('index', [
             'dataProvider' => $dataProvider,

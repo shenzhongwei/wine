@@ -14,15 +14,8 @@ $this->title = '商品列表';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="good-info-index">
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <p>
-        <?php /* echo Html::a('Create Good Info', ['create'], ['class' => 'btn btn-success'])*/  ?>
-    </p>
-
     <?php Pjax::begin(); echo GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'merchant',
@@ -55,12 +48,12 @@ $this->params['breadcrumbs'][] = $this->title;
                     'delete' => function ($url, $model) {
                         if($model->is_active == 0){
                             return Html::a('<i class="fa fa-arrow-up">上架</i>', $url, [
-                                'title' => Yii::t('app', '上架'),
+                                'title' => Yii::t('app', '上架该商品'),
                                 'class' => 'del btn btn-info btn-xs',
                             ]);
                         }else{
                             return Html::a('<i class="fa fa-arrow-down">下架</i>', $url, [
-                                'title' => Yii::t('app', '下架'),
+                                'title' => Yii::t('app', '下架该商品'),
                                 'class' => 'del btn btn-danger btn-xs',
                             ]);
                         }
@@ -75,7 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'panel' => [
             'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> '.Html::encode($this->title).' </h3>',
             'type'=>'info',
-            'before'=>Html::a('<i class="glyphicon glyphicon-plus"></i> 发布商品', ['create'], ['class' => 'btn btn-success']),
+            'before'=>$this->render('_search', ['model' => $searchModel]),
             'after'=>Html::a('<i class="glyphicon glyphicon-repeat"></i> 刷新列表', ['index'], ['class' => 'btn btn-info']),
             'showFooter'=>true
         ],

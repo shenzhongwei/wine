@@ -7,7 +7,7 @@ use yii\helpers\Html;
  * @var admin\models\GoodInfo $model
  */
 
-$this->title = 'Create Good Info';
+$this->title = '新增商品';
 $this->params['breadcrumbs'][] = ['label' => 'Good Infos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
