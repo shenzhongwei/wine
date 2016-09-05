@@ -140,7 +140,7 @@ class GoodType extends \yii\db\ActiveRecord
      * @return \yii\db\ActiveQuery
      */
     public function getGoodSmells()
-    {
+    {  //good_smell.type=good_type.id
         return $this->hasMany(GoodSmell::className(), ['type' => 'id'])->where(['good_smell.is_active'=>1]);
     }
 

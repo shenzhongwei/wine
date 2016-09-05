@@ -36,7 +36,7 @@ class PayController extends ApiController{
             return $this->showResult(301,'读取订单信息出错');
         }
         $wxUnified = new AppUnifiedOrder();
-        if($type==1){
+        if($type==1){  //订单付款
             $orderInfo = OrderInfo::findOne(['order_code'=>$orderCode,'uid'=>$user_id,'state'=>1,'is_del'=>0]);
             if(empty($orderInfo)){
                 return $this->showResult(304,'订单信息错误，请重试');
@@ -45,7 +45,7 @@ class PayController extends ApiController{
 //            $wxUnified->setParameter('total_fee',1);
             $wxUnified->setParameter('total_fee',($orderInfo->pay_bill)*100);
             $wxUnified->setParameter('notify_url',WxPayConfig::NOTIFY_URL_ORDER);
-        }elseif($type == 2){
+        }elseif($type == 2){ //充值
             $inout_id = substr($orderCode,10);
             $inout = AccountInout::findOne(['target_id'=>$user_id,'id'=>$inout_id,'type'=>4,'status'=>2]);
             if(empty($inout)){
@@ -58,13 +58,16 @@ class PayController extends ApiController{
         }else{
             return $this->showResult(301,'数据异常');
         }
+
         $wxUnified->setParameter('spbill_create_ip',$_SERVER['REMOTE_ADDR']);
         $wxUnified->setParameter('out_trade_no',$orderCode);
         $wxUnified->setParameter('time_start',date('YmdHis',time()));
         $wxUnified->setParameter('time_expire',date('YmdHis',time()+900));
         $wxUnified->setParameter('trade_type','APP');
         $wxUnified->setParameter('goods_tag','SANTE');
+
         $res = $wxUnified->getResult();
+
         if($res['return_code']=='FAIL'){
             $data = $res['return_msg'];
             return $this->showResult(400,'下单失败',$data);
