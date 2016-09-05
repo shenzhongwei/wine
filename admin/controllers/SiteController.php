@@ -5,8 +5,6 @@ namespace admin\controllers;
 use admin\models\AdminForm;
 use admin\models\Menu;
 use Yii;
-use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
 
 
 /**
