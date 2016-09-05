@@ -29,7 +29,6 @@ use yii\helpers\Html;
 <script type="text/javascript">
     $(window).load(function() {
         photo="<?=$logo ?>";
-        alert(photo);return false;
         var options =
         {
             thumbBox: '.thumbBox',
