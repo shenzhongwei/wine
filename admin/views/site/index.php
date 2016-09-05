@@ -23,7 +23,7 @@ $this->title = '双天酒';
                     <li class="nav-header">
                         <div class="dropdown profile-element" style="text-align: center">
                             <span><img id="wa_logo" alt="image" class="img-circle" style="width:96px;margin-top:4px;border-radius:128px;box-shadow:0px 0px 12px #7E7E7E;"
-                                       src="<?=empty($user->wa_logo) ? Yii::$app->params['img_path'].'/logo/profile_small.jpg':Yii::$app->params['img_path'].$user->wa_logo;?>" />
+                                       src="<?=empty($user->wa_logo) ? (Yii::$app->params['img_path'].'/logo/profile_small.jpg'):(Yii::$app->params['img_path'].$user->wa_logo);?>" />
                             </span>
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                 <span class="clear">
