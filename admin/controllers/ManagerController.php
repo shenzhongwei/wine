@@ -124,7 +124,7 @@ use yii\web\NotFoundHttpException;
                      if(!$admin->save()){
                          return $this->showResult(400,'保存失败，请重试');
                      }else{
-                         return $this->showResult(200,'修改头像成功','../../../photo'.$admin->wa_logo);
+                         return $this->showResult(200,'修改头像成功','../../photo'.$admin->wa_logo);
                      }
                  }
              }else{
