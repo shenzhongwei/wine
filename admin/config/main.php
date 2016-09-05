@@ -9,6 +9,19 @@ return [
     "modules" => [
         "admin" => [
             "class" => 'mdm\admin\Module',
+            'controllerMap' => [
+                'assignment' => [
+                    'class' => 'mdm\admin\controllers\AssignmentController',
+                    'userClassName' => 'admin\models\Admin',
+                    'idField' => 'wa_id'
+                ]
+            ],
+            'menus' => [
+                'assignment' => [
+                    'label' => 'Grand Access' // change label
+                ],
+                //'route' => null, // disable menu route
+            ]
         ],
         'gridview' =>  [
             'class' => '\kartik\grid\Module',
@@ -46,18 +59,9 @@ return [
         //ACF肯定要加,加了才会自动验证是否有权限
         'class' => 'mdm\admin\components\AccessControl',
         'allowActions' => [
-            //允许访问的action
-            //controller/action
-            //'*'
-            'site/*',
-            'gii/*',
-            'index/*',
-            'manager/*',
             'debug/*',
-            'admin/*',
-            'good/*',
-            'gridview/*'
-//            'user/*',
+            'site/login',
+            'site/error'
         ],
     ],
 

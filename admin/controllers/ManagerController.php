@@ -18,31 +18,6 @@ use yii\web\NotFoundHttpException;
  */
  class ManagerController extends BaseController{
 
-
-
-     public function behaviors()
-     {
-         return [
-             'access' => [
-                 'class' => AccessControl::className(),
-                 'rules' => [
-                     [
-                         'actions' => ['index','update','upload','list','create','delete','lock','del','recover','search','searchlist'],
-                         'allow' => true,
-                         'roles' => ['@'],
-                     ],
-                 ],
-             ],
-             'verbs' => [
-                 'class' => VerbFilter::className(),
-                 'actions' => [
-                     'upload' => ['post'],
-                 ],
-             ],
-         ];
-     }
-
-
      public function actionIndex(){
          $logo = empty(Yii::$app->user->identity->wa_logo) ? '':Yii::$app->params['img_path'].Yii::$app->user->identity->wa_logo;
          return $this->render('logo',[

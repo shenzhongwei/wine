@@ -18,31 +18,9 @@ class SiteController extends BaseController
     /**
      * @inheritdoc
      */
-    public function behaviors()
+    public function init()
     {
         $this->enableCsrfValidation = false;
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'actions' => ['login', 'error'],
-                        'allow' => true,
-                    ],
-                    [
-                        'actions' => ['logout', 'index'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['get'],
-                ],
-            ],
-        ];
     }
 
     /**

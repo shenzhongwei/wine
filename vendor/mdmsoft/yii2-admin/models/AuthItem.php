@@ -172,7 +172,7 @@ class AuthItem extends Model
             $this->_item->level = 0;
             $this->_item->description = $this->description;
             $this->_item->ruleName = $this->ruleName;
-            $this->_item->data = $this->data === null || $this->data === '' ? null : Json::decode($this->data);
+            $this->_item->data = empty(trim($this->data)) ? '' : Json::decode($this->data);
             if ($isNew) {
                 $manager->add($this->_item);
             } else {
