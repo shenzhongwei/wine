@@ -13,6 +13,7 @@ use Yii;
  * @property integer $type
  * @property string $start
  * @property string $end
+ * @property string $pay_password
  * @property integer $create_at
  * @property integer $is_active
  * @property integer $update_at
@@ -37,6 +38,7 @@ class UserAccount extends \yii\db\ActiveRecord
         return [
             [['target', 'level', 'type', 'create_at', 'is_active', 'update_at'], 'integer'],
             [['start', 'end'], 'number'],
+            [['pay_password'],'string'],
         ];
     }
 
@@ -52,6 +54,7 @@ class UserAccount extends \yii\db\ActiveRecord
             'type' => '钱包类型 1余额 2支付宝 3微信',
             'start' => '开始金额',
             'end' => '最终金额',
+            'pay_password'=>'余额支付密码',
             'create_at' => '开通时间',
             'is_active' => '是否激活',
             'update_at' => '状态更改时间',

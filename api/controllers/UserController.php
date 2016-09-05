@@ -362,6 +362,7 @@ class UserController extends ApiController{
         if(!$isExist->save()){
             return $this->showResult(400,'修改密码失败');
         }else{
+            Yii::$app->cache->delete('message_'.$phone);
             return $this->showResult(200,'修改密码成功');
         }
     }
@@ -391,7 +392,7 @@ class UserController extends ApiController{
     }
 
     /**
-     * 我的账户余额api
+     * 我的账户余额以及是否设置支付密码api
      */
     public function actionAccount(){
         $user_id = Yii::$app->user->identity->getId();
@@ -400,13 +401,110 @@ class UserController extends ApiController{
         //没有返回0
         if(empty($account)){
             $lastbill = 0;
+            $set_pwd = 0;
         }else{
             //有返回剩余金额
             $lastbill = $account->end>0 ? $account->end:0;
+            $set_pwd = empty($account->pay_password) ? 0:1;
         }
         $data = [
             'last_bill'=>$lastbill,
+            'set_pwd'=>$set_pwd,
         ];
         return $this->showResult(200,'成功',$data);
+    }
+
+    /**
+     * 设置余额支付密码
+     */
+    public function actionSetPayPwd(){
+        $user_id = Yii::$app->user->identity->getId();
+        $userInfo = UserInfo::findOne($user_id);//判断用户是否存在
+        if(empty($userInfo)){
+            return $this->showResult(302,'用户信息异常');
+        }
+        //接收数据
+        $code = Yii::$app->request->post('code','');//验证码
+        $password = Yii::$app->request->post('password','');//密码
+        $confirmPwd = Yii::$app->request->post('confirmPwd','');//确认密码
+        if(empty($code)||empty($password)||empty($confirmPwd)){//判断是否接受完整
+            return $this->showResult(301,'获取数据出错');
+        }
+        if($confirmPwd!=$password){//判断两次输入密码是否一致
+            return $this->showResult(301,'两次输入的密码不一致');
+        }
+        $codeCache = Yii::$app->cache->get('message_'.$userInfo->phone);//找到缓存中的密码
+        if($codeCache===false){
+            return $this->showResult(303,'验证码已过期，请重新获取');//验证code
+        }elseif($codeCache!=$code){
+            return $this->showResult(303,'验证码错误，请重新输入');
+        }
+        $userAccount = UserAccount::findOne(['target'=>$user_id,'type'=>1,'level'=>2]);//涨到用户余额
+        if(!empty($userAccount->pay_password)){
+            return $this->showResult(303,'该用户已设置余额支付密码，请勿重复设置');
+        }
+        if(empty($userAccount)){
+            $userAccount = new UserAccount();
+            $userAccount->create_at = time();
+            $userAccount->start = 0;
+            $userAccount->end = 0;
+        }
+        $userAccount->target=$user_id;
+        $userAccount->level=2;
+        $userAccount->type=1;
+        $userAccount->is_active = 1;
+        $userAccount->pay_password = md5(Yii::$app->params['pay_pre'].$password);
+        $userAccount->update_at = time();
+        if($userAccount->save()){
+            Yii::$app->cache->delete('message_'.$userInfo->phone);
+            return $this->showResult(200,'设置成功');
+        }else{
+            return $this->showResult(400,'设置失败，请重试');
+        }
+    }
+
+
+    /**
+     * 修改余额支付密码
+     */
+    public function actionModifyPayPwd(){
+        $user_id = Yii::$app->user->identity->getId();
+        $userInfo = UserInfo::findOne($user_id);//判断用户是否存在
+        if(empty($userInfo)){
+            return $this->showResult(302,'用户信息异常');
+        }
+        //接收数据
+        $code = Yii::$app->request->post('code','');//验证码
+        $old_pwd = Yii::$app->request->post('oldPwd');//原密码
+        $password = Yii::$app->request->post('password','');//密码
+        $confirmPwd = Yii::$app->request->post('confirmPwd','');//确认密码
+        if(empty($code)||empty($password)||empty($confirmPwd)||empty($old_pwd)){//判断是否接受完整
+            return $this->showResult(301,'获取数据出错');
+        }
+        if($confirmPwd!=$password){//判断两次输入密码是否一致
+            return $this->showResult(301,'两次输入的密码不一致');
+        }
+        $codeCache = Yii::$app->cache->get('message_'.$userInfo->phone);//找到缓存中的密码
+        if($codeCache===false){
+            return $this->showResult(303,'验证码已过期，请重新获取');//验证code
+        }elseif($codeCache!=$code){
+            return $this->showResult(303,'验证码错误，请重新输入');
+        }
+        $userAccount = UserAccount::findOne(['target'=>$user_id,'type'=>1,'level'=>2]);//涨到用户余额
+        if(empty($userAccount)||empty($userAccount->pay_password)){
+            return $this->showResult(303,'该用户尚未设置余额支付密码，请前往设置');
+        }
+        if($userAccount->pay_password != md5(Yii::$app->params['pay_pre'].$old_pwd)){
+            return $this->showResult(303,'原密码错误，请重新输入');
+        }
+        $userAccount->is_active = 1;
+        $userAccount->pay_password = md5(Yii::$app->params['pay_pre'].$password);
+        $userAccount->update_at = time();
+        if($userAccount->save()){
+            Yii::$app->cache->delete('message_'.$userInfo->phone);
+            return $this->showResult(200,'修改成功');
+        }else{
+            return $this->showResult(400,'修改失败，请重试');
+        }
     }
 }

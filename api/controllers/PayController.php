@@ -12,7 +12,6 @@ use api\models\MessageList;
 use api\models\OrderInfo;
 use api\models\OrderPay;
 use api\models\UserAccount;
-use common\models\PromotionInfo;
 use common\pay\alipay\AlipayNotify;
 use common\pay\alipay\helpers\AlipayHelper;
 use common\pay\wepay\AppUnifiedOrder;
@@ -273,7 +272,8 @@ class PayController extends ApiController{
     public function actionAccountPayOrder(){
         $user_id = Yii::$app->user->identity->getId();
         $orderCode = Yii::$app->request->post('order_code');//对应的订单code
-        if(empty($orderCode)){//未获取到返回错误
+        $pay_password = Yii::$app->request->post('pay_password');//对应的订单code
+        if(empty($orderCode)||empty($pay_password)){//未获取到返回错误
             return $this->showResult(301,'读取订单信息出错');
         }
         $orderInfo = OrderInfo::findOne(['uid'=>$user_id,'order_code'=>$orderCode,'state'=>1,'is_del'=>0]);//查找订单，炸不到返回错误
@@ -284,6 +284,13 @@ class PayController extends ApiController{
         $account = UserAccount::findOne(['target'=>$user_id,'type'=>1,'level'=>2,'is_active'=>1]);
         if(empty($account)||$account->end<$orderInfo->pay_bill){
             return $this->showResult(305,'账户余额不足，请先充值');
+        }
+        if(empty($account->pay_password)){
+            return $this->showResult(305,'未设置余额付款密码，请前往设置');
+        }
+
+        if($account->pay_password != md5(Yii::$app->params['pay_pre'].$pay_password)){
+            return $this->showResult(305,'余额付款密码错误，请重试');
         }
         /**
          * 开启事务
