@@ -166,7 +166,7 @@ function Upload(obj){
         }else if(data.status == '200'){
             var img = new Image();
             // 开始加载图片
-            img.src = wa_logo.data.data;
+            img.src = data.data;
 // 为Image对象添加图片加载成功的处理方法
             img.onload = function(){
                 wa_logo.src = data.data;
