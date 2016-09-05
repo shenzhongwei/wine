@@ -102,27 +102,29 @@ use yii\web\NotFoundHttpException;
              if(empty($pic)){
                  return $this->showResult(301,'未获取到图片数据');
              }
-             $logoPath = Yii::$app->params['img_path'].'/logo/';
              $pic_path = '../../photo/logo/';
              if(!is_dir($pic_path)){
-                 @mkdir($logoPath,0777,true);
+                 @mkdir($pic_path,0777,true);
              }
              $logo_name = 'admin_'.time().$user_id.rand(100,999).'.'.substr($type,6);
              if(file_put_contents($pic_path.$logo_name,$pic)){
                  $size = filesize($pic_path);
                  if($size > $max_file_size){
-                     @unlink ($pic_path);
+                     @unlink ($pic_path.$logo_name);
                      return $this->showResult(301,'图片大小不能超过2M');
                  }
                  $admin = Admin::findOne(['wa_id'=>$user_id]);
                  if(empty($admin)){
                      return $this->showResult(302,'用户登录信息失效');
                  }else{
+                     if(!empty($admin->wa_logo)){
+                         @unlink ('../../photo'.$admin->wa_logo);
+                     }
                      $admin->wa_logo = '/logo/'.$logo_name;
                      if(!$admin->save()){
                          return $this->showResult(400,'保存失败，请重试');
                      }else{
-                         return $this->showResult(200,'修改头像成功',$logoPath.$logo_name);
+                         return $this->showResult(200,'修改头像成功','../../photo'.$admin->wa_logo);
                      }
                  }
              }else{
