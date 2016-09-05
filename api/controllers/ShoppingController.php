@@ -26,7 +26,7 @@ class ShoppingController extends ApiController{
         $user_id = Yii::$app->user->identity->getId();
         $page = Yii::$app->request->post('page',1);//页数
         $pageSize = Yii::$app->params['pageSize'];
-        //找出购物车内的产品
+        //找出购物车内的产品  shopping_cert与good_info
         $query = ShoppingCert::find()->joinWith('g')->where("uid=$user_id and good_info.id>0");
         $count = $query->count();
         $query->offset(($page-1)*$pageSize)->limit($pageSize);
@@ -129,7 +129,7 @@ class ShoppingController extends ApiController{
      */
     public function actionEdit(){
         $user_id = Yii::$app->user->identity->getId();
-        //获取json数据
+        //获取json数据 [{'cert_id':1,'amount':2},{}]
         $data = json_decode(Yii::$app->request->post('data'),true);
         if(empty($data)){
             return $this->showResult(301,'未获取到详细数据');

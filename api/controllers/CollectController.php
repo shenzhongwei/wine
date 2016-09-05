@@ -62,7 +62,7 @@ class CollectController extends  ApiController{
         if(empty($userInfo)){
             return $this->showResult(302,'用户信息异常');
         }
-        //找出收藏数据
+        //找出收藏数据    good_collection 与 good_info
         $query = GoodCollection::find()->joinWith('g')->where(['status'=>1,'uid'=>$user_id])->orderBy(['add_at'=>SORT_DESC]);
         $count = $query->count();
         $query->offset(($page-1)*$pageSize)->limit($pageSize);

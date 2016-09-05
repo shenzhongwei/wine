@@ -64,7 +64,7 @@ class ProductController extends ApiController{
     public function actionHome(){
         //产品类型
         $type = GoodType::find()->select(['id','name','logo'])->where(['is_active'=>1])->asArray()->all();
-        //抢购产品
+        //抢购产品  抢购商品和商品信息关联
         $rushList = GoodRush::find()->joinWith('g')->where("good_rush.is_active=1 and start_at<='".date('H:i:s')."' and end_at>='".date('H:i:s')."'")->one();
         $rush = [];
         if(!empty($rushList)){
@@ -73,7 +73,7 @@ class ProductController extends ApiController{
                 'pic'=>Yii::$app->params['img_path'].$rushList->g->pic,
                 'end_at'=>$rushList->end_at,
                 'name'=>$rushList->g->name,
-                'volum'=>$rushList->g->volum,
+                'volum'=>$rushList->g->volum, //毫升
                 'number'=>$rushList->g->number,
                 'limit'=>$rushList->limit,
                 'sale_price'=>$rushList->price,
@@ -216,7 +216,7 @@ class ProductController extends ApiController{
                 return $this->showResult(303,'未获取到店铺信息');
             }
             $query->andWhere(['merchant'=>$shop->merchant]);
-        }elseif($from == 2){
+        }elseif($from == 2){ //为2表示搜索产品
             if(empty($from_val)){
                 return $this->showResult(301,'获取数据异常');
             }
@@ -275,7 +275,7 @@ class ProductController extends ApiController{
         $pics = ArrayHelper::getColumn($goodInfo->goodPics,function($element){
             return Yii::$app->params['img_path'].$element->pic;
         });
-        //查找评论
+        //查找评论   comment_detail与order_comment
         $query = CommentDetail::find()->joinWith('c')->where(['gid'=>$good_id,'comment_detail.status'=>1])->orderBy(['order_comment.add_at'=>SORT_DESC]);
         $query->offset(0)->limit(2);
         $comments = $query->all();

@@ -115,7 +115,7 @@ class OrderController extends ApiController{
                 }
             }
             if($from == 2){
-                $goodIds = '('.implode(',',array_column($from_val,'good_id')).')';
+                $goodIds = '('.implode(',',array_column($from_val,'good_id')).')'; //array_column() 返回输入数组中某个单一列的值。
                 $sql = "DELETE FROM shopping_cert WHERE gid IN $goodIds AND uid=$user_id";
                 $row = Yii::$app->db->createCommand($sql)->execute();
                 if(empty($row)){
@@ -147,7 +147,7 @@ class OrderController extends ApiController{
         $pageSize = Yii::$app->params['pageSize'];
         $res = OrderInfo::AutoCancelOrder($user_id);
         if($res){
-            //找用户订单
+            //找用户订单,查找用户一个月内的订单
             $query = OrderInfo::find()->joinWith('orderDetails')->where([
                 'and','uid='.$user_id,'is_del=0','order_date+2592000>'.time(),'state in (1,2,3,4,5,6,7,99)']);
             if(!empty($state)){//筛选
@@ -303,7 +303,7 @@ class OrderController extends ApiController{
      */
     public function actionAccount(){
         $user_id = Yii::$app->user->identity->getId();
-        $bill = Yii::$app->request->post('bill');
+        $bill = Yii::$app->request->post('bill'); //充值金额
         $billPromotions = PromotionInfo::find()->where(
             'pt_id=2 and condition>0 and discount>0 and is_active=1 start_at<='.time().' and end_at>='.time().' and condition<='.$bill)
             ->orderBy(['condition'=>SORT_DESC])->all();
@@ -340,6 +340,7 @@ class OrderController extends ApiController{
      * 充值页面充值金额选项以及优惠描述接口
      */
     public function actionActivity(){
+        //先查找充值赠送的描述
         $vipPromotion = PromotionInfo::find()->where('pt_id=3 and is_active=1 and `condition`>0')->one();
         $billLabels = [];
         if(empty($vipPromotion)){
@@ -349,6 +350,7 @@ class OrderController extends ApiController{
             $billLabels [] = $condition;
             $vip_des = '充值满'.$condition.'元，获得终生会员资格';
         }
+        //在查找充值送优惠的描述
         $billPromotions = PromotionInfo::find()->where(
             'pt_id=2 and `condition`>0 and discount>0 and is_active=1 and start_at<='.time().' and end_at>='.time())
             ->orderBy(['`condition`'=>SORT_ASC])->all();

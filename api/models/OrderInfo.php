@@ -160,7 +160,7 @@ class OrderInfo extends \yii\db\ActiveRecord
     //生成订单码
     public static function generateCode(){
         $arr = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-        $key = array_rand($arr);
+        $key = array_rand($arr); //array_rand() 函数返回数组中的随机键
         $code=$arr[$key];
         return $code;
     }
