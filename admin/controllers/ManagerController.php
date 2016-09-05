@@ -20,8 +20,6 @@ use yii\web\NotFoundHttpException;
 
      public function actionIndex(){
          $logo = empty(Yii::$app->user->identity->wa_logo) ? '':Yii::$app->params['img_path'].Yii::$app->user->identity->wa_logo;
-         var_dump($logo);
-         exit;
          return $this->render('logo',[
              'logo'=>$logo,
          ]);
