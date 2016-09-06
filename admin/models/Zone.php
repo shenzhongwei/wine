@@ -83,4 +83,21 @@ class Zone extends \yii\db\ActiveRecord
         return self::find()->where("status<>'0' and leveltype=3 and parentid=320400")->asArray()->all();
     }
 
+    //省
+    public static function getProvince(){
+        $model=self::find()->where(['leveltype'=>1,'status'=>'1'])->asArray()->all();
+        return empty($model)?[]:$model;
+    }
+
+    //市
+    public static function getCity($p_id){
+        $model=Zone::find()->where(['leveltype'=>2,'status'=>'1','parentid'=>$p_id])->asArray()->all();
+        return empty($model)?[]:$model;
+    }
+
+    //区
+    public static function getDistrict($c_id){
+        $model=Zone::find()->where(['leveltype'=>3,'status'=>'1','parentid'=>$c_id])->asArray()->all();
+        return empty($model)?[]:$model;
+    }
 }

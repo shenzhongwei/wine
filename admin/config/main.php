@@ -48,15 +48,16 @@ return [
         'allowActions' => [
             //允许访问的action
             //controller/action
-            //'*'
-            'site/*',
-            'gii/*',
-            'index/*',
-            'manager/*',
-            'debug/*',
-            'admin/*',
-            'good/*',
-            'gridview/*'
+            '*'
+//            'site/*',
+//            'gii/*',
+//            'index/*',
+//            'manager/*',
+//            'debug/*',
+//            'admin/*',
+//            'good/*',
+//            'gridview/*',
+//            'merchant/*',
 //            'user/*',
         ],
     ],

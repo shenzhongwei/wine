@@ -65,6 +65,7 @@ use yii\web\NotFoundHttpException;
              'pageSize' => '15',
              'pageSizeParam' => false,
          ]);
+
          $admin = $data->joinWith('admingroup')->offset($pages->offset)->limit($pages->limit)->all();
          $auth = Yii::$app->authManager;
          $item = $auth->getRolesByType(Yii::$app->user->identity->wa_type);

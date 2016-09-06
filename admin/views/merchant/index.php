@@ -7,31 +7,39 @@ use yii\widgets\Pjax;
 /**
  * @var yii\web\View $this
  * @var yii\data\ActiveDataProvider $dataProvider
- * @var admin\models\GoodSearch $searchModel
+ * @var admin\models\MerchantInfoQuery $searchModel
  */
 
-$this->title = '商品列表';
+$this->title = '商户列表';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="good-info-index">
-    <?php Pjax::begin();
-        echo GridView::widget([
+<div class="merchant-info-index">
+     <?php Pjax::begin();
+     echo GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-            'merchant',
-            'type',
-            'name',
-            'volum',
-            'price',
-            'unit',
-            'pic',
-            'number',
-            'detail:ntext',
-            'regist_at',
-            'is_active',
             [
-                'header' => '操作',
+                'header'=>'序号',
+                'class' => 'yii\grid\SerialColumn'
+            ],
+            [
+                'attribute'=> 'name',
+                'format'=>'html',
+                'value'=>function($data){
+                    return '<a href="../manager/update?id='.$data->wa_id.'">'.$data->name.'</a>';
+                }
+            ],
+            'address',
+            'phone',
+            [
+                'attribute'=>'is_active',
+                'value'=>function($data){
+                    return $data->is_active==0?'否':'是';
+                },
+            ],
+
+            [
+                'header'=>'操作',
                 'class' => 'yii\grid\ActionColumn',
                 'buttons' => [
                     'view' => function ($url, $model) {
@@ -48,17 +56,18 @@ $this->params['breadcrumbs'][] = $this->title;
                     },
                     'delete' => function ($url, $model) {
                         if($model->is_active == 0){
-                            return Html::a('<i class="fa fa-arrow-up">上架</i>', $url, [
-                                'title' => Yii::t('app', '上架该商品'),
+                            return Html::a('<i>激活</i>', $url, [
+                                'title' => Yii::t('app', '激活该商户'),
                                 'class' => 'del btn btn-info btn-xs',
                             ]);
                         }else{
-                            return Html::a('<i class="fa fa-arrow-down">下架</i>', $url, [
-                                'title' => Yii::t('app', '下架该商品'),
+                            return Html::a('<i>冻结</i>', $url, [
+                                'title' => Yii::t('app', '冻结该商户'),
                                 'class' => 'del btn btn-danger btn-xs',
                             ]);
                         }
                     }
+
                 ],
             ],
         ],
@@ -66,13 +75,15 @@ $this->params['breadcrumbs'][] = $this->title;
         'hover'=>true,
         'condensed'=>true,
         'floatHeader'=>true,
+
         'panel' => [
             'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> '.Html::encode($this->title).' </h3>',
             'type'=>'info',
-            'before'=>$this->render('_search', ['model' => $searchModel]),
-            'after'=>Html::a('<i class="glyphicon glyphicon-repeat"></i> 刷新列表', ['index'], ['class' => 'btn btn-info']),
+            'before'=>$this->render('_search', ['model' => $searchModel,'mername'=>$mername]),
+            'after'=>Html::a('<i class="glyphicon glyphicon-repeat"></i>刷新列表', ['index'], ['class' => 'btn btn-info']),
             'showFooter'=>true
         ],
-    ]); Pjax::end(); ?>
+    ]);
+     Pjax::end(); ?>
 
 </div>

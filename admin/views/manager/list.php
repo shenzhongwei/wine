@@ -14,9 +14,12 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="ibox float-e-margins">
         <div class="ibox-content">
             <p>
-                <a href="<?= Url::toRoute('manager/create')?>"><button class="btn btn-info" ><li class="fa fa-plus"></li> 新增管理员</button></a>
+                <a href="<?= Url::toRoute('manager/create')?>">
+                    <button class="btn btn-info" ><li class="fa fa-plus"></li> 新增理员</button>
+                </a>
             </p>
             <input name="manager_page" value="1" type="hidden">
+
             <div class="row" style="margin-bottom: 5px">
                 <div class="col-lg-2">
                     <div class="input-group">
@@ -71,6 +74,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <button class="btn btn-info btn-sm" onclick="goPage(1)"><li class="fa fa-refresh"></li>清 空</button>
                 </div>
             </div>
+
             <div class="row">
                 <div class="col-sm-12">
                     <div class="ibox float-e-margins">
@@ -103,6 +107,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                             <td><?=$val['wa_name'] ?></td>
                                             <td><?=$val['admingroup']['item_name'] ?></td>
                                             <td>
+                                                <!--turn on/off-->
                                                 <div class="switch">
                                                     <div class="onoffswitch">
                                                         <input type="checkbox" <?php
@@ -124,15 +129,14 @@ $this->params['breadcrumbs'][] = $this->title;
                                                     </div>
                                                 </div>
                                             </td>
+
                                             <td><?=$val['wa_last_login_time'] ?></td>
                                             <td><?=$val['wa_last_login_ip'] ?></td>
                                             <td><?php
                                                 if($val['wa_status']==0){
-                                                    echo '<p><span class="label label-default"><i class="fa fa-times"></i> 已 删</span>
-                        </p>';
+                                                    echo '<p><span class="label label-default"><i class="fa fa-times"></i> 已 删</span></p>';
                                                 }else{
-                                                    echo '<p><span class="label label-info"><i class="fa fa-check"></i> 正 常</span>
-                        </p>';
+                                                    echo '<p><span class="label label-info"><i class="fa fa-check"></i> 正 常</span></p>';
                                                 }
                                                 ?>
                                             </td>
@@ -141,28 +145,26 @@ $this->params['breadcrumbs'][] = $this->title;
                                                 <a class="btn btn-primary btn-xs" href="<?=Url::toRoute(['manager/update','id'=>$val['wa_id']])?>">
                                                     <i class="fa fa-edit"></i>编辑
                                                 </a>
+
                                                 <?php
                                                 if($val['wa_type']>Yii::$app->user->identity->wa_type&&$val['wa_status']<>0){
-                                                    ?>
-                                                    <a class="btn btn-default btn-xs" id="manager_del">
-                                                        <i class="fa fa-trash-o"></i>
-                                                        删除
-                                                    </a>
-                                                    <?php
+                                                ?>
+                                                <a class="btn btn-default btn-xs" id="manager_del">
+                                                    <i class="fa fa-trash-o"></i>删除
+                                                </a>
+                                                <?php
                                                 }elseif($val['wa_type']>Yii::$app->user->identity->wa_type&&$val['wa_status']==0){
-                                                    ?>
-                                                    <a href="#" class="btn btn-success btn-xs" id="manager_recover">
-                                                        <i class="fa fa-undo"></i>
-                                                        恢复
-                                                    </a>
-                                                    <?php
+                                                ?>
+                                                <a href="#" class="btn btn-success btn-xs" id="manager_recover">
+                                                    <i class="fa fa-undo"></i>恢复
+                                                </a>
+                                                <?php
                                                 }else{
-                                                    ?>
+                                                ?>
                                                     <a href="#" class="btn btn-warning btn-xs">
-                                                        <i class="fa fa-warning"></i>
-                                                        不可删
+                                                        <i class="fa fa-warning"></i>不可删
                                                     </a>
-                                                    <?php
+                                                <?php
                                                 }
                                                 ?>
                                             </td>
@@ -182,6 +184,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                         'lastPageLabel' => '末页',
                                     ]) ?>
                                 </div>
+
                             </div>
                         </div>
                     </div>
