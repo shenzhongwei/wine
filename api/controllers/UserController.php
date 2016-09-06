@@ -494,7 +494,7 @@ class UserController extends ApiController{
         if(empty($userAccount)||empty($userAccount->pay_password)){
             return $this->showResult(303,'该用户尚未设置余额支付密码，请前往设置');
         }
-        if($userAccount->pay_password != md5(Yii::$app->params['pay_pre'].$old_pwd)){
+        if($userAccount->pay_password != (md5(Yii::$app->params['pay_pre'].$old_pwd))){
             return $this->showResult(303,'原密码错误，请重新输入');
         }
         $userAccount->is_active = 1;

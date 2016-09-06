@@ -33,6 +33,10 @@ class ComposerStaticInite4343f3ad7d2ea8db509f2e66bb8db83
         array (
             'pjkui\\kindeditor\\' => 17,
         ),
+        'm' => 
+        array (
+            'mdm\\admin\\' => 10,
+        ),
         'k' => 
         array (
             'kartik\\widgets\\' => 15,
@@ -138,6 +142,10 @@ class ComposerStaticInite4343f3ad7d2ea8db509f2e66bb8db83
         'pjkui\\kindeditor\\' => 
         array (
             0 => __DIR__ . '/..' . '/pjkui/kindeditor',
+        ),
+        'mdm\\admin\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mdmsoft/yii2-admin',
         ),
         'kartik\\widgets\\' => 
         array (

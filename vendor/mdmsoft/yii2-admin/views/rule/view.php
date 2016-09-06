@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 echo Html::a(Yii::t('rbac-admin', 'Delete'), ['delete', 'id' => $model->name], [
                     'class' => 'btn btn-danger',
                     'data-confirm' => Yii::t('rbac-admin', 'Are you sure to delete this item?'),
-                    'data-method' => 'post',
+                    'data-method' => 'get',
                 ]);
                 ?>
             </p>

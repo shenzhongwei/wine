@@ -18,33 +18,8 @@ use yii\web\NotFoundHttpException;
  */
  class ManagerController extends BaseController{
 
-
-
-     public function behaviors()
-     {
-         return [
-             'access' => [
-                 'class' => AccessControl::className(),
-                 'rules' => [
-                     [
-                         'actions' => ['index','update','upload','list','create','delete','lock','del','recover','search','searchlist'],
-                         'allow' => true,
-                         'roles' => ['@'],
-                     ],
-                 ],
-             ],
-             'verbs' => [
-                 'class' => VerbFilter::className(),
-                 'actions' => [
-                     'upload' => ['post'],
-                 ],
-             ],
-         ];
-     }
-
-
      public function actionIndex(){
-         $logo = empty(Yii::$app->user->identity->wa_logo) ? '':Yii::$app->params['img_path'].Yii::$app->user->identity->wa_logo;
+         $logo = empty(Yii::$app->user->identity->wa_logo) ? '':'../../../photo'.Yii::$app->user->identity->wa_logo;
          return $this->render('logo',[
              'logo'=>$logo,
          ]);
@@ -124,31 +99,33 @@ use yii\web\NotFoundHttpException;
              if(empty($pic_content)){
                  return $this->showResult(301,'未获取到图片数据');
              }
-             $pic =base64_decode($pic_content );
+             $pic =base64_decode($pic_content);
              if(empty($pic)){
                  return $this->showResult(301,'未获取到图片数据');
              }
-             $logoPath = Yii::$app->params['img_path'].'/logo/';
-             if(!is_dir($logoPath)){
-                 @mkdir($logoPath,0777,true);
+             $pic_path = '../../photo/logo/';
+             if(!is_dir($pic_path)){
+                 @mkdir($pic_path,0777,true);
              }
              $logo_name = 'admin_'.time().$user_id.rand(100,999).'.'.substr($type,6);
-             $pic_path = $logoPath.$logo_name;
-             if(file_put_contents($pic_path,$pic)){
+             if(file_put_contents($pic_path.$logo_name,$pic)){
                  $size = filesize($pic_path);
                  if($size > $max_file_size){
-                     @unlink ($pic_path);
+                     @unlink ($pic_path.$logo_name);
                      return $this->showResult(301,'图片大小不能超过2M');
                  }
                  $admin = Admin::findOne(['wa_id'=>$user_id]);
                  if(empty($admin)){
                      return $this->showResult(302,'用户登录信息失效');
                  }else{
+                     if(!empty($admin->wa_logo)){
+                         @unlink ('../../photo'.$admin->wa_logo);
+                     }
                      $admin->wa_logo = '/logo/'.$logo_name;
                      if(!$admin->save()){
                          return $this->showResult(400,'保存失败，请重试');
                      }else{
-                         return $this->showResult(200,'修改头像成功',$pic_path);
+                         return $this->showResult(200,'修改头像成功','../../photo'.$admin->wa_logo);
                      }
                  }
              }else{

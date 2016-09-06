@@ -32,7 +32,6 @@ class ItemController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['post'],
                     'assign' => ['post'],
                     'remove' => ['post'],
                 ],

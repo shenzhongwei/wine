@@ -5,8 +5,8 @@ namespace admin\controllers;
 use admin\models\AdminForm;
 use admin\models\Menu;
 use Yii;
-use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 
 
 /**
@@ -18,9 +18,16 @@ class SiteController extends BaseController
     /**
      * @inheritdoc
      */
-    public function behaviors()
+    public function init()
     {
         $this->enableCsrfValidation = false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
         return [
             'access' => [
                 'class' => AccessControl::className(),

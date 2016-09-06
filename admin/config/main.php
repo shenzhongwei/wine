@@ -36,8 +36,7 @@ return [
 
             ]
         ],
-        ],
-
+    ],
     "aliases" => [
         "@mdm/admin" => "@vendor/mdmsoft/yii2-admin",
     ],
@@ -46,19 +45,9 @@ return [
         //ACF肯定要加,加了才会自动验证是否有权限
         'class' => 'mdm\admin\components\AccessControl',
         'allowActions' => [
-            //允许访问的action
-            //controller/action
-            '*'
-//            'site/*',
-//            'gii/*',
-//            'index/*',
-//            'manager/*',
-//            'debug/*',
-//            'admin/*',
-//            'good/*',
-//            'gridview/*',
-//            'merchant/*',
-//            'user/*',
+            'debug/*',
+            'site/login',
+            'site/error',
         ],
     ],
 

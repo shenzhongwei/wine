@@ -15,27 +15,6 @@ use yii\filters\VerbFilter;
  */
 class GoodController extends Controller
 {
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'actions' => ['index','update','create','delete','view'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions'=>[
-                    'delete'=>['get','post'],
-                ]
-            ],
-        ];
-    }
 
     /**
      * Lists all GoodInfo models.
@@ -119,6 +98,8 @@ class GoodController extends Controller
             $model->is_active = 0;
         }
         $model->save();
+        var_dump($this->redirect(['index']));
+        exit;
         return $this->redirect(['index']);
     }
 
