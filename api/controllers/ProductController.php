@@ -298,17 +298,21 @@ class ProductController extends ApiController{
         $token = Yii::$app->request->post('token');
         if(empty($token)){
             $is_collected = 0;
+            $collection_id = 0;
         }else{
             $userLogin = UserLogin::findOne(['token'=>$token]);
             if(empty($userLogin)||empty($userLogin->uid)){
                 $is_collected = 0;
+                $collection_id = 0;
             }else{
                 //判断该商品是否已收藏
                 $collectedGood = GoodCollection::find()->where(['uid'=>$userLogin->uid,'gid'=>$good_id,'status'=>1])->one();
                 if(!empty($collectedGood)){
                     $is_collected = 1;
+                    $collection_id = $collectedGood->id;
                 }else{
                     $is_collected = 0;
+                    $collection_id = 0;
                 }
             }
         }
@@ -327,6 +331,7 @@ class ProductController extends ApiController{
             'limit'=>$limit,
             'comments'=>$comment,
             'is_collected'=>$is_collected,
+            'collection_id'=>$collection_id,
             'is_active'=>$goodInfo->is_active,
             'detail'=>stripcslashes($goodInfo->detail),
         ];
