@@ -98,9 +98,9 @@ class GoodController extends Controller
             $model->is_active = 0;
         }
         $model->save();
-        var_dump($this->redirect(['index']));
-        exit;
-        return $this->redirect(['index']);
+//        var_dump($this->redirect(['index']));
+//        exit;
+        return $this->redirect('index');
     }
 
 
