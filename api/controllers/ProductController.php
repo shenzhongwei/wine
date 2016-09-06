@@ -31,7 +31,7 @@ class ProductController extends ApiController{
         foreach($types as $type){
             $smell = $type->getTypes($type->goodSmells);
             $boot = $type->getTypes($type->goodBoots);
-            $brand = $type->getTypes($type->goodBrands);
+            $brand = $type->getBrands($type->goodBrands);
             $breed = $type->getTypes($type->goodBreeds);
             $color = $type->getTypes($type->goodColors);
             $country = $type->getTypes($type->goodCountries);

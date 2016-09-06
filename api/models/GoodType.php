@@ -157,7 +157,16 @@ class GoodType extends \yii\db\ActiveRecord
             return [
                 'id'=>$element['id'],
                 'name'=>$element['name'],
-                'logo'=>empty($element['logo']) ? '':Yii::$app->params['img_path'].$element['logo']
+            ];
+        });
+    }
+
+    public function getBrands($arr=[]){
+        return ArrayHelper::getColumn($arr,function($element){
+            return [
+                'id'=>$element['id'],
+                'name'=>$element['name'],
+                'logo'=>empty($element['logo']) ? '':Yii::$app->params['img_path'].$element['logo'],
             ];
         });
     }
