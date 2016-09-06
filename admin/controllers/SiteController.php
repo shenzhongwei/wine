@@ -4,6 +4,7 @@ namespace admin\controllers;
 
 use admin\models\AdminForm;
 use admin\models\Menu;
+use admin\models\Zone;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -37,7 +38,7 @@ class SiteController extends BaseController
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index'],
+                        'actions' => ['logout', 'index','selectcity','selectdistrict','upload'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -110,5 +111,29 @@ class SiteController extends BaseController
 
         return $this->goHome();
     }
-
+    //查询城市
+    public function actionSelectcity(){
+        $p_id=Yii::$app->request->post('p_id');
+        $data=Zone::getCity($p_id);
+        return json_encode($data);
+    }
+    //查询地区
+    public function actionSelectdistrict(){
+        $c_id=Yii::$app->request->post('c_id');
+        $data=Zone::getDistrict($c_id);
+        return json_encode($data);
+    }
+    //上传单张图片
+    public static function actionUpload($user_id,$img,$pic_path,$img_temp){
+        if(!empty($img)){
+            $ext = $img->getExtension();
+           // $pic_path = '../../photo/logo/';
+            if(!is_dir($pic_path)){
+                @mkdir($pic_path,0777,true);
+            }
+            $logo_name = 'admin_'.time().$user_id.rand(100,999).'.'.$ext;
+            $res=$img->saveAs($pic_path.$logo_name);//设置图片的存储位置
+             return $img_temp.$logo_name;
+        }
+    }
 }

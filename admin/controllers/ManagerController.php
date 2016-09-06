@@ -362,6 +362,7 @@ use yii\web\NotFoundHttpException;
              return $this->showResult(200,'成功',$data);
          }
      }
+
      protected function findModel($id)
      {
          if (($model = Admin::findOne($id)) !== null) {
@@ -369,5 +370,35 @@ use yii\web\NotFoundHttpException;
          } else {
              throw new NotFoundHttpException('The requested page does not exist.');
          }
+     }
+
+     public function actionView(){
+         $id=Yii::$app->request->post('wa_id');
+         $query=[];
+         if(empty($id)){
+             $state='500';
+             $res='商户管理员id获取失败';
+         }else{
+             $model=Admin::findOne($id);
+             if(!empty($model)){
+                 $state='200';
+                 $res='查找成功';
+                 $query=array(
+                     'username'=>$model->wa_username,
+                     'password'=>$model->wa_password,
+                     'wa_logo'=>$model->wa_logo,
+                     'wa_type'=>$model->wa_type
+                 );
+             }else{
+                 $state='500';
+                 $res='不存在该商户管理员信息';
+             }
+         }
+         $data=[
+             'state'=>$state,
+             'res'=>$res,
+             'data'=>$query,
+         ];
+         return json_encode($data);
      }
 }

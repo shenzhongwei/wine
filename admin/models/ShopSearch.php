@@ -5,20 +5,19 @@ namespace admin\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use admin\models\MerchantInfo;
-use yii\helpers\ArrayHelper;
+use admin\models\ShopInfo;
 
 /**
- * MerchantInfoSearch represents the model behind the search form about `admin\models\MerchantInfo`.
+ * ShopSearch represents the model behind the search form about `admin\models\ShopInfo`.
  */
-class MerchantInfoSearch extends MerchantInfo
+class ShopSearch extends ShopInfo
 {
-
     public function rules()
     {
         return [
-            [['id', 'wa_id', 'lat', 'lng', 'registe_at', 'is_active', 'active_at'], 'integer'],
-            [['name', 'region', 'address', 'phone', 'province', 'city', 'district'], 'safe'],
+            [['id', 'wa_id', 'merchant', 'lat', 'lng', 'limit', 'regist_at', 'is_active', 'active_at'], 'integer'],
+            [['name', 'region', 'address', 'bus_pic', 'logo', 'province', 'city', 'district'], 'safe'],
+            [['least_money', 'send_bill', 'no_send_need'], 'number'],
         ];
     }
 
@@ -30,7 +29,7 @@ class MerchantInfoSearch extends MerchantInfo
 
     public function search($params)
     {
-        $query = MerchantInfo::find();
+        $query = ShopInfo::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -43,9 +42,14 @@ class MerchantInfoSearch extends MerchantInfo
         $query->andFilterWhere([
             'id' => $this->id,
             'wa_id' => $this->wa_id,
+            'merchant' => $this->merchant,
             'lat' => $this->lat,
             'lng' => $this->lng,
-            'registe_at' => $this->registe_at,
+            'limit' => $this->limit,
+            'least_money' => $this->least_money,
+            'send_bill' => $this->send_bill,
+            'no_send_need' => $this->no_send_need,
+            'regist_at' => $this->regist_at,
             'is_active' => $this->is_active,
             'active_at' => $this->active_at,
         ]);
@@ -53,27 +57,12 @@ class MerchantInfoSearch extends MerchantInfo
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'region', $this->region])
             ->andFilterWhere(['like', 'address', $this->address])
-            ->andFilterWhere(['like', 'phone', $this->phone])
+            ->andFilterWhere(['like', 'bus_pic', $this->bus_pic])
+            ->andFilterWhere(['like', 'logo', $this->logo])
             ->andFilterWhere(['like', 'province', $this->province])
             ->andFilterWhere(['like', 'city', $this->city])
             ->andFilterWhere(['like', 'district', $this->district]);
 
         return $dataProvider;
-    }
-
-    /*查询所有商户名称*/
-    public static function getAllMerchant(){
-        $model=MerchantInfo::find()->asArray()->all();
-
-        $data=ArrayHelper::getColumn($model,function($element){
-            return  $element['name'];
-        });
-        return $data;
-    }
-
-    /*查询某一商户名称*/
-    public static function getOneMerchant($id){
-        $model=MerchantInfo::findOne($id);
-        return empty($model)?'':$model->name;
     }
 }

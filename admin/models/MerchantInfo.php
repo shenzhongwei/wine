@@ -51,6 +51,7 @@ class MerchantInfo extends \yii\db\ActiveRecord
             [['wa_id', 'lat', 'lng', 'registe_at', 'is_active', 'active_at'], 'integer'],
             [['name', 'address', 'province', 'city', 'district'], 'string', 'max' => 128],
             [['phone'], 'string', 'max' => 11],
+            [['wa_username'],'validusername'],
             [['region'], 'string', 'max' => 50],
             [['wa_id'], 'exist', 'skipOnError' => true, 'targetClass' => Admin::className(), 'targetAttribute' => ['wa_id' => 'wa_id']],
         ];
@@ -63,12 +64,12 @@ class MerchantInfo extends \yii\db\ActiveRecord
     {
         return [
             'id' => '主键id',
-            'name' => '商户名',
+            'name' => '商户名称',
             'wa_id' => '后台管理员id',
             'region' => '所在地区',
             'address' => '详细地址',
             'lat' => '纬度',
-            'phone'=>'手机号',
+            'phone'=>'联系方式',
             'lng' => '经度',
             'registe_at' => '入驻时间',
             'is_active' => '是否激活',
@@ -115,5 +116,13 @@ class MerchantInfo extends \yii\db\ActiveRecord
     public static function find()
     {
         return new MerchantInfoQuery(get_called_class());
+    }
+
+    //判断商户后台用户名是否唯一
+    public static function validusername($username){
+        $model=Admin::find()->where(['wa_username'=>$username,'wa_type'=>3])->asArray()->all();
+        if(!empty($model)){
+            return $model->addError('用户名已存在');
+        }
     }
 }
