@@ -14,14 +14,22 @@ $this->title = '商品列表';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="good-info-index">
-    <?php Pjax::begin();
+    <?php Pjax::begin(['id'=>'goodinfos','timeout'=>3000]);
         echo GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'merchant',
             'type',
-            'name',
+            [
+                'attribute'=>'name',
+                'format' => 'raw',
+                'value'=> function($model){
+                    return Html::a($model->name,['good/view', 'id' => $model->id],
+                        ['title' => '查看详细']
+                    );
+                }
+            ],
             'volum',
             'price',
             'unit',

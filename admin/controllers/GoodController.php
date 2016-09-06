@@ -13,8 +13,21 @@ use yii\filters\VerbFilter;
 /**
  * GoodController implements the CRUD actions for GoodInfo model.
  */
-class GoodController extends Controller
+class GoodController extends BaseController
 {
+
+    public function behaviors()
+    {
+        return [
+            'varbs'=>[
+                'class'=>VerbFilter::className(),
+                'actions'=>[
+                    'delete'=>['post','get'],
+                ]
+            ]
+        ];
+    }
+
 
     /**
      * Lists all GoodInfo models.
@@ -40,7 +53,7 @@ class GoodController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->render('view', ['model' => $model]);
         } else {
             return $this->render('view', ['model' => $model]);
         }
@@ -91,6 +104,7 @@ class GoodController extends Controller
      */
     public function actionDelete($id)
     {
+        $type = Yii::$app->request->get('type');
         $model = $this->findModel($id);
         if($model->is_active==0){
             $model->is_active = 1;
@@ -98,9 +112,11 @@ class GoodController extends Controller
             $model->is_active = 0;
         }
         $model->save();
-//        var_dump($this->redirect(['index']));
-//        exit;
-        return $this->redirect('index');
+        if(empty($type)){
+            return $this->runAction('index');
+        }else{
+            return $this->redirect(['index']);
+        }
     }
 
 
