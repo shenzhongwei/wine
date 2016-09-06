@@ -4,15 +4,14 @@ use yii\helpers\Html;
 
 /**
  * @var yii\web\View $this
- * @var admin\models\MerchantInfo $model
+ * @var admin\models\ShopInfo $model
  */
 
-$this->title = '新添商户';
-$this->params['breadcrumbs'][] = ['label' => 'Merchant Infos', 'url' => ['index']];
+$this->title = '新添门店';
+$this->params['breadcrumbs'][] = ['label' => '门店列表', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="merchant-info-create">
-
+<div class="shop-info-create">
     <?= $this->render('_form', [
         'model' => $model,
         'item_arr'=>$item_arr

@@ -100,4 +100,11 @@ class Zone extends \yii\db\ActiveRecord
         $model=Zone::find()->where(['leveltype'=>3,'status'=>'1','parentid'=>$c_id])->asArray()->all();
         return empty($model)?[]:$model;
     }
+
+    //根据id查找地名
+    public static function getDetailName($id){
+        $model=Zone::find()->where(['id'=>$id])->asArray()->one();
+        return empty($model)?'':$model['name'];
+
+    }
 }
