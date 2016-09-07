@@ -387,7 +387,7 @@ use yii\web\NotFoundHttpException;
                      'username'=>$model->wa_username,
                      'password'=>$model->wa_password,
                      'wa_logo'=>$model->wa_logo,
-                     'wa_type'=>$model->wa_type
+                     'wa_type'=>Admin::getadminValue($model->wa_type)
                  );
              }else{
                  $state='500';

@@ -163,4 +163,17 @@ class Admin extends \yii\db\ActiveRecord implements IdentityInterface
     public function CreateModel($admin){
 
     }
+
+
+    //管理员type值对应的管理员类型
+    public static function getadminValue($wa_type){
+        switch($wa_type){
+            case 1: $v='开发者'; break;
+            case 2: $v='系统管理员'; break;
+            case 3: $v='商家管理员'; break;
+            case 4: $v='门店管理员'; break;
+            default: $v='无'; break;
+        }
+        return $v;
+    }
 }

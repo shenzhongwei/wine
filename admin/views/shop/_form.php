@@ -20,6 +20,9 @@ $province=ArrayHelper::map(Zone::getProvince(),'id','name');
 $city=[];
 $district=[];
 ?>
+<style>
+    .shopinfo-no_send_need{width: 50px;height: 30px;;padding-left:2px ;padding-right: 2px; border: 1px solid #ccc;}
+</style>
 <script type="text/javascript">
     $(document).ready(function() {
         selectAddress($("#shopinfo-province"),$("#shopinfo-city"),$("#shopinfo-district"));
@@ -36,17 +39,29 @@ $district=[];
     ]);
     ?>
     <div class="merchant-form" style="margin-top: 10px;width: 90%;">
-        <?= $form->field($model, 'merchant')->dropDownList($merchant)?>
+        <?= $form->field($model, 'merchant')->dropDownList($merchant,[$model->isNewRecord?'':'disabled'=>true])?>
         <?= $form->field($model, 'name')->textInput()?>
         <?= $form->field($model, 'limit')->textInput()?>
         <?= $form->field($model, 'least_money')->textInput()?>
         <?= $form->field($model, 'send_bill')->textInput()?>
+<!--        --><?//= $form->field($model, 'no_send_need')->textInput(['placeholder'=>'输入金额'])?>
+        <?= $form->field($model, 'no_send_need',[
+            'template'=> '<label class="control-label col-md-2" for="shopinfo-no_send_need" >免配送条件</label>
+                        <div class="col-sm-10" >
+                        <p>满<input type="text" id="shopinfo-no_send_need" name="ShopInfo[no_send_need]" class="shopinfo-no_send_need" placeholder="0">元，免配送费</p>
+                        <div class="help-block"></div>
+                        </div>'
+        ])->textInput(['maxlength'=>20,'style'=>'width:50px'])?>
+
+        <input type="hidden" value="<?=$model->bus_pic?>" name="ShopInfo[bus_pic_url]">
         <?= $form->field($model, 'bus_pic')->widget(FileInput::className(),[
             'options'=>[
                 'accept'=>'image/*',
             ],
             'pluginOptions'=>[
                 'previewFileType' => 'image',
+                'initialPreview' =>$p1,
+                'initialPreviewConfig' =>$PreviewConfig,
                 'initialPreviewAsData' => true,
                 'showUpload'=>false,
                 'showRemove'=>false,
@@ -54,12 +69,15 @@ $district=[];
                 'maxFileCount'=>1,
             ]
         ])?>
+        <input type="hidden" value="<?=$model->bus_pic?>" name="ShopInfo[logo_url]">
         <?= $form->field($model, 'logo')->widget(FileInput::className(),[
             'options'=>[
                 'accept'=>'image/*',
             ],
             'pluginOptions'=>[
                 'previewFileType' => 'image',
+                'initialPreview' =>$p2,
+                'initialPreviewConfig' =>$PreviewConfig,
                 'initialPreviewAsData' => true,
                 'showUpload'=>false,
                 'showRemove'=>false,

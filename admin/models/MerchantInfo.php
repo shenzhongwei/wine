@@ -51,9 +51,10 @@ class MerchantInfo extends \yii\db\ActiveRecord
             [['wa_id', 'lat', 'lng', 'registe_at', 'is_active', 'active_at'], 'integer'],
             [['name', 'address', 'province', 'city', 'district'], 'string', 'max' => 128],
             [['phone'], 'string', 'max' => 11],
-            [['wa_username'],'validusername'],
             [['region'], 'string', 'max' => 50],
             [['wa_id'], 'exist', 'skipOnError' => true, 'targetClass' => Admin::className(), 'targetAttribute' => ['wa_id' => 'wa_id']],
+            [['phone','name'],'required','message'=>'不能为空'],
+            ['phone','match','pattern'=>'/^13[0-9]{1}[0-9]{8}$|15[0-9]{1}[0-9]{8}$|18[0-9][0-9]{8}|17[0-9]{9}$|14[0-9]{9}$/','message'=>'手机号格式不正确'],
         ];
     }
 

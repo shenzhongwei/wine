@@ -11,6 +11,7 @@ use admin\models\ShopInfo;
 use admin\models\ShopSearch;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -21,7 +22,8 @@ use yii\web\UploadedFile;
  */
 class ShopController extends BaseController
 {
-    /**
+
+/**
      * Lists all ShopInfo models.
      * @return mixed
      */
@@ -71,16 +73,13 @@ class ShopController extends BaseController
         $item = $auth->getRolesByType(Yii::$app->user->identity->wa_type);
         $itemArr =ArrayHelper::map($item,'level','name');
 
-        $logourl='';
         $model = new ShopInfo;
+        $p1 = $p2='';
+        $P= [];
 
         if (Yii::$app->request->post()) {
             //获取传过来的值
             $shop=Yii::$app->request->post('ShopInfo');
-
-            if(empty($shop['name']) ){
-                return $this->showResult(400,'请输入门店名称');
-            }
             if(empty($shop['wa_username']) ){
                 return $this->showResult(400,'请输入后台登陆名');
             }
@@ -95,7 +94,6 @@ class ShopController extends BaseController
                 $message = '密码长度为5-16位';
                 return $this->showResult(400,$message);
             }
-
 
             //上传头像
             $img =UploadedFile::getInstance($model,'wa_logo');
@@ -133,9 +131,15 @@ class ShopController extends BaseController
                     throw new Exception;
                 }
 
-                $p=Zone::getDetailName($shop['province']);;
-                $c=Zone::getDetailName($shop['city']);
-                $d=Zone::getDetailName($shop['district']);
+                $p=Zone::getDetailName($shop['province']);
+                $c=$d='';
+                if(isset($shop['city'])){
+                    $c=Zone::getDetailName($shop['city']);
+                }
+                if(isset($shop['district'])){
+                    $d=Zone::getDetailName($shop['district']);
+                }
+
                 //创建门店信息
                 $model->attributes=[
                     'name'=>$shop['name'],
@@ -146,7 +150,7 @@ class ShopController extends BaseController
                     'limit'=>$shop['limit'],
                     'least_money'=>$shop['least_money'],
                     'send_bill'=>$shop['send_bill'],
-                    'no_send_need'=>$shop['no_send_need'],
+                    'no_send_need'=>empty($shop['no_send_need'])?0:$shop['no_send_need'],
                     'bus_pic'=>$businessurl,
                     'logo'=>$shopurl,
                     'registe_at'=>date('YmdHis'),
@@ -168,9 +172,12 @@ class ShopController extends BaseController
             }catch(Exception $e){
                 $transaction->rollBack();
                 Yii::$app->session->setFlash('danger','门店添加失败');
+                $model->wa_type='4';
                 return $this->redirect('create',[
                     'model' => $model,
-                    'item_arr'=>$itemArr
+                    'item_arr'=>$itemArr,
+                    'p1'=>$p1,'p2'=>$p2,
+                    'PreviewConfig' =>$P,
                 ]);
             }
         } else {
@@ -178,7 +185,9 @@ class ShopController extends BaseController
             $model->wa_type='4';
             return $this->render('create', [
                 'model' => $model,
-                'item_arr'=>$itemArr
+                'item_arr'=>$itemArr,
+                'p1'=>$p1,'p2'=>$p2,
+                'PreviewConfig' =>$P,
             ]);
         }
     }
@@ -191,13 +200,94 @@ class ShopController extends BaseController
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        $auth = Yii::$app->authManager;
+        $item = $auth->getRolesByType(Yii::$app->user->identity->wa_type);
+        $itemArr =ArrayHelper::map($item,'level','name');
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $model = $this->findModel($id);
+        // 对门店图进行处理
+        $p1 = $p2='';$P= [];
+        if ($model) {
+            $p1 = Yii::$app->params['img_path'].$model->bus_pic;
+            $p2 =Yii::$app->params['img_path'].$model->logo;
+            $P = [
+                'url' =>Url::toRoute('/shop/delete'),
+                'key' => $model->id,
+                'width'=>'200px'
+            ];
+        }
+
+        if (Yii::$app->request->post()) {
+            //获取传过来的值
+            $shop=Yii::$app->request->post('ShopInfo');
+            $user_id = Yii::$app->user->identity->getId();
+            if(empty($user_id)){
+                return $this->showResult(302,'用户信息获取失败');
+            }
+            //上传营业执照
+            $img =UploadedFile::getInstance($model,'bus_pic');
+            $pic_path = '../../photo/business/';
+            $img_temp='/business/';
+            $businessurl=SiteController::actionUpload($user_id,$img,$pic_path,$img_temp);
+
+            //上传门店logo
+            $img =UploadedFile::getInstance($model,'logo');
+            $pic_path = '../../photo/shop/';
+            $img_temp='/shop/';
+            $shopurl=SiteController::actionUpload($user_id,$img,$pic_path,$img_temp);
+
+            $transaction = Yii::$app->db->beginTransaction();
+            try{
+
+                $p=Zone::getDetailName($shop['province']);
+                $c=$d='';
+                if(isset($shop['city'])){
+                    $c=Zone::getDetailName($shop['city']);
+                }
+                if(isset($shop['district'])){
+                    $d=Zone::getDetailName($shop['district']);
+                }
+
+                //创建门店信息
+                $model->attributes=[
+                    'name'=>$shop['name'],
+                    'region'=>$shop['region'],
+                    'address'=>$shop['address'],
+                    'limit'=>$shop['limit'],
+                    'least_money'=>$shop['least_money'],
+                    'send_bill'=>$shop['send_bill'],
+                    'no_send_need'=>empty($shop['no_send_need'])?0:$shop['no_send_need'],
+                    'bus_pic'=>empty($businessurl)?$shop['bus_pic_url']:$businessurl,
+                    'logo'=>empty($shopurl)?$shop['logo_url']:$shopurl,
+                    'registe_at'=>date('YmdHis'),
+                    'active_at'=>date('YmdHis'),
+                    'province'=>empty($p)?$model->province:$p,
+                    'city'=>empty($c)?$model->city:$c,
+                    'district'=>empty($d)?$model->district:$d,
+                ];
+                if(!$model->save()){
+                    throw new Exception;
+                }
+
+                $transaction->commit();//提交
+                Yii::$app->session->setFlash('success','门店添加成功');
+                return $this->redirect(['view', 'id' => $model->id]);
+            }catch(Exception $e){
+                $transaction->rollBack();
+                Yii::$app->session->setFlash('danger','门店添加失败');
+                $model->wa_type='4';
+                return $this->redirect('update',[
+                    'model' => $model,
+                    'p1'=>$p1,'p2'=>$p2,
+                    'PreviewConfig' =>$P,
+                ]);
+            }
         } else {
+
             return $this->render('update', [
                 'model' => $model,
+                'p1'=>$p1,'p2'=>$p2,
+                'PreviewConfig' =>$P,
             ]);
         }
     }
@@ -208,11 +298,34 @@ class ShopController extends BaseController
      * @param integer $id
      * @return mixed
      */
-    public function actionDelete($id)
+    public function actionDelete()
     {
-        $this->findModel($id)->delete();
-
+        $user_id = Yii::$app->user->identity->getId();
+        if(empty($user_id)){
+            return $this->showResult(302,'用户登录信息失效');
+        }
+        $id=Yii::$app->request->get('id');
+        if(empty($id)){
+            return $this->showResult(301,'读取数据发生错误');
+        }
+        $shopInfo =ShopInfo::findOne([$id]);
+        if(empty($shopInfo)){
+            return $this->showResult(301,'未获取到该门店的信息');
+        }
+        $shopInfo->active_at = date('YmdHis');
+        if($shopInfo->is_active==1){
+            $shopInfo->is_active=0;
+        }else{
+            $shopInfo->is_active=1;
+        }
+        if($shopInfo->save()){
+            Yii::$app->session->setFlash('success','修改成功');
+        }else{
+            Yii::$app->session->setFlash('danger','失败，请重试');
+        }
         return $this->redirect(['index']);
+
+
     }
 
     /**

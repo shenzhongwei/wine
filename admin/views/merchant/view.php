@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 use kartik\detail\DetailView;
 use kartik\datecontrol\DateControl;
-
+use yii\helpers\Url;
 /**
  * @var yii\web\View $this
  * @var admin\models\MerchantInfo $model
@@ -13,33 +13,11 @@ $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Merchant Infos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<style>
-    /*弹出层*/
-    .pop_hide{
-        display: none;
-        position: absolute;
-        top: 0%;  left: 0%;
-        width: 100%;  height: 100%;
-        background-color: black;
-        z-index:1001;
-        -moz-opacity: 0.7;
-        opacity:.70;
-        filter: alpha(opacity=70);
-    }
-    .pop_showbrand{
-        display: none;
-        z-index:1002;  overflow: auto;
-        position: absolute;top: 15%;
-        left:0; right:0; margin-left: 0;margin-right: 0;
-        margin: 10px auto;
-        width:500px;
-        height:auto;background-color: #ffffff;
-        border:1px solid #CCCCCC;
-        box-shadow:0 0 3px #000;
-    }
-</style>
-<div class="merchant-info-view">
+<!--引用css-->
+<?=Html::cssFile('@web/css/wine/pop.css')?>
 
+
+<div class="merchant-info-view">
     <?= DetailView::widget([
             'model' => $model,
             'condensed'=>true,
@@ -97,39 +75,8 @@ $this->params['breadcrumbs'][] = $this->title;
 $tourl=\yii\helpers\Url::toRoute('/manager/view');
 $imgpath=Yii::$app->params['img_path'];
 $Js=<<<Js
-
-    $('table a').click(function(){
-        var html='';
-        $.ajax({
-            url:'{$tourl}',
-            data:{'wa_id':$(this).text()},
-            type:'post',
-            dataType:'json',
-            success:function(msg){
-                    if(msg.state=='200'){
-                        html='<table style="width:90%;margin:0 auto;">' +
-                                 '<tr align="left"><th>后台登陆名</th><td>'+msg.data['username']+'</td></tr>' +
-                                 '<tr align="left"><th>登陆密码</th><td>******</td></tr>' +
-                                 '<tr align="left"><th>头像</th><td><img src="{$imgpath}'+msg.data['wa_logo']+'" width="50" height="50"></td></tr>' +
-                                 '<tr align="left"><th>用户组</th><td>商户管理员</td></tr>'
-                            '</table>';
-
-                        $('.pop_showbrand').find('div').html(html);
-                        $('.pop_hide').slideDown();
-                        $('.pop_showbrand').slideDown();
-                    }else{
-                        alert(msg.data);
-                    }
-            }
-        });
-    });
-
-    /*关闭弹出框*/
-    $('.close').click(function(){
-       $('.pop_hide').slideUp();
-       $('.pop_showbrand').slideUp();
-    });
-
+    click_pop('{$imgpath}','{$tourl}');
 Js;
 $this->registerJs($Js);
 ?>
+<script type="text/javascript" src="<?=\yii\helpers\Url::to('@web/js/wine/pop.js') ?>"></script>

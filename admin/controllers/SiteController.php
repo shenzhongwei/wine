@@ -133,7 +133,8 @@ class SiteController extends BaseController
             }
             $logo_name = 'admin_'.time().$user_id.rand(100,999).'.'.$ext;
             $res=$img->saveAs($pic_path.$logo_name);//设置图片的存储位置
-             return $img_temp.$logo_name;
+            return $img_temp.$logo_name;
         }
+        return '';
     }
 }

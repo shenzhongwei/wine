@@ -7,17 +7,18 @@ use yii\helpers\Html;
  * @var admin\models\ShopInfo $model
  */
 
-$this->title = 'Update Shop Info: ' . ' ' . $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Shop Infos', 'url' => ['index']];
+$this->title = '更新门店信息' . ' ' . $model->name;
+$this->params['breadcrumbs'][] = ['label' => '门店列表', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="shop-info-update">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <?= $this->render('_form', [
         'model' => $model,
+        'p1' =>$p1, 'p2' =>$p2,
+        // 需要展示的图片设置，比如图片的宽度等s
+        'PreviewConfig' =>$PreviewConfig,
     ]) ?>
 
 </div>
