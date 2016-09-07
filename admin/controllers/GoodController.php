@@ -37,6 +37,9 @@ class GoodController extends BaseController
     {
         $searchModel = new GoodSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
+        $dataProvider->pagination = [
+            'pageSize' => 15,
+        ];
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
@@ -104,7 +107,6 @@ class GoodController extends BaseController
      */
     public function actionDelete($id)
     {
-        $type = Yii::$app->request->get('type');
         $model = $this->findModel($id);
         if($model->is_active==0){
             $model->is_active = 1;
@@ -112,11 +114,7 @@ class GoodController extends BaseController
             $model->is_active = 0;
         }
         $model->save();
-        if(empty($type)){
-            return $this->runAction('index');
-        }else{
-            return $this->redirect(['index']);
-        }
+        return $this->runAction('index');
     }
 
 

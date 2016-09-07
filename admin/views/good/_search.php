@@ -20,9 +20,11 @@ use yii\widgets\ActiveForm;
         ],
     ]); ?>
 
+    <?php  echo $form->field($model, 'name') ?>
+
     <?php  echo $form->field($model, 'type') ?>
 
-    <?php  echo $form->field($model, 'name') ?>
+    <?php  echo $form->field($model, 'merchant') ?>
 
     <?php  echo $form->field($model, 'volum') ?>
 

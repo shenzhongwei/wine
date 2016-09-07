@@ -20,9 +20,8 @@ use kartik\datecontrol\DateControl;
         'formConfig' => [
             'labelSpan' => 1,
             'deviceSize' => ActiveForm::SIZE_SMALL,
-        ]
+        ],
     ]); echo Form::widget([
-
         'model' => $model,
         'form' => $form,
         'columns' => 1,
