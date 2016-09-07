@@ -66,7 +66,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     "raw",
                 ],
                 'value'=>function($model){
-                    return Html::img(Yii::$app->params['img_path'].$model->pic,[
+                    return Html::img(\yii\helpers\Url::to(Yii::$app->params['img_path'].$model->pic),[
                         'width'=>"50px",'height'=>"50px","onclick"=>"ShowImg(this);",'style'=>'cursor:pointer','title'=>"点击放大"
                     ]);
                 }
