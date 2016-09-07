@@ -14,7 +14,9 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="shop-info-create">
     <?= $this->render('_form', [
         'model' => $model,
-        'item_arr'=>$item_arr
+        'item_arr'=>$item_arr,
+        'p1'=>$p1,'p2'=>$p2,
+        'PreviewConfig' =>$PreviewConfig,
     ]) ?>
 
 </div>

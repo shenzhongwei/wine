@@ -72,7 +72,6 @@ class MerchantController extends BaseController
         $item = $auth->getRolesByType(Yii::$app->user->identity->wa_type);
         $itemArr = ArrayHelper::map($item,'level','name');
 
-        $logourl='';
         $model = new MerchantInfo;
 
         if (Yii::$app->request->post()) {
@@ -96,27 +95,14 @@ class MerchantController extends BaseController
                 $message = '密码长度为5-16位';
                 return $this->showResult(400,$message);
             }
-            if(!$this->validateMobilePhone($merchant['phone'])&&!empty($merchant['phone'])){
-                $message = '手机格式错误';
-                return $this->showResult(400,$message);
-            }
+
 
             //上传头像
             $img =UploadedFile::getInstance($model,'wa_logo');
             $pic_path = '../../photo/logo/';
             $img_temp='/logo/';
             $logourl=SiteController::actionUpload($user_id,$img,$pic_path,$img_temp);
-//            if(!empty($img)){
-//               $ext = $img->getExtension();
-//                $pic_path = '../../photo/logo/';
-//                if(!is_dir($pic_path)){
-//                    @mkdir($pic_path,0777,true);
-//                }
-//                $logo_name = 'admin_'.time().$user_id.rand(100,999).'.'.$ext;
-//                $res=$img->saveAs($pic_path.$logo_name);//设置图片的存储位置
-//                $logourl='/logo/'.$logo_name;
-//            }
-            //var_dump($merchant);exit;
+
             $transaction = Yii::$app->db->beginTransaction();
             try{
                 //创建后台商户管理员
@@ -135,9 +121,14 @@ class MerchantController extends BaseController
                     throw new Exception;
                 }
 
-                $p=Zone::getDetailName($merchant['province']);;
-                $c=Zone::getDetailName($merchant['city']);
-                $d=Zone::getDetailName($merchant['district']);
+                $p=Zone::getDetailName($merchant['province']);
+                $c=$d='';
+                if(isset($shop['city'])){
+                    $c=Zone::getDetailName($shop['city']);
+                }
+                if(isset($shop['district'])){
+                    $d=Zone::getDetailName($shop['district']);
+                }
                 //创建商户信息
                 $model->attributes=[
                     'name'=>$merchant['name'],
@@ -194,9 +185,14 @@ class MerchantController extends BaseController
             $merchant=Yii::$app->request->post('MerchantInfo');
             $transaction = Yii::$app->db->beginTransaction();
             try{
-                $p=Zone::getDetailName($merchant['province']);;
-                $c=Zone::getDetailName($merchant['city']);
-                $d=Zone::getDetailName($merchant['district']);
+                $p=Zone::getDetailName($merchant['province']);
+                $c=$d='';
+                if(isset($shop['city'])){
+                    $c=Zone::getDetailName($merchant['city']);
+                }
+                if(isset($shop['district'])){
+                    $d=Zone::getDetailName($merchant['district']);
+                }
                 //创建商户信息
                 $model->attributes=[
                     'name'=>$merchant['name'],
@@ -205,9 +201,9 @@ class MerchantController extends BaseController
                     'phone'=>$merchant['phone'],
                     'registe_at'=>date('YmdHis'),
                     'active_at'=>date('YmdHis'),
-                    'province'=>$p,
-                    'city'=>$c,
-                    'district'=>$d,
+                    'province'=>empty($p)?$model->province:$p,
+                    'city'=>empty($c)?$model->city:$c,
+                    'district'=>empty($d)?$model->district:$d,
                 ];
                 if(!$model->save()){
                     throw new Exception;
