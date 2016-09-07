@@ -54,7 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
         'enableEditMode'=>true,
         'deleteOptions'=>[
-            'url'=>['delete', 'id' => $model->id],
+            'url'=>['delete', 'id' => $model->id,'type'=>1,'kvdelete'=>true],
             'label'=>$model->is_active ? '<i class="glyphicon glyphicon-arrow-down"></i>':'<i class="glyphicon glyphicon-arrow-up"></i>',
             'title' => Yii::t('app', $model->is_active ? '下架':'上架'),
             'confirm'=>$model->is_active ? '一旦下架，用户将看不到该产品信息，确认下架?':'上架后该产品变为显示状态，确认上架?',

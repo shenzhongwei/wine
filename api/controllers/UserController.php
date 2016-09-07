@@ -386,6 +386,7 @@ class UserController extends ApiController{
                 'user_id'=>$element->id,
                 'nickName'=>$element->nickname,
                 'phone'=>$element->phone,
+                'headUrl'=>empty($element->head_url) ? Yii::$app->params['img_path'].'/logo/user_default.jpg':Yii::$app->params['img_path'].$element->head_url,
             ];
         });
         return $this->showList(200,'列表如下',$count,$data);
