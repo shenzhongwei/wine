@@ -31,7 +31,7 @@ $comment='<div class="comment">
 foreach($model->orderComments as $k){
     foreach($k->commentDetails as $key=>$value){
     $comment.= '<li>
-                    <img src="'.Yii::$app->params['img_path'].$k->u->head_url.'">
+                    <img src="../../../photo'.$k->u->head_url.'">
                     <div>
                        <p style="width:20%;"><span>'.$k->u->nickname.'</span>    <span style="float:right;color:#00a2d4;">'.date('Y-m-d H:i:s',$k->add_at).'</span></p>
                        <p><span>送货评分：'.$k->send_star.'</span><span style="margin-left:5%"> 商品评分：'.$value['star'].'</span></p>
@@ -138,7 +138,7 @@ $comment.= '</ul>
 </div>
 <script>
    $(function(){
-       $('a').eq(0).click(function(){
+       $('table a').click(function(){
            var text=$(this).text();//获取a标签下的值
            if(text=='展开'){  //查看评价
                $(this).html('<i class="fa fa-hand-o-up">收起</i>');
