@@ -30,8 +30,13 @@ $comment='<div class="comment">
              <ul>';
 foreach($model->orderComments as $k){
     foreach($k->commentDetails as $key=>$value){
+        if(empty($k->u->head_url)){
+            $img="../../../photo/logo/user_default.jpg";
+        }else{
+            $img="../../../photo/".$k->u->head_url;
+        }
     $comment.= '<li>
-                    <img src="'.Yii::$app->params['img_path'].empty($k->u->head_url)?'/logo/user_default.jpg':$k->u->head_url.'">
+                    <img src="'.$img.'">
                     <div>
                        <p style="width:20%;"><span>'.$k->u->nickname.'</span>    <span style="float:right;color:#00a2d4;">'.date('Y-m-d H:i:s',$k->add_at).'</span></p>
                        <p><span>送货评分：'.$k->send_star.'</span><span style="margin-left:5%"> 商品评分：'.$value['star'].'</span></p>
