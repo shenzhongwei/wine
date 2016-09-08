@@ -10,7 +10,7 @@ use yii\helpers\Url;
  */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Merchant Infos', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => '商户列表', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <!--引用css-->
@@ -73,7 +73,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 <?php
 $tourl=\yii\helpers\Url::toRoute('/manager/view');
-$imgpath=Yii::$app->params['img_path'];
+$imgpath='../../../photo';
 $Js=<<<Js
     click_pop('{$imgpath}','{$tourl}');
 Js;

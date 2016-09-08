@@ -13,7 +13,8 @@ $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Shop Infos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
-$img_path=Yii::$app->params['img_path'];
+//$img_path=Yii::$app->params['img_path'];
+$img_path='../../../photo';
 ?>
 <!--引用css-->
 <?=Html::cssFile('@web/css/wine/pop.css')?>
@@ -72,7 +73,7 @@ $img_path=Yii::$app->params['img_path'];
                         'height'=>'50'
                     ]
                 ],
-                'value'=>$img_path.$model->logo
+                'value'=>empty($model->logo)?'':'../../../photo'.$model->logo
             ],
             [
                 'attribute'=>'is_active',
