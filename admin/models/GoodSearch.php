@@ -12,12 +12,16 @@ use admin\models\GoodInfo;
  */
 class GoodSearch extends GoodInfo
 {
+
+    public $start_price;
+    public $end_price;
+
     public function rules()
     {
         return [
             [['id', 'merchant', 'type', 'brand', 'smell', 'color', 'dry', 'boot', 'breed', 'country', 'style', 'order', 'regist_at', 'is_active', 'active_at'], 'integer'],
             [['name', 'volum', 'unit', 'pic', 'number', 'detail'], 'safe'],
-            [['price'], 'number'],
+            [['price','start_price','end_price'], 'number'],
         ];
     }
 
@@ -51,20 +55,19 @@ class GoodSearch extends GoodInfo
             'breed' => $this->breed,
             'country' => $this->country,
             'style' => $this->style,
-            'price' => $this->price,
             'order' => $this->order,
             'regist_at' => $this->regist_at,
             'is_active' => $this->is_active,
             'active_at' => $this->active_at,
         ]);
-
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'volum', $this->volum])
             ->andFilterWhere(['like', 'unit', $this->unit])
             ->andFilterWhere(['like', 'pic', $this->pic])
             ->andFilterWhere(['like', 'number', $this->number])
             ->andFilterWhere(['like', 'detail', $this->detail]);
-
+        $query->andFilterWhere(['>=','price',$this->start_price])
+            ->andFilterWhere(['<=','price',$this->end_price]);
         return $dataProvider;
     }
 }

@@ -12,6 +12,9 @@ use yii\widgets\Pjax;
 
 $this->title = '商品列表';
 $this->params['breadcrumbs'][] = $this->title;
+\admin\assets\AppAsset::register($this);
+// here
+$this->registerJsFile("@web/js/good/_script.js");
 ?>
 <div class="good-info-index">
     <?php Pjax::begin(['id'=>'goodinfos','timeout'=>3000]);
@@ -86,7 +89,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label'=>'发布时间',
                 'attribute'=>'regist_at',
                 'value'=>function($model){
-                    return date('Y-m-d',$model->regist_at);
+                    return date('Y年m月d日',$model->regist_at);
                 }
             ],
             [
@@ -147,23 +150,3 @@ $this->params['breadcrumbs'][] = $this->title;
 
 </div>
 
-<script type="text/javascript">
-    function ShowImg(obj){
-        path  = obj.src;
-        var img = new Image();
-        // 开始加载图片
-        img.src = path;
-// 为Image对象添加图片加载成功的处理方法
-        img.onload = function(){
-            layer.open({
-                type:1,
-                content:'<img src="'+path+'" height="500px" >',
-                title:false,
-                shadeClose:true,
-                move :false,
-                shift:5
-                }
-            );
-        }
-    }
-</script>

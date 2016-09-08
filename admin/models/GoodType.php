@@ -2,6 +2,7 @@
 
 namespace admin\models;
 
+use common\helpers\ArrayHelper;
 use Yii;
 
 /**
@@ -158,5 +159,10 @@ class GoodType extends \yii\db\ActiveRecord
     public static function find()
     {
         return new GoodTypeQuery(get_called_class());
+    }
+
+    public static function GetTypes(){
+        $types = self::findAll(['is_active'=>1]);
+        return ArrayHelper::map($types,'id','name');
     }
 }

@@ -12,6 +12,9 @@ use kartik\datecontrol\DateControl;
 $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => '信息列表', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+\admin\assets\AppAsset::register($this);
+// here
+$this->registerJsFile("@web/js/good/_script.js");
 ?>
 
 <div class="wrapper wrapper-content">
@@ -33,30 +36,93 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= DetailView::widget([
                         'model' => $model,
                         'attributes' => [
-                            'id',
-                            'merchant',
-                            'type',
-                            'brand',
-                            'smell',
-                            'color',
-                            'dry',
-                            'boot',
-                            'breed',
-                            'country',
-                            'style',
-                            'name',
-                            'volum',
-                            'price',
-                            'unit',
-                            'pic',
+
+                            [
+                                'attribute'=>'name',
+                                'value'=> $model->name.$model->volum,
+                            ],
+                            [
+                                'header'=>'归属商户',
+                                'attribute'=>'merchant',
+                                'format' => 'raw',
+                                'value'=> Html::a($model->merchant0->name,['merchant/view', 'id' => $model->merchant0->id], ['title' => '查看商户信息','style'=>'color:#2a62bc;font-size:15px']),
+                            ],
+                            [
+                                'attribute'=>'type',
+                                'value'=> $model->type0->name,
+                            ],
+                            [
+                                'attribute'=>'brand',
+                                'value'=> empty($model->brand0) ? null:$model->brand0->name,
+                            ],
+                            [
+                                'attribute'=>'smell',
+                                'value'=> empty($model->smell0) ? null:$model->smell0->name,
+                            ],
+                            [
+                                'attribute'=>'color',
+                                'value'=> empty($model->color0) ? null:$model->color0->name,
+                            ],
+                            [
+                                'attribute'=>'dry',
+                                'value'=> empty($model->dry0) ? null:$model->dry0->name,
+                            ],
+                            [
+                                'attribute'=>'boot',
+                                'value'=> empty($model->boot0) ? null:$model->boot0->name,
+                            ],
+                            [
+                                'attribute'=>'breed',
+                                'value'=> empty($model->breed0) ? null:$model->breed0->name,
+                            ],
+                            [
+                                'attribute'=>'country',
+                                'value'=> empty($model->country0) ? null:$model->country0->name,
+                            ],
+                            [
+                                'attribute'=>'style',
+                                'value'=> empty($model->style0) ? null:$model->style0->name,
+                            ],
+                            [
+                                'label'=>'单价',
+                                'attribute'=>'price',
+                                'value'=> $model->price.'/'.$model->unit,
+                            ],
                             'number',
-                            'detail:ntext',
-                            'order',
-                            'regist_at',
-                            'is_active',
-                            'active_at',
+                            [
+
+                                'header'=>'图片',
+                                'attribute'=>'pic',
+                                "format" => [
+                                    "raw",
+                                ],
+                                'value'=>Html::img('../../../photo'.$model->pic,[
+                                    'height'=>"180px","onclick"=>"ShowImg(this);",'style'=>'cursor:pointer','title'=>"点击放大"
+                                ]),
+                            ],
+                            [
+                                'attribute'=>'detail',
+                                'value'=>Html::encode($model->detail),
+                            ],
+                            [
+                                'label'=>'发布时间',
+                                'attribute'=>'regist_at',
+                                'value'=>date('Y年m月d日',$model->regist_at),
+                            ],
+                            [
+                                'label'=>'状态',
+                                'attribute' => 'is_active',
+                                'format' => 'raw',
+                                'value' => $state =  $model->is_active==0 ? '<label class="label label-danger">已下架</label>':'<label class="label label-info">上架中</label>'
+
+                            ],
+                            [
+                                'label'=>$model->is_active == 0 ? '下架时间':'上架时间',
+                                'attribute'=>'active_at',
+                                'value'=>date('Y-m-d H:i:s',$model->regist_at),
+                            ],
                         ],
-                        'hAlign' =>DetailView::ALIGN_LEFT,
+                        'hAlign' =>DetailView::ALIGN_MIDDLE,
                     ]) ?>
                 </div>
             </div>

@@ -2,7 +2,9 @@
 
 namespace admin\models;
 
+use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "merchant_info".
@@ -53,7 +55,8 @@ class MerchantInfo extends \yii\db\ActiveRecord
             [['phone'], 'string', 'max' => 11],
             [['region'], 'string', 'max' => 50],
             [['wa_id'], 'exist', 'skipOnError' => true, 'targetClass' => Admin::className(), 'targetAttribute' => ['wa_id' => 'wa_id']],
-            [['phone','name'],'required','message'=>'不能为空'],
+            [['phone','name'],'required'],
+            [['wa_username'],'validusername'],
             ['phone','match','pattern'=>'/^13[0-9]{1}[0-9]{8}$|15[0-9]{1}[0-9]{8}$|18[0-9][0-9]{8}|17[0-9]{9}$|14[0-9]{9}$/','message'=>'手机号格式不正确'],
         ];
     }
@@ -120,10 +123,15 @@ class MerchantInfo extends \yii\db\ActiveRecord
     }
 
     //判断商户后台用户名是否唯一
-    public static function validusername($username){
-        $model=Admin::find()->where(['wa_username'=>$username,'wa_type'=>3])->asArray()->all();
+    public function validusername(){
+        $model=Admin::findIdentityByUsername($this->wa_username);
         if(!empty($model)){
-            return $model->addError('用户名已存在');
+            return $this->addError('wa_username','用户名已存在');
         }
+    }
+
+    public static function GetMerchants(){
+        $merchants = self::findAll(['is_active'=>1]);
+        return ArrayHelper::map($merchants,'id','name');
     }
 }

@@ -6,6 +6,7 @@ use admin\models\Admin;
 use admin\models\MerchantInfoSearch;
 use admin\models\UploadForm;
 use admin\models\Zone;
+use kartik\form\ActiveForm;
 use Yii;
 use admin\models\MerchantInfo;
 use yii\base\Exception;
@@ -14,6 +15,7 @@ use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 use yii\web\UploadedFile;
 
 /**
@@ -57,6 +59,15 @@ class MerchantController extends BaseController
         }
     }
 
+    public function actionValidForm(){
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $data = Yii::$app->request->post();
+        $model = new MerchantInfo();
+        $model->load($data);
+        return ActiveForm::validate($model);
+    }
+
+
     /**
      * Creates a new MerchantInfo model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -72,9 +83,8 @@ class MerchantController extends BaseController
         $item = $auth->getRolesByType(Yii::$app->user->identity->wa_type);
         $itemArr = ArrayHelper::map($item,'level','name');
 
-        $model = new MerchantInfo;
-
-        if (Yii::$app->request->post()) {
+        $model = new MerchantInfo();
+        if (Yii::$app->request->post()&& $model->load(Yii::$app->request->post()) && $model->validate()) {
             //获取传过来的值
             $merchant=Yii::$app->request->post('MerchantInfo');
 
