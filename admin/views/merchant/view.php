@@ -73,7 +73,8 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 <?php
 $tourl=\yii\helpers\Url::toRoute('/manager/view');
-$imgpath='../../../photo';
+$imgpath=Yii::$app->params['img_path'];
+
 $Js=<<<Js
     click_pop('{$imgpath}','{$tourl}');
 Js;
