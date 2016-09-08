@@ -31,7 +31,7 @@ $comment='<div class="comment">
 foreach($model->orderComments as $k){
     foreach($k->commentDetails as $key=>$value){
     $comment.= '<li>
-                    <img src="../../../photo'.$k->u->head_url.'">
+                    <img src="../../../photo'.empty($k->u->head_url)?'/logo/user_default.jpg':$k->u->head_url.'">
                     <div>
                        <p style="width:20%;"><span>'.$k->u->nickname.'</span>    <span style="float:right;color:#00a2d4;">'.date('Y-m-d H:i:s',$k->add_at).'</span></p>
                        <p><span>送货评分：'.$k->send_star.'</span><span style="margin-left:5%"> 商品评分：'.$value['star'].'</span></p>

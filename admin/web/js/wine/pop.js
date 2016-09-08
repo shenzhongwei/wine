@@ -15,7 +15,13 @@ function click_pop(imgpath,tourl) {
                     html = '<table style="width:90%;margin:0 auto;">' +
                         '<tr align="left"><th>后台登陆名</th><td>' + msg.data["username"] + '</td></tr>' +
                         '<tr align="left"><th>登陆密码</th><td>******</td></tr>' +
-                        '<tr align="left"><th>头像</th><td><img src="'+imgpath+ msg.data["wa_logo"] + '" width="50" height="50"></td></tr>' +
+                        '<tr align="left"><th>头像</th><td>';
+                    if(msg.data["wa_logo"]!=''){
+                        html +='<img src="'+imgpath+ msg.data["wa_logo"]+ '" width="50" height="50">';
+                    }else{
+                        html +='<img src="'+imgpath+'/logo/user_default.jpg" width="50" height="50">';
+                    }
+                    html+='</td></tr>' +
                         '<tr align="left"><th>用户组</th><td>'+msg.data["wa_type"]+'</td></tr>'+
                     '</table>';
 
