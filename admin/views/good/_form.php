@@ -8,6 +8,7 @@ use kartik\widgets\DepDrop;
 use yii\helpers\Url;
 use kartik\widgets\Select2;
 use common\helpers\ArrayHelper;
+use admin\models\GoodType;
 
 /**
  * @var yii\web\View $this
@@ -17,26 +18,6 @@ use common\helpers\ArrayHelper;
 $admin = Yii::$app->user->identity;
 $merchants = MerchantInfo::GetMerchants();
 $wa_type = $admin->wa_type;
-$types = \admin\models\GoodType::GetTypes();
-var_dump($types);
-$brands = [];
-$smells = [];
-$colors = [];
-$dries = [];
-$boots = [];
-$breeds = [];
-$countries = [];
-$styles = [];
-if(!empty($model->id)){
-    $brands = $model->brand0;
-    $smells = $model->smell0;
-    $colors = $model->color0;
-    $dries = $model->dry0;
-    $boots = $model->boot0;
-    $breeds = $model->breed0;
-    $countries = $model->country0;
-    $styles = $model->style0;
-}
 ?>
 <div class="ibox-content good-info-form">
 
@@ -75,7 +56,7 @@ if(!empty($model->id)){
             ],
             'type'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>Select2::className(),
                 'options'=>[
-                    'data'=>$types,
+                    'data'=>GoodType::GetTypes(),
                     'options'=>['placeholder'=>'请选择商品大类'],
                     'pluginOptions' => ['allowClear' => true],
                 ]
@@ -83,7 +64,7 @@ if(!empty($model->id)){
             'brand'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>DepDrop::className(),
                 'options'=>[
                     'type' => DepDrop::TYPE_SELECT2,
-                    'data'=> empty($model->id) ? []:ArrayHelper::getColumn($model->brand0,function($element){return ['id'=>$element->id,'name'=>$element->name];}),
+                    'data'=> empty($model->id) ? []:GoodType::GetChilds($model->type,'goodBrands'),
                     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
                     'pluginOptions'=>[
                         'placeholder'=>'请选择品牌',
@@ -97,7 +78,7 @@ if(!empty($model->id)){
             'smell'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>DepDrop::className(),
                 'options'=>[
                     'type' => DepDrop::TYPE_SELECT2,
-                    'data'=> empty($model->id) ? []:ArrayHelper::getColumn($model->smell0,function($element){return ['id'=>$element->id,'name'=>$element->name];}),
+                    'data'=> empty($model->id) ? []:GoodType::GetChilds($model->type,'goodSmells'),
                     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
                     'pluginOptions'=>[
                         'placeholder'=>'请选择香型',
@@ -111,7 +92,7 @@ if(!empty($model->id)){
             'color'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>DepDrop::className(),
                 'options'=>[
                     'type' => DepDrop::TYPE_SELECT2,
-                    'data'=> empty($model->id) ? []:ArrayHelper::getColumn($model->color0,function($element){return ['id'=>$element->id,'name'=>$element->name];}),
+                    'data'=> empty($model->id) ? []:GoodType::GetChilds($model->type,'goodColors'),
                     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
                     'pluginOptions'=>[
                         'placeholder'=>'请选择颜色',
@@ -125,7 +106,7 @@ if(!empty($model->id)){
             'dry'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>DepDrop::className(),
                 'options'=>[
                     'type' => DepDrop::TYPE_SELECT2,
-                    'data'=> empty($model->id) ? []:ArrayHelper::getColumn($model->dry0,function($element){return ['id'=>$element->id,'name'=>$element->name];}),
+                    'data'=> empty($model->id) ? []:GoodType::GetChilds($model->type,'goodDries'),
                     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
                     'pluginOptions'=>[
                         'placeholder'=>'请选择干型',
@@ -139,7 +120,7 @@ if(!empty($model->id)){
             'boot'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>DepDrop::className(),
                 'options'=>[
                     'type' => DepDrop::TYPE_SELECT2,
-                    'data'=> empty($model->id) ? []:ArrayHelper::getColumn($model->boot0,function($element){return ['id'=>$element->id,'name'=>$element->name];}),
+                    'data'=> empty($model->id) ? []:GoodType::GetChilds($model->type,'goodBoots'),
                     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
                     'pluginOptions'=>[
                         'placeholder'=>'请选择产地',
@@ -153,7 +134,7 @@ if(!empty($model->id)){
             'breed'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>DepDrop::className(),
                 'options'=>[
                     'type' => DepDrop::TYPE_SELECT2,
-                    'data'=> empty($model->id) ? []:ArrayHelper::getColumn($model->breed0,function($element){return ['id'=>$element->id,'name'=>$element->name];}),
+                    'data'=> empty($model->id) ? []:GoodType::GetChilds($model->type,'goodBreeds'),
                     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
                     'pluginOptions'=>[
                         'placeholder'=>'请选择品种',
@@ -167,7 +148,7 @@ if(!empty($model->id)){
             'country'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>DepDrop::className(),
                 'options'=>[
                     'type' => DepDrop::TYPE_SELECT2,
-                    'data'=> empty($model->id) ? []:ArrayHelper::getColumn($model->country0,function($element){return ['id'=>$element->id,'name'=>$element->name];}),
+                    'data'=> empty($model->id) ? []:GoodType::GetChilds($model->type,'goodCountries'),
                     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
                     'pluginOptions'=>[
                         'placeholder' => '请选择国家',
@@ -181,7 +162,7 @@ if(!empty($model->id)){
             'style'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>DepDrop::className(),
                 'options'=>[
                     'type' => DepDrop::TYPE_SELECT2,
-                    'data'=> empty($model->id) ? []:ArrayHelper::getColumn($model->style0,function($element){return ['id'=>$element->id,'name'=>$element->name];}),
+                    'data'=> empty($model->id) ? []:GoodType::GetChilds($model->type,'goodStyles'),
                     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
                     'pluginOptions'=>[
                         'placeholder' => '请选择类型',
