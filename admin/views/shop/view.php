@@ -81,7 +81,7 @@ $img_path=Yii::$app->params['img_path'];
             ],
             [
                 'attribute'=>'active_at',
-                'value'=>empty($model->active_at)?'':$model->active_at,
+                'value'=>empty($model->active_at)?'':date('Y-m-d H:i:s',$model->active_at),
             ],
         ],
 

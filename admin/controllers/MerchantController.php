@@ -120,7 +120,7 @@ class MerchantController extends BaseController
                 if(!$admin->save()){
                     throw new Exception;
                 }
-
+                //获取省-市-区
                 $p=Zone::getDetailName($merchant['province']);
                 $c=$d='';
                 if(isset($shop['city'])){
@@ -136,8 +136,8 @@ class MerchantController extends BaseController
                     'region'=>$merchant['region'],
                     'address'=>$merchant['address'],
                     'phone'=>$merchant['phone'],
-                    'registe_at'=>date('YmdHis'),
-                    'active_at'=>date('YmdHis'),
+                    'registe_at'=>time(),
+                    'active_at'=>time(),
                     'province'=>$p,
                     'city'=>$c,
                     'district'=>$d,
@@ -145,16 +145,16 @@ class MerchantController extends BaseController
                 if(!$model->save()){
                     throw new Exception;
                 }
+                //创建角色对象
                 $user_id = $model->wa_id;
                 $role = $auth->createRole('商家管理员');      //创建角色对象
                 $auth->assign($role, $user_id);                           //添加对应关系
 
                 $transaction->commit();//提交
-                Yii::$app->session->setFlash('success','商户添加成功');
                 return $this->redirect(['view', 'id' => $model->id]);
               }catch(Exception $e){
                 $transaction->rollBack();
-                Yii::$app->session->setFlash('danger','商户添加失败');
+                $model->wa_type='3';
                 return $this->redirect('create',[
                     'model' => $model,
                     'item_arr'=>$itemArr
@@ -199,8 +199,8 @@ class MerchantController extends BaseController
                     'region'=>$merchant['region'],
                     'address'=>$merchant['address'],
                     'phone'=>$merchant['phone'],
-                    'registe_at'=>date('YmdHis'),
-                    'active_at'=>date('YmdHis'),
+                    'registe_at'=>time(),
+                    'active_at'=>time(),
                     'province'=>empty($p)?$model->province:$p,
                     'city'=>empty($c)?$model->city:$c,
                     'district'=>empty($d)?$model->district:$d,
@@ -209,11 +209,11 @@ class MerchantController extends BaseController
                     throw new Exception;
                 }
                 $transaction->commit();//提交
-                Yii::$app->session->setFlash('success','商户修改成功');
+
                 return $this->redirect(['view', 'id' => $model->id]);
             }catch(Exception $e){
                 $transaction->rollBack();
-                Yii::$app->session->setFlash('danger','商户修改失败');
+
                 return $this->redirect('create',[
                     'model' => $model,
                 ]);
@@ -250,6 +250,7 @@ class MerchantController extends BaseController
             $merchantInfo->is_active=0;
         }else{
             $merchantInfo->is_active=1;
+            $merchantInfo->active_at=time();
         }
         if($merchantInfo->save()){
             Yii::$app->session->setFlash('success','修改成功');

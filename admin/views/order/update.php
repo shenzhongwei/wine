@@ -7,8 +7,8 @@ use yii\helpers\Html;
  * @var admin\models\OrderInfo $model
  */
 
-$this->title = 'Update Order Info: ' . ' ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Order Infos', 'url' => ['index']];
+$this->title = '编辑订单：' . ' ' . $model->id;
+$this->params['breadcrumbs'][] = ['label' => '订单列表', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>

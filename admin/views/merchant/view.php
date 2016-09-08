@@ -47,7 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute'=>'active_at',
-                'value'=>empty($model->active_at)?'':$model->active_at,
+                'value'=>empty($model->active_at)?'':date('Y-m-d H:i:s',$model->active_at),
             ],
         ],
         'deleteOptions'=>[

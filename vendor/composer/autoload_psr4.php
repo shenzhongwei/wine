@@ -59,4 +59,7 @@ return array(
     'himiklab\\jqgrid\\' => array($vendorDir . '/himiklab/yii2-jqgrid-widget'),
     'cebe\\markdown\\' => array($vendorDir . '/cebe/markdown'),
     'Faker\\' => array($vendorDir . '/fzaninotto/faker/src/Faker'),
+    'kartik\\editable\\' => array($vendorDir . '/kartik-v/yii2-editable'),
+    'kartik\\popover\\' => array($vendorDir . '/kartik-v/yii2-popover'),
+    'kartik\\bootstrap-popover-x\\' => array($vendorDir . '/kartik-v/bootstrap-popover-x'),
 );

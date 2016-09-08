@@ -150,4 +150,6 @@ class UserInfo extends \yii\db\ActiveRecord
     {
         return $this->hasMany(UserTicket::className(), ['uid' => 'id']);
     }
+
+
 }

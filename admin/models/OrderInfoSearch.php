@@ -12,12 +12,17 @@ use admin\models\OrderInfo;
  */
 class OrderInfoSearch extends OrderInfo
 {
+
     public function rules()
     {
         return [
-            [['id', 'sid', 'uid', 'aid', 'order_date', 'pay_id', 'pay_date', 'ticket_id', 'send_id', 'state', 'send_date', 'is_del', 'status'], 'integer'],
+            [['id', 'aid', 'pay_id', 'pay_date', 'ticket_id', 'send_id', 'state', 'send_date', 'is_del', 'status'], 'integer'],
             [['order_code', 'send_code'], 'safe'],
             [['total', 'discount', 'send_bill', 'pay_bill'], 'number'],
+
+            [['name','nickname'],'string','max'=>50],
+            [['is_ticket'],'integer'],
+            [['order_date'],'date','format'=>'yyyy-mm-dd']
         ];
     }
 
@@ -39,29 +44,51 @@ class OrderInfoSearch extends OrderInfo
             return $dataProvider;
         }
 
-        $query->andFilterWhere([
-            'id' => $this->id,
-            'sid' => $this->sid,
-            'uid' => $this->uid,
-            'aid' => $this->aid,
-            'order_date' => $this->order_date,
-            'pay_id' => $this->pay_id,
-            'pay_date' => $this->pay_date,
-            'total' => $this->total,
-            'discount' => $this->discount,
-            'ticket_id' => $this->ticket_id,
-            'send_bill' => $this->send_bill,
-            'send_id' => $this->send_id,
-            'pay_bill' => $this->pay_bill,
-            'state' => $this->state,
-            'send_date' => $this->send_date,
-            'is_del' => $this->is_del,
-            'status' => $this->status,
-        ]);
+        $query->joinWith('s')
+            ->joinWith('u')
+            ->andFilterWhere(['like','shop_info.name',$params['OrderInfoSearch']['name']])
+            ->andFilterWhere(['like','user_info.nickname',$params['OrderInfoSearch']['nickname']])
+            ->orFilterWhere(['like','user_info.realname',$params['OrderInfoSearch']['nickname']]);
 
+        $query->andFilterWhere([ 'total' => $this->total ]);
+        //下单时间
+        if(!empty($params['OrderInfoSearch']['order_date'])){
+            $query->andFilterWhere(['between','order_date',strtotime($params['OrderInfoSearch']['order_date'].' 00:00:00'),strtotime($params['OrderInfoSearch']['order_date'].'23:59:59')]);
+
+        }
+        //有无优惠券
+        if($params['OrderInfoSearch']['is_ticket']=='1'){
+            $query->andFilterWhere(['!=', 'is_ticket', 0]);
+        }
+        //支付方式
+        if(!empty($params['OrderInfoSearch']['pay_id'])){
+            $query->andFilterWhere(['pay_id'=>$params['OrderInfoSearch']['pay_id']]);
+        }
         $query->andFilterWhere(['like', 'order_code', $this->order_code])
             ->andFilterWhere(['like', 'send_code', $this->send_code]);
 
         return $dataProvider;
+    }
+
+    /*
+     * 获取支付方式
+     */
+    public static function getPaytype($pay_id=0){
+        if(empty($pay_id)){
+            $model=Dics::find()->select(['id','name'])->where(['type'=>'付款方式'])->asArray()->all();
+            return empty($model)?[]:$model;
+        }else{
+            $model=Dics::find()->select(['name'])->where(['type'=>'付款方式','id'=>$pay_id])->asArray()->one();
+            return empty($model)?'':$model['name'];
+        }
+
+    }
+
+    /*
+     *获取配送进度
+     */
+    public static function getOrderstep($state){
+        $model=Dics::find()->select(['name'])->where(['type'=>'订单状态','id'=>$state])->asArray()->one();
+        return empty($model)?'':$model['name'];
     }
 }

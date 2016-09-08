@@ -38,7 +38,7 @@ class ShopInfo extends \yii\db\ActiveRecord
     public $wa_password;
     public $wa_type;
     public $wa_logo;
-
+    public $merchant_name;
 
     /**
      * @inheritdoc
@@ -96,7 +96,8 @@ class ShopInfo extends \yii\db\ActiveRecord
             'wa_username'=>'后台登陆名',
             'wa_password'=>'后台登陆密码',
             'wa_type'=>'用户组类型',
-            'wa_logo'=>'用户头像'
+            'wa_logo'=>'用户头像',
+            'merchant_name' => '商户名'
         ];
     }
 

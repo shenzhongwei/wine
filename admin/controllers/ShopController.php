@@ -58,11 +58,7 @@ class ShopController extends BaseController
         }
     }
 
-    /**
-     * Creates a new ShopInfo model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
+
     public function actionCreate()
     {
         $user_id = Yii::$app->user->identity->getId();
@@ -153,8 +149,8 @@ class ShopController extends BaseController
                     'no_send_need'=>empty($shop['no_send_need'])?0:$shop['no_send_need'],
                     'bus_pic'=>$businessurl,
                     'logo'=>$shopurl,
-                    'registe_at'=>date('YmdHis'),
-                    'active_at'=>date('YmdHis'),
+                    'registe_at'=>time(),
+                    'active_at'=>time(),
                     'province'=>$p,
                     'city'=>$c,
                     'district'=>$d,
@@ -192,12 +188,7 @@ class ShopController extends BaseController
         }
     }
 
-    /**
-     * Updates an existing ShopInfo model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     */
+
     public function actionUpdate($id)
     {
         $auth = Yii::$app->authManager;
@@ -259,8 +250,8 @@ class ShopController extends BaseController
                     'no_send_need'=>empty($shop['no_send_need'])?0:$shop['no_send_need'],
                     'bus_pic'=>empty($businessurl)?$shop['bus_pic_url']:$businessurl,
                     'logo'=>empty($shopurl)?$shop['logo_url']:$shopurl,
-                    'registe_at'=>date('YmdHis'),
-                    'active_at'=>date('YmdHis'),
+                    'registe_at'=>time(),
+                    'active_at'=>time(),
                     'province'=>empty($p)?$model->province:$p,
                     'city'=>empty($c)?$model->city:$c,
                     'district'=>empty($d)?$model->district:$d,
@@ -292,12 +283,7 @@ class ShopController extends BaseController
         }
     }
 
-    /**
-     * Deletes an existing ShopInfo model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
+
     public function actionDelete()
     {
         $user_id = Yii::$app->user->identity->getId();
@@ -313,10 +299,11 @@ class ShopController extends BaseController
             return $this->showResult(301,'未获取到该门店的信息');
         }
         $shopInfo->active_at = date('YmdHis');
-        if($shopInfo->is_active==1){
+        if($shopInfo->is_active==1){ //正常状态
             $shopInfo->is_active=0;
-        }else{
+        }else{  //失效状态
             $shopInfo->is_active=1;
+            $shopInfo->active_at=time();
         }
         if($shopInfo->save()){
             Yii::$app->session->setFlash('success','修改成功');
@@ -328,13 +315,7 @@ class ShopController extends BaseController
 
     }
 
-    /**
-     * Finds the ShopInfo model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return ShopInfo the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
+
     protected function findModel($id)
     {
         if (($model = ShopInfo::findOne($id)) !== null) {

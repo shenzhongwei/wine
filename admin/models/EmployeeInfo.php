@@ -62,4 +62,29 @@ class EmployeeInfo extends \yii\db\ActiveRecord
     {
         return $this->hasMany(OrderInfo::className(), ['send_id' => 'id']);
     }
+
+    /*
+     * 获取所有的配送人员
+     */
+    public static function getAllemployee(){
+        $model=self::find()->select(['id','name'])->andWhere(['!=','status',0])->asArray()->all();
+        $query=array();
+        foreach($model as $k=>$v){
+            $query[$v['id']]=$v['name'];
+        }
+            return $query;
+    }
+
+
+    /*
+    * 获取所有的订单状态
+    */
+    public static function getAllorderstate(){
+        $model=Dics::find()->select(['id','name'])->andWhere(['type'=>'订单状态'])->asArray()->all();
+        $query=array();
+        foreach($model as $k=>$v){
+            $query[$v['id']]=$v['name'];
+        }
+        return $query;
+    }
 }

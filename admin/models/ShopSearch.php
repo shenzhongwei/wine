@@ -12,12 +12,15 @@ use admin\models\ShopInfo;
  */
 class ShopSearch extends ShopInfo
 {
+
     public function rules()
     {
         return [
             [['id', 'wa_id', 'lat', 'lng', 'limit', 'regist_at', 'is_active', 'active_at'], 'integer'],
             [['name', 'region', 'address', 'bus_pic', 'logo', 'province', 'city', 'district'], 'safe'],
             [['least_money', 'send_bill', 'no_send_need'], 'number'],
+
+            [['merchant_name'],'string','max'=>50]
         ];
     }
 
@@ -38,11 +41,15 @@ class ShopSearch extends ShopInfo
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }
-        $merchant=$params['ShopSearch']['merchant'];
-        $model=MerchantInfo::find()->select(['id'])->andWhere(['like','name',$merchant])->asArray()->all();
-        $merids=array();
-        foreach($model as $k=>$v){
-            $merids[]=$v['id'];
+
+        $merchantname=$params['ShopSearch']['merchant_name'];
+        if(!empty($merchantname)){
+            $model=MerchantInfo::find()->select(['id'])->andWhere(['like','name',$merchantname])->asArray()->all();
+            $merids=array();
+            foreach($model as $k=>$v){
+                $merids[]=$v['id'];
+            }
+            $query->andFilterWhere(['in','merchant',$merids]);
         }
 
         $query->andFilterWhere([
@@ -53,16 +60,31 @@ class ShopSearch extends ShopInfo
             'is_active' => $this->is_active,
         ]);
 
-        $query->andFilterWhere(['in','merchant',$merids])
-            ->andFilterWhere(['like', 'name', $this->name])
+        if(!empty($params['ShopSearch']['province'])){
+            $model=Zone::find()->where(['id'=>$params['ShopSearch']['province']])->one();
+            $query->andFilterWhere(['like', 'province', $model->name]);
+        }
+        if(!empty($params['ShopSearch']['city'])){
+            $model=Zone::find()->where(['id'=>$params['ShopSearch']['city']])->one();
+            $query->andFilterWhere(['like', 'city', $model->name]);
+        }
+        if(!empty($params['ShopSearch']['district'])){
+            $model=Zone::find()->where(['id'=>$params['ShopSearch']['district']])->one();
+            $query->andFilterWhere(['like', 'district', $model->name]);
+        }
+        $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'region', $this->region])
             ->andFilterWhere(['like', 'address', $this->address])
             ->andFilterWhere(['like', 'bus_pic', $this->bus_pic])
-            ->andFilterWhere(['like', 'logo', $this->logo])
-            ->andFilterWhere(['like', 'province', $this->province])
-            ->andFilterWhere(['like', 'city', $this->city])
-            ->andFilterWhere(['like', 'district', $this->district]);
+            ->andFilterWhere(['like', 'logo', $this->logo]);
+
 
         return $dataProvider;
+    }
+
+    //根据门店id查找门店名称
+    public static function getOneShopname($shop_id){
+        $model=ShopInfo::findOne($shop_id);
+        return empty($model)?'':$model->name;
     }
 }

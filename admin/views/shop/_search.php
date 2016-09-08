@@ -24,6 +24,7 @@ $district=[];
 </script>
 
 <script type="text/javascript" src="<?=Url::to('@web/js/wine/address.js') ?>"></script>
+
 <div class="shop-info-search">
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
@@ -34,7 +35,7 @@ $district=[];
     ]); ?>
 
     <?= $form->field($model, 'name') ?>
-    <?= $form->field($model, 'merchant')->widget(AutoComplete::className(),[
+    <?= $form->field($model, 'merchant_name')->widget(AutoComplete::className(),[
         'clientOptions' => [
             'source' =>$mername,
         ]

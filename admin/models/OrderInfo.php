@@ -37,6 +37,10 @@ use Yii;
  */
 class OrderInfo extends \yii\db\ActiveRecord
 {
+
+    public $name;
+    public $nickname;
+    public $is_ticket;
     /**
      * @inheritdoc
      */
@@ -51,7 +55,7 @@ class OrderInfo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['sid', 'uid', 'aid', 'order_date', 'pay_id', 'pay_date', 'ticket_id', 'send_id', 'state', 'send_date', 'is_del', 'status'], 'integer'],
+            [['sid', 'uid', 'aid', 'order_date', 'pay_id', 'pay_date', 'ticket_id', 'state', 'send_date', 'is_del', 'status'], 'integer'],
             [['total', 'discount', 'send_bill', 'pay_bill'], 'number'],
             [['ticket_id'], 'required'],
             [['order_code'], 'string', 'max' => 16],
@@ -60,6 +64,8 @@ class OrderInfo extends \yii\db\ActiveRecord
             [['send_id'], 'exist', 'skipOnError' => true, 'targetClass' => EmployeeInfo::className(), 'targetAttribute' => ['send_id' => 'id']],
             [['sid'], 'exist', 'skipOnError' => true, 'targetClass' => ShopInfo::className(), 'targetAttribute' => ['sid' => 'id']],
             [['uid'], 'exist', 'skipOnError' => true, 'targetClass' => UserInfo::className(), 'targetAttribute' => ['uid' => 'id']],
+
+            [['name'],'string','max'=>50]
         ];
     }
 
@@ -70,24 +76,29 @@ class OrderInfo extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'sid' => 'Sid',
-            'uid' => 'Uid',
-            'aid' => 'Aid',
-            'order_date' => 'Order Date',
-            'order_code' => 'Order Code',
-            'pay_id' => 'Pay ID',
-            'pay_date' => 'Pay Date',
-            'total' => 'Total',
-            'discount' => 'Discount',
-            'ticket_id' => 'Ticket ID',
-            'send_bill' => 'Send Bill',
-            'send_id' => 'Send ID',
-            'send_code' => 'Send Code',
-            'pay_bill' => 'Pay Bill',
-            'state' => 'State',
-            'send_date' => 'Send Date',
-            'is_del' => 'Is Del',
-            'status' => 'Status',
+            'sid' => '门店id',
+            'uid' => '用户id',
+            'aid' => '用户地址id',
+            'order_date' => '下单时间',
+            'order_code' => '订单号',
+            'pay_id' => '支付方式',
+            'pay_date' => '支付时间',
+            'total' => '总金额',
+            'discount' => '优惠金额',
+            'ticket_id' => '优惠券id',
+            'send_bill' => '配送费',
+            'send_id' => '配送人员id',
+            'send_code' => '物流编号',
+            'pay_bill' => '付款金额',
+            'state' => '订单进度',
+            'send_date' => '送达时间',
+            'is_del' => '是否删除',
+            'status' => '订单状态',
+
+            'name' => '门店名',
+            'nickname' => '用户名',
+            'is_ticket' => '是否使用优惠券'
+
         ];
     }
 
@@ -146,4 +157,7 @@ class OrderInfo extends \yii\db\ActiveRecord
     {
         return $this->hasMany(OrderPay::className(), ['oid' => 'id']);
     }
+
+
+
 }
