@@ -65,7 +65,7 @@ class GoodInfo extends \yii\db\ActiveRecord
     {
         return [
             [['merchant', 'type', 'brand', 'smell', 'color', 'dry', 'boot', 'breed', 'country', 'style', 'order', 'regist_at', 'is_active', 'active_at'], 'integer'],
-            [['name', 'detail','type','price','detail','volum','unit','pic'], 'required'],
+            [['name', 'detail','type','price','detail','volum','unit','pic','merchant'], 'required'],
             [['price'], 'number'],
             [['detail'], 'string'],
             [['name'], 'string', 'max' => 50],
@@ -93,11 +93,11 @@ class GoodInfo extends \yii\db\ActiveRecord
         return [
             'id' => '主键id',
             'merchant' => '所属商户',
-            'type' => '类型',
+            'type' => '类别',
             'brand' => '品牌',
             'smell' => '香型',
             'color' => '颜色类型',
-            'dry' => '干型id',
+            'dry' => '干型',
             'boot' => '产地',
             'breed' => '品种',
             'country' => '国家',

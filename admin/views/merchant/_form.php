@@ -32,7 +32,11 @@ $district=[];
         $form = ActiveForm::begin(
             [
                 'type'=>ActiveForm::TYPE_HORIZONTAL,
-                'options' => ['enctype' => 'multipart/form-data']
+                'enableAjaxValidation'=>true,
+                'validationUrl'=>'valid-form',
+                'options' => [
+                    'enctype' => 'multipart/form-data',
+                ]
             ]
         );
     ?>

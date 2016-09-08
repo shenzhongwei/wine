@@ -2,10 +2,14 @@
 
 namespace admin\controllers;
 
+use admin\models\MerchantInfo;
+use admin\models\GoodType;
+use common\helpers\ArrayHelper;
 use Yii;
 use admin\models\GoodInfo;
 use admin\models\GoodSearch;
 use yii\filters\AccessControl;
+use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -37,6 +41,9 @@ class GoodController extends BaseController
     {
         $searchModel = new GoodSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
+        $dataProvider->pagination = [
+            'pageSize' => 15,
+        ];
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
@@ -66,15 +73,41 @@ class GoodController extends BaseController
      */
     public function actionCreate()
     {
-        $model = new GoodInfo;
+        $admin = Yii::$app->user->identity;
+        $model = new GoodInfo();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
+            if($admin->wa_type>=2){
+                $model->merchant = MerchantInfo::findOne(['wa_id'=>$admin->id])->id;
+            }
             return $this->render('create', [
                 'model' => $model,
             ]);
         }
+    }
+
+    public function actionChilds(){
+        $key = Yii::$app->request->get('key');
+        $depDrop = Yii::$app->request->post('depdrop_parents');
+        $results = [];
+        if (isset($depDrop)) {
+            $id = end($depDrop);
+            if(!empty($id)){
+                $type = GoodType::findOne($id);
+                if(!empty($type)){
+                    $results = ArrayHelper::getColumn($type->$key,function($element){
+                        return [
+                            'id'=>$element->id,
+                            'name'=>$element->name,
+                        ];
+                    });
+                }
+            }
+        }
+        echo Json::encode(['output' => empty($results) ? '':$results, 'selected'=>'']);
+        exit;
     }
 
     /**
@@ -104,7 +137,6 @@ class GoodController extends BaseController
      */
     public function actionDelete($id)
     {
-        $type = Yii::$app->request->get('type');
         $model = $this->findModel($id);
         if($model->is_active==0){
             $model->is_active = 1;
@@ -112,11 +144,7 @@ class GoodController extends BaseController
             $model->is_active = 0;
         }
         $model->save();
-        if(empty($type)){
-            return $this->runAction('index');
-        }else{
-            return $this->redirect(['index']);
-        }
+        return $this->runAction('index');
     }
 
 

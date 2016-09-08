@@ -50,7 +50,7 @@ use common\widgets\Alert;
     <?=Html::jsFile('@web/js/plugins/suggest/bootstrap-suggest.min.js')?>
     <?=Html::jsFile('@web/js/bootstrap.js')?>
     <?=Html::jsFile('@web/js/content.min.js')?>
-    <?=Html::jsFile('@web/js/plugins/datapicker/bootstrap-datepicker.js')?>
+    <?=Html::jsFile('@web/js/plugins/fancybox/jquery.fancybox.js'); ?>
 <!--    --><?//=Html::jsFile('@web/js/bootstrap.min.js')?>
     <?php $this->head() ?>
 </head>

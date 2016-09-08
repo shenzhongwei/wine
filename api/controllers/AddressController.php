@@ -162,7 +162,7 @@ class AddressController extends ApiController{
                     'lat'=>$add->lat/1000000,
                     'lng'=>$add->lng/1000000,
                     'tag'=>$add->tag,
-                    'default'=>$add->is_default,
+                    'is_default'=>$add->is_default,
                 ];
             }
             return $this->showList(200,'获取成功',$count,$data);

@@ -2,6 +2,8 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use admin\models\GoodType;
+use admin\models\MerchantInfo;
 
 /**
  * @var yii\web\View $this
@@ -20,21 +22,27 @@ use yii\widgets\ActiveForm;
         ],
     ]); ?>
 
-    <?php  echo $form->field($model, 'type') ?>
+    <?php  echo $form->field($model, 'name')->textInput(['style'=>'margin-right:10px']) ?>
 
-    <?php  echo $form->field($model, 'name') ?>
+    <?php  echo $form->field($model, 'type')->dropDownList(GoodType::GetTypes(),['prompt'=>'请选择类型','style'=>'margin-right:10px']) ?>
 
-    <?php  echo $form->field($model, 'volum') ?>
+    <?php  echo $form->field($model, 'merchant')->dropDownList(MerchantInfo::GetMerchants(),['prompt'=>'请选择商户','style'=>'margin-right:10px']) ?>
 
-    <?php  echo $form->field($model, 'price') ?>
+    <?php  echo $form->field($model, 'volum')->textInput(['style'=>'margin-right:10px']) ?>
 
-    <?php  echo $form->field($model, 'number') ?>
+    <?php  echo $form->field($model, 'price')->hiddenInput() ?>
 
-    <?php  echo $form->field($model, 'is_active') ?>
+    <?php  echo $form->field($model, 'start_price')->textInput(['style'=>'width:80px','onkeyup'=>'this.value=this.value.replace(/\D/gi,"")'])->label(false) ?>
+至
+    <?php  echo $form->field($model, 'end_price')->textInput(['style'=>'margin-right:10px;width:80px','onkeyup'=>'this.value=this.value.replace(/\D/gi,"")'])->label(false) ?>
+
+    <?php  echo $form->field($model, 'number')->textInput(['style'=>'margin-right:10px']) ?>
+
+    <?php  echo $form->field($model, 'is_active')->radioList([0=>'未上架',1=>'上架中'],['style'=>'margin-right:10px']) ->label(false) ?>
 
     <div class="form-group" style="height: 44px">
         <?= Html::submitButton('搜索', ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton('重置', ['class' => 'btn btn-default']) ?>
+        <?= Html::resetButton('重置', ['class' => 'btn btn-warning']) ?>
     </div>
 
     <?php ActiveForm::end();?>

@@ -174,6 +174,8 @@ class Select2 extends InputWidget
         $multiple = ArrayHelper::getValue($this->pluginOptions, 'multiple', false);
         unset($this->pluginOptions['multiple']);
         $multiple = ArrayHelper::getValue($this->options, 'multiple', $multiple);
+//        var_dump($this->options);
+//        exit;
         $this->options['multiple'] = $multiple;
         if (!empty($this->addon) || empty($this->pluginOptions['width'])) {
             $this->pluginOptions['width'] = '100%';

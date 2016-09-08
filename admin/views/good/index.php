@@ -12,58 +12,123 @@ use yii\widgets\Pjax;
 
 $this->title = '商品列表';
 $this->params['breadcrumbs'][] = $this->title;
+\admin\assets\AppAsset::register($this);
+// here
+$this->registerJsFile("@web/js/good/_script.js");
 ?>
 <div class="good-info-index">
     <?php Pjax::begin(['id'=>'goodinfos','timeout'=>3000]);
         echo GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-            'merchant',
-            'type',
             [
+                'header'=>'序号',
+                'class' => 'kartik\grid\SerialColumn'
+            ],
+            [
+                'header'=>'商品名称',
                 'attribute'=>'name',
                 'format' => 'raw',
                 'value'=> function($model){
-                    return Html::a($model->name,['good/view', 'id' => $model->id],
-                        ['title' => '查看详细']
+                    return Html::a($model->name.$model->volum,['good/view', 'id' => $model->id],
+                        ['title' => '查看商品详细','style'=>'color:#2a62bc;font-size:15px']
                     );
                 }
             ],
-            'volum',
-            'price',
-            'unit',
-            'pic',
-            'number',
-            'detail:ntext',
-            'regist_at',
-            'is_active',
+            [
+                'header'=>'归属商户',
+                'attribute'=>'merchant',
+                'format' => 'raw',
+                'value'=> function($model){
+                    return Html::a($model->merchant0->name,['merchant/view', 'id' => $model->merchant0->id],
+                        ['title' => '查看商户信息','style'=>'color:#2a62bc;font-size:15px']
+                    );
+                },
+                'headerOptions'=>['width'=>120]
+
+            ],
+            [
+                'header'=>'类型',
+                'attribute'=>'type',
+                'value'=> function($model){
+                    return $model->type0->name;
+                }
+            ],
+            [
+                'attribute'=>'price',
+                'label' => '单价',
+                'value'=> function($model){
+                    return '¥'.$model->price.'/'.$model->unit;
+                }
+            ],
+            [
+
+                'header'=>'图片',
+                'attribute'=>'pic',
+                "format" => [
+                    "raw",
+                ],
+                'value'=>function($model){
+                    return Html::img('../../../photo'.$model->pic,[
+                        'width'=>"50px",'height'=>"50px","onclick"=>"ShowImg(this);",'style'=>'cursor:pointer','title'=>"点击放大"
+                    ]);
+                }
+            ],
+            [
+                'header'=>'编号',
+                'attribute'=>'number',
+            ],
+            [
+                'header'=>'详情',
+                'attribute'=>'detail',
+                'value'=>function($model){
+                    return Html::encode($model->detail);
+                }
+            ],
+            [
+                'label'=>'发布时间',
+                'attribute'=>'regist_at',
+                'value'=>function($model){
+                    return date('Y年m月d日',$model->regist_at);
+                }
+            ],
+            [
+                'label'=>'状态',
+                'attribute' => 'is_active',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    $state =  $model->is_active==0 ? '<label class="label label-danger">已下架</label>':'<label class="label label-info">上架中</label>';
+                    return $state;
+                },
+            ],
             [
                 'header' => '操作',
                 'class' => 'yii\grid\ActionColumn',
                 'buttons' => [
                     'view' => function ($url, $model) {
                         return Html::a('<i class="fa fa-eye">查看</i>', $url, [
-                            'title' => Yii::t('app', '查看'),
-                            'class' => 'del btn btn-primary btn-xs',
+                            'title' => Yii::t('app', Yii::t('app','View')),
+                            'class' => 'btn btn-primary btn-xs',
                         ]);
                     },
                     'update' => function ($url, $model) {
-                        return Html::a('<i class="fa fa-edit">编辑</i>', $url, [
+                        return Html::a(Yii::t('app','Update'), $url, [
                             'title' => Yii::t('app', '编辑'),
-                            'class' => 'del btn btn-success btn-xs',
+                            'class' => 'btn btn-success btn-xs',
                         ]);
                     },
                     'delete' => function ($url, $model) {
                         if($model->is_active == 0){
-                            return Html::a('<i class="fa fa-arrow-up">上架</i>', $url, [
+                            return Html::a(Yii::t('app','Up'), $url, [
                                 'title' => Yii::t('app', '上架该商品'),
-                                'class' => 'del btn btn-info btn-xs',
+                                'class' => 'btn btn-info btn-xs',
+                                'data-confirm' => Yii::t('app', 'GoodUpSure'),
                             ]);
                         }else{
-                            return Html::a('<i class="fa fa-arrow-down">下架</i>', $url, [
+                            return Html::a(Yii::t('app','Down'), $url, [
                                 'title' => Yii::t('app', '下架该商品'),
-                                'class' => 'del btn btn-danger btn-xs',
+                                'class' => 'btn btn-danger btn-xs',
+                                'data-confirm' => Yii::t('app', 'GoodDownSure'),
                             ]);
                         }
                     }
@@ -84,3 +149,4 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); Pjax::end(); ?>
 
 </div>
+
