@@ -7,6 +7,8 @@ use admin\models\MerchantInfo;
 use kartik\widgets\DepDrop;
 use yii\helpers\Url;
 use kartik\widgets\Select2;
+use common\helpers\ArrayHelper;
+use admin\models\GoodType;
 
 /**
  * @var yii\web\View $this
@@ -16,9 +18,7 @@ use kartik\widgets\Select2;
 $admin = Yii::$app->user->identity;
 $merchants = MerchantInfo::GetMerchants();
 $wa_type = $admin->wa_type;
-$types = \admin\models\GoodType::GetTypes();
 ?>
-
 <div class="ibox-content good-info-form">
 
     <div class="col-sm-6">
@@ -56,7 +56,7 @@ $types = \admin\models\GoodType::GetTypes();
             ],
             'type'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>Select2::className(),
                 'options'=>[
-                    'data'=>$types,
+                    'data'=>GoodType::GetTypes(),
                     'options'=>['placeholder'=>'请选择商品大类'],
                     'pluginOptions' => ['allowClear' => true],
                 ]
@@ -64,7 +64,7 @@ $types = \admin\models\GoodType::GetTypes();
             'brand'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>DepDrop::className(),
                 'options'=>[
                     'type' => DepDrop::TYPE_SELECT2,
-                    'data'=> [],
+                    'data'=> empty($model->id) ? []:GoodType::GetChilds($model->type,'goodBrands'),
                     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
                     'pluginOptions'=>[
                         'placeholder'=>'请选择品牌',
@@ -78,7 +78,7 @@ $types = \admin\models\GoodType::GetTypes();
             'smell'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>DepDrop::className(),
                 'options'=>[
                     'type' => DepDrop::TYPE_SELECT2,
-                    'data'=> [],
+                    'data'=> empty($model->id) ? []:GoodType::GetChilds($model->type,'goodSmells'),
                     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
                     'pluginOptions'=>[
                         'placeholder'=>'请选择香型',
@@ -92,7 +92,7 @@ $types = \admin\models\GoodType::GetTypes();
             'color'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>DepDrop::className(),
                 'options'=>[
                     'type' => DepDrop::TYPE_SELECT2,
-                    'data'=> [],
+                    'data'=> empty($model->id) ? []:GoodType::GetChilds($model->type,'goodColors'),
                     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
                     'pluginOptions'=>[
                         'placeholder'=>'请选择颜色',
@@ -106,7 +106,7 @@ $types = \admin\models\GoodType::GetTypes();
             'dry'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>DepDrop::className(),
                 'options'=>[
                     'type' => DepDrop::TYPE_SELECT2,
-                    'data'=> [],
+                    'data'=> empty($model->id) ? []:GoodType::GetChilds($model->type,'goodDries'),
                     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
                     'pluginOptions'=>[
                         'placeholder'=>'请选择干型',
@@ -120,7 +120,7 @@ $types = \admin\models\GoodType::GetTypes();
             'boot'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>DepDrop::className(),
                 'options'=>[
                     'type' => DepDrop::TYPE_SELECT2,
-                    'data'=> [],
+                    'data'=> empty($model->id) ? []:GoodType::GetChilds($model->type,'goodBoots'),
                     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
                     'pluginOptions'=>[
                         'placeholder'=>'请选择产地',
@@ -134,7 +134,7 @@ $types = \admin\models\GoodType::GetTypes();
             'breed'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>DepDrop::className(),
                 'options'=>[
                     'type' => DepDrop::TYPE_SELECT2,
-                    'data'=> [],
+                    'data'=> empty($model->id) ? []:GoodType::GetChilds($model->type,'goodBreeds'),
                     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
                     'pluginOptions'=>[
                         'placeholder'=>'请选择品种',
@@ -148,7 +148,7 @@ $types = \admin\models\GoodType::GetTypes();
             'country'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>DepDrop::className(),
                 'options'=>[
                     'type' => DepDrop::TYPE_SELECT2,
-                    'data'=> [],
+                    'data'=> empty($model->id) ? []:GoodType::GetChilds($model->type,'goodCountries'),
                     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
                     'pluginOptions'=>[
                         'placeholder' => '请选择国家',
@@ -162,7 +162,7 @@ $types = \admin\models\GoodType::GetTypes();
             'style'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>DepDrop::className(),
                 'options'=>[
                     'type' => DepDrop::TYPE_SELECT2,
-                    'data'=> [],
+                    'data'=> empty($model->id) ? []:GoodType::GetChilds($model->type,'goodStyles'),
                     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
                     'pluginOptions'=>[
                         'placeholder' => '请选择类型',

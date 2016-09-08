@@ -165,4 +165,9 @@ class GoodType extends \yii\db\ActiveRecord
         $types = self::findAll(['is_active'=>1]);
         return ArrayHelper::map($types,'id','name');
     }
+
+    public static function GetChilds($type,$key){
+        $type = self::findOne($type);
+        return ArrayHelper::map($type->$key,'id','name');
+    }
 }
