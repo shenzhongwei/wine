@@ -35,11 +35,22 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format'=>'html',
                 'value'=>'<a>'.$model->wa_id.'</a>'
             ],
-            'address',
-            'lat',
-            'lng',
+            [
+                'attribute'=>'address',
+                'format'=>'html',
+                'value'=>$model->province.'-'.$model->city.'-'.$model->district.'-'.$model->region.$model->address
+            ],
+            [
+                'label'=>'经纬度',
+                'format'=>'html',
+                'value'=>'经度：'.($model->lng/1000000).'&nbsp;&nbsp; 纬度：'.($model->lat/1000000)
+            ],
             'phone',
-            'registe_at',
+            [
+                'attribute'=>'registe_at',
+                'value'=>empty($model->registe_at)?'':date('Y-m-d H:i:s',$model->active_at),
+            ],
+
             [
                 'attribute'=>'is_active',
                 'value'=>$model->is_active==0?'否':'是',

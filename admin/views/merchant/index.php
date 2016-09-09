@@ -29,7 +29,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     return '<a href="../manager/update?id='.$data->wa_id.'">'.$data->name.'</a>';
                 }
             ],
-            'address',
+            [
+                'label'=>'商户地址',
+                'format'=>'html',
+                'value'=>function($data){
+                    return $data->province.'-'.$data->city.'-'.$data->district.' '.$data->region.$data->address;
+                }
+            ],
             'phone',
             [
                 'attribute'=>'is_active',

@@ -6,6 +6,7 @@ use admin\models\Admin;
 use admin\models\MerchantInfo;
 use admin\models\MerchantInfoSearch;
 use admin\models\Zone;
+use kartik\form\ActiveForm;
 use Yii;
 use admin\models\ShopInfo;
 use admin\models\ShopSearch;
@@ -15,6 +16,7 @@ use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 use yii\web\UploadedFile;
 
 /**
@@ -58,6 +60,18 @@ class ShopController extends BaseController
         }
     }
 
+    public function actionValidForm(){
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $data = Yii::$app->request->post();
+        $id=Yii::$app->request->get();
+        if(empty($id)){
+            $model = new MerchantInfo();
+        }else{ //指定场景，验证哪些必填
+            $model = new MerchantInfo(['scenario'=>'create']);
+        }
+        $model->load($data);
+        return ActiveForm::validate($model);
+    }
 
     public function actionCreate()
     {
@@ -76,20 +90,6 @@ class ShopController extends BaseController
         if (Yii::$app->request->post()) {
             //获取传过来的值
             $shop=Yii::$app->request->post('ShopInfo');
-            if(empty($shop['wa_username']) ){
-                return $this->showResult(400,'请输入后台登陆名');
-            }
-            $exist_model = Admin::findIdentityByUsername($shop['wa_username']);
-            if(!empty($exist_model)){
-                return $this->showResult(400,'该后台登陆名已被使用');
-            }
-            if(empty($shop['wa_password'])){
-                return $this->showResult(400,'请输入密码');
-            }
-            if(strlen($shop['wa_password'])>16 ||strlen($shop['wa_password'])<5){
-                $message = '密码长度为5-16位';
-                return $this->showResult(400,$message);
-            }
 
             //上传头像
             $img =UploadedFile::getInstance($model,'wa_logo');
@@ -154,6 +154,10 @@ class ShopController extends BaseController
                     'province'=>$p,
                     'city'=>$c,
                     'district'=>$d,
+
+                    'lng'=>empty($d)?(empty($c)?(empty($p)?'':Zone::getLngLat($c)['lng']*1000000):Zone::getLngLat($p)['lng']*1000000):Zone::getLngLat($d)['lng']*1000000,
+                    'lat'=>empty($d)?(empty($c)?(empty($p)?'':Zone::getLngLat($c)['lat']*1000000):Zone::getLngLat($p)['lat']*1000000):Zone::getLngLat($d)['lat']*1000000,
+
                 ];
                 if(!$model->save()){
                     throw new Exception;
@@ -167,23 +171,23 @@ class ShopController extends BaseController
                 return $this->redirect(['view', 'id' => $model->id]);
             }catch(Exception $e){
                 $transaction->rollBack();
-                Yii::$app->session->setFlash('danger','门店添加失败');
-                $model->wa_type='4';
-                return $this->redirect('create',[
-                    'model' => $model,
-                    'item_arr'=>$itemArr,
-                    'p1'=>$p1,'p2'=>$p2,
-                    'PreviewConfig' =>$P,
-                ]);
             }
         } else {
             //跳到 新建 页面
             $model->wa_type='4';
+            $province=ArrayHelper::map(Zone::getProvince(),'id','name');
+            $city=[];
+            $district=[];
+
             return $this->render('create', [
                 'model' => $model,
                 'item_arr'=>$itemArr,
                 'p1'=>$p1,'p2'=>$p2,
                 'PreviewConfig' =>$P,
+
+                'province'=>$province,
+                'city'=>$city,
+                'district'=>$district
             ]);
         }
     }
@@ -239,7 +243,7 @@ class ShopController extends BaseController
                     $d=Zone::getDetailName($shop['district']);
                 }
 
-                //创建门店信息
+                //保存门店信息
                 $model->attributes=[
                     'name'=>$shop['name'],
                     'region'=>$shop['region'],
@@ -260,25 +264,33 @@ class ShopController extends BaseController
                     throw new Exception;
                 }
 
+                //保存经纬度
+                $model->attributes=[
+                    'lng'=>empty($model->district)?(empty($model->city)?(empty($model->province)?'':Zone::getLngLat($model->city)['lng']*1000000):Zone::getLngLat($model->province)['lng']*1000000):Zone::getLngLat($model->district)['lng']*1000000,
+                    'lat'=>empty($model->district)?(empty($model->city)?(empty($model->province)?'':Zone::getLngLat($model->city)['lat']*1000000):Zone::getLngLat($model->province)['lat']*1000000):Zone::getLngLat($model->district)['lat']*1000000,
+                ];
+                if(!$model->save()){
+                    throw new Exception;
+                }
                 $transaction->commit();//提交
                 Yii::$app->session->setFlash('success','门店添加成功');
                 return $this->redirect(['view', 'id' => $model->id]);
             }catch(Exception $e){
                 $transaction->rollBack();
-                Yii::$app->session->setFlash('danger','门店添加失败');
-                $model->wa_type='4';
-                return $this->redirect('update',[
-                    'model' => $model,
-                    'p1'=>$p1,'p2'=>$p2,
-                    'PreviewConfig' =>$P,
-                ]);
+
             }
         } else {
+            $model->province=empty($model->province)?'':Zone::getDetailId($model->province);
+            $model->city=empty($model->city)?'':Zone::getDetailId($model->city);
+            $model->district=empty($model->district)?'':Zone::getDetailId($model->district);
 
             return $this->render('update', [
                 'model' => $model,
                 'p1'=>$p1,'p2'=>$p2,
                 'PreviewConfig' =>$P,
+                'province'=>ArrayHelper::map(Zone::getProvince(),'id','name'),
+                'city'=>ArrayHelper::map(Zone::getCity($model->province),'id','name'),
+                'district'=>ArrayHelper::map(Zone::getDistrict( $model->city),'id','name')
             ]);
         }
     }

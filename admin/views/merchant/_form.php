@@ -14,9 +14,9 @@ use yii\helpers\Url;
  */
 
 //省
-$province=ArrayHelper::map(Zone::getProvince(),'id','name');
-$city=[];
-$district=[];
+//$province=ArrayHelper::map(Zone::getProvince(),'id','name');
+//$city=[];
+//$district=[];
 
 ?>
 <script type="text/javascript">
@@ -32,8 +32,8 @@ $district=[];
         $form = ActiveForm::begin(
             [
                 'type'=>ActiveForm::TYPE_HORIZONTAL,
-                'enableAjaxValidation'=>true,
-                'validationUrl'=>'valid-form',
+                'enableAjaxValidation'=>true, //开启ajax验证
+                'validationUrl'=>Url::toRoute(['valid-form','id'=>empty($model['id'])?0:$model['id']]), //验证url
                 'options' => [
                     'enctype' => 'multipart/form-data',
                 ]
@@ -45,8 +45,8 @@ $district=[];
         <?= $form->field($model, 'name')->textInput(['maxlength' =>128])?>
         <?= $form->field($model, 'phone')->textInput(['maxlength' =>11])?>
         <?= $form->field($model, 'province')->dropDownList($province,['prompt'=>'--省--'])?>
-        <?= $form->field($model, 'city')->dropDownList($city,['prompt'=>'--市--','disabled'=>true])?>
-        <?= $form->field($model, 'district')->dropDownList($district,['prompt'=>'--区--','disabled'=>true])?>
+        <?= $form->field($model, 'city')->dropDownList($city,['prompt'=>'--市--',!$model->isNewRecord?'':'disabled'=>true])?>
+        <?= $form->field($model, 'district')->dropDownList($district,['prompt'=>'--区--',!$model->isNewRecord?'':'disabled'=>true])?>
         <?= $form->field($model, 'region')->textInput(['maxlength' =>50])->label('小区名称') ?>
         <?= $form->field($model, 'address')->textInput(['maxlength' =>128])->label('门牌号') ?>
         <hr>

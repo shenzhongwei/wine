@@ -16,9 +16,9 @@ use kartik\file\FileInput;
  */
 $merchant=ArrayHelper::map(MerchantInfo::find()->asArray()->all(),'id','name'); //第2个参数是value,第3个参数是option的值
 //省
-$province=ArrayHelper::map(Zone::getProvince(),'id','name');
-$city=[];
-$district=[];
+//$province=ArrayHelper::map(Zone::getProvince(),'id','name');
+//$city=[];
+//$district=[];
 ?>
 <style>
     .shopinfo-no_send_need{width: 50px;height: 30px;;padding-left:2px ;padding-right: 2px; border: 1px solid #ccc;}
@@ -35,6 +35,8 @@ $district=[];
     <?php
     $form = ActiveForm::begin([
         'type'=>ActiveForm::TYPE_HORIZONTAL,
+        'enableAjaxValidation'=>true, //开启ajax验证
+        'validationUrl'=>Url::toRoute(['valid-form','id'=>empty($model['id'])?0:$model['id']]), //验证url
         'options' => ['enctype' => 'multipart/form-data']
     ]);
     ?>
@@ -44,7 +46,6 @@ $district=[];
         <?= $form->field($model, 'limit')->textInput()?>
         <?= $form->field($model, 'least_money')->textInput()?>
         <?= $form->field($model, 'send_bill')->textInput()?>
-<!--        --><?//= $form->field($model, 'no_send_need')->textInput(['placeholder'=>'输入金额'])?>
         <?= $form->field($model, 'no_send_need',[
             'template'=> '<label class="control-label col-md-2" for="shopinfo-no_send_need" >免配送条件</label>
                         <div class="col-sm-10" >
@@ -86,8 +87,8 @@ $district=[];
             ]
         ])?>
         <?= $form->field($model, 'province')->dropDownList($province,['prompt'=>'--省--'])?>
-        <?= $form->field($model, 'city')->dropDownList($city,['prompt'=>'--市--','disabled'=>true])?>
-        <?= $form->field($model, 'district')->dropDownList($district,['prompt'=>'--区--','disabled'=>true])?>
+        <?= $form->field($model, 'city')->dropDownList($city,['prompt'=>'--市--',!$model->isNewRecord?'':'disabled'=>true])?>
+        <?= $form->field($model, 'district')->dropDownList($district,['prompt'=>'--区--',!$model->isNewRecord?'':'disabled'=>true])?>
         <?= $form->field($model, 'region')->textInput(['maxlength' =>50])->label('小区名称') ?>
         <?= $form->field($model, 'address')->textInput(['maxlength' =>128])->label('门牌号') ?>
         <hr>

@@ -107,4 +107,16 @@ class Zone extends \yii\db\ActiveRecord
         return empty($model)?'':$model['name'];
 
     }
+
+    //根据地名查找对应id
+    public static function getDetailId($name){
+        $model=Zone::find()->where(['name'=>$name])->asArray()->one();
+        return empty($model)?'':$model['id'];
+    }
+
+    //根据id取经纬度
+    public static function getLngLat($name){
+        $model=Zone::find()->where(['name'=>$name])->asArray()->one();
+        return empty($model)?'':$model;
+    }
 }

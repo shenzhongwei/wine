@@ -56,8 +56,10 @@ class MerchantInfo extends \yii\db\ActiveRecord
             [['region'], 'string', 'max' => 50],
             [['wa_id'], 'exist', 'skipOnError' => true, 'targetClass' => Admin::className(), 'targetAttribute' => ['wa_id' => 'wa_id']],
             [['phone','name'],'required'],
-            [['wa_username'],'validusername'],
+            [['wa_username','wa_password'],'required','on'=>'create'],
+            [['wa_username'],'validusername','on'=>'create'],
             ['phone','match','pattern'=>'/^13[0-9]{1}[0-9]{8}$|15[0-9]{1}[0-9]{8}$|18[0-9][0-9]{8}|17[0-9]{9}$|14[0-9]{9}$/','message'=>'手机号格式不正确'],
+            ['wa_password','match','pattern'=>'/^[\w\W]{5,16}$/','message'=>'密码长度为5~16位'],
         ];
     }
 
@@ -87,6 +89,14 @@ class MerchantInfo extends \yii\db\ActiveRecord
             'wa_type'=>'用户组类型',
             'wa_logo'=>'用户头像'
         ];
+    }
+
+    //指定“新增” 模块需要验证参数的规则
+    public function scenarios()
+    {
+        $n=parent::scenarios();
+        $n['create']=['name','phone','province','city','district','region','address','wa_username','wa_password','wa_type','wa_logo'];
+        return $n;
     }
 
     /**
