@@ -7,6 +7,7 @@ $params = array_merge(
 );
 return [
     "modules" => [
+        'redactor' => 'yii\redactor\RedactorModule',
         "admin" => [
             "class" => 'mdm\admin\Module',
         ],

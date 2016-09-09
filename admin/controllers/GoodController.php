@@ -9,10 +9,12 @@ use Yii;
 use admin\models\GoodInfo;
 use admin\models\GoodSearch;
 use yii\filters\AccessControl;
+use yii\helpers\FileHelper;
 use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * GoodController implements the CRUD actions for GoodInfo model.
@@ -48,6 +50,43 @@ class GoodController extends BaseController
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
         ]);
+    }
+
+    public function actionUpload(){
+        $goodInfo = new GoodInfo();
+        $id = Yii::$app->request->post('id');
+        if(empty($id)){
+            $file_name = 'good_pic_'.time();
+        }else{
+            $file_name = 'good_pic_'.$id;
+        }
+        if(Yii::$app->request->isPost) {
+            $image = UploadedFile::getInstance($goodInfo, 'img');
+            $path = '../../photo/goods/';
+            if(!is_dir($path) || !is_writable($path)){
+                FileHelper::createDirectory($path,0777,true);
+            }
+            $filePath = $path.'/'.$file_name.'.'.$image->extension;
+            if( $image->saveAs($filePath)){
+                echo json_encode([
+                    'imageUrl'=>'/goods/'.$file_name.'.'.$image->extension,
+                    'error'=>'',
+                ]);
+                exit;
+            }else{
+                echo json_encode([
+                    'imageUrl'=>'',
+                    'error'=>'保存图片失败，请重试',
+                ]);
+                exit;
+            }
+        }else{
+            echo json_encode([
+                'imageUrl'=>'',
+                'error'=>'未获取到图片信息',
+            ]);
+            exit;
+        }
     }
 
     /**
@@ -119,9 +158,20 @@ class GoodController extends BaseController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            $pic = $model->pic;
+            if($pic != 'good_pic_'.$model->id){
+                $extension = substr($model->pic,strrpos($model->pic,'.')+1);
+                @rename('../../photo'.$model->pic,'../../photo/goods/good_pic_'.$model->id.'.'.$extension);
+                $model->pic = '/goods/good_pic_'.$model->id.'.'.$extension;
+            }
+            if($model->save()){
+                return $this->redirect(['view', 'id' => $model->id]);
+            }else{
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
+            }
         } else {
             return $this->render('update', [
                 'model' => $model,

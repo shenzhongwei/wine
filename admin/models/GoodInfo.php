@@ -50,6 +50,8 @@ use Yii;
  */
 class GoodInfo extends \yii\db\ActiveRecord
 {
+    public $img;
+
     /**
      * @inheritdoc
      */
@@ -58,6 +60,7 @@ class GoodInfo extends \yii\db\ActiveRecord
         return 'good_info';
     }
 
+
     /**
      * @inheritdoc
      */
@@ -65,13 +68,15 @@ class GoodInfo extends \yii\db\ActiveRecord
     {
         return [
             [['merchant', 'type', 'brand', 'smell', 'color', 'dry', 'boot', 'breed', 'country', 'style', 'order', 'regist_at', 'is_active', 'active_at'], 'integer'],
-            [['name', 'detail','type','price','detail','volum','unit','pic','merchant'], 'required'],
+            [['name', 'detail','type','price','detail','volum','unit','merchant'], 'required'],
+            [['pic'],'required','message'=>'请上传产品图片'],
             [['price'], 'number'],
             [['detail'], 'string'],
             [['name'], 'string', 'max' => 50],
-            [['volum', 'pic'], 'string', 'max' => 128],
+            [['volum'], 'string', 'max' => 128],
             [['unit'], 'string', 'max' => 10],
             [['number'], 'string', 'max' => 8],
+            ['img', 'file', 'extensions' => ['png', 'jpg', 'gif','jpeg'], 'maxSize' => 1024*1024*6],
             [['boot'], 'exist', 'skipOnError' => true, 'targetClass' => GoodBoot::className(), 'targetAttribute' => ['boot' => 'id']],
             [['type'], 'exist', 'skipOnError' => true, 'targetClass' => GoodType::className(), 'targetAttribute' => ['type' => 'id']],
             [['brand'], 'exist', 'skipOnError' => true, 'targetClass' => GoodBrand::className(), 'targetAttribute' => ['brand' => 'id']],
@@ -106,7 +111,8 @@ class GoodInfo extends \yii\db\ActiveRecord
             'volum' => '容量',
             'price' => '价格',
             'unit' => '单位',
-            'pic' => '图片',
+            'pic' => '产品图片',
+            'img'=>'产品图片',
             'number' => '编号',
             'detail' => '详情',
             'order' => '排序',

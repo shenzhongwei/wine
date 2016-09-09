@@ -6,13 +6,13 @@ function ShowImg(obj){
 // 为Image对象添加图片加载成功的处理方法
     img.onload = function(){
         layer.open({
-                type:1,
-                content:'<img src="'+path+'" height="500px" >',
-                title:false,
-                shadeClose:true,
-                move :false,
-                shift:5
-            }
-        );
+            area: ['360px', '360px'],
+            type:1,
+            content:'<div style="text-align: center"><img src="'+path+'" height="360px" ></div>',
+            title:false,
+            shadeClose:true,
+            move :false,
+            shift:5,
+        });
     }
 }

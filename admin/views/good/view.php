@@ -93,21 +93,21 @@ $this->registerJsFile("@web/js/good/_script.js");
 
                                 'header'=>'图片',
                                 'attribute'=>'pic',
-                                "format" => [
-                                    "raw",
-                                ],
+                                "format" => "raw",
                                 'value'=>Html::img('../../../photo'.$model->pic,[
                                     'height'=>"180px","onclick"=>"ShowImg(this);",'style'=>'cursor:pointer','title'=>"点击放大"
                                 ]),
                             ],
                             [
                                 'attribute'=>'detail',
-                                'value'=>Html::encode($model->detail),
+                                "format" => "html",
+                                'value'=>$model->detail,
                             ],
                             [
                                 'label'=>'发布时间',
                                 'attribute'=>'regist_at',
-                                'value'=>date('Y年m月d日',$model->regist_at),
+                                'format'=>["date", "php:Y年m月d日"],
+                                'value'=>$model->regist_at,
                             ],
                             [
                                 'label'=>'状态',
@@ -119,7 +119,8 @@ $this->registerJsFile("@web/js/good/_script.js");
                             [
                                 'label'=>$model->is_active == 0 ? '下架时间':'上架时间',
                                 'attribute'=>'active_at',
-                                'value'=>date('Y-m-d H:i:s',$model->regist_at),
+                                'format'=>["date", "php:Y-m-d H:i:s"],
+                                'value'=>$model->regist_at,
                             ],
                         ],
                         'hAlign' =>DetailView::ALIGN_MIDDLE,

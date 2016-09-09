@@ -65,9 +65,7 @@ $this->registerJsFile("@web/js/good/_script.js");
 
                 'header'=>'图片',
                 'attribute'=>'pic',
-                "format" => [
-                    "raw",
-                ],
+                "format" => "raw",
                 'value'=>function($model){
                     return Html::img('../../../photo'.$model->pic,[
                         'width'=>"50px",'height'=>"50px","onclick"=>"ShowImg(this);",'style'=>'cursor:pointer','title'=>"点击放大"
@@ -81,15 +79,17 @@ $this->registerJsFile("@web/js/good/_script.js");
             [
                 'header'=>'详情',
                 'attribute'=>'detail',
+                'format'=>'html',
                 'value'=>function($model){
-                    return Html::encode($model->detail);
+                    return $model->detail;
                 }
             ],
             [
                 'label'=>'发布时间',
                 'attribute'=>'regist_at',
+                'format'=>['date','php:Y年m月d日'],
                 'value'=>function($model){
-                    return date('Y年m月d日',$model->regist_at);
+                    return $model->regist_at;
                 }
             ],
             [
