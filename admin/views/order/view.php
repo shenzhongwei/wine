@@ -124,7 +124,7 @@ $comment.= '</ul>
             [
                 'attribute'=>'send_code',
                 'format'=>'html',
-                'value'=>$model->send_code.' ( 配送人员 ：<b>'.$model->send['name'].'</b>;联系方式：<b>'.$model->send['phone'].'</b>&nbsp;&nbsp;&nbsp;送达时间：<b>'.date('Y-m-d H:i:s',$model->send_date).'</b>) '
+                'value'=>$model->send_code.' ( 配送人员 ：<b>'.$model->send['name'].'</b>;联系方式：<b>'.$model->send['phone'].'</b>&nbsp;&nbsp;&nbsp;送达时间：<b>'.(empty($model->send_date)?'':date('Y-m-d H:i:s',$model->send_date)).'</b>) '
             ],
             [
                 'attribute'=> 'status',

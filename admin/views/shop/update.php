@@ -19,6 +19,10 @@ $this->params['breadcrumbs'][] = 'Update';
         'p1' =>$p1, 'p2' =>$p2,
         // 需要展示的图片设置，比如图片的宽度等s
         'PreviewConfig' =>$PreviewConfig,
+
+        'province'=>$province,
+        'city'=>$city,
+        'district'=>$district
     ]) ?>
 
 </div>

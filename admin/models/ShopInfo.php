@@ -60,8 +60,11 @@ class ShopInfo extends \yii\db\ActiveRecord
             [['address', 'bus_pic', 'logo', 'province', 'city', 'district'], 'string', 'max' => 128],
             [['wa_id'], 'exist', 'skipOnError' => true, 'targetClass' =>Admin::className(), 'targetAttribute' => ['wa_id' => 'wa_id']],
             [['merchant'], 'exist', 'skipOnError' => true, 'targetClass' => MerchantInfo::className(), 'targetAttribute' => ['merchant' => 'id']],
-            [['merchant','limit','least_money','send_bill','name'],'required','message'=>'不能为空'],
 
+            [['merchant','limit','least_money','send_bill','name'],'required','message'=>'不能为空'],
+            [['wa_username','wa_password'],'required','on'=>'create'],
+            [['wa_username'],'validusername','on'=>'create'],
+            ['wa_password','match','pattern'=>'/^[\w\W]{5,16}$/','message'=>'密码长度为5~16位'],
 
         ];
     }
@@ -101,6 +104,14 @@ class ShopInfo extends \yii\db\ActiveRecord
         ];
     }
 
+    //指定“新增” 模块需要验证参数的规则,里面添加的参数是 form表单中的值
+    public function scenarios()
+    {
+        $n=parent::scenarios();
+        $n['create']=['merchant','name','limit','least_money','send_bill','no_send_need','bus_pic','logo','province','city','district','region','address','wa_username','wa_password','wa_type','wa_logo'];
+        return $n;
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -124,4 +135,13 @@ class ShopInfo extends \yii\db\ActiveRecord
     {
         return $this->hasOne(MerchantInfo::className(), ['id' => 'merchant']);
     }
+
+    //判断商户后台用户名是否唯一
+    public function validusername(){
+        $model=Admin::findIdentityByUsername($this->wa_username);
+        if(!empty($model)){
+            return $this->addError('wa_username','用户名已存在');
+        }
+    }
+
 }

@@ -50,6 +50,7 @@ class MerchantController extends BaseController
      */
     public function actionView($id)
     {
+
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -62,16 +63,19 @@ class MerchantController extends BaseController
     public function actionValidForm(){
         Yii::$app->response->format = Response::FORMAT_JSON;
         $data = Yii::$app->request->post();
-        $model = new MerchantInfo();
+        $id=Yii::$app->request->get('id');
+        if(empty($id)){
+            $model = new MerchantInfo();
+        }else{
+            $model = new MerchantInfo(['scenario'=>'create']);
+        }
         $model->load($data);
         return ActiveForm::validate($model);
     }
 
 
-    /**
-     * Creates a new MerchantInfo model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
+    /*
+     * 创建
      */
     public function actionCreate()
     {
@@ -83,29 +87,10 @@ class MerchantController extends BaseController
         $item = $auth->getRolesByType(Yii::$app->user->identity->wa_type);
         $itemArr = ArrayHelper::map($item,'level','name');
 
-        $model = new MerchantInfo();
+        $model = new MerchantInfo(['scenarios'=>'create']);
         if (Yii::$app->request->post()&& $model->load(Yii::$app->request->post()) && $model->validate()) {
             //获取传过来的值
             $merchant=Yii::$app->request->post('MerchantInfo');
-
-            if(empty($merchant['name']) ){
-                return $this->showResult(400,'请输入商户名称');
-            }
-            if(empty($merchant['wa_username']) ){
-                return $this->showResult(400,'请输入后台登陆名');
-            }
-            $exist_model = Admin::findIdentityByUsername($merchant['wa_username']);
-            if(!empty($exist_model)){
-                return $this->showResult(400,'该后台登陆名已被使用');
-            }
-            if(empty($merchant['wa_password'])){
-                return $this->showResult(400,'请输入密码');
-            }
-            if(strlen($merchant['wa_password'])>16 ||strlen($merchant['wa_password'])<5){
-                $message = '密码长度为5-16位';
-                return $this->showResult(400,$message);
-            }
-
 
             //上传头像
             $img =UploadedFile::getInstance($model,'wa_logo');
@@ -133,11 +118,11 @@ class MerchantController extends BaseController
                 //获取省-市-区
                 $p=Zone::getDetailName($merchant['province']);
                 $c=$d='';
-                if(isset($shop['city'])){
-                    $c=Zone::getDetailName($shop['city']);
+                if(isset($merchant['city'])){
+                    $c=Zone::getDetailName($merchant['city']);
                 }
-                if(isset($shop['district'])){
-                    $d=Zone::getDetailName($shop['district']);
+                if(isset($merchant['district'])){
+                    $d=Zone::getDetailName($merchant['district']);
                 }
                 //创建商户信息
                 $model->attributes=[
@@ -151,6 +136,8 @@ class MerchantController extends BaseController
                     'province'=>$p,
                     'city'=>$c,
                     'district'=>$d,
+                    'lng'=>empty($d)?(empty($c)?(empty($p)?'':Zone::getLngLat($c)['lng']*1000000):Zone::getLngLat($p)['lng']*1000000):Zone::getLngLat($d)['lng']*1000000,
+                    'lat'=>empty($d)?(empty($c)?(empty($p)?'':Zone::getLngLat($c)['lat']*1000000):Zone::getLngLat($p)['lat']*1000000):Zone::getLngLat($d)['lat']*1000000,
                 ];
                 if(!$model->save()){
                     throw new Exception;
@@ -164,28 +151,24 @@ class MerchantController extends BaseController
                 return $this->redirect(['view', 'id' => $model->id]);
               }catch(Exception $e){
                 $transaction->rollBack();
-                $model->wa_type='3';
-                return $this->redirect('create',[
-                    'model' => $model,
-                    'item_arr'=>$itemArr
-                ]);
               }
         } else {
             //跳到 新建 页面
             $model->wa_type='3';
+
             return $this->render('create', [
                 'model' => $model,
-                'item_arr'=>$itemArr
+                'item_arr'=>$itemArr,
+                'province'=>ArrayHelper::map(Zone::getProvince(),'id','name'),
+                'city'=>[],
+                'district'=>[],
             ]);
         }
 
     }
 
-    /**
-     * Updates an existing MerchantInfo model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
+    /*
+     * 更新
      */
     public function actionUpdate($id)
     {
@@ -193,27 +176,35 @@ class MerchantController extends BaseController
 
         if (Yii::$app->request->post()) {
             $merchant=Yii::$app->request->post('MerchantInfo');
+           // var_dump($merchant);exit;
             $transaction = Yii::$app->db->beginTransaction();
             try{
                 $p=Zone::getDetailName($merchant['province']);
                 $c=$d='';
-                if(isset($shop['city'])){
+                if(isset($merchant['city'])){
                     $c=Zone::getDetailName($merchant['city']);
                 }
-                if(isset($shop['district'])){
+                if(isset($merchant['district'])){
                     $d=Zone::getDetailName($merchant['district']);
                 }
-                //创建商户信息
+
+                //更新商户信息
                 $model->attributes=[
                     'name'=>$merchant['name'],
                     'region'=>$merchant['region'],
                     'address'=>$merchant['address'],
                     'phone'=>$merchant['phone'],
-                    'registe_at'=>time(),
-                    'active_at'=>time(),
                     'province'=>empty($p)?$model->province:$p,
                     'city'=>empty($c)?$model->city:$c,
                     'district'=>empty($d)?$model->district:$d,
+                ];
+                if(!$model->save()){
+                    throw new Exception;
+                }
+                //保存经纬度
+                $model->attributes=[
+                    'lng'=>empty($model->district)?(empty($model->city)?(empty($model->province)?'':Zone::getLngLat($model->city)['lng']*1000000):Zone::getLngLat($model->province)['lng']*1000000):Zone::getLngLat($model->district)['lng']*1000000,
+                    'lat'=>empty($model->district)?(empty($model->city)?(empty($model->province)?'':Zone::getLngLat($model->city)['lat']*1000000):Zone::getLngLat($model->province)['lat']*1000000):Zone::getLngLat($model->district)['lat']*1000000,
                 ];
                 if(!$model->save()){
                     throw new Exception;
@@ -223,23 +214,23 @@ class MerchantController extends BaseController
                 return $this->redirect(['view', 'id' => $model->id]);
             }catch(Exception $e){
                 $transaction->rollBack();
-
-                return $this->redirect('create',[
-                    'model' => $model,
-                ]);
             }
         } else {
+            $model->province=empty($model->province)?'':Zone::getDetailId($model->province);
+            $model->city=empty($model->city)?'':Zone::getDetailId($model->city);
+            $model->district=empty($model->district)?'':Zone::getDetailId($model->district);
+
             return $this->render('update', [
                 'model' => $model,
+                'province'=>ArrayHelper::map(Zone::getProvince(),'id','name'),
+                'city'=>ArrayHelper::map(Zone::getCity($model->province),'id','name'),
+                'district'=>ArrayHelper::map(Zone::getDistrict( $model->city),'id','name')
             ]);
         }
     }
 
-    /**
-     * Deletes an existing MerchantInfo model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
+    /*
+     * 删除
      */
     public function actionDelete()
     {
@@ -272,12 +263,8 @@ class MerchantController extends BaseController
 
     }
 
-    /**
-     * Finds the MerchantInfo model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return MerchantInfo the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
+    /*
+     * 查找数据
      */
     protected function findModel($id)
     {

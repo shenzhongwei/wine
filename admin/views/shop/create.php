@@ -17,6 +17,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'item_arr'=>$item_arr,
         'p1'=>$p1,'p2'=>$p2,
         'PreviewConfig' =>$PreviewConfig,
+
+        'province'=>$province,
+        'city'=>$city,
+        'district'=>$district
     ]) ?>
 
 </div>

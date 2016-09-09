@@ -42,10 +42,13 @@ $img_path='../../../photo';
             ],
             [
                 'attribute'=>'address',
-                'value'=>empty($model->province)?'':($model->province.'-'.$model->city.'-'.$model->district.' '.$model->region.$model->address)
+                'value'=>empty($model->province)?'':($model->province.'-'.$model->city.'-'.$model->district.'-'.$model->region.$model->address)
             ],
-            'lat',
-            'lng',
+            [
+                'label'=>'经纬度',
+                'format'=>'html',
+                'value'=>'经度：'.($model->lng/1000000).'&nbsp;&nbsp; 纬度：'.($model->lat/1000000)
+            ],
             'limit',
             'least_money',
             'send_bill',
