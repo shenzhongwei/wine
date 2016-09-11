@@ -10,7 +10,6 @@ use kartik\widgets\Select2;
 use admin\models\GoodType;
 use kartik\widgets\FileInput;
 use yii\redactor\widgets\Redactor;
-use ijackua\lepture\Markdowneditor;
 
 /**
  * @var yii\web\View $this

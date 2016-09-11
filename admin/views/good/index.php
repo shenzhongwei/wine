@@ -51,7 +51,14 @@ $this->registerJsFile("@web/js/good/_script.js");
                 'header'=>'类型',
                 'attribute'=>'type',
                 'value'=> function($model){
-                    return $model->type0->name;
+                    return empty($model->type0) ? '无':$model->type0->name;
+                }
+            ],
+            [
+                'header'=>'品牌',
+                'attribute'=>'brand',
+                'value'=> function($model){
+                    return $model->brand0->name;
                 }
             ],
             [
