@@ -114,7 +114,10 @@ class GoodController extends BaseController
     {
         $admin = Yii::$app->user->identity;
         $model = new GoodInfo();
-
+        $model->regist_at = time();
+        $model->is_active = 1;
+        $model->active_at = time();
+        $model->number = GoodInfo::generateCode().rand(1000,9999).date('is',time());
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -193,6 +196,7 @@ class GoodController extends BaseController
         }else{
             $model->is_active = 0;
         }
+        $model->active_at = time();
         $model->save();
         return $this->runAction('index');
     }

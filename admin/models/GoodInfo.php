@@ -266,4 +266,12 @@ class GoodInfo extends \yii\db\ActiveRecord
     {
         return new GoodInfoQuery(get_called_class());
     }
+
+
+    public static function generateCode(){
+        $arr = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+        $key = array_rand($arr); //array_rand() 函数返回数组中的随机键
+        $code=$arr[$key];
+        return $code;
+    }
 }

@@ -7,7 +7,12 @@ $params = array_merge(
 );
 return [
     "modules" => [
-        'redactor' => 'yii\redactor\RedactorModule',
+        'redactor' => [
+            'class'=>'yii\redactor\RedactorModule',
+            'imageAllowExtensions'=>['jpg','png','gif','jpeg'],
+            'uploadDir' => '@photo/goods/detail',
+            'uploadUrl' => '@web/../../photo/goods/detail',
+        ],
         "admin" => [
             "class" => 'mdm\admin\Module',
         ],

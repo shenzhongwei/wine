@@ -252,7 +252,15 @@ $wa_type = $admin->wa_type;
                 'columnSize'=>'sm',
                 'attributes' => [
                     'detail'=>[
-                        'type'=> Form::INPUT_WIDGET, 'widgetClass'=>Redactor::className(),
+                        'type'=> Form::INPUT_WIDGET, 'widgetClass'=>Redactor::className(),'options'=>[
+                            'clientOptions' => [
+                                'imageManagerJson' => ['/redactor/upload/image-json'],
+                                'imageUpload' => ['/redactor/upload/image'],
+                                'fileUpload' => ['/redactor/upload/file'],
+                                'lang' => 'zh_cn',
+                                'plugins' => ['clips', 'fontcolor','imagemanager'],
+                            ]
+                        ],
                     ],
                 ]
 
