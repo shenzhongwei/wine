@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\widgets\Pjax;
+use yii\helpers\Url;
 
 /**
  * @var yii\web\View $this
@@ -88,7 +89,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                 'attribute'=>'detail',
                 'format'=>'html',
                 'value'=>function($model){
-                    return $model->detail;
+                    return '<a class="btn btn-link btn-xs" href="'.Url::toRoute(['good/detail','id'=>$model->id]).'">点击查看</a>';
                 }
             ],
             [
@@ -115,20 +116,20 @@ $this->registerJsFile("@web/js/good/_script.js");
                     'view' => function ($url, $model) {
                         return Html::a('<i class="fa fa-eye">查看</i>', $url, [
                             'title' => Yii::t('app', Yii::t('app','View')),
-                            'class' => 'btn btn-primary btn-xs',
+                            'class' => 'btn btn-info btn-xs',
                         ]);
                     },
                     'update' => function ($url, $model) {
                         return Html::a(Yii::t('app','Update'), $url, [
                             'title' => Yii::t('app', '编辑'),
-                            'class' => 'btn btn-success btn-xs',
+                            'class' => 'btn btn-primary btn-xs',
                         ]);
                     },
                     'delete' => function ($url, $model) {
                         if($model->is_active == 0){
                             return Html::a(Yii::t('app','Up'), $url, [
                                 'title' => Yii::t('app', '上架该商品'),
-                                'class' => 'btn btn-info btn-xs',
+                                'class' => 'btn btn-success btn-xs',
                                 'data-confirm' => Yii::t('app', 'GoodUpSure'),
                             ]);
                         }else{

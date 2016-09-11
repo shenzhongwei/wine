@@ -105,6 +105,14 @@ class GoodController extends BaseController
         }
     }
 
+    public function actionDetail($id)
+    {
+        $model = $this->findModel($id);
+
+        echo $model->detail;
+        exit;
+    }
+
     /**
      * Creates a new GoodInfo model.
      * If creation is successful, the browser will be redirected to the 'view' page.

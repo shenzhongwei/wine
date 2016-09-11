@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use \kartik\detail\DetailView;
-use kartik\datecontrol\DateControl;
+use yii\helpers\Url;
 
 /**
  * @var yii\web\View $this
@@ -101,7 +101,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                             [
                                 'attribute'=>'detail',
                                 "format" => "html",
-                                'value'=>$model->detail,
+                                'value'=>'<a class="btn btn-link btn-xs" href="'.Url::toRoute(['good/detail','id'=>$model->id]).'">点击查看</a>',
                             ],
                             [
                                 'label'=>'发布时间',
