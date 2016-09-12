@@ -3,12 +3,10 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\widgets\DatePicker;
-/**
- * @var yii\web\View $this
- * @var admin\models\OrderInfoSearch $model
- * @var yii\widgets\ActiveForm $form
- */
-$pay_types=\yii\helpers\ArrayHelper::map(\admin\models\OrderInfoSearch::getPaytype(),'id','name');
+use yii\helpers\ArrayHelper;
+use admin\models\OrderInfoSearch;
+
+$pay_types=ArrayHelper::map(OrderInfoSearch::getPaytype(),'id','name');
 ?>
 
 <div class="order-info-search">
@@ -22,21 +20,29 @@ $pay_types=\yii\helpers\ArrayHelper::map(\admin\models\OrderInfoSearch::getPayty
 
     <?= $form->field($model, 'name')->textInput(['style'=>['width'=>'100px']])?>
 
-    <?= $form->field($model, 'nickname')->textInput(['style'=>['width'=>'100px']]) ?>
+    <?= $form->field($model, 'nickname')->textInput(['style'=>['width'=>'100px']])->label('下单用户') ?>
 
-    <?= $form->field($model, 'order_date')->widget(DatePicker::classname(),[
-        'options' => ['placeholder' => ''],
+    <?= $form->field($model, 'order_date_from')->widget(DatePicker::classname(),[
+        'options' => ['placeholder' => '','style'=>['width'=>'120px']],
         'pluginOptions' => [
             'todayHighlight' => true,
             'format' => 'yyyy-mm-dd',
         ]
-    ]) ?>
+    ])->label('下单时间：从') ?>
 
-    <?= $form->field($model, 'order_code') ?>
-    <?= $form->field($model, 'send_code') ?>
+    <?= $form->field($model, 'order_date_to')->widget(DatePicker::classname(),[
+        'options' => ['placeholder' => '','style'=>['width'=>'120px']],
+        'pluginOptions' => [
+            'todayHighlight' => true,
+            'format' => 'yyyy-mm-dd',
+        ]
+    ])->label('至') ?>
+
+    <?= $form->field($model, 'order_code')->textInput(['style'=>['width'=>'100px']]) ?>
+
+    <?= $form->field($model, 'send_code')->textInput(['style'=>['width'=>'100px']]) ?>
+
     <?= $form->field($model, 'pay_id')->dropDownList($pay_types,['prompt'=>'全部']) ?>
-
-    <?= $form->field($model, 'total')->textInput(['style'=>['width'=>'50px']]) ?>
 
     <?= $form->field($model, 'is_ticket')->dropDownList(['0'=>'无','1'=>'有']) ?>
 
@@ -45,9 +51,7 @@ $pay_types=\yii\helpers\ArrayHelper::map(\admin\models\OrderInfoSearch::getPayty
         <?= Html::resetButton('重置', ['class' => 'btn btn-default','style'=>'margin-top:-8px']) ?>
     </div>
 
-    <?php ActiveForm::end();
-   
-    ?>
+    <?php ActiveForm::end();?>
 
 </div>
 

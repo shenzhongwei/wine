@@ -41,6 +41,8 @@ class OrderInfo extends \yii\db\ActiveRecord
     public $name;
     public $nickname;
     public $is_ticket;
+    public $order_date_from;
+    public $order_date_to;
     /**
      * @inheritdoc
      */
