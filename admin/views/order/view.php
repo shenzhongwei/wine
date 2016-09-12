@@ -37,10 +37,13 @@ foreach($model->orderComments as $k){
         }
     $comment.= '<li>
                     <img src="'.$img.'">
-                    <div>
-                       <p style="width:20%;"><span>'.$k->u->nickname.'</span>    <span style="float:right;color:#00a2d4;">'.date('Y-m-d H:i:s',$k->add_at).'</span></p>
-                       <p><span>送货评分：'.$k->send_star.'</span><span style="margin-left:5%"> 商品评分：'.$value['star'].'</span></p>
-                       <p>内容'.$value['content'].'</p>
+                    <div class="area">
+                       <p style="width:20%;"><span style="color:#00a2d4;">'.$k->u->nickname.'</span>    <span style="float:right;color:#00a2d4;">'.date('Y-m-d H:i:s',$k->add_at).'</span></p>
+                       <div style="margin-bottom:5px;">
+                            <div style="height:20px;"><span>送货评分：</span><div class="atar_Show"><p class="'.$k->send_star.'"></p></div></div>
+                            <div style="height:20px;"><span> 商品评分：</span><div class="atar_Show"><p class="'.$value['star'].'"></p></div></div>
+                       </div>
+                       <p style="color:#0a6aa1;">内容'.$value['content'].'</p>
                     </div>
                  </li>';
     }
@@ -49,26 +52,19 @@ $comment.= '</ul>
           </div>';
 ?>
 <style>
-    .table2{
-        width:500px;
-        border:1px solid #cad9ea;
-        color:#666;
-    }
-    .table2 th {
-        background-repeat:repeat-x;
-        height:30px;
-        color: #0a6aa1;
-    }
-    .table2 td,.table2 th{
-        border:1px solid #cad9ea;
-        padding:0 1em 0;text-align: center;
-    }
+    .table2{ width:500px; border:1px solid #cad9ea;color:#666;}
+    .table2 th { background-repeat:repeat-x;height:30px; color: #0a6aa1; }
+    .table2 td,.table2 th{ border:1px solid #cad9ea; padding:0 1em 0;text-align: center; }
     /*评价css*/
     .comment{ display:none;border: 1px solid #00a2d4;height:auto;border-radius: 5px;}
     .comment ul{padding-left: 5px;list-style: none;}
     .comment ul li{width:95%;margin-top: 5px;min-height:50px;border-bottom: 2px solid #c0c4cd;list-style: none}
-    img{width: 50px;height: 50px;border-radius: 25px; border:1px solid #9acfea;}
-    .comment div{min-height:40px;margin-top:-50px ;margin-left:60px}
+     img{width: 50px;height: 50px;border-radius: 25px; border:1px solid #9acfea;}
+    .comment div.area{min-height:40px;margin-top:-50px ;margin-left:60px}
+    /*评分星级*/
+     .atar_Show{background:url('../images/starky.png') 100% 100%; width:110px; height:20px;  position:relative;left:60px;top:-20px;}
+    .atar_Show p{ background:url('../images/starsy.png')  100% 100%;left:0; height:20px; width:110px;}
+
 </style>
 <div class="order-info-view">
 
@@ -153,5 +149,14 @@ $comment.= '</ul>
                $('div.comment').slideUp();
            }
        });
+
+
+       //显示分数
+       $(".atar_Show p").each(function(index, element) {
+            var num=$(this).attr("class");
+            var www=num*22;//一个星星的宽度是22px
+            $(this).css({width:www+'px'});
+       });
+
    });
 </script>

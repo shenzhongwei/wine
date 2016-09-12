@@ -62,4 +62,5 @@ return array(
     'kartik\\editable\\' => array($vendorDir . '/kartik-v/yii2-editable'),
     'kartik\\popover\\' => array($vendorDir . '/kartik-v/yii2-popover'),
     'kartik\\bootstrap-popover-x\\' => array($vendorDir . '/kartik-v/bootstrap-popover-x'),
+    'kartik\\field\\' => array($vendorDir . '/kartik-v/yii2-field-range'),
 );

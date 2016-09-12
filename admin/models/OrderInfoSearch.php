@@ -22,7 +22,7 @@ class OrderInfoSearch extends OrderInfo
 
             [['name','nickname'],'string','max'=>50],
             [['is_ticket'],'integer'],
-            [['order_date'],'date','format'=>'yyyy-mm-dd']
+            [['order_date_from','order_date_to'],'date','format'=>'yyyy-mm-dd']
         ];
     }
 
@@ -52,9 +52,14 @@ class OrderInfoSearch extends OrderInfo
 
         $query->andFilterWhere([ 'total' => $this->total ]);
         //下单时间
-        if(!empty($params['OrderInfoSearch']['order_date'])){
-            $query->andFilterWhere(['between','order_date',strtotime($params['OrderInfoSearch']['order_date'].' 00:00:00'),strtotime($params['OrderInfoSearch']['order_date'].'23:59:59')]);
-
+        if(!empty($params['OrderInfoSearch']['order_date_from']) && !empty($params['OrderInfoSearch']['order_date_to']) ){
+            $query->andFilterWhere(['between','order_date',strtotime($params['OrderInfoSearch']['order_date_from'].' 00:00:00'),strtotime($params['OrderInfoSearch']['order_date_to'].'00:00:00')]);
+        }else{
+            if(!empty($params['OrderInfoSearch']['order_date_from'])){
+                $query->andFilterWhere(['>=','order_date',strtotime($params['OrderInfoSearch']['order_date_from'].' 00:00:00')]);
+            }else{
+                $query->andFilterWhere(['<=','order_date',strtotime($params['OrderInfoSearch']['order_date_to'].' 23:59:59')]);
+            }
         }
         //有无优惠券
         if($params['OrderInfoSearch']['is_ticket']=='1'){
