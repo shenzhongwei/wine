@@ -155,7 +155,6 @@ class MerchantController extends BaseController
         } else {
             //跳到 新建 页面
             $model->wa_type='3';
-
             return $this->render('create', [
                 'model' => $model,
                 'item_arr'=>$itemArr,
