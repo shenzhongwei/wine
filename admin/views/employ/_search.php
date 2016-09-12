@@ -5,12 +5,15 @@ use yii\widgets\ActiveForm;
 use kartik\widgets\DepDrop;
 use yii\helpers\Url;
 use kartik\widgets\Select2;
+use admin\models\EmployeeInfo;
 /**
  * @var yii\web\View $this
  * @var admin\models\EmployeeInfoSearch $model
  * @var yii\widgets\ActiveForm $form
  */
 
+//var_dump($model->owner_id);
+//exit;
 ?>
 
 <div class="employee-info-search">
@@ -30,7 +33,7 @@ use kartik\widgets\Select2;
     <?= $form->field($model, 'type')->dropDownList(['0'=>'商户','1'=>'门店'],['prompt'=>'全部','id'=>'employee_search_type']) ?>
 
     <?= $form->field($model, 'owner_id')->widget(DepDrop::className(),[
-            'data'=>[],
+            'data'=>$model->owner_id==='' ? [] : EmployeeInfo::getOwners($model->type),
             'options'=>[ 'placeholder'=>'请选择所属商家/门店'],
             'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
             'pluginOptions'=>[

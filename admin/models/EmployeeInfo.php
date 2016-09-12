@@ -2,6 +2,7 @@
 
 namespace admin\models;
 
+use common\helpers\ArrayHelper;
 use Yii;
 
 /**
@@ -91,6 +92,25 @@ class EmployeeInfo extends \yii\db\ActiveRecord
             $query[$v['id']]=$v['name'];
         }
         return $query;
+    }
+
+    public static function getOwners($type){
+        switch($type){
+            case 0: //商家
+                $model=MerchantInfoSearch::find()->where(['is_active'=>1])->all();
+                break;
+            case 1: //门店
+                $model=ShopSearch::find()->where(['is_active'=>1])->all();
+                break;
+            default://wu
+                $model = [];
+                break;
+        }
+        $results=[];
+        if(!empty($model)){
+            $results = ArrayHelper::map($model,'id','name');
+        }
+        return $results;
     }
 
 }
