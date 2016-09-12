@@ -152,7 +152,7 @@ $this->registerJsFile("@web/js/good/_script.js");
             'type'=>'info',
             'before'=>$this->render('_search', ['model' => $searchModel]),
             'after'=>Html::a('<i class="glyphicon glyphicon-repeat"></i> 刷新列表', ['index'], ['class' => 'btn btn-info']),
-            'showFooter'=>true
+            'showFooter'=>true,
         ],
     ]); Pjax::end(); ?>
 

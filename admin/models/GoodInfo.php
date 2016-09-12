@@ -75,7 +75,7 @@ class GoodInfo extends \yii\db\ActiveRecord
             [['name'], 'string', 'max' => 50],
             [['volum'], 'string', 'max' => 128],
             [['unit'], 'string', 'max' => 10],
-            [['number'], 'string', 'max' => 8],
+            [['number'], 'string', 'max' => 10],
             ['img', 'file', 'extensions' => ['png', 'jpg', 'gif','jpeg'], 'maxSize' => 1024*1024*6],
             [['boot'], 'exist', 'skipOnError' => true, 'targetClass' => GoodBoot::className(), 'targetAttribute' => ['boot' => 'id']],
             [['type'], 'exist', 'skipOnError' => true, 'targetClass' => GoodType::className(), 'targetAttribute' => ['type' => 'id']],
