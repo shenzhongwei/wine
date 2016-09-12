@@ -23,7 +23,7 @@ $wa_type = $admin->wa_type;
 ?>
 <div class="ibox-content good-info-form">
 
-    <div class="col-sm-6">
+    <div class="col-sm-12">
     <?php $form = ActiveForm::begin([
         'type'=>ActiveForm::TYPE_VERTICAL,
         'fullSpan'=>12,
@@ -33,6 +33,7 @@ $wa_type = $admin->wa_type;
     ]);
     ?>
         <div class="row">
+            <div class="col-sm-6">
             <div class="col-sm-6">
         <?php
     echo Form::widget([
@@ -156,7 +157,8 @@ $wa_type = $admin->wa_type;
     ]);
 
 ?>
-                </div><div class="col-sm-6">
+                </div>
+            <div class="col-sm-6">
                 <?php
                 echo Form::widget([
                     'model' => $model,
@@ -242,30 +244,31 @@ $wa_type = $admin->wa_type;
                 echo $form->field($model,'pic')->hiddenInput()->label(false);
                 ?>
             </div>
-        </div>
-            <div class="row">
-            <?php
-            echo Form::widget([
-                'model' => $model,
-                'form' => $form,
-                'columns' => 1,
-                'columnSize'=>'sm',
-                'attributes' => [
-                    'detail'=>[
-                        'type'=> Form::INPUT_WIDGET, 'widgetClass'=>Redactor::className(),'options'=>[
-                            'clientOptions' => [
-                                'imageManagerJson' => ['/redactor/upload/image-json'],
-                                'imageUpload' => ['/redactor/upload/image'],
-                                'fileUpload' => ['/redactor/upload/file'],
-                                'lang' => 'zh_cn',
-                                'plugins' => ['clips', 'fontcolor','imagemanager'],
-                            ]
+            </div>
+            <div class="col-sm-6">
+                <?php
+                echo Form::widget([
+                    'model' => $model,
+                    'form' => $form,
+                    'columns' => 1,
+                    'columnSize'=>'sm',
+                    'attributes' => [
+                        'detail'=>[
+                            'type'=> Form::INPUT_WIDGET, 'widgetClass'=>Redactor::className(),'options'=>[
+                                'clientOptions' => [
+                                    'imageManagerJson' => ['/redactor/upload/image-json'],
+                                    'imageUpload' => ['/redactor/upload/image'],
+                                    'fileUpload' => ['/redactor/upload/file'],
+                                    'lang' => 'zh_cn',
+                                    'plugins' => ['clips', 'fontcolor','imagemanager'],
+                                ]
+                            ],
                         ],
-                    ],
-                ]
+                    ]
 
-            ]);
-            ?>
+                ]);
+                ?>
+            </div>
         </div>
     <?php
     echo Html::submitButton($model->isNewRecord ? Yii::t('app', '保存') : Yii::t('app', '保存'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']);
