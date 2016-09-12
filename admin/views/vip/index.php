@@ -23,7 +23,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
 //        'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\CheckboxColumn'],
+            [
+                'header'=>'序号',
+                'class' => 'kartik\grid\SerialColumn'
+            ],
 
             [
                 'header'=>'商品名称',
@@ -37,7 +40,8 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
 
             [
-                'header'=>'原价',
+                'label'=>'原价',
+                'attribute'=>'g.price',
                 'value'=>function($model) {
                     return '¥'.$model->g->price.'/'.$model->g->unit;
                 }
@@ -57,7 +61,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $state;
                 },
             ],
-//            'limit',
             [
                 'label'=>'会员商品状态',
                 'attribute' => 'is_active',
@@ -89,11 +92,13 @@ $this->params['breadcrumbs'][] = $this->title;
                             return Html::a(Yii::t('app','Up'), $url, [
                                 'title' => Yii::t('app', '上架该商品'),
                                 'class' => 'btn btn-success btn-xs',
+                                'data-confirm'=>'确定上架该会员商品？'
                             ]);
                         }else{
                             return Html::a(Yii::t('app','Down'), $url, [
                                 'title' => Yii::t('app', '下架该商品'),
                                 'class' => 'btn btn-danger btn-xs',
+                                'data-confirm'=>'确定下架该会员商品？'
                             ]);
                         }
                     }

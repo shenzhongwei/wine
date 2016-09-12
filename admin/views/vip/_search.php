@@ -20,11 +20,13 @@ use yii\widgets\ActiveForm;
         'method' => 'get',
     ]); ?>
 
-    <?= $form->field($model, 'gid') ?>
+    <?= $form->field($model, 'good_name')->textInput(['style'=>'margin-right:10px'])->label('商品名') ?>
 
-    <?= $form->field($model, 'price') ?>
+    <?= $form->field($model, 'start_price')->textInput(['style'=>'width:80px','onkeyup'=>'this.value=this.value.replace(/\D/gi,"")'])->label('价格') ?>
+    至
+    <?= $form->field($model, 'end_price')->textInput(['style'=>'margin-right:10px;width:80px','onkeyup'=>'this.value=this.value.replace(/\D/gi,"")'])->label(false) ?>
 
-    <?= $form->field($model, 'is_active') ?>
+    <?= $form->field($model, 'is_active')->radioList([0=>'未上架',1=>'上架中'],['style'=>'margin-right:10px'])->label(false) ?>
 
     <div class="form-group" style="height: 44px">
         <?= Html::submitButton('搜 索', ['class' => 'btn btn-primary']) ?>

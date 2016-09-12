@@ -20,7 +20,7 @@ class VipController extends BaseController
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['post'],
+                    'delete' => ['post','get'],
                 ],
             ],
         ];
@@ -36,6 +36,9 @@ class VipController extends BaseController
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
         $dataProvider->pagination = [
             'pageSize'=>15,
+        ];
+        $dataProvider->sort = [
+            'defaultOrder'=>['is_active'=>SORT_DESC,'is_active'=>SORT_DESC,'id'=>SORT_ASC]
         ];
         return $this->render('index', [
             'dataProvider' => $dataProvider,
@@ -104,9 +107,14 @@ class VipController extends BaseController
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        $model = GoodVip::findOne($id);
+        if($model->is_active==0){
+            $model->is_active = 1;
+        }else{
+            $model->is_active = 0;
+        }
+        $model->save();
+        return $this->runAction('index');
     }
 
     /**

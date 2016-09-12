@@ -44,28 +44,13 @@ class GoodSearch extends GoodInfo
         }
 
         $query->andFilterWhere([
-            'id' => $this->id,
             'merchant' => $this->merchant,
             'type' => $this->type,
-            'brand' => $this->brand,
-            'smell' => $this->smell,
-            'color' => $this->color,
-            'dry' => $this->dry,
-            'boot' => $this->boot,
-            'breed' => $this->breed,
-            'country' => $this->country,
-            'style' => $this->style,
-            'order' => $this->order,
-            'regist_at' => $this->regist_at,
             'is_active' => $this->is_active,
-            'active_at' => $this->active_at,
         ]);
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'volum', $this->volum])
-            ->andFilterWhere(['like', 'unit', $this->unit])
-            ->andFilterWhere(['like', 'pic', $this->pic])
-            ->andFilterWhere(['like', 'number', $this->number])
-            ->andFilterWhere(['like', 'detail', $this->detail]);
+            ->andFilterWhere(['like', 'number', $this->number]);
         $query->andFilterWhere(['>=','price',$this->start_price])
             ->andFilterWhere(['<=','price',$this->end_price]);
         return $dataProvider;

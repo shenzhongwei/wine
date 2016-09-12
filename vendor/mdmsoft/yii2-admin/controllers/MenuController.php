@@ -45,9 +45,6 @@ class MenuController extends Controller
         $dataProvider->pagination = [
             'pageSize'=>15,
         ];
-        $dataProvider->sort = [
-            'defaultOrder' => ['is_active'=>SORT_DESC,'id'=>SORT_ASC]
-        ];
         return $this->render('index', [
                 'dataProvider' => $dataProvider,
                 'searchModel' => $searchModel,
