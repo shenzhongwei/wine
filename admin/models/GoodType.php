@@ -152,14 +152,6 @@ class GoodType extends \yii\db\ActiveRecord
         return $this->hasMany(GoodStyle::className(), ['type' => 'id']);
     }
 
-    /**
-     * @inheritdoc
-     * @return GoodTypeQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new GoodTypeQuery(get_called_class());
-    }
 
     public static function GetTypes(){
         $types = self::findAll(['is_active'=>1]);

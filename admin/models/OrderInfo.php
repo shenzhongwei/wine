@@ -152,14 +152,4 @@ class OrderInfo extends \yii\db\ActiveRecord
         return $this->hasOne(UserInfo::className(), ['id' => 'uid']);
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getOrderPays()
-    {
-        return $this->hasMany(OrderPay::className(), ['oid' => 'id']);
-    }
-
-
-
 }

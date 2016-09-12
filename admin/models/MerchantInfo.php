@@ -123,14 +123,6 @@ class MerchantInfo extends \yii\db\ActiveRecord
         return $this->hasMany(ShopInfo::className(), ['merchant' => 'id']);
     }
 
-    /**
-     * @inheritdoc
-     * @return MerchantInfoQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new MerchantInfoQuery(get_called_class());
-    }
 
     //判断商户后台用户名是否唯一
     public function validusername(){

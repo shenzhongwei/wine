@@ -73,12 +73,5 @@ class GoodBrand extends \yii\db\ActiveRecord
         return $this->hasMany(GoodInfo::className(), ['brand' => 'id']);
     }
 
-    /**
-     * @inheritdoc
-     * @return GoodBrandQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new GoodBrandQuery(get_called_class());
-    }
+
 }

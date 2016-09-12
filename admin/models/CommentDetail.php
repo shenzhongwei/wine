@@ -71,12 +71,4 @@ class CommentDetail extends \yii\db\ActiveRecord
         return $this->hasOne(OrderComment::className(), ['id' => 'cid']);
     }
 
-    /**
-     * @inheritdoc
-     * @return CommentDetailQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new CommentDetailQuery(get_called_class());
-    }
 }

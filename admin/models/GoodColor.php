@@ -70,12 +70,5 @@ class GoodColor extends \yii\db\ActiveRecord
         return $this->hasMany(GoodInfo::className(), ['color' => 'id']);
     }
 
-    /**
-     * @inheritdoc
-     * @return GoodColorQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new GoodColorQuery(get_called_class());
-    }
+
 }

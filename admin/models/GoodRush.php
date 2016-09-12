@@ -67,12 +67,4 @@ class GoodRush extends \yii\db\ActiveRecord
         return $this->hasOne(GoodInfo::className(), ['id' => 'gid']);
     }
 
-    /**
-     * @inheritdoc
-     * @return GoodRushQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new GoodRushQuery(get_called_class());
-    }
 }

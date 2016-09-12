@@ -258,14 +258,6 @@ class GoodInfo extends \yii\db\ActiveRecord
         return $this->hasMany(ShoppingCert::className(), ['gid' => 'id']);
     }
 
-    /**
-     * @inheritdoc
-     * @return GoodInfoQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new GoodInfoQuery(get_called_class());
-    }
 
 
     public static function generateCode(){

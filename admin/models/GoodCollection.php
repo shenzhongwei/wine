@@ -68,12 +68,5 @@ class GoodCollection extends \yii\db\ActiveRecord
         return $this->hasOne(UserInfo::className(), ['id' => 'uid']);
     }
 
-    /**
-     * @inheritdoc
-     * @return GoodCollectionQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new GoodCollectionQuery(get_called_class());
-    }
+
 }

@@ -70,12 +70,5 @@ class GoodCountry extends \yii\db\ActiveRecord
         return $this->hasMany(GoodInfo::className(), ['country' => 'id']);
     }
 
-    /**
-     * @inheritdoc
-     * @return GoodCountryQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new GoodCountryQuery(get_called_class());
-    }
+
 }

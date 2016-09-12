@@ -65,13 +65,4 @@ class ShoppingCert extends \yii\db\ActiveRecord
     {
         return $this->hasOne(GoodInfo::className(), ['id' => 'gid']);
     }
-
-    /**
-     * @inheritdoc
-     * @return ShoppingCertQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new ShoppingCertQuery(get_called_class());
-    }
 }

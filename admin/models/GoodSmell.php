@@ -70,12 +70,4 @@ class GoodSmell extends \yii\db\ActiveRecord
         return $this->hasOne(GoodType::className(), ['id' => 'type']);
     }
 
-    /**
-     * @inheritdoc
-     * @return GoodSmellQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new GoodSmellQuery(get_called_class());
-    }
 }

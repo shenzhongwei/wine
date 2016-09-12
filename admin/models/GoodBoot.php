@@ -70,12 +70,4 @@ class GoodBoot extends \yii\db\ActiveRecord
         return $this->hasMany(GoodInfo::className(), ['boot' => 'id']);
     }
 
-    /**
-     * @inheritdoc
-     * @return GoodBootQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new GoodBootQuery(get_called_class());
-    }
 }

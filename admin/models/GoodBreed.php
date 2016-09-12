@@ -70,12 +70,5 @@ class GoodBreed extends \yii\db\ActiveRecord
         return $this->hasMany(GoodInfo::className(), ['breed' => 'id']);
     }
 
-    /**
-     * @inheritdoc
-     * @return GoodBreedQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new GoodBreedQuery(get_called_class());
-    }
+
 }

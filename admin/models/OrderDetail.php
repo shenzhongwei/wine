@@ -71,12 +71,4 @@ class OrderDetail extends \yii\db\ActiveRecord
         return $this->hasOne(GoodInfo::className(), ['id' => 'gid']);
     }
 
-    /**
-     * @inheritdoc
-     * @return OrderDetailQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new OrderDetailQuery(get_called_class());
-    }
 }

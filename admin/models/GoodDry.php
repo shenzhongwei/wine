@@ -70,12 +70,4 @@ class GoodDry extends \yii\db\ActiveRecord
         return $this->hasMany(GoodInfo::className(), ['dry' => 'id']);
     }
 
-    /**
-     * @inheritdoc
-     * @return GoodDryQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new GoodDryQuery(get_called_class());
-    }
 }

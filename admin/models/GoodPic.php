@@ -57,12 +57,4 @@ class GoodPic extends \yii\db\ActiveRecord
         return $this->hasOne(GoodInfo::className(), ['id' => 'gid']);
     }
 
-    /**
-     * @inheritdoc
-     * @return GoodPicQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new GoodPicQuery(get_called_class());
-    }
 }
