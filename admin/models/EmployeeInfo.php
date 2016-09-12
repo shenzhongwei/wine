@@ -19,6 +19,7 @@ use Yii;
  */
 class EmployeeInfo extends \yii\db\ActiveRecord
 {
+
     /**
      * @inheritdoc
      */
@@ -36,6 +37,10 @@ class EmployeeInfo extends \yii\db\ActiveRecord
             [['type', 'owner_id', 'register_at', 'status'], 'integer'],
             [['name'], 'string', 'max' => 25],
             [['phone'], 'string', 'max' => 11],
+
+            [['phone','name','type','owner_id'],'required'],
+            ['phone','match','pattern'=>'/^13[0-9]{1}[0-9]{8}$|15[0-9]{1}[0-9]{8}$|18[0-9][0-9]{8}|17[0-9]{9}$|14[0-9]{9}$/','message'=>'手机号格式不正确'],
+
         ];
     }
 
@@ -46,12 +51,12 @@ class EmployeeInfo extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
-            'phone' => 'Phone',
-            'type' => 'Type',
+            'name' => '配送人员姓名',
+            'phone' => '配送人员联系方式',
+            'type' => '所属类型',
             'owner_id' => 'Owner ID',
             'register_at' => 'Register At',
-            'status' => 'Status',
+            'status' => '当前状态',
         ];
     }
 
@@ -87,4 +92,5 @@ class EmployeeInfo extends \yii\db\ActiveRecord
         }
         return $query;
     }
+
 }
