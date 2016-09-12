@@ -259,6 +259,7 @@ $wa_type = $admin->wa_type;
                                     'imageManagerJson' => ['/redactor/upload/image-json'],
                                     'imageUpload' => ['/redactor/upload/image'],
                                     'fileUpload' => ['/redactor/upload/file'],
+                                    'minHeight' => '500px',
                                     'lang' => 'zh_cn',
                                     'plugins' => ['clips', 'fontcolor','imagemanager'],
                                 ]
@@ -270,8 +271,10 @@ $wa_type = $admin->wa_type;
                 ?>
             </div>
         </div>
+        <div style="text-align: center">
     <?php
     echo Html::submitButton($model->isNewRecord ? Yii::t('app', '保存') : Yii::t('app', '保存'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']);
     ActiveForm::end(); ?>
+        </div>
     </div>
 </div>
