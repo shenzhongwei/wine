@@ -41,7 +41,6 @@ class EmployeeInfo extends \yii\db\ActiveRecord
 
             [['phone','name','type','owner_id'],'required'],
             ['phone','match','pattern'=>'/^13[0-9]{1}[0-9]{8}$|15[0-9]{1}[0-9]{8}$|18[0-9][0-9]{8}|17[0-9]{9}$|14[0-9]{9}$/','message'=>'手机号格式不正确'],
-
         ];
     }
 

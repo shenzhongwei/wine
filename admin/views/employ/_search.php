@@ -12,8 +12,6 @@ use admin\models\EmployeeInfo;
  * @var yii\widgets\ActiveForm $form
  */
 
-//var_dump($model->owner_id);
-//exit;
 ?>
 
 <div class="employee-info-search">

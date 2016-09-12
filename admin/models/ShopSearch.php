@@ -36,6 +36,14 @@ class ShopSearch extends ShopInfo
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination'=>[
+                'pageSize' => 10,
+            ],
+            'sort' => [   //排序
+                'defaultOrder' => [
+                    'id' => SORT_DESC,
+                ]
+            ],
         ]);
 
         if (!($this->load($params) && $this->validate())) {

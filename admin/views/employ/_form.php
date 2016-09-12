@@ -37,9 +37,11 @@ use yii\helpers\Url;
 }
 ?>
 
-<div class="employee-info-form">
+<div class="employee-info-form" style="margin-top: 5px;">
 
-    <?php $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_HORIZONTAL]);?>
+    <?php $form = ActiveForm::begin([
+        'type'=>ActiveForm::TYPE_HORIZONTAL,
+    ]);?>
     <?php echo Form::widget([
             'model' => $model,
             'form' => $form,
@@ -62,7 +64,7 @@ use yii\helpers\Url;
                 'owner_id'=>['type'=>Form::INPUT_WIDGET,'label'=>'上级商家/门店名称','widgetClass'=>DepDrop::className(),
                     'options'=>[
                         'type' => DepDrop::TYPE_SELECT2,
-                        'data'=>$model->type==''? []:getowner($model),
+                        'data'=>$model->type===''? []:\admin\models\EmployeeInfo::getOwners($model->type),
                         'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
                         'pluginOptions'=>[
                             'placeholder'=>'请选择所属商家/门店',
