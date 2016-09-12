@@ -271,9 +271,9 @@ $wa_type = $admin->wa_type;
                 ?>
             </div>
         </div>
-        <div style="text-align: center">
+        <div style="text-align: center;position: absolute;left: 45%;right: 45%">
     <?php
-    echo Html::submitButton($model->isNewRecord ? Yii::t('app', '保存') : Yii::t('app', '保存'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']);
+    echo Html::submitButton($model->isNewRecord ? Yii::t('app', '保存') : Yii::t('app', '保存'), ['class' => $model->isNewRecord ? 'btn btn-success btn-block' : 'btn btn-primary btn-block']);
     ActiveForm::end(); ?>
         </div>
     </div>
