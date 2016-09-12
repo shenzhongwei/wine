@@ -33,6 +33,8 @@ use Yii;
  */
 class UserInfo extends \yii\db\ActiveRecord
 {
+    public $name;
+    public $invite_user;
     /**
      * @inheritdoc
      */
@@ -64,17 +66,17 @@ class UserInfo extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'phone' => 'Phone',
-            'sex' => 'Sex',
-            'head_url' => 'Head Url',
-            'birth' => 'Birth',
-            'nickname' => 'Nickname',
-            'realname' => 'Realname',
-            'invite_user_id' => 'Invite User ID',
-            'is_vip' => 'Is Vip',
-            'invite_code' => 'Invite Code',
-            'status' => 'Status',
-            'created_time' => 'Created Time',
+            'phone' => '联系方式',
+            'sex' => '性别',
+            'head_url' => '头像',
+            'birth' => '出生日期',
+            'nickname' => '昵称',
+            'realname' => '真实名称',
+            'invite_user_id' => '邀请人id',
+            'is_vip' => '是否是会员',
+            'invite_code' => '邀请码',
+            'status' => '用户状态',
+            'created_time' => '注册日期',
             'updated_time' => 'Updated Time',
         ];
     }

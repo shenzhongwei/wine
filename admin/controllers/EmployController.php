@@ -4,9 +4,11 @@ namespace admin\controllers;
 
 use admin\models\MerchantInfoSearch;
 use admin\models\ShopSearch;
+use kartik\widgets\ActiveForm;
 use Yii;
 use admin\models\EmployeeInfo;
 use admin\models\EmployeeInfoSearch;
+use yii\web\Response;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\web\Controller;
@@ -75,7 +77,6 @@ class EmployController extends Controller
             return $this->render('view', ['model' => $model]);
         }
     }
-
 
     public function actionCreate()
     {
@@ -158,6 +159,7 @@ class EmployController extends Controller
                 case 1: //门店
                         $model=ShopSearch::find()->where(['is_active'=>1])->all();
                     break;
+                default: $model=''; break;
             }
             if(!empty($model)){
                 $results = ArrayHelper::getColumn($model,function($element){

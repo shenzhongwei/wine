@@ -13,11 +13,6 @@ use yii\helpers\Url;
  * @var yii\widgets\ActiveForm $form
  */
 
-//省
-//$province=ArrayHelper::map(Zone::getProvince(),'id','name');
-//$city=[];
-//$district=[];
-
 ?>
 <script type="text/javascript">
     $(document).ready(function() {
