@@ -56,7 +56,7 @@ class GoodVip extends \yii\db\ActiveRecord
      */
     public function getG()
     {
-        return $this->hasOne(GoodInfo::className(), ['id' => 'gid']);
+        return $this->hasOne(GoodInfo::className(), ['id' => 'gid'])->where('good_info.id>0');
     }
 
 }

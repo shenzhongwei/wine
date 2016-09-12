@@ -10,6 +10,7 @@ function ShowImg(obj){
             type:1,
             content:'<div style="text-align: center"><img src="'+path+'" height="360px" ></div>',
             title:false,
+            scrollbar:false,
             shadeClose:true,
             move :false,
             shift:5,

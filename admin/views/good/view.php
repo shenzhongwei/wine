@@ -32,7 +32,7 @@ $this->registerJsFile("@web/js/good/_script.js");
             </p>
 
             <div class="row">
-                <div class="col-sm-11">
+                <div class="col-sm-5">
                     <?= DetailView::widget([
                         'model' => $model,
                         'attributes' => [
@@ -125,6 +125,20 @@ $this->registerJsFile("@web/js/good/_script.js");
                         ],
                         'hAlign' =>DetailView::ALIGN_MIDDLE,
                     ]) ?>
+                </div>
+                <div class="col-sm-6">
+                    <?= DetailView::widget([
+                        'model' => $model,
+                        'attributes' => [
+                            [
+                                'attribute'=>'detail',
+                                "format" => "html",
+                                'value'=>$model->detail,
+//                                'value'=>'<a class="btn btn-link btn-xs" href="'.Url::toRoute(['good/detail','id'=>$model->id]).'">点击查看</a>',
+                            ],
+                        ],
+                        'hAlign' =>DetailView::ALIGN_MIDDLE,
+                    ]); ?>
                 </div>
             </div>
         </div>
