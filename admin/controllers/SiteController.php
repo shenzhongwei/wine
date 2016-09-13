@@ -127,7 +127,7 @@ class SiteController extends BaseController
     public static function actionUpload($user_id,$img,$pic_path,$img_temp){
         if(!empty($img)){
             $ext = $img->getExtension();
-           // $pic_path = '../../photo/logo/';
+
             if(!is_dir($pic_path)){
                 @mkdir($pic_path,0777,true);
             }

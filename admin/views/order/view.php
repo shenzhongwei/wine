@@ -22,6 +22,7 @@ foreach($model->orderDetails as $k){
 $table.='<tr><th colspan="3">
                 总价：<span style="color: red">'.$model->total.'</span> 元,
                 优惠金额：<span style="color: red">'.$model->discount.'</span> 元,
+                配送金额：<span style="color: red">'.$model->send_bill.'</span> 元,
                 付款金额：<span style="color: red">'.$model->pay_bill.'</span> 元
              </th></tr></table>';
 
@@ -52,9 +53,7 @@ $comment.= '</ul>
           </div>';
 ?>
 <style>
-    .table2{ width:500px; border:1px solid #cad9ea;color:#666;}
-    .table2 th { background-repeat:repeat-x;height:30px; color: #0a6aa1; }
-    .table2 td,.table2 th{ border:1px solid #cad9ea; padding:0 1em 0;text-align: center; }
+
     /*评价css*/
     .comment{ display:none;border: 1px solid #00a2d4;height:auto;border-radius: 5px;}
     .comment ul{padding-left: 5px;list-style: none;}
@@ -66,6 +65,8 @@ $comment.= '</ul>
     .atar_Show p{ background:url('../images/starsy.png')  100% 100%;left:0; height:20px; width:110px;}
 
 </style>
+<!--引用css-->
+<?=Html::cssFile('@web/css/wine/table.css')?>
 <div class="order-info-view">
 
     <?= DetailView::widget([
@@ -96,7 +97,11 @@ $comment.= '</ul>
                 'value'=>empty($model->aid)?'':$model->a->province.'-'.$model->a->city.'-'.$model->a->district.'-'.$model->a->region.$model->a->address
 
             ],
-            'order_code',
+            [
+                'attribute'=>'order_code',
+                'format'=>'html',
+                'value'=>'<span style="color: #0a6aa1">'.$model->order_code.'</span>'
+            ],
             [
                 'attribute'=>'order_date',
                 'format'=>['date','php:Y-m-d H:i:s' ],
@@ -112,7 +117,6 @@ $comment.= '</ul>
                 'format'=>'html',
                 'value'=>$table
             ],
-            'send_bill',
             [
                 'attribute'=> 'state',
                 'value'=>OrderInfoSearch::getOrderstep($model->state)
@@ -120,7 +124,7 @@ $comment.= '</ul>
             [
                 'attribute'=>'send_code',
                 'format'=>'html',
-                'value'=>$model->send_code.' ( 配送人员 ：<b>'.$model->send['name'].'</b>;联系方式：<b>'.$model->send['phone'].'</b>&nbsp;&nbsp;&nbsp;送达时间：<b>'.(empty($model->send_date)?'':date('Y-m-d H:i:s',$model->send_date)).'</b>) '
+                'value'=>'<span style="color: #0a6aa1">'.$model->send_code.'</span> ( 配送人员 ：<b>'.$model->send['name'].'</b>;联系方式：<b>'.$model->send['phone'].'</b>&nbsp;&nbsp;&nbsp;送达时间：<b>'.(empty($model->send_date)?'':date('Y-m-d H:i:s',$model->send_date)).'</b>) '
             ],
             [
                 'attribute'=> 'status',
@@ -134,7 +138,7 @@ $comment.= '</ul>
         ],
     ]) ?>
     <p style="margin: 0 auto;text-align: center;">
-        <?= Html::a('返回', 'index', ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('返回', 'javascript:history.go(-1);', ['class' => 'btn btn-primary']) ?>
     </p>
 </div>
 <script>

@@ -71,7 +71,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'enableEditMode'=>true,
     ]) ?>
     <p style="margin: 0 auto;text-align: center;">
-        <?= Html::a('返回', 'index', ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('返回', 'javascript:history.go(-1);', ['class' => 'btn btn-primary']) ?>
     </p>
 </div>
     <!--点击后台商户管理员id后 弹出的显示框-->

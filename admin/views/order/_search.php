@@ -48,7 +48,7 @@ $pay_types=ArrayHelper::map(OrderInfoSearch::getPaytype(),'id','name');
 
     <div class="form-group">
         <?= Html::submitButton('搜索', ['class' => 'btn btn-primary','style'=>'margin-top:-8px']) ?>
-        <?= Html::resetButton('重置', ['class' => 'btn btn-default','style'=>'margin-top:-8px']) ?>
+        <?= Html::resetButton('重置', ['class' => 'btn btn-warning','style'=>'margin-top:-8px']) ?>
     </div>
 
     <?php ActiveForm::end();?>

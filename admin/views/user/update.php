@@ -7,17 +7,17 @@ use yii\helpers\Html;
  * @var admin\models\UserInfo $model
  */
 
-$this->title = 'Update User Info: ' . ' ' . $model->id;
+$this->title = '更新用户信息: ' . ' ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'User Infos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="user-info-update">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <?= $this->render('_form', [
         'model' => $model,
+        'p1'=>$p1,
+        'PreviewConfig'=>$PreviewConfig
     ]) ?>
 
 </div>

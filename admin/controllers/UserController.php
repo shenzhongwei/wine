@@ -5,9 +5,11 @@ namespace admin\controllers;
 use Yii;
 use admin\models\UserInfo;
 use admin\models\UserInfoSearch;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * UserController implements the CRUD actions for UserInfo model.
@@ -20,20 +22,24 @@ class UserController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['post'],
+                    'delete' => ['post','get'],
                 ],
             ],
         ];
     }
 
-    /**
-     * Lists all UserInfo models.
-     * @return mixed
-     */
+
     public function actionIndex()
     {
         $searchModel = new UserInfoSearch;
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
+
+        $dataProvider->pagination = [
+            'pageSize'=>10,
+        ];
+        $dataProvider->sort = [
+            'defaultOrder'=>['is_vip'=>SORT_ASC,'updated_time'=>SORT_DESC,'status'=>SORT_DESC,]
+        ];
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
@@ -41,11 +47,7 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single UserInfo model.
-     * @param integer $id
-     * @return mixed
-     */
+
     public function actionView($id)
     {
         $model = $this->findModel($id);
@@ -57,11 +59,7 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Creates a new UserInfo model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
+
     public function actionCreate()
     {
         $model = new UserInfo;
@@ -71,49 +69,76 @@ class UserController extends Controller
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'p1'=>'',
+                'PreviewConfig'=>[]
             ]);
         }
     }
 
-    /**
-     * Updates an existing UserInfo model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     */
+
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        // 对用户头像进行处理
+        $p1 ='';$P= [];
+        if ($model) {
+            $p1 = Yii::$app->params['img_path'].$model->head_url;
+            $P = [
+                'url' =>Url::toRoute('/user/delete-img'),
+                'key' => $model->id,
+                'width'=>'200px'
+            ];
+        }
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        //上传用户头像
+        $img =UploadedFile::getInstance($model,'head_url');
+        $pic_path = '../../photo/logo/';
+        $img_temp='/logo/';
+        $userlogo=SiteController::actionUpload($id,$img,$pic_path,$img_temp);
+
+        if (Yii::$app->request->post()) {
+            $userinfo=Yii::$app->request->post('UserInfo');
+
+            $model->attributes=[
+                'sex'=>$userinfo['sex'],
+                'head_url'=>empty($userlogo)?$userinfo['header']:$userlogo,
+                'birth'=>$userinfo['birth'],
+                'nickname'=>$userinfo['nickname'],
+                'is_vip'=>$userinfo['is_vip'],
+                'updated_time'=>date('Y-m-d H:i:s'),
+            ];
+            if($model->save()){
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+
         } else {
+            $usermodel=UserInfo::findOne(['id'=>$model->invite_user_id]);
+            $model->invite_user=$usermodel->realname.'('.$usermodel->nickname.')';
             return $this->render('update', [
                 'model' => $model,
+                'p1'=>$p1,
+                'PreviewConfig'=>$P
             ]);
         }
     }
 
-    /**
-     * Deletes an existing UserInfo model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
+
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
+        $query=$this->findModel($id);
+        $query->status=0;
+        $query->save();
         return $this->redirect(['index']);
     }
 
-    /**
-     * Finds the UserInfo model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return UserInfo the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
+    public function actionDeleteImg($id)
+    {
+        $query=$this->findModel($id);
+        $query->header_url='';
+        $query->save();
+
+    }
+
     protected function findModel($id)
     {
         if (($model = UserInfo::findOne($id)) !== null) {

@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 use kartik\widgets\ActiveForm;
 use kartik\builder\Form;
-use kartik\datecontrol\DateControl;
+use kartik\widgets\DatePicker;
 
 /**
  * @var yii\web\View $this
@@ -14,42 +14,54 @@ use kartik\datecontrol\DateControl;
 
 <div class="user-info-form">
 
-    <?php $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_HORIZONTAL]); echo Form::widget([
+    <?php $form = ActiveForm::begin([
+        'type'=>ActiveForm::TYPE_HORIZONTAL,
+        'options' => ['enctype' => 'multipart/form-data']
+    ]);?>
+    <div class="user-form" style="margin-top: 10px;width: 90%;">
 
-        'model' => $model,
-        'form' => $form,
-        'columns' => 1,
-        'attributes' => [
+        <?=$form->field($model,'phone')->textInput(['placeholder'=>'输入手机号', 'maxlength'=>13,$model->isNewRecord?'':'readonly'=>true]);?>
 
-            'sex'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'Enter Sex...']],
+        <?=$form->field($model,'sex')->dropDownList(['保密'=>'保密','男'=>'男','女'=>'女'],['options'=>['placeholder'=>'请选择性别']]);?>
 
-            'invite_user_id'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'Enter Invite User ID...']],
+        <?=$form->field($model,'is_vip')->dropDownList(['0'=>'否','1'=>'是']);?>
 
-            'is_vip'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'Enter Is Vip...']],
+        <input type="hidden" name="UserInfo[header]" value="<?=$model->head_url?>">
+        <?=$form->field($model,'head_url')->widget(\kartik\file\FileInput::className(),[
+              'options'=>[
+                  'accept'=>'image/*',
+              ],
+              'pluginOptions'=>[
+                  'previewFileType' => 'image',
+                  'initialPreview' =>$p1,
+                  'initialPreviewConfig' =>$PreviewConfig,
+                  'initialPreviewAsData' => true,
+                  'showUpload'=>false,
+                  'showRemove'=>false,
+                  'autoReplace'=>true,
+                  'maxFileCount'=>1,
+              ]
+          ]);?>
 
-            'status'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'Enter Status...']],
+        <?=$form->field($model,'birth')->widget(DatePicker::className(),[
+              'options' => ['placeholder' => '',],
+              'pluginOptions' => [
+                  'todayHighlight' => true,
+                  'format' => 'yyyy-mm-dd',
+              ]
+          ]);?>
 
-            'created_time'=>['type'=> Form::INPUT_WIDGET, 'widgetClass'=>DateControl::classname(),'options'=>['type'=>DateControl::FORMAT_DATETIME]],
+        <?=$form->field($model,'nickname')->textInput(['maxlength'=>32]);?>
 
-            'updated_time'=>['type'=> Form::INPUT_WIDGET, 'widgetClass'=>DateControl::classname(),'options'=>['type'=>DateControl::FORMAT_DATETIME]],
+        <?=$form->field($model,'realname')->textInput(['maxlength'=>32,$model->isNewRecord?'':'readonly'=>true]);?>
 
-            'phone'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'Enter Phone...', 'maxlength'=>13]],
+        <?=$form->field($model,'invite_user')->textInput(['maxlength'=>32,$model->isNewRecord?'':'readonly'=>true])->label('邀请人');?>
 
-            'head_url'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'Enter Head Url...', 'maxlength'=>128]],
-
-            'birth'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'Enter Birth...', 'maxlength'=>255]],
-
-            'nickname'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'Enter Nickname...', 'maxlength'=>32]],
-
-            'realname'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'Enter Realname...', 'maxlength'=>32]],
-
-            'invite_code'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'Enter Invite Code...', 'maxlength'=>32]],
-
-        ]
-
-    ]);
-
-    echo Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']);
-    ActiveForm::end(); ?>
-
+        <?=$form->field($model,'invite_code')->textInput(['maxlength'=>32,$model->isNewRecord?'':'readonly'=>true]);?>
+    </div>
+    <p style="margin: 0 auto;text-align: center;margin-bottom: 2px;">
+        <?=Html::submitButton($model->isNewRecord ? Yii::t('app', '创建') : Yii::t('app', '更新'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']);?>
+        <?=Html::a('返回', 'javascript:history.go(-1);location.reload()', ['class' => 'btn btn-primary','style'=>'margin-left:10px']);?>
+    </p>
+    <?php ActiveForm::end(); ?>
 </div>

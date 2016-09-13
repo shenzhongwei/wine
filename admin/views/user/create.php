@@ -7,16 +7,16 @@ use yii\helpers\Html;
  * @var admin\models\UserInfo $model
  */
 
-$this->title = 'Create User Info';
+$this->title = '新增用户';
 $this->params['breadcrumbs'][] = ['label' => 'User Infos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-info-create">
-    <div class="page-header">
-        <h1><?= Html::encode($this->title) ?></h1>
-    </div>
+
     <?= $this->render('_form', [
         'model' => $model,
+        'p1'=>$p1,
+        'PreviewConfig'=>$PreviewConfig
     ]) ?>
 
 </div>
