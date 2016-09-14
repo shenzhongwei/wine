@@ -75,11 +75,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'header' => '操作',
                 'class' => 'yii\grid\ActionColumn',
                 'buttons' => [
-                    'view' => function ($url, $model) {
-                        return Html::a('<i class="fa fa-eye">查看</i>', $url, [
-                            'title' => Yii::t('app', Yii::t('app','View')),
-                            'class' => 'btn btn-info btn-xs',
-                        ]);
+                    'view'=>function ($url, $model) {
+                        return '';
                     },
                     'update' => function ($url, $model) {
                         return Html::a(Yii::t('app','Update'), $url, [

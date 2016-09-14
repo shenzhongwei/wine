@@ -426,38 +426,38 @@ return array (
       '@mdm/admin' => $vendorDir . '/mdmsoft/yii2-admin',
     ),
   ),
-  'kartik-v/yii2-editable' => 
+  'kartik-v/yii2-editable' =>
   array (
     'name' => 'kartik-v/yii2-editable',
     'version' => '9999999-dev',
-    'alias' => 
+      'alias' =>
     array (
       '@kartik/editable' => $vendorDir . '/kartik-v/yii2-editable',
     ),
   ),
-  'kartik-v/ yii2-popover' => 
+    'kartik-v/ yii2-popover' =>
   array (
     'name' => 'kartik-v/ yii2-popover',
     'version' => '9999999-dev',
-    'alias' => 
+            'alias' =>
     array (
       '@kartik/popover' => $vendorDir . '/kartik-v/ yii2-popover',
     ),
   ),
-  'kartik-v/ bootstrap-popover-x' => 
+    'kartik-v/ bootstrap-popover-x' =>
   array (
     'name' => 'kartik-v/ bootstrap-popover-x',
     'version' => '9999999-dev',
-    'alias' => 
+            'alias' =>
     array (
       '@kartik/bootstrap-popover-x' => $vendorDir . '/kartik-v/ bootstrap-popover-x',
     ),
   ),
-  'kartik-v/ yii2-field-range' => 
+    'kartik-v/ yii2-field-range' =>
   array (
     'name' => 'kartik-v/ yii2-field-range',
     'version' => '9999999-dev',
-    'alias' => 
+            'alias' =>
     array (
       '@kartik/field' => $vendorDir . '/kartik-v/ yii2-field-range',
     ),
