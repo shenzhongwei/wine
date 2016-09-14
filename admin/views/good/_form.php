@@ -21,7 +21,8 @@ $admin = Yii::$app->user->identity;
 $merchants = MerchantInfo::GetMerchants();
 $wa_type = $admin->wa_type;
 ?>
-<div class="ibox-content good-info-form">
+<div>
+<div class="good-info-form">
 
     <div class="col-sm-12">
     <?php $form = ActiveForm::begin([
@@ -277,4 +278,5 @@ $wa_type = $admin->wa_type;
     ActiveForm::end(); ?>
         </div>
     </div>
+</div>
 </div>

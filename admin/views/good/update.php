@@ -12,11 +12,11 @@ $this->params['breadcrumbs'][] = ['label' => 'Good Infos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
-<div class="good-info-update">
-    <div class="ibox-content">
-    <h2><?= Html::encode($this->title) ?></h2>
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
+<div class="good-info-update ibox-content">
+    <div class="row">
+        <h2><?= Html::encode($this->title) ?></h2>
+        <?= $this->render('_form', [
+            'model' => $model,
+        ]) ?>
     </div>
 </div>

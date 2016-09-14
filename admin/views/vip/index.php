@@ -15,14 +15,9 @@ $this->title = '会员商品表';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="good-vip-index">
-    <p>
-        <?php /* echo Html::a('Create Good Vip', ['create'], ['class' => 'btn btn-success'])*/  ?>
-    </p>
-
     <?php Pjax::begin(['id'=>'goodvips','timeout'=>3000]);
     echo GridView::widget([
         'dataProvider' => $dataProvider,
-//        'filterModel' => $searchModel,
         'columns' => [
             [
                 'header'=>'序号',

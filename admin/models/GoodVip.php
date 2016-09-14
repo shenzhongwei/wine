@@ -2,8 +2,8 @@
 
 namespace admin\models;
 
-use api\models\GoodInfo;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "good_vip".
@@ -56,7 +56,7 @@ class GoodVip extends \yii\db\ActiveRecord
     {
         return [
             'id' => '主键',
-            'gid' => '商品id',
+            'gid' => '商品',
             'price' => '会员价',
             'limit' => '限购数量',
             'is_active' => '是否上架',
@@ -76,6 +76,19 @@ class GoodVip extends \yii\db\ActiveRecord
         if(!empty($vip)){
             return $this->addError('gid','该产品已参与会员活动');
         }
+    }
+
+    public static function GetGoods(){
+        $goods = GoodInfo::find()->where(['is_active'=>1])->all();
+        if(empty($goods)){
+            return [];
+        }
+        return ArrayHelper::map(ArrayHelper::getColumn($goods,function($element){
+            return [
+                'id'=>$element['id'],
+                'name'=>$element['name'].' （原价：¥'.$element['price'].'）',
+            ];
+        }),'id','name');
     }
 
 }

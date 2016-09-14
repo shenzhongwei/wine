@@ -12,10 +12,8 @@ $this->params['breadcrumbs'][] = ['label' => '会员产品', 'url' => ['index']]
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="good-vip-create">
-    <div class="ibox-content">
     <h2><?= Html::encode($this->title) ?></h2>
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>
-    </div>
 </div>
