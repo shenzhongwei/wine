@@ -18,6 +18,8 @@ class PromotionInfoSearch extends PromotionInfo
             [['id', 'pt_id', 'limit', 'target_id', 'valid_circle', 'start_at', 'end_at', 'time', 'regist_at', 'is_active', 'active_at'], 'integer'],
             [['name'], 'safe'],
             [['condition', 'discount'], 'number'],
+
+            [['start_from','end_to'],'date','format'=>'yyyy-mm-dd'],
         ];
     }
 
@@ -38,23 +40,26 @@ class PromotionInfoSearch extends PromotionInfo
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }
+        $promotion=$params['PromotionInfoSearch'];
+
 
         $query->andFilterWhere([
-            'id' => $this->id,
-            'pt_id' => $this->pt_id,
             'limit' => $this->limit,
-            'target_id' => $this->target_id,
             'condition' => $this->condition,
-            'discount' => $this->discount,
             'valid_circle' => $this->valid_circle,
-            'start_at' => $this->start_at,
-            'end_at' => $this->end_at,
-            'time' => $this->time,
-            'regist_at' => $this->regist_at,
             'is_active' => $this->is_active,
-            'active_at' => $this->active_at,
         ]);
 
+
+        //活动优惠时间
+       if(!empty($promotion['start_from'])){
+            $query->andFilterWhere(['>=','start_at',strtotime($promotion['start_from'].' 00:00:00')]);
+       }
+       if(!empty($promotion['end_to'])){
+            $query->andFilterWhere(['<=','end_at',strtotime($promotion['end_to'].' 23:59:59')]);
+       }
+
+        //活动名称
         $query->andFilterWhere(['like', 'name', $this->name]);
 
         return $dataProvider;

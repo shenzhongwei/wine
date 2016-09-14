@@ -80,19 +80,6 @@ class EmployeeInfo extends \yii\db\ActiveRecord
             return $query;
     }
 
-
-    /*
-    * 获取所有的订单状态
-    */
-    public static function getAllorderstate(){
-        $model=Dics::find()->select(['id','name'])->andWhere(['type'=>'订单状态'])->asArray()->all();
-        $query=array();
-        foreach($model as $k=>$v){
-            $query[$v['id']]=$v['name'];
-        }
-        return $query;
-    }
-
     public static function getOwners($type){
         switch($type){
             case 0: //商家

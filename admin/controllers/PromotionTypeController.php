@@ -12,7 +12,7 @@ use yii\filters\VerbFilter;
 /**
  * PromotionTypeController implements the CRUD actions for PromotionType model.
  */
-class PromotionTypeController extends Controller
+class PromotionTypeController extends BaseController
 {
     public function behaviors()
     {
@@ -20,7 +20,7 @@ class PromotionTypeController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['post'],
+                    'delete' => ['post','get'],
                 ],
             ],
         ];
@@ -85,17 +85,8 @@ class PromotionTypeController extends Controller
     {
         $model = $this->findModel($id);
 
-        if (Yii::$app->request->post()) {
-            if($model->is_active==1){
-                $model->is_active=0;
-            }else{
-                $model->is_active=1;
-            }
-            $model->active_at=time();
-
-            if($model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -109,10 +100,32 @@ class PromotionTypeController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionDelete($id)
+    public function actionDelete()
     {
-        $this->findModel($id)->delete();
+        $user_id = Yii::$app->user->identity->getId();
+        if(empty($user_id)){
+            return $this->showResult(302,'用户登录信息失效');
+        }
+        $id=Yii::$app->request->get('id');
+        if(empty($id)){
+            return $this->showResult(301,'读取数据发生错误');
+        }
+        $query =PromotionType::findOne([$id]);
+        if(empty($query)){
+            return $this->showResult(301,'未获取到该优惠券的信息');
+        }
+        //$query=$this->findModel($id);
 
+        if($query->is_active==1){
+            $query->is_active=0;
+        }else{
+            $query->is_active=1;
+        }
+        $query->active_at=time();
+        $query->save();
+//        if($query->save()) {
+//            return $this->redirect(['view', 'id' => $query->id]);
+//        }
         return $this->redirect(['index']);
     }
 

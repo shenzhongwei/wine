@@ -97,7 +97,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'editableOptions'=>[
                     'inputType' => Editable::INPUT_DROPDOWN_LIST,
                     'asPopover' => true,
-                    'data' =>EmployeeInfo::getAllorderstate(),
+                    'data' =>\admin\models\Dics::getAllorderstate(),
                 ],
             ],
             [

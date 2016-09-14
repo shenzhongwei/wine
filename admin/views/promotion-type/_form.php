@@ -42,7 +42,7 @@ use kartik\datecontrol\DateControl;
 
             'is_active'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>kartik\select2\Select2::className(),
                 'options'=>[
-                    'data'=>['0'=>'下架','2'=>'上架'],
+                    'data'=>['0'=>'下架','1'=>'上架'],
                     'options'=>['placeholder'=>'请选择是否上架'],
                     'pluginOptions'=>['allowClear'=>true]
                 ]
