@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "69faab5cb3067f77c9eed497bd1b30ba",
-    "content-hash": "b131f7adb7a7c4a47479b4b2468c2b2f",
+    "hash": "ce39565dcf324f602240e8b98c6f1ad3",
+    "content-hash": "cfc7b7ec01ec6044133d4efcd227f10b",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -429,6 +429,51 @@
             ],
             "description": "CSS for vector based country flags",
             "time": "2016-08-14 20:21:13"
+        },
+        {
+            "name": "daixianceng/yii2-smser",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/daixianceng/yii2-smser.git",
+                "reference": "189dcf1e977b91c6c02b3759896b43f9c40025bc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/daixianceng/yii2-smser/zipball/189dcf1e977b91c6c02b3759896b43f9c40025bc",
+                "reference": "189dcf1e977b91c6c02b3759896b43f9c40025bc",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "*"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "daixianceng\\smser\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD 3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Cosmo",
+                    "email": "daixianceng@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Yii2 SMS extension",
+            "homepage": "https://github.com/daixianceng/yii2-smser",
+            "keywords": [
+                "extension",
+                "plugin",
+                "sms",
+                "smser",
+                "yii2"
+            ],
+            "time": "2016-03-19 11:51:11"
         },
         {
             "name": "ezyang/htmlpurifier",

@@ -47,10 +47,10 @@ class GoodVipSearch extends GoodVip
             'desc' => ['good_info.price' => SORT_DESC],
             'label' => 'good_info.price',
         ];
+        $sort->defaultOrder = ['is_active'=>SORT_DESC,'g.price' => SORT_ASC,'id'=>SORT_ASC];
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }
-
         $query->andFilterWhere([
             'gid' => $this->gid,
             'good_vip.is_active' => $this->is_active,
@@ -58,7 +58,6 @@ class GoodVipSearch extends GoodVip
         $query->andFilterWhere(['like', 'good_info.name', $this->good_name]);
         $query->andFilterWhere(['>=','good_vip.price',$this->start_price])
             ->andFilterWhere(['<=','good_vip.price',$this->end_price]);
-
         return $dataProvider;
     }
 }

@@ -31,7 +31,8 @@
         "pjkui/kindeditor": "*",
         "yiidoc/yii2-redactor": "*",
         "kartik-v/yii2-mpdf": "*",
-        "mdmsoft/yii2-admin": "*"
+        "mdmsoft/yii2-admin": "*",
+        "daixianceng/yii2-smser": "*"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

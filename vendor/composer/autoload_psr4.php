@@ -57,10 +57,7 @@ return array(
     'kartik\\affix\\' => array($vendorDir . '/kartik-v/yii2-widget-affix'),
     'ijackua\\lepture\\' => array($vendorDir . '/ijackua/yii2-lepture-markdown-editor-widget'),
     'himiklab\\jqgrid\\' => array($vendorDir . '/himiklab/yii2-jqgrid-widget'),
+    'daixianceng\\smser\\' => array($vendorDir . '/daixianceng/yii2-smser/src'),
     'cebe\\markdown\\' => array($vendorDir . '/cebe/markdown'),
     'Faker\\' => array($vendorDir . '/fzaninotto/faker/src/Faker'),
-    'kartik\\editable\\' => array($vendorDir . '/kartik-v/yii2-editable'),
-    'kartik\\popover\\' => array($vendorDir . '/kartik-v/yii2-popover'),
-    'kartik\\bootstrap-popover-x\\' => array($vendorDir . '/kartik-v/bootstrap-popover-x'),
-    'kartik\\field\\' => array($vendorDir . '/kartik-v/yii2-field-range'),
 );

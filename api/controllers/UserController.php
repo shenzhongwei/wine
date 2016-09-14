@@ -8,6 +8,7 @@ use api\models\UserInfo;
 use api\models\UserLogin;
 use api\models\UserTicket;
 use common\helpers\ArrayHelper;
+use daixianceng\smser\Wxtsms;
 use Yii;
 use \Exception;
 use yii\web\UploadedFile;
@@ -48,9 +49,18 @@ class UserController extends ApiController{
     public function actionSendMessage(){
         //获取手机号
         $phone = Yii::$app->request->post('phone','');
+        $smser = new Wxtsms();
+        $smser->username = Yii::$app->params['smsParams']['username'];
+        $smser->setPassword(Yii::$app->params['smsParams']['password']);
         $code = rand(111111,999999);
-        Yii::$app->cache->set('message_'.$phone,$code);
-        return $this->showResult(200,'发送成功',$code);
+        $content = "【酒双天】您本次操作验证码为：".$code."，请在半小时内完成本次操作。如非本人操作，请忽略。";
+        $res = $smser->sendSms($phone,$content);
+        if($res){
+            Yii::$app->cache->set('message_'.$phone,$code);
+            return $this->showResult(200,'发送成功');
+        }else{
+            return $this->showResult(304,'发送失败',$smser->getMessage());
+        }
     }
 
     /**

@@ -84,6 +84,10 @@ class ComposerStaticInite4343f3ad7d2ea8db509f2e66bb8db83
         array (
             'himiklab\\jqgrid\\' => 16,
         ),
+        'd' => 
+        array (
+            'daixianceng\\smser\\' => 18,
+        ),
         'c' => 
         array (
             'cebe\\markdown\\' => 14,
@@ -298,6 +302,10 @@ class ComposerStaticInite4343f3ad7d2ea8db509f2e66bb8db83
         'himiklab\\jqgrid\\' => 
         array (
             0 => __DIR__ . '/..' . '/himiklab/yii2-jqgrid-widget',
+        ),
+        'daixianceng\\smser\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/daixianceng/yii2-smser/src',
         ),
         'cebe\\markdown\\' => 
         array (
