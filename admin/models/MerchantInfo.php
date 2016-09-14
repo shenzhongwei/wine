@@ -83,7 +83,6 @@ class MerchantInfo extends \yii\db\ActiveRecord
             'province' => '省',
             'city' => '市',
             'district' => '区',
-
             'wa_username'=>'后台登陆名',
             'wa_password'=>'后台登陆密码',
             'wa_type'=>'用户组类型',
@@ -95,7 +94,7 @@ class MerchantInfo extends \yii\db\ActiveRecord
     public function scenarios()
     {
         $n=parent::scenarios();
-        $n['create']=['name','phone','province','city','district','region','address','wa_username','wa_password','wa_type','wa_logo'];
+        $n['create']=['name','phone','province','city','district','region','address','wa_username','wa_password','wa_type','wa_logo','id'];
         return $n;
     }
 

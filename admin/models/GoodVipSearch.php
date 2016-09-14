@@ -22,6 +22,7 @@ class GoodVipSearch extends GoodVip
             [['id', 'gid', 'limit', 'is_active'], 'integer'],
             [['price','start_price','end_price'], 'number'],
             [['good_name'],'string'],
+            [['gid','is_active','price','good_name','start_price','end_price'],'safe']
         ];
     }
 
@@ -41,13 +42,6 @@ class GoodVipSearch extends GoodVip
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-        $sort = $dataProvider->getSort();
-        $sort->attributes['g.price'] = [
-            'asc' => ['good_info.price' => SORT_ASC],
-            'desc' => ['good_info.price' => SORT_DESC],
-            'label' => 'good_info.price',
-        ];
-        $sort->defaultOrder = ['is_active'=>SORT_DESC,'g.price' => SORT_ASC,'id'=>SORT_ASC];
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }

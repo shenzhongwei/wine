@@ -2,12 +2,14 @@
 
 namespace admin\controllers;
 
+use kartik\widgets\ActiveForm;
 use Yii;
 use admin\models\GoodVip;
 use admin\models\GoodVipSearch;
 use admin\controllers\BaseController;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * VipController implements the CRUD actions for GoodVip model.
@@ -44,6 +46,20 @@ class VipController extends BaseController
     }
 
 
+    public function actionValidForm(){
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $data = Yii::$app->request->post();
+        $id=Yii::$app->request->get('id');
+        if(empty($id)){
+            $model = new GoodVip(['scenario'=>'add']);
+        }else{
+            $model = new GoodVip(['scenario'=>'update']);
+        }
+        $model->load($data);
+        return ActiveForm::validate($model);
+    }
+
+
     /**
      * Creates a new GoodVip model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -54,7 +70,7 @@ class VipController extends BaseController
         $model = new GoodVip;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
+            return $this->runAction('index');
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -71,9 +87,9 @@ class VipController extends BaseController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+//        $model->scenario = 'update';
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
+            return $this->runAction('index');
         } else {
             return $this->render('update', [
                 'model' => $model,

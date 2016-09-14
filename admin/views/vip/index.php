@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\widgets\Pjax;
+use yii\bootstrap\Modal;
 
 /**
  * @var yii\web\View $this
@@ -18,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php /* echo Html::a('Create Good Vip', ['create'], ['class' => 'btn btn-success'])*/  ?>
     </p>
 
-    <?php Pjax::begin(['id'=>'goodinfos','timeout'=>3000]);
+    <?php Pjax::begin(['id'=>'goodvips','timeout'=>3000]);
     echo GridView::widget([
         'dataProvider' => $dataProvider,
 //        'filterModel' => $searchModel,
@@ -109,7 +110,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'panel' => [
             'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> '.Html::encode($this->title).' </h3>',
             'type'=>'info',
-            'before'=>$this->render('_search', ['model' => $searchModel]),
+            'before'=>$this->render('_search', ['model' => $searchModel]).Html::a('<i class="glyphicon glyphicon-plus"></i> 添加会员商品', ['create'], ['class' => 'btn btn-success']),
             'after'=>Html::a('<i class="glyphicon glyphicon-repeat"></i> 刷新列表', ['index'], ['class' => 'btn btn-info']),
             'showFooter'=>true
         ],

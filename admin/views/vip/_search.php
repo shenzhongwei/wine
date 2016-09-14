@@ -36,7 +36,3 @@ use yii\widgets\ActiveForm;
     <?php ActiveForm::end(); ?>
 
 </div>
-
-<?php
-echo Html::a('<i class="glyphicon glyphicon-plus"></i> 添加会员商品', ['create'], ['class' => 'btn btn-success']);
-?>

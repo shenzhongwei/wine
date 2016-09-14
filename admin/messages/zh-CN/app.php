@@ -22,6 +22,7 @@ return [
     'view'=>'<i class="fa fa-eye"> 查看</i>',
     'Up'=>'<i class="fa fa-arrow-up"> 上架</i>',
     'Down'=>'<i class="fa fa-arrow-down"> 下架</i>',
+    'Save'=>'保存',
     'GoodDownSure'=>'确认下架该产品？一旦下架用户将无法看到该产品',
     'GoodUpSure'=>'确认上架该产品？一旦上架用户将看到该产品',
 ];

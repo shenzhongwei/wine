@@ -64,7 +64,7 @@ class MerchantController extends BaseController
         Yii::$app->response->format = Response::FORMAT_JSON;
         $data = Yii::$app->request->post();
         $id=Yii::$app->request->get('id');
-        if(empty($id)){
+        if(!empty($id)){
             $model = new MerchantInfo();
         }else{
             $model = new MerchantInfo(['scenario'=>'create']);
@@ -87,7 +87,7 @@ class MerchantController extends BaseController
         $item = $auth->getRolesByType(Yii::$app->user->identity->wa_type);
         $itemArr = ArrayHelper::map($item,'level','name');
 
-        $model = new MerchantInfo(['scenarios'=>'create']);
+        $model = new MerchantInfo(['scenario'=>'create']);
         if (Yii::$app->request->post()&& $model->load(Yii::$app->request->post()) && $model->validate()) {
             //获取传过来的值
             $merchant=Yii::$app->request->post('MerchantInfo');
