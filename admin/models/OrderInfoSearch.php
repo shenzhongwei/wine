@@ -65,7 +65,7 @@ class OrderInfoSearch extends OrderInfo
         }else{
             if(!empty($params['OrderInfoSearch']['order_date_from'])){
                 $query->andFilterWhere(['>=','order_date',strtotime($params['OrderInfoSearch']['order_date_from'].' 00:00:00')]);
-            }else{
+            }elseif(!empty($params['OrderInfoSearch']['order_date_to'])){
                 $query->andFilterWhere(['<=','order_date',strtotime($params['OrderInfoSearch']['order_date_to'].' 23:59:59')]);
             }
         }

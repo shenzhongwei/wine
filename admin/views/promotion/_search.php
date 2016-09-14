@@ -2,12 +2,16 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-
+use kartik\widgets\DatePicker;
+USE admin\models\Dics;
+use yii\helpers\ArrayHelper;
+use admin\models\PromotionInfo;
 /**
  * @var yii\web\View $this
  * @var admin\models\PromotionInfoSearch $model
  * @var yii\widgets\ActiveForm $form
  */
+
 ?>
 
 <div class="promotion-info-search">
@@ -15,39 +19,41 @@ use yii\widgets\ActiveForm;
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
         'method' => 'get',
+        'options'=>[
+            'class'=>'form-inline',
+        ],
     ]); ?>
 
-    <?= $form->field($model, 'id') ?>
+    <?= $form->field($model, 'name')->textInput(['placeholder'=>'例：充值优惠']) ?>
 
-    <?= $form->field($model, 'pt_id') ?>
+    <?= $form->field($model, 'condition')->textInput(['placeholder'=>'例：500','style'=>['width'=>'100px']]) ?>
 
-    <?= $form->field($model, 'limit') ?>
+    <?= $form->field($model, 'valid_circle')->dropDownList(PromotionInfo::getValidRange(),['prompt'=>'全部']) ?>
 
-    <?= $form->field($model, 'target_id') ?>
+    <?= $form->field($model, 'limit')->dropDownList(Dics::getPromotionRange(),['prompt'=>'全部'])  ?>
 
-    <?= $form->field($model, 'name') ?>
+    <?= $form->field($model, 'start_from')->widget(DatePicker::classname(),[
+        'options' => ['placeholder' => date('Y-m-d'),'style'=>['width'=>'120px']],
+        'pluginOptions' => [
+            'todayHighlight' => true,
+            'format' => 'yyyy-mm-dd',
+        ]
+    ]) ?>
 
-    <?php // echo $form->field($model, 'condition') ?>
+    <?= $form->field($model, 'end_to')->widget(DatePicker::classname(),[
+        'options' => ['placeholder' =>date('Y-m-d'),'style'=>['width'=>'120px']],
+        'pluginOptions' => [
+            'todayHighlight' => true,
+            'format' => 'yyyy-mm-dd',
+        ]
+    ]) ?>
 
-    <?php // echo $form->field($model, 'discount') ?>
+    <?= $form->field($model, 'is_active')->dropDownList(['0'=>'否','1'=>'是'],['prompt'=>'全部']) ?>
 
-    <?php // echo $form->field($model, 'valid_circle') ?>
-
-    <?php // echo $form->field($model, 'start_at') ?>
-
-    <?php // echo $form->field($model, 'end_at') ?>
-
-    <?php // echo $form->field($model, 'time') ?>
-
-    <?php // echo $form->field($model, 'regist_at') ?>
-
-    <?php // echo $form->field($model, 'is_active') ?>
-
-    <?php // echo $form->field($model, 'active_at') ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton('Reset', ['class' => 'btn btn-default']) ?>
+        <?= Html::submitButton('搜索', ['class' => 'btn btn-primary','style'=>'margin-top:-8px']) ?>
+        <?= Html::resetButton('重置', ['class' => 'btn btn-warning','style'=>'margin-top:-8px']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

@@ -43,4 +43,29 @@ class Dics extends \yii\db\ActiveRecord
             'name' => 'Name',
         ];
     }
+
+    /*
+     * 获取所有的订单状态
+     */
+    public static function getAllorderstate(){
+        $model=Dics::find()->select(['id','name'])->andWhere(['type'=>'订单状态'])->asArray()->all();
+        $query=array();
+        foreach($model as $k=>$v){
+            $query[$v['id']]=$v['name'];
+        }
+        return $query;
+    }
+
+
+    /*
+     * 获取优惠适用对象
+     */
+    public static function getPromotionRange(){
+        $model=Dics::find()->select(['id','name'])->andWhere(['type'=>'优惠适用对象'])->asArray()->all();
+        $query=array();
+        foreach($model as $k=>$v){
+            $query[$v['id']]=$v['name'];
+        }
+        return $query;
+    }
 }
