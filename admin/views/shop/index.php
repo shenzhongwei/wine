@@ -45,25 +45,25 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => 'yii\grid\ActionColumn',
                 'buttons' => [
                     'view' => function ($url, $model) {
-                        return Html::a('<i class="fa fa-eye">查看</i>', $url, [
+                        return Html::a('<i class="fa fa-eye"> 查看</i>', $url, [
                             'title' => Yii::t('app', '查看'),
                             'class' => 'del btn btn-primary btn-xs',
                         ]);
                     },
                     'update' => function ($url, $model) {
-                        return Html::a('<i class="fa fa-edit">编辑</i>', $url, [
+                        return Html::a('<i class="fa fa-edit"> 编辑</i>', $url, [
                             'title' => Yii::t('app', '编辑'),
                             'class' => 'del btn btn-success btn-xs',
                         ]);
                     },
                     'delete' => function ($url, $model) {
                         if($model->is_active == 0){
-                            return Html::a('<i>激活</i>', $url, [
+                            return Html::a('<i class="fa fa-unlock-alt"> 激活</i>', $url, [
                                 'title' => Yii::t('app', '激活该门店'),
                                 'class' => 'del btn btn-info btn-xs',
                             ]);
                         }else{
-                            return Html::a('<i>冻结</i>', $url, [
+                            return Html::a('<i class="fa fa-lock"> 冻结</i>', $url, [
                                 'title' => Yii::t('app', '冻结该门店'),
                                 'class' => 'del btn btn-danger btn-xs',
                             ]);
@@ -77,7 +77,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'hover'=>true,
         'condensed'=>true,
         'floatHeader'=>true,
-
         'panel' => [
             'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> '.Html::encode($this->title).' </h3>',
             'type'=>'info',
@@ -88,3 +87,9 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); Pjax::end(); ?>
 
 </div>
+<script language="JavaScript">
+    $(function (){
+        $('.panel').find('.dropdown-toggle').unbind();
+        $('.panel').find('.dropdown-toggle').attr('class','btn btn-default dropdown-toggle');
+    });
+</script>

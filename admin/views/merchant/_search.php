@@ -6,13 +6,11 @@ use yii\jui\AutoComplete;
 
 /**
  * @var yii\web\View $this
- * @var admin\models\MerchantInfoQuery $model
  * @var yii\widgets\ActiveForm $form
  */
 ?>
 
 <div class="merchant-info-search">
-
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
         'method' => 'get',
@@ -36,6 +34,5 @@ use yii\jui\AutoComplete;
     </div>
 
     <?php ActiveForm::end(); ?>
-
-</div>
+    </div>
 <?=Html::a('<i class="glyphicon glyphicon-plus"></i>新增商户', ['create'], ['class' => 'btn btn-success'])?>

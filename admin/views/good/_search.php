@@ -4,6 +4,9 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use admin\models\GoodType;
 use admin\models\MerchantInfo;
+use yii\jui\AutoComplete;
+use admin\models\GoodInfo;
+use kartik\widgets\Select2;
 
 /**
  * @var yii\web\View $this
@@ -22,11 +25,36 @@ use admin\models\MerchantInfo;
         ],
     ]); ?>
 
-    <?php  echo $form->field($model, 'name')->textInput(['style'=>'margin-right:10px']) ?>
+    <?php  echo $form->field($model, 'name',[
+        'options'=>['class'=>'col-sm-2','style'=>'padding:0;width:auto']])->widget(AutoComplete::className(),[
+        'clientOptions' => [
+                'source' =>GoodInfo::GetGoodNames(),
+      ],
+    ])->textInput() ?>
 
-    <?php  echo $form->field($model, 'type')->dropDownList(GoodType::GetTypes(),['prompt'=>'请选择类型','style'=>'margin-right:10px']) ?>
+<!--    --><?php // echo $form->field($model, 'type')->dropDownList(GoodType::GetTypes(),['prompt'=>'请选择类型','style'=>'margin-right:10px']) ?>
 
-    <?php  echo $form->field($model, 'merchant')->dropDownList(MerchantInfo::GetMerchants(),['prompt'=>'请选择商户','style'=>'margin-right:10px']) ?>
+    <?=$form->field($model,'type',[
+        'options'=>['class'=>'col-sm-2','style'=>'padding:0;width:auto'],
+        'template' => "{label}\n<div class='col-sm-9'>{input}</div>",
+        'labelOptions' => ['class' => 'col-lg-2'],
+    ])->widget(Select2::className(),[
+        'data'=>GoodType::GetTypes(),
+        'options'=>['placeholder'=>'请选择商品大类'],
+        'pluginOptions' => ['allowClear' => true],
+    ]) ?>
+
+    <?=$form->field($model,'merchant',[
+        'options'=>['class'=>'col-sm-2','style'=>'padding:0;width:auto'],
+        'template' => "{label}\n<div class='col-sm-9'>{input}</div>",
+        'labelOptions' => ['class' => 'col-lg-2'],
+    ])->widget(Select2::className(),[
+        'data'=>MerchantInfo::GetMerchants(),
+        'options'=>['placeholder'=>'请选择商户'],
+        'pluginOptions' => ['allowClear' => true],
+    ])->label('商户') ?>
+
+<!--    --><?php // echo $form->field($model, 'merchant')->dropDownList(MerchantInfo::GetMerchants(),['prompt'=>'请选择商户','style'=>'margin-right:10px']) ?>
 
     <?php  echo $form->field($model, 'volum')->textInput(['style'=>'margin-right:10px']) ?>
 
@@ -36,7 +64,11 @@ use admin\models\MerchantInfo;
 至
     <?php  echo $form->field($model, 'end_price')->textInput(['style'=>'margin-right:10px;width:80px','onkeyup'=>'this.value=this.value.replace(/\D/gi,"")'])->label(false) ?>
 
-    <?php  echo $form->field($model, 'number')->textInput(['style'=>'margin-right:10px']) ?>
+    <?php  echo $form->field($model, 'number')->widget(AutoComplete::className(),[
+        'clientOptions' => [
+            'source' =>GoodInfo::GetGoodNumbers(),
+        ]
+    ])->textInput(['style'=>'margin-right:10px']) ?>
 
     <?php  echo $form->field($model, 'is_active')->radioList([0=>'未上架',1=>'上架中'],['style'=>'margin-right:10px']) ->label(false) ?>
 

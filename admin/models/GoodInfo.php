@@ -3,6 +3,7 @@
 namespace admin\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "good_info".
@@ -258,7 +259,15 @@ class GoodInfo extends \yii\db\ActiveRecord
         return $this->hasMany(ShoppingCert::className(), ['gid' => 'id']);
     }
 
+    public static function GetGoodNames(){
+        $goods = self::findAll(['is_active'=>1]);
+        return ArrayHelper::getColumn($goods,'name');
+    }
 
+    public static function GetGoodNumbers(){
+        $goods = self::findAll(['is_active'=>1]);
+        return ArrayHelper::getColumn($goods,'number');
+    }
 
     public static function generateCode(){
         $arr = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];

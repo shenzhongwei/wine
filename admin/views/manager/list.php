@@ -143,26 +143,26 @@ $this->params['breadcrumbs'][] = $this->title;
                                             <td><?=$val['created_time'] ?></td>
                                             <td>
                                                 <a class="btn btn-primary btn-xs" href="<?=Url::toRoute(['manager/update','id'=>$val['wa_id']])?>">
-                                                    <i class="fa fa-edit"></i>编辑
+                                                    <i class="fa fa-edit"> 编辑</i>
                                                 </a>
 
                                                 <?php
                                                 if($val['wa_type']>Yii::$app->user->identity->wa_type&&$val['wa_status']<>0){
                                                 ?>
-                                                <a class="btn btn-default btn-xs" id="manager_del">
-                                                    <i class="fa fa-trash-o"></i>删除
+                                                <a class="btn btn-warning btn-xs" id="manager_del">
+                                                    <i class="fa fa-trash-o"> 删除</i>
                                                 </a>
                                                 <?php
                                                 }elseif($val['wa_type']>Yii::$app->user->identity->wa_type&&$val['wa_status']==0){
                                                 ?>
                                                 <a href="#" class="btn btn-success btn-xs" id="manager_recover">
-                                                    <i class="fa fa-undo"></i>恢复
+                                                    <i class="fa fa-undo"> 恢复</i>
                                                 </a>
                                                 <?php
                                                 }else{
                                                 ?>
                                                     <a href="#" class="btn btn-warning btn-xs">
-                                                        <i class="fa fa-warning"></i>不可删
+                                                        <i class="fa fa-warning"> 不可删</i>
                                                     </a>
                                                 <?php
                                                 }

@@ -123,14 +123,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'template'=>'{view}&nbsp;&nbsp;&nbsp;{delete}',
                 'buttons' => [
                     'view' => function ($url, $model) {
-                        return Html::a('<i class="fa fa-eye">查看</i>', $url, [
+                        return Html::a('<i class="fa fa-eye"> 查看</i>', $url, [
                             'title' => Yii::t('app', '查看'),
                             'class' => 'del btn btn-primary btn-xs',
                         ]);
                     },
                     'delete' => function ($url, $model) {
                         if($model->status == 1){
-                            return Html::a('<i>删除</i>', $url, [
+                            return Html::a('<i class="fa fa-trash-o"> 删除</i>', $url, [
                                 'title' => Yii::t('app', '删除订单'),
                                 'class' => 'del btn btn-danger btn-xs',
                                 'data'=>['confirm'=>'你确定要删除该条记录吗？']

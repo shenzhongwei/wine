@@ -2,6 +2,8 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\jui\AutoComplete;
+use admin\models\GoodVip;
 
 /**
  * @var yii\web\View $this
@@ -20,7 +22,11 @@ use yii\widgets\ActiveForm;
         'method' => 'get',
     ]); ?>
 
-    <?= $form->field($model, 'good_name')->textInput(['style'=>'margin-right:10px'])->label('商品名') ?>
+    <?= $form->field($model, 'good_name')->widget(AutoComplete::className(),[
+        'clientOptions'=>[
+            'source'=>GoodVip::GetGoodNames(),
+        ],
+    ])->textInput(['style'=>'margin-right:10px'])->label('商品名') ?>
 
     <?= $form->field($model, 'start_price')->textInput(['style'=>'width:80px','onkeyup'=>'this.value=this.value.replace(/\D/gi,"")'])->label('价格') ?>
     至

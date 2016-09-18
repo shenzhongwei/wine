@@ -91,4 +91,13 @@ class GoodVip extends \yii\db\ActiveRecord
         }),'id','name');
     }
 
+
+    public static function GetGoodNames(){
+        $goods = GoodInfo::find()->joinWith('goodVips')->where('good_vip.id>0')->all();
+        if(empty($goods)){
+            return [];
+        }
+        return ArrayHelper::getColumn($goods,'name');
+    }
+
 }
