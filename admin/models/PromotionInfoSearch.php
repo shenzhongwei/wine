@@ -44,10 +44,10 @@ class PromotionInfoSearch extends PromotionInfo
 
 
         $query->andFilterWhere([
-            'limit' => $this->limit,
-            'condition' => $this->condition,
-            'valid_circle' => $this->valid_circle,
-            'is_active' => $this->is_active,
+            'limit' => $this->limit, //活动范围
+            'condition' => $this->condition, //满xx元
+            'valid_circle' => $this->valid_circle, //有效期
+            'is_active' => $this->is_active, //是否上架
         ]);
 
 

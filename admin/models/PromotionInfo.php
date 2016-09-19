@@ -60,7 +60,7 @@ class PromotionInfo extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'pt_id' => '优惠类型',
+            'pt_id' => '活动类型',
             'limit' => '活动范围',
             'target_id' => '平台/商家/门店名称',
             'name' => '活动名称',

@@ -108,7 +108,7 @@ foreach($typemodel as $k=>$v){
 
     <p style="margin: 0 auto;text-align: center;margin-bottom: 2px;">
         <?=Html::submitButton($model->isNewRecord ? Yii::t('app', '创建') : Yii::t('app', '更新'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']);?>
-        <?=Html::a('返回', 'javascript:history.go(-1);location.reload()', ['class' => 'btn btn-primary','style'=>'margin-left:10px']);?>
+        <?=Html::a('返回', ['index'], ['class' => 'btn btn-primary','style'=>'margin-left:10px']);?>
     </p>
     <?php  ActiveForm::end(); ?>
 

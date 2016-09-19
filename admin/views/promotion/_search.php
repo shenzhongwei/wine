@@ -59,3 +59,5 @@ use admin\models\PromotionInfo;
     <?php ActiveForm::end(); ?>
 
 </div>
+
+<?=Html::a('<i class="glyphicon glyphicon-plus"></i>新增优惠促销活动', ['create'], ['class' => 'btn btn-success','style'=>'margin-top:5px;'])?>

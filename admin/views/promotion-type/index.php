@@ -10,7 +10,7 @@ use admin\models\PromotionType;
  * @var admin\models\PromotionTypeSearch $searchModel
  */
 
-$this->title = '优惠券分类';
+$this->title = '活动分类';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="promotion-type-index">
@@ -57,12 +57,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => 'yii\grid\ActionColumn',
                 'template'=>'{update}&nbsp;&nbsp;&nbsp;{delete}',
                 'buttons' => [
-//                    'view' => function ($url, $model) {
-//                        return Html::a('<i class="fa fa-eye">查看</i>', $url, [
-//                            'title' => Yii::t('app', '查看'),
-//                            'class' => 'del btn btn-primary btn-xs',
-//                        ]);
-//                    },
                     'update' => function ($url, $model) {
                         return Html::a('<i class="fa fa-edit ">编辑</i>', $url, [
                             'title' => Yii::t('app', '编辑'),

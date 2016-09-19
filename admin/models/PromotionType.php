@@ -47,7 +47,7 @@ class PromotionType extends \yii\db\ActiveRecord
             'id' => 'ID',
             'class' => '类别',
             'group' => '组别',
-            'name' => '优惠名称',
+            'name' => '活动名称',
             'regist_at' => '添加时间',
             'is_active' => '是否上架',
             'active_at' => 'Active At',

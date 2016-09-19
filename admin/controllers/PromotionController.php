@@ -16,7 +16,7 @@ use admin\models\GoodInfo;
 /**
  * PromotionController implements the CRUD actions for PromotionInfo model.
  */
-class PromotionController extends Controller
+class PromotionController extends BaseController
 {
     public function behaviors()
     {
@@ -24,7 +24,7 @@ class PromotionController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['post'],
+                    'delete' => ['post','get'],
                 ],
             ],
         ];
@@ -119,11 +119,30 @@ class PromotionController extends Controller
     }
 
 
-    public function actionDelete($id)
+    public function actionDelete()
     {
-        $this->findModel($id)->delete();
+        $user_id = Yii::$app->user->identity->getId();
+        if(empty($user_id)){
+            return $this->showResult(302,'用户登录信息失效');
+        }
+        $id=Yii::$app->request->get('id');
+        if(empty($id)){
+            return $this->showResult(301,'读取数据发生错误');
+        }
+        $query =PromotionInfo::findOne([$id]);
+        if(empty($query)){
+            return $this->showResult(301,'未获取到该活动的信息');
+        }
 
+        if($query->is_active==1){
+            $query->is_active=0;
+        }else{
+            $query->is_active=1;
+        }
+        $query->active_at=time();
+        $query->save();
         return $this->redirect(['index']);
+
     }
 
 

@@ -68,4 +68,16 @@ class Dics extends \yii\db\ActiveRecord
         }
         return $query;
     }
+
+    /*
+     * 获取钱包类型
+     */
+    public static function getAccountType(){
+        $model=Dics::find()->select(['id','name'])->andWhere(['type'=>'钱包类型'])->asArray()->all();
+        $query=array();
+        foreach($model as $k=>$v){
+            $query[$v['id']]=$v['name'];
+        }
+        return $query;
+    }
 }

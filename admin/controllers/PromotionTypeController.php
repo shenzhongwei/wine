@@ -114,7 +114,6 @@ class PromotionTypeController extends BaseController
         if(empty($query)){
             return $this->showResult(301,'未获取到该优惠券的信息');
         }
-        //$query=$this->findModel($id);
 
         if($query->is_active==1){
             $query->is_active=0;
@@ -123,9 +122,6 @@ class PromotionTypeController extends BaseController
         }
         $query->active_at=time();
         $query->save();
-//        if($query->save()) {
-//            return $this->redirect(['view', 'id' => $query->id]);
-//        }
         return $this->redirect(['index']);
     }
 
