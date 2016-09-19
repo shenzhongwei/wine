@@ -43,7 +43,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute'=>'target_name',
                 'format'=>'html',
                 'value'=>function($data){
-
                     return Html::a(\admin\models\UserAccount::getAccountAcceptName($data),['view','id'=>$data->target]);
                 }
             ],

@@ -80,4 +80,16 @@ class Dics extends \yii\db\ActiveRecord
         }
         return $query;
     }
+
+    /*
+     * 获取图片类型
+     */
+    public static function getPicType(){
+        $model=Dics::find()->select(['id','name'])->andWhere(['type'=>'图片类型'])->asArray()->all();
+        $query=array();
+        foreach($model as $k=>$v){
+            $query[$v['id']]=$v['name'];
+        }
+        return $query;
+    }
 }
