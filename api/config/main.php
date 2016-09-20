@@ -11,7 +11,7 @@ return [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'controllerNamespace' => 'api\controllers',
-    'timeZone'=>'Asia/Chongqing',
+    'timeZone'=>'Asia/Shanghai',
     'components' => [
         #支付宝支付
         'alipay' => [
