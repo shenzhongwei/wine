@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\widgets\Pjax;
+use dosamigos\datetimepicker\DateTimePicker;
 
 /**
  * @var yii\web\View $this
@@ -55,17 +56,39 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute'=>'start_at',
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
-                'width'=>'9%',
                 'headerOptions'=>['class'=>'kv-sticky-column'],
                 'contentOptions'=>['class'=>'kv-sticky-column'],
                 'format'=>[
                     'time',
                     (isset(Yii::$app->modules['datecontrol']['displaySettings']['time'])) ? Yii::$app->modules['datecontrol']['displaySettings']['time'] : 'h:i:s A'
                 ],
-
                 'value'=>function($model){
-                    return strtotime($model->end_at);
-                }
+                    return strtotime($model->start_at);
+                },
+                'filterType'=>DateTimePicker::className(),
+                'filterWidgetOptions'=>[
+                    'value' => '',
+                    // inline too, not bad
+                    'inline' => false,
+                    'language'=>'zh-CN',
+                    'options'=>[
+                        'readonly'=>true,
+                    ],
+                    'template'=>"{button}{reset}{input}",
+                    // modify template for custom rendering
+                    'clientOptions' => [
+                        'autoclose' => true,
+                        'format'=>'hh:ii:00',
+                        'startView'=>1,
+                        'maxView'=>1,
+                        'keyboardNavigation'=>false,
+                        'showMeridian'=>true,
+                        'minuteStep'=>10,
+                        'forceParse'=>false,
+                        'readonly'=>true,
+                    ]
+                ],
+                'filterInputOptions'=>['readonly'=>true,'style'=>['width'=>'120px']],
             ],
             [
                 'attribute'=>'end_at',
@@ -80,7 +103,31 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'value'=>function($model){
                     return strtotime($model->end_at);
-                }
+                },
+                'filterType'=>DateTimePicker::className(),
+                'filterWidgetOptions'=>[
+                    'value' => '',
+                    // inline too, not bad
+                    'inline' => false,
+                    'language'=>'zh-CN',
+                    'options'=>[
+                        'readonly'=>true,
+                    ],
+                    'template'=>"{button}{reset}{input}",
+                    // modify template for custom rendering
+                    'clientOptions' => [
+                        'autoclose' => true,
+                        'format'=>'hh:ii:00',
+                        'startView'=>1,
+                        'maxView'=>1,
+                        'keyboardNavigation'=>false,
+                        'showMeridian'=>true,
+                        'minuteStep'=>10,
+                        'forceParse'=>false,
+                        'readonly'=>true,
+                    ]
+                ],
+                'filterInputOptions'=>['readonly'=>true,'style'=>['width'=>'120px']],
             ],
             [
                 'label'=>'抢购状态',

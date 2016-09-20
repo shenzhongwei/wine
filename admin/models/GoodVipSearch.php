@@ -42,6 +42,13 @@ class GoodVipSearch extends GoodVip
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+        $sort = $dataProvider->getSort();
+        $sort->attributes['g.price'] = [
+            'asc' => ['good_info.price' => SORT_ASC],
+            'desc' => ['good_info.price' => SORT_DESC],
+            'label' => 'good_info.price',
+        ];
+        $sort->defaultOrder = ['is_active' => SORT_DESC];
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }

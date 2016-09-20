@@ -12,11 +12,15 @@ use admin\models\GoodRush;
  */
 class RushSearch extends GoodRush
 {
+    public $start_price;
+    public $end_price;
+    public $good_name;
     public function rules()
     {
         return [
             [['id', 'gid', 'limit', 'amount', 'is_active'], 'integer'],
-            [['price'], 'number'],
+            [['price','start_price','end_price'], 'number'],
+            [['good_name'],'string'],
             [['start_at', 'end_at'], 'safe'],
         ];
     }
@@ -45,11 +49,10 @@ class RushSearch extends GoodRush
             'price' => $this->price,
             'limit' => $this->limit,
             'amount' => $this->amount,
-            'start_at' => $this->start_at,
-            'end_at' => $this->end_at,
             'is_active' => $this->is_active,
         ]);
-
+        $query->andFilterWhere(['>=','good_rush.start_at',$this->start_at])
+            ->andFilterWhere(['<=','good_rush.end_at',$this->end_at]);
         return $dataProvider;
     }
 }
