@@ -1610,19 +1610,19 @@
         "source": {
             "type": "git",
             "url": "https://github.com/kartik-v/yii2-grid.git",
-            "reference": "f03b9c7cb8276eedd865fb3cad89ff12f2dd33c2"
+            "reference": "7cca20a27234207d6d114a39a3263ae9c88fd171"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/kartik-v/yii2-grid/zipball/f03b9c7cb8276eedd865fb3cad89ff12f2dd33c2",
-            "reference": "f03b9c7cb8276eedd865fb3cad89ff12f2dd33c2",
+            "url": "https://api.github.com/repos/kartik-v/yii2-grid/zipball/7cca20a27234207d6d114a39a3263ae9c88fd171",
+            "reference": "7cca20a27234207d6d114a39a3263ae9c88fd171",
             "shasum": ""
         },
         "require": {
             "kartik-v/yii2-dialog": "~1.0",
             "kartik-v/yii2-krajee-base": "~1.7"
         },
-        "time": "2016-08-16 19:21:27",
+        "time": "2016-09-06 20:07:42",
         "type": "yii2-extension",
         "extra": {
             "branch-alias": {
