@@ -161,7 +161,7 @@ class AddressController extends ApiController{
                     'province'=>$add->province,
                     'city'=>$add->city,
                     'district'=>$add->district,
-                    'street'=>$add->regin,
+                    'street'=>$add->region,
                     'address'=>$add->address,
                     'lat'=>$add->lat/1000000,
                     'lng'=>$add->lng/1000000,
