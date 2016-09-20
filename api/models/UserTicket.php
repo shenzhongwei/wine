@@ -78,9 +78,11 @@ class UserTicket extends \yii\db\ActiveRecord
      * 自动过期优惠券
      */
     public static function AutoOverTimeTicket($user_id){
-        $userTicket = self::find()->where(['and','uid'=>$user_id,'start_at>0','end_at>0','status=1','end_at<'.time()])->one();
+        $userTicket = self::find()->where(['and','uid='.$user_id,'start_at>0','end_at>0','status=1','end_at<'.time()])->one();
         if(!empty($userTicket)){
             $sql = "UPDATE user_ticket SET status=0 WHERE uid=$user_id AND start_at>0 AND end_at>0 AND status=1 AND end_at<".time();
+            var_dump($sql);
+            exit;
             $row = Yii::$app->db->createCommand($sql)->execute();
             if(!empty($row)){
                 return true;
