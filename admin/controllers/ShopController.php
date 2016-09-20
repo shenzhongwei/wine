@@ -33,7 +33,12 @@ class ShopController extends BaseController
     {
         $searchModel = new ShopSearch;
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
-
+        $dataProvider->pagination=[
+            'pageSize' => 10
+        ];
+        $dataProvider->sort=[
+            'defaultOrder' => [ 'id' => SORT_DESC]
+        ];
         //获取所有的商户名称
         $mername=MerchantInfoSearch::getAllMerchant();
 

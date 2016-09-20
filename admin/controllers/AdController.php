@@ -45,6 +45,13 @@ class AdController extends BaseController
         $searchModel = new AdListSearch;
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
 
+        $dataProvider->pagination = [
+            'pageSize' => 10,
+        ];
+        $dataProvider->sort = [
+            'defaultOrder' => ['id'=>SORT_ASC,'is_show'=>SORT_DESC]
+        ];
+
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,

@@ -34,14 +34,6 @@ class MerchantInfoSearch extends MerchantInfo
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination'=>[
-                'pageSize' => 10,
-            ],
-            'sort' => [   //排序
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
         ]);
 
         if (!($this->load($params) && $this->validate())) {

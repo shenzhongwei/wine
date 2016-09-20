@@ -34,7 +34,12 @@ class PromotionTypeController extends BaseController
     {
         $searchModel = new PromotionTypeSearch;
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
-
+        $dataProvider->pagination=[
+            'pageSize' => 15,
+        ];
+        $dataProvider->sort = [
+            'defaultOrder' => ['is_active'=>SORT_DESC,'id'=>SORT_DESC]
+        ];
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,

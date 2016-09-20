@@ -36,6 +36,12 @@ class OrderController extends Controller
         $searchModel = new OrderInfoSearch;
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
 
+        $dataProvider->pagination=[
+                'pageSize' => 10,
+        ];
+        $dataProvider->sort=[
+            'defaultOrder' => [ 'id' => SORT_DESC]
+        ];
         /*********************在gridview列表页面上直接修改数据 start*****************************************/
         //获取前面一部传过来的值
         if (Yii::$app->request->post('hasEditable')) {

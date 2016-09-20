@@ -83,7 +83,7 @@ class UserAccountController extends Controller
     {
         $model = $this->findModel($id);
 
-        $query = AccountInout::find();
+        $query = AccountInout::find()->where(['aid'=>$id]);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);

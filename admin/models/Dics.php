@@ -92,4 +92,28 @@ class Dics extends \yii\db\ActiveRecord
         }
         return $query;
     }
+
+    /*
+     * 消息类型
+     */
+    public static function getMessageType(){
+        $model=Dics::find()->select(['id','name'])->andWhere(['type'=>'消息类型'])->asArray()->all();
+        $query=array();
+        foreach($model as $k=>$v){
+            $query[$v['id']]=$v['name'];
+        }
+        return $query;
+    }
+
+    /*
+     * 消息跳转页面
+     */
+    public static function getMessageToUrl(){
+        $model=Dics::find()->select(['id','name'])->andWhere(['type'=>'消息跳转页面'])->asArray()->all();
+        $query=array();
+        foreach($model as $k=>$v){
+            $query[$v['id']]=$v['name'];
+        }
+        return $query;
+    }
 }
