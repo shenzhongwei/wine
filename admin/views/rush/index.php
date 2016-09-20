@@ -58,11 +58,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'width'=>'9%',
                 'headerOptions'=>['class'=>'kv-sticky-column'],
                 'contentOptions'=>['class'=>'kv-sticky-column'],
-                'format'=>['date','php:h:i:s A'],
-                'value'=>function($model){
-                    return $model->start_at;
-                }
+                'format'=>[
+                    'time',
+                    (isset(Yii::$app->modules['datecontrol']['displaySettings']['time'])) ? Yii::$app->modules['datecontrol']['displaySettings']['time'] : 'h:i:s A'
+                ],
 
+                'value'=>function($model){
+                    return strtotime($model->end_at);
+                }
             ],
             [
                 'attribute'=>'end_at',
@@ -71,9 +74,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 'width'=>'9%',
                 'headerOptions'=>['class'=>'kv-sticky-column'],
                 'contentOptions'=>['class'=>'kv-sticky-column'],
-                'format'=>['date','php:h:i:s A'],
+                'format'=>[
+                    'time',
+                    (isset(Yii::$app->modules['datecontrol']['displaySettings']['time'])) ? Yii::$app->modules['datecontrol']['displaySettings']['time'] : 'h:i:s A'
+                ],
                 'value'=>function($model){
-                    return $model->end_at;
+                    return strtotime($model->end_at);
                 }
             ],
             [

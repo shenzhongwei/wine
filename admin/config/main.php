@@ -25,13 +25,14 @@ return [
         'datecontrol' =>  [
             'class' => 'kartik\datecontrol\Module',
 
+
             'ajaxConversion'=>true,
 
             // format settings for displaying each date attribute (ICU format example)
             'displaySettings' => [
-                Module::FORMAT_DATE => 'dd-MM-yyyy',
-                Module::FORMAT_TIME => 'hh:mm:ss a',
-                Module::FORMAT_DATETIME => 'dd-MM-yyyy hh:mm:ss a',
+                Module::FORMAT_DATE => 'php:U',
+                Module::FORMAT_TIME => 'php:h:i:s A',
+                Module::FORMAT_DATETIME => 'php:Y-m-d H:i:s',
             ],
 
             // format settings for saving each date attribute (PHP format example)
