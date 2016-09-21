@@ -50,7 +50,7 @@ class AddressController extends ApiController{
         //插入数据库
         $userAddress = new UserAddress();
         $userAddress->attributes = [
-            'uid'=>$user->id,
+            'uid'=>$user->uid,
             'get_phone'=>$phone,
             'get_person'=>$receiver,
             'province'=>$province,
