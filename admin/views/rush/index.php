@@ -247,3 +247,10 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); Pjax::end(); ?>
 
 </div>
+
+<script language="JavaScript">
+    $(function (){
+        $('.panel').find('.dropdown-toggle').unbind();
+        $('.panel').find('.dropdown-toggle').attr('class','btn btn-default dropdown-toggle');
+    });
+</script>

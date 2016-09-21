@@ -86,6 +86,7 @@ $merchant=ArrayHelper::map(MerchantInfo::find()->asArray()->all(),'id','name'); 
                 'maxFileCount'=>1,
             ]
         ])?>
+        <?= $form->field($model, 'phone')->textInput()?>
         <?= $form->field($model, 'province')->dropDownList($province,['prompt'=>'--省--'])?>
         <?= $form->field($model, 'city')->dropDownList($city,['prompt'=>'--市--',!$model->isNewRecord?'':'disabled'=>true])?>
         <?= $form->field($model, 'district')->dropDownList($district,['prompt'=>'--区--',!$model->isNewRecord?'':'disabled'=>true])?>

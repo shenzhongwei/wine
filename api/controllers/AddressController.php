@@ -89,8 +89,6 @@ class AddressController extends ApiController{
         }
         //将其他地址改为非默认
         $otherAddress =  UserAddress::find()->where("id<>$address_id and uid=$user_id and status<>0 and is_default<>0")->all();
-//        var_dump($otherAddress);
-//        exit;
         $transaction = Yii::$app->db->beginTransaction();
         try{
             //修改为默认地址

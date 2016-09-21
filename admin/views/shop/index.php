@@ -37,6 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $data->province.'-'.$data->city.'-'.$data->district.' '.$data->region.$data->address;
                 }
             ],
+            'phone',
            'limit',
            'send_bill',
            'least_money',

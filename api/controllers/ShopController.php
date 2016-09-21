@@ -39,6 +39,7 @@ class ShopController extends ApiController{
                 return [
                     'shop_id'=>$element->id,
                     'name'=>$element->name,
+                    'phone'=>$element->phone,
                     'address'=>$element->province.$element->city.$element->district.$element->region.$element->address,
                     'lat'=>$element->lat/1000000,
                     'lng'=>$element->lng/1000000,

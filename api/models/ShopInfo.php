@@ -13,6 +13,8 @@ use Yii;
  * @property integer $merchant
  * @property string $region
  * @property string $address
+ * @property string $contacter
+ * @property string $phone
  * @property integer $lat
  * @property integer $lng
  * @property integer $limit
@@ -50,6 +52,7 @@ class ShopInfo extends \yii\db\ActiveRecord
             [['wa_id', 'merchant', 'lat', 'lng', 'limit', 'regist_at', 'is_active', 'active_at'], 'integer'],
             [['send_bill','no_send_need','least_money'], 'number'],
             [['name', 'region'], 'string', 'max' => 50],
+            [['phone'],'string'],
             [['address', 'bus_pic', 'logo', 'province', 'city', 'district'], 'string', 'max' => 128],
             [['merchant'], 'exist', 'skipOnError' => true, 'targetClass' => MerchantInfo::className(), 'targetAttribute' => ['merchant' => 'id']],
         ];
