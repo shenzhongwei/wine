@@ -35,12 +35,22 @@ class GoodRush extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['gid'], 'required'],
+            [['gid','price','limit','start_at','end_at'], 'required','on'=>['add','update']],
             [['gid', 'limit', 'amount', 'is_active'], 'integer'],
             [['price'], 'number'],
             [['start_at', 'end_at'], 'safe'],
             [['gid'], 'exist', 'skipOnError' => true, 'targetClass' => GoodInfo::className(), 'targetAttribute' => ['gid' => 'id']],
+            ['gid','validGood','on'=>['add','update']],
+            ['end_at', 'validTime','on'=>['add','update']],
         ];
+    }
+
+    public function scenarios()
+    {
+        $behavior = parent::scenarios();
+        $behavior['add']=['id','gid','price','is_active','limit','start_at','end_at'];
+        $behavior['update']=['id','gid','price','is_active','limit','start_at','end_at'];
+        return $behavior;
     }
 
     /**
@@ -50,7 +60,7 @@ class GoodRush extends \yii\db\ActiveRecord
     {
         return [
             'id' => '主键id',
-            'gid' => '商品id',
+            'gid' => '商品',
             'price' => '抢购价',
             'limit' => '单次限购数量',
             'amount' => '抢购数量',
@@ -75,5 +85,29 @@ class GoodRush extends \yii\db\ActiveRecord
         }
         return array_unique(ArrayHelper::getColumn($goods,'name'));
     }
+
+    /**
+     * 验证规则
+     */
+    public function validGood(){
+        if(!empty($this->start_at)&&!empty($this->end_at)){
+            $query = self::find()->where("gid=$this->gid and (start_at<'$this->end_at' or end_at>'$this->start_at')");
+            if(!empty($this->id)){
+                $query->andWhere("id <> $this->id");
+            }
+            $good = $query->one();
+            if(!empty($good)){
+                return $this->addError('gid','该时间段内已存在该产品的抢购');
+            }
+        }
+    }
+
+    public function validTime(){
+        if(!empty($this->end_at)&&!empty($this->start_at)&&$this->end_at<=$this->start_at){
+            return $this->addError('end_at','结束时间必须大于开始时间');
+        }
+    }
+
+
 
 }

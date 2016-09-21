@@ -2,12 +2,14 @@
 
 namespace admin\controllers;
 
+use kartik\form\ActiveForm;
 use Yii;
 use admin\models\GoodRush;
 use admin\models\RushSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * RushController implements the CRUD actions for GoodRush model.
@@ -41,21 +43,20 @@ class RushController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single GoodRush model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('view', ['model' => $model]);
+    public function actionValidForm(){
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $data = Yii::$app->request->post();
+        $id=Yii::$app->request->get('id');
+        if(empty($id)){
+            $model = new GoodRush(['scenario'=>'add']);
+        }else{
+            $model = new GoodRush(['scenario'=>'update']);
         }
+        $model->load($data);
+        return ActiveForm::validate($model);
     }
+
+
 
     /**
      * Creates a new GoodRush model.
@@ -67,7 +68,7 @@ class RushController extends Controller
         $model = new GoodRush;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->runAction(['index']);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -86,7 +87,7 @@ class RushController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->runAction(['index']);
         } else {
             return $this->render('update', [
                 'model' => $model,

@@ -7,8 +7,8 @@ use yii\helpers\Html;
  * @var admin\models\GoodRush $model
  */
 
-$this->title = 'Create Good Rush';
-$this->params['breadcrumbs'][] = ['label' => 'Good Rushes', 'url' => ['index']];
+$this->title = '发布抢购';
+$this->params['breadcrumbs'][] = ['label' => '抢购管理', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="good-rush-create">

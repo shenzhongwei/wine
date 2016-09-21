@@ -7,8 +7,8 @@ use yii\helpers\Html;
  * @var admin\models\GoodRush $model
  */
 
-$this->title = 'Update Good Rush: ' . ' ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Good Rushes', 'url' => ['index']];
+$this->title = '编辑抢购' . ' ' . $model->g->name;
+$this->params['breadcrumbs'][] = ['label' => '抢购管理', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>

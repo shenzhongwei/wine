@@ -41,7 +41,7 @@ use admin\models\GoodVip;
                     ],
                 ],
 
-                'price'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'请设置会员价', 'maxlength'=>10]],
+                'price'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'请设置会员价', 'maxlength'=>10,'onkeyup'=>'clearNoNum(this)']],
 
             ]
 

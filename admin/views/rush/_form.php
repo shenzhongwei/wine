@@ -3,7 +3,10 @@
 use yii\helpers\Html;
 use kartik\widgets\ActiveForm;
 use kartik\builder\Form;
-use kartik\datecontrol\DateControl;
+use yii\helpers\Url;
+use kartik\select2\Select2;
+use admin\models\GoodVip;
+use dosamigos\datetimepicker\DateTimePicker;
 
 /**
  * @var yii\web\View $this
@@ -13,33 +16,92 @@ use kartik\datecontrol\DateControl;
 ?>
 
 <div class="good-rush-form">
-
-    <?php $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_HORIZONTAL]); echo Form::widget([
+    <div class="col-sm-4">
+    <?php $form = ActiveForm::begin([
+        'type'=>ActiveForm::TYPE_VERTICAL,
+        'formConfig' => [
+            'deviceSize' => ActiveForm::SIZE_LARGE,
+        ],
+        'enableAjaxValidation'=>true, //开启ajax验证
+        'validationUrl'=>Url::toRoute(['valid-form','id'=>empty($model['id'])?0:$model['id']]), //验证url
+    ]);
+    echo Form::widget([
 
         'model' => $model,
         'form' => $form,
         'columns' => 1,
         'attributes' => [
 
-            'gid'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'Enter 商品id...']],
+            'id'=>['type'=>Form::INPUT_HIDDEN,'label'=>false],
 
-            'limit'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'Enter 单次购买最大数量...']],
+            'gid'=>['label'=>'商品','type'=> Form::INPUT_WIDGET,'widgetClass'=>Select2::className(),
+                'options'=>[
+                    'data'=>GoodVip::GetGoods(),
+                    'options'=>['placeholder'=>'请选择商品'],
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+            ],
 
-            'amount'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'Enter 抢购数量...']],
+            'limit'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'请填写每单最大可购数量','onkeyup'=>'this.value=this.value.replace(/\D/gi,"")']],
 
-            'is_active'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'Enter 是否上架...']],
+//            'amount'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'Enter 抢购数量...']],
 
-            'price'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'Enter 会员专享价...', 'maxlength'=>10]],
+//            'is_active'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'Enter 是否上架...']],
 
-            'start_at'=>['type'=> Form::INPUT_WIDGET, 'widgetClass'=>DateControl::classname(),'options'=>['type'=>DateControl::FORMAT_TIME]],
+            'price'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'请填写抢购价格', 'maxlength'=>10,'onkeyup'=>'clearNoNum(this)']],
 
-            'end_at'=>['type'=> Form::INPUT_WIDGET, 'widgetClass'=>DateControl::classname(),'options'=>['type'=>DateControl::FORMAT_TIME]],
+            'start_at'=>['type'=> Form::INPUT_WIDGET, 'widgetClass'=>DateTimePicker::className(),'options'=>[
+                'value' => empty($model->id) ? '':strtotime($model->start_at),
+                // inline too, not bad
+                'inline' => false,
+                'language'=>'zh-CN',
+                'options'=>[
+                    'readonly'=>true,
+                ],
+                'template'=>"{button}{reset}{input}",
+                // modify template for custom rendering
+                'clientOptions' => [
+                    'autoclose' => true,
+                    'format'=>'hh:ii:00',
+                    'startView'=>1,
+                    'maxView'=>1,
+                    'keyboardNavigation'=>false,
+                    'showMeridian'=>true,
+                    'minuteStep'=>10,
+                    'forceParse'=>false,
+                    'readonly'=>true,
+                ]
+            ]],
+
+            'end_at'=>['type'=> Form::INPUT_WIDGET, 'widgetClass'=>DateTimePicker::className(),'options'=>[
+                'value' => empty($model->id) ? '':strtotime($model->end_at),
+                // inline too, not bad
+                'inline' => false,
+                'language'=>'zh-CN',
+                'options'=>[
+                    'readonly'=>true,
+                ],
+                'template'=>"{button}{reset}{input}",
+                // modify template for custom rendering
+                'clientOptions' => [
+                    'autoclose' => true,
+                    'format'=>'hh:ii:00',
+                    'startView'=>1,
+                    'maxView'=>1,
+                    'keyboardNavigation'=>false,
+                    'showMeridian'=>true,
+                    'minuteStep'=>10,
+                    'forceParse'=>false,
+                    'readonly'=>true,
+                ]
+            ]
+            ],
 
         ]
 
     ]);
 
-    echo Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']);
+    echo Html::submitButton(Yii::t('app', 'Create') , ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']);
     ActiveForm::end(); ?>
-
+</div>
 </div>

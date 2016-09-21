@@ -86,7 +86,7 @@ class GoodVip extends \yii\db\ActiveRecord
         return ArrayHelper::map(ArrayHelper::getColumn($goods,function($element){
             return [
                 'id'=>$element['id'],
-                'name'=>$element['name'].' （原价：¥'.$element['price'].'）',
+                'name'=>$element['name'].$element['volum'].' （原价：¥'.$element['price'].'）',
             ];
         }),'id','name');
     }
