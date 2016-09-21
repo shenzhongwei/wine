@@ -68,7 +68,7 @@ class RushController extends Controller
         $model = new GoodRush;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->runAction(['index']);
+            return $this->runAction('index');
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -87,7 +87,7 @@ class RushController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->runAction(['index']);
+            return $this->runAction('index');
         } else {
             return $this->render('update', [
                 'model' => $model,

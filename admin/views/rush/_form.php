@@ -101,7 +101,7 @@ use dosamigos\datetimepicker\DateTimePicker;
 
     ]);
 
-    echo Html::submitButton(Yii::t('app', 'Create') , ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']);
+    echo Html::submitButton(Yii::t('app', 'Save') , ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']);
     ActiveForm::end(); ?>
 </div>
 </div>
