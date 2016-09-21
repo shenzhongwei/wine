@@ -88,7 +88,7 @@ class AddressController extends ApiController{
             return $this->showResult(304,'该地址数据异常，请稍后重试');
         }
         //将其他地址改为非默认
-        $otherAddress =  UserAddress::find()->where("id<>$address_id and uid=$user_id and status<>0")->all();
+        $otherAddress =  UserAddress::find()->where("id<>$address_id and uid=$user_id and status<>0 and is_defautl<>1")->all();
         $transaction = Yii::$app->db->beginTransaction();
         try{
             //修改为默认地址
@@ -99,7 +99,7 @@ class AddressController extends ApiController{
                 throw new Exception('修改地址状态出错');
             }
             if(!empty($otherAddress)){
-                $sql = "UPDATE mm_user_address SET is_default=0 WHERE id<>$address_id AND uid=$user_id AND status<>0";
+                $sql = "UPDATE user_address SET is_default=0 WHERE id<>$address_id AND uid=$user_id AND status<>0";
                 $row = Yii::$app->db->createCommand($sql)->execute();
                 if(empty($row)){
                     throw new Exception('修改其他地址状态出错');
