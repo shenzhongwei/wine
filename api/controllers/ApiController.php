@@ -35,7 +35,7 @@ class ApiController extends Controller
     	return preg_match("/^13[0-9]{1}[0-9]{8}$|15[0-9]{1}[0-9]{8}$|18[0-9][0-9]{8}|17[0-9]{9}$|14[0-9]{9}$/",$mobilephone) && strlen($mobilephone)==11;
     }
 
-    public function showResult($code=200,$message='',$data=[],$tradeNull=true){
+    public function showResult($code=200,$message='',$data=null,$tradeNull=true){
         $result = [
             'status'=>(string)$code,
             'message'=>$message,
@@ -72,7 +72,11 @@ class ApiController extends Controller
 			}else{
 				$result['data'] = (string)$data;
 			}
-		}
+		}else{
+            if(isset($data)){
+                $result['data'] = [];
+            }
+        }
 		return $result;
     }
 

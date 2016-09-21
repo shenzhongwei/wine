@@ -88,7 +88,9 @@ class AddressController extends ApiController{
             return $this->showResult(304,'该地址数据异常，请稍后重试');
         }
         //将其他地址改为非默认
-        $otherAddress =  UserAddress::find()->where("id<>$address_id and uid=$user_id and status<>0 and is_defautl<>1")->all();
+        $otherAddress =  UserAddress::find()->where("id<>$address_id and uid=$user_id and status<>0 and is_default<>0")->all();
+//        var_dump($otherAddress);
+//        exit;
         $transaction = Yii::$app->db->beginTransaction();
         try{
             //修改为默认地址
@@ -148,7 +150,7 @@ class AddressController extends ApiController{
         $count = $query->count();
         $adds = $query->offset(($page-1)*$pageSize)->limit($pageSize)->all();
         //判断是否有地址
-        if(empty($adds)){
+        if(empty($count)){
             return $this->showResult(303,'尚未添加收货地址');
         }else{
             //写入数组返回
