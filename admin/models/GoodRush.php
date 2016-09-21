@@ -2,6 +2,7 @@
 
 namespace admin\models;
 
+use common\helpers\ArrayHelper;
 use Yii;
 
 /**
@@ -50,8 +51,8 @@ class GoodRush extends \yii\db\ActiveRecord
         return [
             'id' => '主键id',
             'gid' => '商品id',
-            'price' => '会员专享价',
-            'limit' => '单次购买最大数量',
+            'price' => '抢购价',
+            'limit' => '单次限购数量',
             'amount' => '抢购数量',
             'start_at' => '开始时间',
             'end_at' => '结束时间',
@@ -64,7 +65,15 @@ class GoodRush extends \yii\db\ActiveRecord
      */
     public function getG()
     {
-        return $this->hasOne(GoodInfo::className(), ['id' => 'gid']);
+        return $this->hasOne(GoodInfo::className(), ['id' => 'gid'])->where('good_info.id>0');
+    }
+
+    public static function GetGoodNames(){
+        $goods = GoodInfo::find()->joinWith('goodRushes')->where('good_rush.id>0')->all();
+        if(empty($goods)){
+            return [];
+        }
+        return array_unique(ArrayHelper::getColumn($goods,'name'));
     }
 
 }

@@ -4,7 +4,8 @@ use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\widgets\Pjax;
 use dosamigos\datetimepicker\DateTimePicker;
-
+use yii\jui\AutoComplete;
+use admin\models\GoodRush;
 /**
  * @var yii\web\View $this
  * @var yii\data\ActiveDataProvider $dataProvider
@@ -37,8 +38,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'headerOptions'=>['class'=>'kartik-sheet-style']
             ],
             [
-                'attribute'=>'gid',
+                'attribute'=>'good_name',
                 'header'=>'商品名称',
+                'hAlign'=>'center',
                 'vAlign'=>'middle',
                 'width'=>'210px',
                 'format'=>'html',
@@ -46,16 +48,51 @@ $this->params['breadcrumbs'][] = $this->title;
                     return Html::a($model->g->name.$model->g->volum,['good/view', 'id' => $model->id],
                         ['title' => '查看商品详细','class'=>'btn btn-link btn-sm']
                     );
+                },
+                'filterType'=>AutoComplete::className(),
+                'filterWidgetOptions'=>[
+                    'clientOptions'=>[
+                        'source'=>GoodRush::GetGoodNames(),
+                    ],
+                ]
+            ],
+            [
+                'label'=>'原价',
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+                'mergeHeader'=>true,
+                'headerOptions'=>['class'=>'kartik-sheet-style'],
+                'attribute'=>'g.price',
+                'width'=>'8%',
+                'value'=>function($model) {
+                    return '¥'.$model->g->price.'/'.$model->g->unit;
                 }
             ],
-            'gid',
-            'price',
-            'limit',
-            'amount',
+            [
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+                'attribute'=>'price',
+                'width'=>'8%',
+                'value'=>function($model) {
+                    return '¥'.$model->price.'/'.$model->g->unit;
+                },
+                'filterInputOptions'=>['onkeyup'=>'clearNoNum(this)','class'=>'form-control'],
+            ],
+            [
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+                'attribute'=>'limit',
+                'width'=>'8%',
+                'value'=>function($model) {
+                    return $model->limit.$model->g->unit;
+                },
+                'filterInputOptions'=>['onkeyup'=>'this.value=this.value.replace(/\D/gi,"")','class'=>'form-control'],
+            ],
             [
                 'attribute'=>'start_at',
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
+                'width'=>'9%',
                 'headerOptions'=>['class'=>'kv-sticky-column'],
                 'contentOptions'=>['class'=>'kv-sticky-column'],
                 'format'=>[
@@ -88,7 +125,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'readonly'=>true,
                     ]
                 ],
-                'filterInputOptions'=>['readonly'=>true,'style'=>['width'=>'120px']],
+                'filterInputOptions'=>['readonly'=>true,'style'=>['width'=>'200px']],
             ],
             [
                 'attribute'=>'end_at',
@@ -127,7 +164,18 @@ $this->params['breadcrumbs'][] = $this->title;
                         'readonly'=>true,
                     ]
                 ],
-                'filterInputOptions'=>['readonly'=>true,'style'=>['width'=>'120px']],
+                'filterInputOptions'=>['readonly'=>true,'style'=>['width'=>'200px']],
+            ],
+            [
+                'label'=>'商品状态',
+                'class'=>'kartik\grid\BooleanColumn',
+                'attribute'=>'g.is_active',
+                'vAlign'=>GridView::ALIGN_LEFT,
+                'width'=>'108px',
+                'mergeHeader'=>true,
+                'headerOptions'=>['class'=>'kartik-sheet-style'],
+                'trueLabel'=>'上架中',
+                'falseLabel'=>'已下架',
             ],
             [
                 'label'=>'抢购状态',
@@ -140,7 +188,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'trueIcon'=>'<label class="label label-info">上架中</label>',
                 'falseIcon'=>'<label class="label label-danger">已下架</label>',
             ],
-
             [
                 'header' => '操作',
                 'class' => 'kartik\grid\ActionColumn',

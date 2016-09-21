@@ -33,26 +33,37 @@ class RushSearch extends GoodRush
 
     public function search($params)
     {
-        $query = GoodRush::find();
-
+        $query = GoodRush::find()->joinWith(['g' => function ($q) {
+            $q->from(GoodInfo::tableName());
+        }]);
+//        var_dump($query->asArray()->all());
+//        exit;
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
+        $sort = $dataProvider->getSort();
+        $sort->attributes['g.price'] = [
+            'asc' => ['good_info.price' => SORT_ASC],
+            'desc' => ['good_info.price' => SORT_DESC],
+            'label' => 'good_info.price',
+        ];
+        $sort->attributes['g.is_active'] = [
+            'asc' => ['good_info.is_active' => SORT_ASC],
+            'desc' => ['good_info.is_active' => SORT_DESC],
+            'label' => 'good_info.is_active',
+        ];
+        $sort->defaultOrder = ['is_active' => SORT_DESC,'g.is_active'=>SORT_DESC];
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }
-
         $query->andFilterWhere([
-            'id' => $this->id,
-            'gid' => $this->gid,
-            'price' => $this->price,
+            'good_info.name' => $this->good_name,
             'limit' => $this->limit,
-            'amount' => $this->amount,
-            'is_active' => $this->is_active,
+            'good_rush.is_active' => $this->is_active,
         ]);
-        $query->andFilterWhere(['>=','good_rush.start_at',$this->start_at])
-            ->andFilterWhere(['<=','good_rush.end_at',$this->end_at]);
+        $query->andFilterWhere(['>=','good_rush.price',$this->price])
+            ->andFilterWhere(['>=','start_at',$this->start_at])
+            ->andFilterWhere(['<=','end_at',$this->end_at]);
         return $dataProvider;
     }
 }

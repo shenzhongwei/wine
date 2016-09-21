@@ -28,7 +28,7 @@ use admin\models\GoodVip;
         ],
     ])->textInput(['style'=>'margin-right:10px'])->label('商品名') ?>
 
-    <?= $form->field($model, 'start_price')->textInput(['style'=>'width:80px','onkeyup'=>'this.value=this.value.replace(/\D/gi,"")'])->label('价格') ?>
+    <?= $form->field($model, 'start_price')->textInput(['style'=>'width:80px','onkeyup'=>'clearNoNum(this)'])->label('价格') ?>
     至
     <?= $form->field($model, 'end_price')->textInput(['style'=>'margin-right:10px;width:80px','onkeyup'=>'this.value=this.value.replace(/\D/gi,"")'])->label(false) ?>
 
