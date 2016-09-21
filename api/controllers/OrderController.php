@@ -375,4 +375,38 @@ class OrderController extends ApiController{
         return $this->showResult(200,'充值活动如下',$data);
     }
 
+
+    /**
+     * 充值金额与赠送金额
+     * 根据用户传递的金额判断赠送多少钱
+     */
+    public function actionPreBill(){
+        $user_id = Yii::$app->user->identity->getId();
+        $bill = Yii::$app->request->post('bill');
+        $user = UserInfo::findOne($user_id);//查找用户信息
+        if(empty($user)){
+            return $this->showResult(302,'用户信息异常，请重试');
+        }
+        //判断参数是否传递
+        if(empty($bill)){
+            return $this->showResult(301,'读取信息出错');
+        }
+        //在查找充值送优惠的数据
+        $billPromotion = PromotionInfo::find()->where(
+            'pt_id=2 and `condition`>0 and discount>0 and is_active=1 and start_at<='.time().' and end_at>='.time().' and `condition`<='.$bill)
+            ->orderBy(['`condition`'=>SORT_DESC])->one();
+        /*
+         * 进行判断，1若存在则加上，不存在则为原金额
+         */
+        if(empty($billPromotion)){
+            $pre = 0;
+        }else{
+            $pre = $billPromotion->discount;
+        }
+        $data = [
+            'pre_bill'=>$bill+$pre,
+        ];
+        return $this->showResult(200,'成功',$data);
+    }
+
 }
