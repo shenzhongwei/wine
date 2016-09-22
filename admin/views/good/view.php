@@ -42,7 +42,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                                 'value'=> $model->name.$model->volum,
                             ],
                             [
-                                'header'=>'归属商户',
+                                'label'=>'归属商户',
                                 'attribute'=>'merchant',
                                 'format' => 'raw',
                                 'value'=> Html::a($model->merchant0->name,['merchant/view', 'id' => $model->merchant0->id], ['title' => '查看商户信息','style'=>'color:#2a62bc;font-size:15px']),
@@ -91,7 +91,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                             'number',
                             [
 
-                                'header'=>'图片',
+                                'label'=>'图片',
                                 'attribute'=>'pic',
                                 "format" => "raw",
                                 'value'=>Html::img('../../../photo'.$model->pic,[

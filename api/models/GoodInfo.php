@@ -295,7 +295,7 @@ class GoodInfo extends \yii\db\ActiveRecord
                 'sale_price'=>$salePrice,
                 'end_at' => $is_rush==1 ? $element->goodRush->end_at : '',
                 'original_price'=>$element->price,
-                'limit'=>$element->goodRush->limit,
+                'limit'=>$is_rush==1 ? $element->goodRush->limit : '',
                 'unit'=>$element->unit,
                 'is_rush'=>$is_rush,
                 'is_vip'=>$is_vip,
