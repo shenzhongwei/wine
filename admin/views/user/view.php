@@ -71,7 +71,7 @@ $useraccount=UserAccount::find()->where(['target'=>$model->id,'level'=>2,'type'=
             'panel'=>[
             'heading'=>$this->title,
             'type'=>DetailView::TYPE_INFO,
-        ],
+            ],
         'attributes' => [
             'id',
             [

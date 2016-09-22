@@ -49,7 +49,7 @@ class OrderController extends ApiController{
             return $this->showResult(301,'读取订单信息失败');
         }
         //验证地址
-        $userAddress = UserAddress::find()->where("lat>0 and lng>0 and uid=$user_id and aid=$address_id and status=1")->one();
+        $userAddress = UserAddress::find()->where("lat>0 and lng>0 and uid=$user_id and id=$address_id and status=1")->one();
         if(empty($userAddress)){
             return $this->showResult(303,'用户地址信息异常');
         }

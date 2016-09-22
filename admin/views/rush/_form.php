@@ -16,7 +16,7 @@ use dosamigos\datetimepicker\DateTimePicker;
 ?>
 
 <div class="good-rush-form">
-    <div class="col-sm-4">
+    <div class="col-sm-6">
     <?php $form = ActiveForm::begin([
         'type'=>ActiveForm::TYPE_VERTICAL,
         'formConfig' => [
@@ -25,83 +25,96 @@ use dosamigos\datetimepicker\DateTimePicker;
         'enableAjaxValidation'=>true, //开启ajax验证
         'validationUrl'=>Url::toRoute(['valid-form','id'=>empty($model['id'])?0:$model['id']]), //验证url
     ]);
-    echo Form::widget([
+    ?>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <?= $model->isNewRecord ? '发布抢购' : '编辑抢购' ?>
+            </div>
+            <div class="panel-body">
+                <?php
 
-        'model' => $model,
-        'form' => $form,
-        'columns' => 1,
-        'attributes' => [
+                echo Form::widget([
 
-            'id'=>['type'=>Form::INPUT_HIDDEN,'label'=>false],
+                    'model' => $model,
+                    'form' => $form,
+                    'columns' => 1,
+                    'attributes' => [
 
-            'gid'=>['label'=>'商品','type'=> Form::INPUT_WIDGET,'widgetClass'=>Select2::className(),
-                'options'=>[
-                    'data'=>GoodVip::GetGoods(),
-                    'options'=>['placeholder'=>'请选择商品'],
-                    'pluginOptions' => ['allowClear' => true],
-                ],
-            ],
+                        'id'=>['type'=>Form::INPUT_HIDDEN,'label'=>false],
 
-            'limit'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'请填写每单最大可购数量','onkeyup'=>'this.value=this.value.replace(/\D/gi,"")']],
+                        'gid'=>['label'=>'商品','type'=> Form::INPUT_WIDGET,'widgetClass'=>Select2::className(),
+                            'options'=>[
+                                'data'=>GoodVip::GetGoods(),
+                                'options'=>['placeholder'=>'请选择商品'],
+                                'pluginOptions' => ['allowClear' => true],
+                            ],
+                        ],
+
+                        'limit'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'请填写每单最大可购数量','onkeyup'=>'this.value=this.value.replace(/\D/gi,"")']],
 
 //            'amount'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'Enter 抢购数量...']],
 
 //            'is_active'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'Enter 是否上架...']],
 
-            'price'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'请填写抢购价格', 'maxlength'=>10,'onkeyup'=>'clearNoNum(this)']],
+                        'price'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'请填写抢购价格', 'maxlength'=>10,'onkeyup'=>'clearNoNum(this)']],
 
-            'start_at'=>['type'=> Form::INPUT_WIDGET, 'widgetClass'=>DateTimePicker::className(),'options'=>[
-                'value' => empty($model->id) ? '':strtotime($model->start_at),
-                // inline too, not bad
-                'inline' => false,
-                'language'=>'zh-CN',
-                'options'=>[
-                    'readonly'=>true,
-                ],
-                'template'=>"{button}{reset}{input}",
-                // modify template for custom rendering
-                'clientOptions' => [
-                    'autoclose' => true,
-                    'format'=>'hh:ii:00',
-                    'startView'=>1,
-                    'maxView'=>1,
-                    'keyboardNavigation'=>false,
-                    'showMeridian'=>true,
-                    'minuteStep'=>10,
-                    'forceParse'=>false,
-                    'readonly'=>true,
-                ]
-            ]],
+                        'start_at'=>['type'=> Form::INPUT_WIDGET, 'widgetClass'=>DateTimePicker::className(),'options'=>[
+                            'value' => empty($model->id) ? '':strtotime($model->start_at),
+                            // inline too, not bad
+                            'inline' => false,
+                            'language'=>'zh-CN',
+                            'options'=>[
+                                'readonly'=>true,
+                            ],
+                            'template'=>"{button}{reset}{input}",
+                            // modify template for custom rendering
+                            'clientOptions' => [
+                                'autoclose' => true,
+                                'format'=>'hh:ii:00',
+                                'startView'=>1,
+                                'maxView'=>1,
+                                'keyboardNavigation'=>false,
+                                'showMeridian'=>true,
+                                'minuteStep'=>10,
+                                'forceParse'=>false,
+                                'readonly'=>true,
+                            ]
+                        ]],
 
-            'end_at'=>['type'=> Form::INPUT_WIDGET, 'widgetClass'=>DateTimePicker::className(),'options'=>[
-                'value' => empty($model->id) ? '':strtotime($model->end_at),
-                // inline too, not bad
-                'inline' => false,
-                'language'=>'zh-CN',
-                'options'=>[
-                    'readonly'=>true,
-                ],
-                'template'=>"{button}{reset}{input}",
-                // modify template for custom rendering
-                'clientOptions' => [
-                    'autoclose' => true,
-                    'format'=>'hh:ii:00',
-                    'startView'=>1,
-                    'maxView'=>1,
-                    'keyboardNavigation'=>false,
-                    'showMeridian'=>true,
-                    'minuteStep'=>10,
-                    'forceParse'=>false,
-                    'readonly'=>true,
-                ]
-            ]
-            ],
+                        'end_at'=>['type'=> Form::INPUT_WIDGET, 'widgetClass'=>DateTimePicker::className(),'options'=>[
+                            'value' => empty($model->id) ? '':strtotime($model->end_at),
+                            // inline too, not bad
+                            'inline' => false,
+                            'language'=>'zh-CN',
+                            'options'=>[
+                                'readonly'=>true,
+                            ],
+                            'template'=>"{button}{reset}{input}",
+                            // modify template for custom rendering
+                            'clientOptions' => [
+                                'autoclose' => true,
+                                'format'=>'hh:ii:00',
+                                'startView'=>1,
+                                'maxView'=>1,
+                                'keyboardNavigation'=>false,
+                                'showMeridian'=>true,
+                                'minuteStep'=>10,
+                                'forceParse'=>false,
+                                'readonly'=>true,
+                            ]
+                        ]
+                        ],
 
-        ]
+                    ]
 
-    ]);
+                ]);
 
-    echo Html::submitButton(Yii::t('app', 'Save') , ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']);
+                echo Html::submitButton(Yii::t('app', 'Save') , ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']);
+                ?>
+            </div>
+
+        </div>
+        <?php
     ActiveForm::end(); ?>
 </div>
 </div>

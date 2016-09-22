@@ -34,9 +34,15 @@ class GoodVipSearch extends GoodVip
 
     public function search($params)
     {
+        $admin = Yii::$app->user->identity;
+        $adminType = $admin->wa_type;
+        $adminId = $admin->wa_id;
         $query = GoodVip::find()->joinWith(['g' => function ($q) {
             $q->from(GoodInfo::tableName());
         }]);
+        if($adminType>2){
+            $query->where(['good_info.merchant'=>$adminId]);
+        }
 //        var_dump($query->asArray()->all());
 //        exit;
         $dataProvider = new ActiveDataProvider([

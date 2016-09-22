@@ -236,7 +236,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'floatHeader'=>true,
         'persistResize'=>false,
         'panel' => [
-            'type'=>GridView::TYPE_SUCCESS,
+            'type'=>'info',
             'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> '.Html::encode($this->title).' </h3>',
             'showPanel'=>true,
             'showFooter'=>true

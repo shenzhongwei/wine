@@ -33,11 +33,17 @@ class RushSearch extends GoodRush
 
     public function search($params)
     {
+        $admin = Yii::$app->user->identity;
+        $adminType = $admin->wa_type;
+        $adminId = $admin->wa_id;
         $query = GoodRush::find()->joinWith(['g' => function ($q) {
             $q->from(GoodInfo::tableName());
         }]);
 //        var_dump($query->asArray()->all());
 //        exit;
+        if($adminType>2){
+            $query->where(['good_info.merchant'=>$adminId]);
+        }
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);

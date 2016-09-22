@@ -33,8 +33,16 @@ class GoodSearch extends GoodInfo
 
     public function search($params)
     {
+        $admin = Yii::$app->user->identity;
+        $adminType = $admin->wa_type;
+        $adminId = $admin->wa_id;
+        var_dump($adminId);
         $query = GoodInfo::find();
-
+        if($adminType>2){
+            $query->where(['merchant'=>$adminId]);
+        }
+        var_dump($query->asArray()->all());
+        exit;
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);

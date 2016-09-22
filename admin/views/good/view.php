@@ -20,7 +20,7 @@ $this->registerJsFile("@web/js/good/_script.js");
 <div class="wrapper wrapper-content">
     <div class="ibox-content">
         <div class="good-info-view">
-            <h1><?= Html::encode($this->title) ?></h1>
+            <h1><span class="glyphicon glyphicon-pushpin" aria-hidden="true"></span> <?= Html::encode($this->title) ?></h1>
             <p>
                 <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-sm btn-primary']) ?>
                 <?= Html::a(Yii::t('app', $model->is_active == 1 ? 'Down':'Up'), ['delete', 'id' => $model->id], [
