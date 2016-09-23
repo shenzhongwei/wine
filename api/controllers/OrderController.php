@@ -35,7 +35,7 @@ class OrderController extends ApiController{
             return $this->showResult(302,'未找到该用户');
         }
         $from = Yii::$app->request->post('from');//订单入口 1直接购买 2购物车购买
-        //订单产品参数[{"good_id":3,"amount":3,"unit_price":100.00},{"good_id":3,"amount":3,"unit_price":100.00}]
+        //订单产品参数[{"good_id":2,"amount":2,"unit_price":245.00},{"good_id":3,"amount":3,"unit_price":100.00}]
         $from_val = json_decode(Yii::$app->request->post('from_val',''),true);
         $shop_id = Yii::$app->request->post('shop_id');//商店id
         $send_bill = Yii::$app->request->post('send_bill');//运费
