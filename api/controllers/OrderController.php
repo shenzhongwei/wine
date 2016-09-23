@@ -176,7 +176,7 @@ class OrderController extends ApiController{
                                 'good_id'=>$detail->gid,
                                 'name'=>$detail->g->name,
                                 'volum'=>$detail->g->volum,
-                                'pic'=>Yii::$app->params['img_path'].$detail->g->pic,
+                                'pic'=>Yii::$app->params['img_path'].$detail->pic,
                                 'number'=>$detail->g->number,
                                 'unit_price'=>$detail->single_price,
                                 'original_price'=>$detail->g->price,
