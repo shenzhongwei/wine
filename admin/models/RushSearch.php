@@ -42,7 +42,8 @@ class RushSearch extends GoodRush
 //        var_dump($query->asArray()->all());
 //        exit;
         if($adminType>2){
-            $query->where(['good_info.merchant'=>$adminId]);
+            $manager = MerchantInfo::findOne(['wa_id'=>$adminId]);
+            $query->andWhere(['good_info.merchant'=>empty($manager) ? 0:$manager->id]);
         }
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

@@ -132,7 +132,14 @@ class MerchantInfo extends \yii\db\ActiveRecord
     }
 
     public static function GetMerchants(){
-        $merchants = self::findAll(['is_active'=>1]);
+        $admin = Yii::$app->user->identity;
+        $adminId = $admin->wa_id;
+        $adminType = $admin->wa_type;
+        $query =  self::find()->where(['is_active'=>1]);
+        if($adminType>2){
+            $query->andWhere(['wa_id'=>$adminId]);
+        }
+        $merchants = $query->all();
         return ArrayHelper::map($merchants,'id','name');
     }
 }

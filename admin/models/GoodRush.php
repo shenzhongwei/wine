@@ -79,11 +79,19 @@ class GoodRush extends \yii\db\ActiveRecord
     }
 
     public static function GetGoodNames(){
-        $goods = GoodInfo::find()->joinWith('goodRushes')->where('good_rush.id>0')->all();
+        $query = GoodInfo::find()->joinWith('goodRushes')->where('good_rush.id>0');
+        $admin = Yii::$app->user->identity;
+        $adminType = $admin->wa_type;
+        $adminId = $admin->wa_id;
+        if($adminType>2){
+            $manager = MerchantInfo::findOne(['wa_id'=>$adminId]);
+            $query->andWhere(['merchant'=>empty($manager) ? 0:$manager->id]);
+        }
+        $goods = $query->all();
         if(empty($goods)){
             return [];
         }
-        return array_unique(ArrayHelper::getColumn($goods,'name'));
+        return array_values(array_unique(ArrayHelper::getColumn($goods,'name')));
     }
 
     /**

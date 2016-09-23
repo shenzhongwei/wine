@@ -13,11 +13,11 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="wrapper wrapper-content">
     <div class="ibox float-e-margins">
         <div class="ibox-content">
-            <p>
-                <a href="<?= Url::toRoute('manager/create')?>">
-                    <button class="btn btn-info" ><li class="fa fa-plus"></li> 新增理员</button>
-                </a>
-            </p>
+<!--            <p>-->
+<!--                <a href="--><?//= Url::toRoute('manager/create')?><!--">-->
+<!--                    <button class="btn btn-info" ><li class="fa fa-plus"></li> 新增理员</button>-->
+<!--                </a>-->
+<!--            </p>-->
             <input name="manager_page" value="1" type="hidden">
 
             <div class="row" style="margin-bottom: 5px">

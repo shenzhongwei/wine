@@ -194,6 +194,30 @@ class OrderController extends ApiController{
         }
     }
 
+
+
+    /**
+     * 确认收货订单接口
+     */
+    public function actionConfirmOrder(){
+        $user_id = Yii::$app->user->identity->getId();
+        $order_id = Yii::$app->request->post('order_id');//获取订单id
+        if(empty($order_id)){//判断是否获取到id
+            return $this->showResult(301,'读取订单信息失败');
+        }
+        $userOrder = OrderInfo::find()->where(['and','uid='.$user_id,'id='.$order_id,'state in (2,3,4,5)'])->one();//查找订单2-5为可收货状态
+        if(empty($userOrder)){
+            return $this->showResult(304,'订单数据异常，请重试');
+        }
+        $userOrder->state = 6;//修改字段
+        if(!$userOrder->save()){
+            return $this->showResult(400,'确认收货失败');
+        }else{
+            return $this->showResult(200,'确认收货成功');
+        }
+    }
+
+
     /**
      * 删除订单接口
      */

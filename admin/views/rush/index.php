@@ -252,5 +252,6 @@ $this->params['breadcrumbs'][] = $this->title;
     $(function (){
         $('.panel').find('.dropdown-toggle').unbind();
         $('.panel').find('.dropdown-toggle').attr('class','btn btn-default dropdown-toggle');
+        $('.ui-autocomplete').css('z-index','99999');
     });
 </script>
