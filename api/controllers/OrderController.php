@@ -94,7 +94,7 @@ class OrderController extends ApiController{
                 'total'=>$total_price,
                 'discount'=>$total_price-$pay_price+$send_bill,
                 'send_bill'=>$userInfo->is_vip ? 0:$send_bill,
-                'ticket_id'=>$ticket_id,
+                'ticket_id'=>empty($ticket_id) ? 0:$ticket_id,
                 'pay_bill'=>$pay_price,
                 'state'=>1,
             ];
