@@ -167,7 +167,7 @@ class OrderInfo extends \yii\db\ActiveRecord
 
     //自动取消订单
     public static function AutoCancelOrder($user_id){
-        $userOrders = self::find()->where(['and',"uid=$user_id",'state=1','order_date<'.(time()-900)])->all();
+        $userOrders = self::find()->where(['and',"uid=$user_id",'state=1','order_date<'.(time()-1800)])->all();
         if(!empty($userOrders)){
             $transaction = Yii::$app->db->beginTransaction();
             try{
