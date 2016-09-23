@@ -73,5 +73,11 @@ class GoodBrand extends \yii\db\ActiveRecord
         return $this->hasMany(GoodInfo::className(), ['brand' => 'id']);
     }
 
+    public static function GetBrands(){
+        $admin = Yii::$app->user->identity;
+        $adminId = $admin->wa_id;
+        $adminType = $admin->wa_type;
+//        if()
+    }
 
 }

@@ -69,7 +69,7 @@ class ShoppingController extends ApiController{
     public function actionDel(){
         $user_id = Yii::$app->user->identity->getId();
         //获取数据
-        $cert_id = Yii::$app->request->post('cert_id',[]);
+        $cert_id = json_decode(stripcslashes(Yii::$app->request->post('cert_id')),true);
         if(empty($cert_id)){
             return $this->showResult(301,'读取购物车信息失败');
         }

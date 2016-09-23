@@ -4,6 +4,10 @@ use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\widgets\Pjax;
 use yii\helpers\Url;
+use admin\models\GoodInfo;
+use yii\jui\AutoComplete;
+use admin\models\MerchantInfo;
+use admin\models\GoodType;
 
 /**
  * @var yii\web\View $this
@@ -21,39 +25,64 @@ $this->registerJsFile("@web/js/good/_script.js");
     <?php Pjax::begin(['id'=>'goodinfos','timeout'=>3000]);
         echo GridView::widget([
         'dataProvider' => $dataProvider,
-        'columns' => [
-            [
-                'header'=>'序号',
-                'class' => 'kartik\grid\SerialColumn'
-            ],
+            'filterModel' => $searchModel,
+            'containerOptions'=>['style'=>'overflow: auto'], // only set when $responsive = false
+            'headerRowOptions'=>['class'=>'kartik-sheet-style'],
+            'filterRowOptions'=>['class'=>'kartik-sheet-style'],
+            'pjax'=>true, // pjax is set to always true for this demo
+            'columns' => [
+                [
+                    'class'=>'kartik\grid\SerialColumn',
+                    'contentOptions'=>['class'=>'kartik-sheet-style'],
+                    'width'=>'36px',
+                    'header'=>'',
+                    'headerOptions'=>['class'=>'kartik-sheet-style']
+                ],
             [
                 'header'=>'商品名称',
                 'attribute'=>'name',
-                'format' => 'raw',
+                'format' => 'html',
                 'value'=> function($model){
                     return Html::a($model->name.$model->volum,['good/view', 'id' => $model->id],
-                        ['title' => '查看商品详细','style'=>'color:#2a62bc;font-size:15px']
+                        ['title' => '查看商品详细','class'=>'btn btn-link btn-sm']
                     );
-                }
+                },
+                'filterType'=>AutoComplete::className(),
+                'filterWidgetOptions'=>[
+                    'clientOptions' => [
+                        'source' =>GoodInfo::GetGoodNames(),
+                    ],
+                ]
             ],
             [
                 'header'=>'归属商户',
                 'attribute'=>'merchant',
-                'format' => 'raw',
+                'format' => 'html',
                 'value'=> function($model){
                     return Html::a($model->merchant0->name,['merchant/view', 'id' => $model->merchant0->id],
-                        ['title' => '查看商户信息','style'=>'color:#2a62bc;font-size:15px']
+                        ['title' => '查看商品详细','class'=>'btn btn-link btn-sm']
                     );
                 },
-                'headerOptions'=>['width'=>120]
-
+                'headerOptions'=>['width'=>120],
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filterWidgetOptions'=>[
+                        'data'=>MerchantInfo::GetMerchants(),
+                        'options'=>['placeholder'=>'请选择类型'],
+                        'pluginOptions' => ['allowClear' => true],
+                    ],
             ],
             [
                 'header'=>'类型',
                 'attribute'=>'type',
                 'value'=> function($model){
                     return empty($model->type0) ? '无':$model->type0->name;
-                }
+                },
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filterWidgetOptions'=>[
+                    'data'=>GoodType::GetTypes(),
+                    'options'=>['placeholder'=>'请选择商户'],
+                    'pluginOptions' => ['allowClear' => true],
+                ],
             ],
             [
                 'header'=>'品牌',
@@ -143,17 +172,28 @@ $this->registerJsFile("@web/js/good/_script.js");
                 ],
             ],
         ],
-        'responsive'=>true,
-        'hover'=>true,
-        'condensed'=>true,
-        'floatHeader'=>true,
-        'panel' => [
-            'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> '.Html::encode($this->title).' </h3>',
-            'type'=>'info',
-            'before'=>$this->render('_search', ['model' => $searchModel]),
-            'after'=>Html::a('<i class="glyphicon glyphicon-repeat"></i> 刷新列表', ['index'], ['class' => 'btn btn-info']),
-            'showFooter'=>true,
-        ],
+            // set your toolbar
+            'toolbar'=> [
+                ['content'=>
+                    Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create'],['type'=>'button', 'title'=>'发布商品', 'class'=>'btn btn-primary']).
+                    Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index'], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>'刷新列表'])
+                ],
+                '{toggleData}',
+                '{export}',
+            ],
+            'responsive'=>false,
+            'hover'=>true,
+            'condensed'=>true,
+            'bordered'=>true,
+            'striped'=>false,
+            'floatHeader'=>true,
+            'persistResize'=>false,
+            'panel' => [
+                'type'=>'info',
+                'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> '.Html::encode($this->title).' </h3>',
+                'showPanel'=>true,
+                'showFooter'=>true
+            ],
     ]); Pjax::end(); ?>
 
 </div>
@@ -161,6 +201,7 @@ $this->registerJsFile("@web/js/good/_script.js");
     $(function (){
         $('.panel').find('.dropdown-toggle').unbind();
         $('.panel').find('.dropdown-toggle').attr('class','btn btn-default dropdown-toggle');
+        $('.ui-autocomplete').css('z-index','99999');
     });
 </script>
 
