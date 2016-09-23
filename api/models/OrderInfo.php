@@ -2,6 +2,7 @@
 
 namespace api\models;
 
+use daixianceng\smser\Wxtsms;
 use Yii;
 use yii\base\Exception;
 
@@ -167,7 +168,7 @@ class OrderInfo extends \yii\db\ActiveRecord
 
     //自动取消订单
     public static function AutoCancelOrder($user_id){
-        $userOrders = self::find()->where(['and',"uid=$user_id",'state=1','order_date<'.(time()-900)])->all();
+        $userOrders = self::find()->where(['and',"uid=$user_id",'state=1','order_date<'.(time()-1800)])->all();
         if(!empty($userOrders)){
             $transaction = Yii::$app->db->beginTransaction();
             try{
@@ -190,6 +191,12 @@ class OrderInfo extends \yii\db\ActiveRecord
                     }
                 }
                 $transaction->commit();
+                $smser = new Wxtsms();
+                $smser->username = Yii::$app->params['smsParams']['username'];
+                $smser->setPassword(Yii::$app->params['smsParams']['password']);
+                $phone = UserLogin::findOne(['uid'=>$user_id])->username;
+                $content = "【酒双天】您有订单由于长时间未付款，系统已为您自动取消";
+                $smser->sendSms($phone,$content);
                 return true;
             }catch (Exception $e){
                 $transaction->rollBack();

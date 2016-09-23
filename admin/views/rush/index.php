@@ -57,18 +57,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]
             ],
             [
-                'label'=>'原价',
-                'hAlign'=>'center',
-                'vAlign'=>'middle',
-                'mergeHeader'=>true,
-                'headerOptions'=>['class'=>'kartik-sheet-style'],
-                'attribute'=>'g.price',
-                'width'=>'8%',
-                'value'=>function($model) {
-                    return '¥'.$model->g->price.'/'.$model->g->unit;
-                }
-            ],
-            [
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
                 'attribute'=>'price',
@@ -167,17 +155,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filterInputOptions'=>['readonly'=>true,'style'=>['width'=>'200px']],
             ],
             [
-                'label'=>'商品状态',
-                'class'=>'kartik\grid\BooleanColumn',
-                'attribute'=>'g.is_active',
-                'vAlign'=>GridView::ALIGN_LEFT,
-                'width'=>'108px',
-                'mergeHeader'=>true,
-                'headerOptions'=>['class'=>'kartik-sheet-style'],
-                'trueLabel'=>'上架中',
-                'falseLabel'=>'已下架',
-            ],
-            [
                 'label'=>'抢购状态',
                 'class'=>'kartik\grid\BooleanColumn',
                 'attribute'=>'is_active',
@@ -187,6 +164,30 @@ $this->params['breadcrumbs'][] = $this->title;
                 'falseLabel'=>'已下架',
                 'trueIcon'=>'<label class="label label-info">上架中</label>',
                 'falseIcon'=>'<label class="label label-danger">已下架</label>',
+            ],
+
+            [
+                'label'=>'原价',
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+                'mergeHeader'=>true,
+                'headerOptions'=>['class'=>'kartik-sheet-style'],
+                'attribute'=>'g.price',
+                'width'=>'8%',
+                'value'=>function($model) {
+                    return '¥'.$model->g->price.'/'.$model->g->unit;
+                }
+            ],
+            [
+                'label'=>'商品状态',
+                'class'=>'kartik\grid\BooleanColumn',
+                'attribute'=>'g.is_active',
+                'vAlign'=>GridView::ALIGN_LEFT,
+                'width'=>'108px',
+                'mergeHeader'=>true,
+                'headerOptions'=>['class'=>'kartik-sheet-style'],
+                'trueLabel'=>'上架中',
+                'falseLabel'=>'已下架',
             ],
             [
                 'header' => '操作',
@@ -252,5 +253,6 @@ $this->params['breadcrumbs'][] = $this->title;
     $(function (){
         $('.panel').find('.dropdown-toggle').unbind();
         $('.panel').find('.dropdown-toggle').attr('class','btn btn-default dropdown-toggle');
+        $('.ui-autocomplete').css('z-index','99999');
     });
 </script>

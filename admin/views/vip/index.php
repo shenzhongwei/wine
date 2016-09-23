@@ -98,6 +98,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
             ],
         ],
+        'toolbar'=> [
+            ['content'=>
+                Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create'],['type'=>'button', 'title'=>'发布会员产品', 'class'=>'btn btn-primary']).
+                Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index'], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>'刷新列表'])
+            ],
+            '{toggleData}',
+            '{export}',
+        ],
         'responsive'=>true,
         'hover'=>true,
         'condensed'=>true,
@@ -105,8 +113,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'panel' => [
             'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> '.Html::encode($this->title).' </h3>',
             'type'=>'info',
-            'before'=>$this->render('_search', ['model' => $searchModel]).Html::a('<i class="glyphicon glyphicon-plus"></i> 添加会员商品', ['create'], ['class' => 'btn btn-success']),
-            'after'=>Html::a('<i class="glyphicon glyphicon-repeat"></i> 刷新列表', ['index'], ['class' => 'btn btn-info']),
+            'before'=>$this->render('_search', ['model' => $searchModel]),
             'showFooter'=>true
         ],
     ]); Pjax::end(); ?>

@@ -79,7 +79,15 @@ class GoodVip extends \yii\db\ActiveRecord
     }
 
     public static function GetGoods(){
-        $goods = GoodInfo::find()->where(['is_active'=>1])->all();
+        $query = GoodInfo::find()->where(['is_active'=>1]);
+        $admin = Yii::$app->user->identity;
+        $adminType = $admin->wa_type;
+        $adminId = $admin->wa_id;
+        if($adminType>2){
+            $manager = MerchantInfo::findOne(['wa_id'=>$adminId]);
+            $query->andWhere(['merchant'=>empty($manager) ? 0:$manager->id]);
+        }
+        $goods = $query->all();
         if(empty($goods)){
             return [];
         }
@@ -93,11 +101,19 @@ class GoodVip extends \yii\db\ActiveRecord
 
 
     public static function GetGoodNames(){
-        $goods = GoodInfo::find()->joinWith('goodVips')->where('good_vip.id>0')->all();
+        $admin = Yii::$app->user->identity;
+        $adminType = $admin->wa_type;
+        $adminId = $admin->wa_id;
+        $query = GoodInfo::find()->joinWith('goodVips')->where('good_vip.id>0');
+        if($adminType>2){
+            $manager = MerchantInfo::findOne(['wa_id'=>$adminId]);
+            $query->andWhere(['merchant'=>empty($manager) ? 0:$manager->id]);
+        }
+        $goods = $query->all();
         if(empty($goods)){
             return [];
         }
-        return ArrayHelper::getColumn($goods,'name');
+        return array_values(array_unique(ArrayHelper::getColumn($goods,'name')));
     }
 
 }

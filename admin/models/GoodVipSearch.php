@@ -41,10 +41,9 @@ class GoodVipSearch extends GoodVip
             $q->from(GoodInfo::tableName());
         }]);
         if($adminType>2){
-            $query->where(['good_info.merchant'=>$adminId]);
+            $manager = MerchantInfo::findOne(['wa_id'=>$adminId]);
+            $query->andWhere(['good_info.merchant'=>empty($manager) ? 0:$manager->id]);
         }
-//        var_dump($query->asArray()->all());
-//        exit;
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);

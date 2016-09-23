@@ -209,72 +209,72 @@ use yii\web\NotFoundHttpException;
      }
 
      //新增用户
-     public function actionCreate(){
-         $user_id = Yii::$app->user->identity->getId();
-         if(empty($user_id)){
-             return $this->showResult(302,'用户登录信息失效');
-         }
-         $model = new Admin();
-         $auth = Yii::$app->authManager;
-         $item = $auth->getRolesByType(Yii::$app->user->identity->wa_type);
-         $itemArr =[];
-         foreach($item as $v){
-             $itemArr[$v->name] = $v->name;
-         }
-         $data = Yii::$app->request->post();
-         if(!empty($data)){
-             if(empty($data['wa_username'])){
-                 return $this->showResult(400,'请输入用户名');
-             }
-             $exist_model = Admin::findIdentityByUsername($data['wa_username']);
-             if(!empty($exist_model)){
-                 return $this->showResult(400,'该用户名已被使用');
-             }
-             if(empty($data['wa_password'])||empty($data['confirm_password'])){
-                 return $this->showResult(400,'请输入密码');
-             }
-             if(strlen($data['wa_password'])>16 ||strlen($data['wa_password'])<5){
-                 $message = '密码长度为5-16位';
-                 return $this->showResult(400,$message);
-             }
-             if(!$this->validateMobilePhone($data['wa_phone'])&&!empty($data['wa_phone'])){
-                 $message = '手机格式错误';
-                 return $this->showResult(400,$message);
-             }
-             if(!in_array($data['item_name'],$itemArr)){
-                 $message = '用户组不可用';
-                 return $this->showResult(400,$message);
-             }
-             $model->attributes = [
-                 'wa_username'=>$data['wa_username'],
-                 'wa_password'=>md5(Yii::$app->params['pwd_pre'].$data['wa_password']),
-                 'wa_type'=>$data['item_name']=='超级管理员' ? 1:2,
-                 'wa_phone'=>$data['wa_phone'],
-                 'wa_name'=>$data['wa_name'],
-                 'wa_token'=>Yii::$app->security->generateRandomString(),
-                 'wa_logo'=>'',
-                 'wa_last_login_time'=>'1999-01-01 01:01:01',
-                 'wa_last_login_ip'=>'',
-                 'wa_lock'=>0,
-                 'wa_status'=>1,
-                 'created_time'=>date('Y-m-d H:i:s',time()),
-                 'updated_time'=>date('Y-m-d H:i:s',time()),
-             ];
-             if(!$model->save()){
-                 return $this->showResult(400,'增加管理员失败，请重试');
-             }else{
-                 $user_id = $model->wa_id;
-                 $role = $auth->createRole($data['item_name']);                //创建角色对象
-                 $auth->assign($role, $user_id);                           //添加对应关系
-                 return $this->showResult(200,'增加管理员成功');
-             }
-         }else{
-             return $this->render('create', [
-                 'model' => $model,
-                 'item' => $itemArr
-             ]);
-         }
-     }
+//     public function actionCreate(){
+//         $user_id = Yii::$app->user->identity->getId();
+//         if(empty($user_id)){
+//             return $this->showResult(302,'用户登录信息失效');
+//         }
+//         $model = new Admin();
+//         $auth = Yii::$app->authManager;
+//         $item = $auth->getRolesByType(Yii::$app->user->identity->wa_type);
+//         $itemArr =[];
+//         foreach($item as $v){
+//             $itemArr[$v->name] = $v->name;
+//         }
+//         $data = Yii::$app->request->post();
+//         if(!empty($data)){
+//             if(empty($data['wa_username'])){
+//                 return $this->showResult(400,'请输入用户名');
+//             }
+//             $exist_model = Admin::findIdentityByUsername($data['wa_username']);
+//             if(!empty($exist_model)){
+//                 return $this->showResult(400,'该用户名已被使用');
+//             }
+//             if(empty($data['wa_password'])||empty($data['confirm_password'])){
+//                 return $this->showResult(400,'请输入密码');
+//             }
+//             if(strlen($data['wa_password'])>16 ||strlen($data['wa_password'])<5){
+//                 $message = '密码长度为5-16位';
+//                 return $this->showResult(400,$message);
+//             }
+//             if(!$this->validateMobilePhone($data['wa_phone'])&&!empty($data['wa_phone'])){
+//                 $message = '手机格式错误';
+//                 return $this->showResult(400,$message);
+//             }
+//             if(!in_array($data['item_name'],$itemArr)){
+//                 $message = '用户组不可用';
+//                 return $this->showResult(400,$message);
+//             }
+//             $model->attributes = [
+//                 'wa_username'=>$data['wa_username'],
+//                 'wa_password'=>md5(Yii::$app->params['pwd_pre'].$data['wa_password']),
+//                 'wa_type'=>$data['item_name']=='超级管理员' ? 1:2,
+//                 'wa_phone'=>$data['wa_phone'],
+//                 'wa_name'=>$data['wa_name'],
+//                 'wa_token'=>Yii::$app->security->generateRandomString(),
+//                 'wa_logo'=>'',
+//                 'wa_last_login_time'=>'1999-01-01 01:01:01',
+//                 'wa_last_login_ip'=>'',
+//                 'wa_lock'=>0,
+//                 'wa_status'=>1,
+//                 'created_time'=>date('Y-m-d H:i:s',time()),
+//                 'updated_time'=>date('Y-m-d H:i:s',time()),
+//             ];
+//             if(!$model->save()){
+//                 return $this->showResult(400,'增加管理员失败，请重试');
+//             }else{
+//                 $user_id = $model->wa_id;
+//                 $role = $auth->createRole($data['item_name']);                //创建角色对象
+//                 $auth->assign($role, $user_id);                           //添加对应关系
+//                 return $this->showResult(200,'增加管理员成功');
+//             }
+//         }else{
+//             return $this->render('create', [
+//                 'model' => $model,
+//                 'item' => $itemArr
+//             ]);
+//         }
+//     }
 
      public function actionLock(){
          $user_id = Yii::$app->user->identity->getId();

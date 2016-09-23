@@ -102,7 +102,7 @@ class CollectController extends  ApiController{
      */
     public function actionDel(){
         $user_id = Yii::$app->user->identity->getId();
-        $collection_id = Yii::$app->request->post('collection_id',[]);
+        $collection_id = json_decode(stripcslashes(Yii::$app->request->post('collection_id')),true);
         if(empty($collection_id)){
             return $this->showResult(301,'获取数据异常');
         }

@@ -36,7 +36,7 @@ class OrderController extends ApiController{
         }
         $from = Yii::$app->request->post('from');//订单入口 1直接购买 2购物车购买
         //订单产品参数[{"good_id":2,"amount":2,"unit_price":245.00},{"good_id":3,"amount":3,"unit_price":100.00}]
-        $from_val = json_decode(Yii::$app->request->post('from_val',''),true);
+        $from_val = json_decode(stripcslashes( Yii::$app->request->post('from_val','')),true);
         $shop_id = Yii::$app->request->post('shop_id');//商店id
         $send_bill = Yii::$app->request->post('send_bill');//运费
         $total_price = Yii::$app->request->post('total_price');//总价
@@ -94,7 +94,7 @@ class OrderController extends ApiController{
                 'total'=>$total_price,
                 'discount'=>$total_price-$pay_price+$send_bill,
                 'send_bill'=>$userInfo->is_vip ? 0:$send_bill,
-                'ticket_id'=>$ticket_id,
+                'ticket_id'=>empty($ticket_id) ? 0:$ticket_id,
                 'pay_bill'=>$pay_price,
                 'state'=>1,
             ];
@@ -176,7 +176,7 @@ class OrderController extends ApiController{
                                 'good_id'=>$detail->gid,
                                 'name'=>$detail->g->name,
                                 'volum'=>$detail->g->volum,
-                                'pic'=>Yii::$app->params['img_path'].$detail->pic,
+                                'pic'=>Yii::$app->params['img_path'].$detail->g->pic,
                                 'number'=>$detail->g->number,
                                 'unit_price'=>$detail->single_price,
                                 'original_price'=>$detail->g->price,
@@ -193,6 +193,30 @@ class OrderController extends ApiController{
             return $this->showResult(400,'服务器异常');
         }
     }
+
+
+
+    /**
+     * 确认收货订单接口
+     */
+    public function actionConfirmOrder(){
+        $user_id = Yii::$app->user->identity->getId();
+        $order_id = Yii::$app->request->post('order_id');//获取订单id
+        if(empty($order_id)){//判断是否获取到id
+            return $this->showResult(301,'读取订单信息失败');
+        }
+        $userOrder = OrderInfo::find()->where(['and','uid='.$user_id,'id='.$order_id,'state in (2,3,4,5)'])->one();//查找订单2-5为可收货状态
+        if(empty($userOrder)){
+            return $this->showResult(304,'订单数据异常，请重试');
+        }
+        $userOrder->state = 6;//修改字段
+        if(!$userOrder->save()){
+            return $this->showResult(400,'确认收货失败');
+        }else{
+            return $this->showResult(200,'确认收货成功');
+        }
+    }
+
 
     /**
      * 删除订单接口

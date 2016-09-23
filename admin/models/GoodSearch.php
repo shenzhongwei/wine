@@ -36,13 +36,11 @@ class GoodSearch extends GoodInfo
         $admin = Yii::$app->user->identity;
         $adminType = $admin->wa_type;
         $adminId = $admin->wa_id;
-        var_dump($adminId);
         $query = GoodInfo::find();
         if($adminType>2){
-            $query->where(['merchant'=>$adminId]);
+            $manager = MerchantInfo::findOne(['wa_id'=>$adminId]);
+            $query->where(['merchant'=>empty($manager) ? 0:$manager->id]);
         }
-        var_dump($query->asArray()->all());
-        exit;
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
@@ -53,6 +51,7 @@ class GoodSearch extends GoodInfo
 
         $query->andFilterWhere([
             'merchant' => $this->merchant,
+            'brand' => $this->brand,
             'type' => $this->type,
             'is_active' => $this->is_active,
         ]);

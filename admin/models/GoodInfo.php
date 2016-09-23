@@ -260,12 +260,28 @@ class GoodInfo extends \yii\db\ActiveRecord
     }
 
     public static function GetGoodNames(){
-        $goods = self::findAll(['is_active'=>1]);
-        return ArrayHelper::getColumn($goods,'name');
+        $admin = Yii::$app->user->identity;
+        $adminType = $admin->wa_type;
+        $adminId = $admin->wa_id;
+        $query = self::find();
+        if($adminType>2){
+            $manager = MerchantInfo::findOne(['wa_id'=>$adminId]);
+            $query->andWhere(['merchant'=>empty($manager) ? 0:$manager->id]);
+        }
+        $goods = $query->all();
+        return array_values(array_unique(ArrayHelper::getColumn($goods,'name')));
     }
 
     public static function GetGoodNumbers(){
-        $goods = self::findAll(['is_active'=>1]);
+        $admin = Yii::$app->user->identity;
+        $adminType = $admin->wa_type;
+        $adminId = $admin->wa_id;
+        $query = self::find();
+        if($adminType>2){
+            $manager = MerchantInfo::findOne(['wa_id'=>$adminId]);
+            $query->andWhere(['merchant'=>empty($manager) ? 0:$manager->id]);
+        }
+        $goods = $query->asArray()->all();
         return ArrayHelper::getColumn($goods,'number');
     }
 
