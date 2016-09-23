@@ -68,7 +68,7 @@ class ShoppingController extends ApiController{
      */
     public function actionDel(){
         $user_id = Yii::$app->user->identity->getId();
-        //获取数据
+        //获取数据 购物车id 的json字符串格式为：[1,2,3]
         $cert_id = json_decode(stripcslashes(Yii::$app->request->post('cert_id')),true);
         if(empty($cert_id)){
             return $this->showResult(301,'读取购物车信息失败');
