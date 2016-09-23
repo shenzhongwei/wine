@@ -127,7 +127,7 @@ class GoodController extends BaseController
         $model = new GoodInfo();
         $model->regist_at = time();
         $model->is_active = 1;
-        $model->active_at = time();
+        $model->active_at = strtotime(date('Y-m-d 00:00:00'));
         $model->number = GoodInfo::generateCode().rand(1000,9999).date('is',time());
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);

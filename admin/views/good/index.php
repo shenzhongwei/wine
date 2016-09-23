@@ -3,7 +3,6 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\widgets\Pjax;
-use yii\helpers\Url;
 use admin\models\GoodInfo;
 use yii\jui\AutoComplete;
 use admin\models\MerchantInfo;
@@ -23,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
 $this->registerJsFile("@web/js/good/_script.js");
 ?>
 <div class="good-info-index">
-    <?php Pjax::begin(['id'=>'goodinfos','timeout'=>3000]);
+    <?php Pjax::begin(['id'=>'goodinfos','timeout'=>5000]);
         echo GridView::widget([
         'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
@@ -43,6 +42,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                     'header'=>'商品名称',
                     'attribute'=>'name',
                     'format' => 'html',
+                    'width'=>'12%',
                     'value'=> function($model){
                         return Html::a($model->name.$model->volum,['good/view', 'id' => $model->id],
                             ['title' => '查看商品详细','class'=>'btn btn-link btn-sm']
@@ -104,16 +104,16 @@ $this->registerJsFile("@web/js/good/_script.js");
                 [
                     'attribute'=>'price',
                     'label' => '单价',
+                    'width'=>'8%',
                     'value'=> function($model){
                         return '¥'.$model->price.'/'.$model->unit;
-                    }
+                    },
+                    'filterInputOptions'=>['onkeyup'=>'clearNoNum(this)','class'=>'form-control'],
                 ],
 
                 [
                     'header'=>'编号',
                     'attribute'=>'number',
-                    'hAlign'=>'center',
-                    'vAlign'=>'middle',
                     'width'=>'9%',
                     'filterType'=>AutoComplete::className(),
                     'filterWidgetOptions'=>[
@@ -128,16 +128,29 @@ $this->registerJsFile("@web/js/good/_script.js");
                     'format'=>['date','php:Y年m月d日'],
                     'value'=>function($model){
                         return $model->regist_at;
-                    }
+                    },
+                    'filterType'=>GridView::FILTER_DATE,
+                    'filterWidgetOptions'=>[
+                        // inline too, not bad
+                        'language' => 'zh-CN',
+                        'options' => ['placeholder' => '选择发布日期','readonly'=>true],
+                        'pluginOptions' => [
+                            'format' => 'yyyy年mm月dd日',
+                            'autoclose' => true,
+
+                        ]
+                    ]
                 ],
                 [
                     'label'=>'状态',
+                    'class'=>'kartik\grid\BooleanColumn',
+                    'width'=>'8%',
                     'attribute' => 'is_active',
-                    'format' => 'raw',
-                    'value' => function ($model) {
-                        $state =  $model->is_active==0 ? '<label class="label label-danger">已下架</label>':'<label class="label label-info">上架中</label>';
-                        return $state;
-                    },
+                    'vAlign'=>GridView::ALIGN_LEFT,
+                    'trueLabel'=>'上架中',
+                    'falseLabel'=>'已下架',
+                    'trueIcon'=>'<label class="label label-info">上架中</label>',
+                    'falseIcon'=>'<label class="label label-danger">已下架</label>',
                 ],
 
                 [
@@ -167,7 +180,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                                 'id'=>'detail',//属性
                                 'data-toggle' => 'modal',    //弹框
                                 'data-target' => '#good-modal',    //指定弹框的id
-                                'class' => 'btn btn-link btn-xs',
+                                'class' => 'detail btn btn-link btn-xs',
                                 'data-id' => $model->id,
                             ]);
                         },
@@ -252,9 +265,7 @@ $this->registerJsFile("@web/js/good/_script.js");
 ]);
 $requestUrl = \yii\helpers\Url::toRoute('detail');  //当前控制器下的view方法
 $Js = <<<JS
-         $('#detail').on('click', function () {  //查看详情的触发事件
-         alert($(this).closest('tr').data('key'));
-         return false;
+         $('.detail').on('click', function () {  //查看详情的触发事件
             $.get('{$requestUrl}', { id:$(this).closest('tr').data('key')  },
                 function (data) {
                     $('#good-modal').find('.modal-body').html(data);  //给该弹框下的body赋值
@@ -271,6 +282,7 @@ $this->registerJs($Js);
         $('.panel').find('.dropdown-toggle').unbind();
         $('.panel').find('.dropdown-toggle').attr('class','btn btn-default dropdown-toggle');
         $('.ui-autocomplete').css('z-index','99999');
+        $('.datepicker-days').css('z-index','99999');
     });
 </script>
 
