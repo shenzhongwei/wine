@@ -194,7 +194,7 @@ class OrderInfo extends \yii\db\ActiveRecord
                 $smser = new Wxtsms();
                 $smser->username = Yii::$app->params['smsParams']['username'];
                 $smser->setPassword(Yii::$app->params['smsParams']['password']);
-                $phone = UserLogin::findOne($user_id)->username;
+                $phone = UserLogin::findOne(['uid'=>$user_id])->username;
                 $content = "【酒双天】您有订单由于长时间未付款，系统已为您自动取消";
                 $smser->sendSms($phone,$content);
                 return true;
