@@ -51,6 +51,7 @@ class GoodSearch extends GoodInfo
 
         $query->andFilterWhere([
             'merchant' => $this->merchant,
+            'brand' => $this->brand,
             'type' => $this->type,
             'is_active' => $this->is_active,
         ]);

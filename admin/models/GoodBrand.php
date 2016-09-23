@@ -2,6 +2,7 @@
 
 namespace admin\models;
 
+use common\helpers\ArrayHelper;
 use Yii;
 
 /**
@@ -77,7 +78,13 @@ class GoodBrand extends \yii\db\ActiveRecord
         $admin = Yii::$app->user->identity;
         $adminId = $admin->wa_id;
         $adminType = $admin->wa_type;
-//        if()
+        $query = self::find()->joinWith('goodInfos')->where('good_info.id>0 and good_brand.is_active=1');
+        if($adminType>2){
+            $manager = MerchantInfo::findOne(['wa_id'=>$adminId]);
+            $query->andWhere(['merchant'=>$manager->id]);
+        }
+        $brands = $query->all();
+        return ArrayHelper::map($brands,'id','name');
     }
 
 }
