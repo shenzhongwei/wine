@@ -55,11 +55,14 @@ class CommentController extends  ApiController{
         }
         $send_star = Yii::$app->request->post('send_star',0);//送货评分
         //good_comment:[{"good_id":3,"good_star":3,"content":100.00},{"good_id":3,"good_star":3,"content":100.00}]
-        $good_comment = json_decode(Yii::$app->request->post('good_comment'),true);//商品评价
+        $good_comment = json_decode(stripcslashes(Yii::$app->request->post('good_comment')),true);//商品评价
+//        $str = stripcslashes(Yii::$app->request->post('good_comment'));
         if(empty($good_comment)){
             return $this->showResult(301,'获取评价内容失败');
         }
         $userOrder = OrderInfo::findOne(['uid'=>$user_id,'id'=>$order_id,'state'=>6]);//查找订单
+        var_dump($userOrder);
+        exit;
         if(empty($userOrder)){//判断订单状态
             return $this->showResult(304,'订单数据异常，请重试');
         }
