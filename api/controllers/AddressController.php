@@ -144,7 +144,7 @@ class AddressController extends ApiController{
         $user_id = Yii::$app->user->identity->getId();
         $page = Yii::$app->request->post('page',1);
         $pageSize = Yii::$app->params['pageSize'];
-        $query = UserAddress::find()->where(['and','uid='.$user_id,'status<>0','lat>0','lng>0']);
+        $query = UserAddress::find()->where(['and','uid='.$user_id,'status<>0','lat>0','lng>0'])->orderBy(['is_default'=>SORT_DESC]);
         $count = $query->count();
         $adds = $query->offset(($page-1)*$pageSize)->limit($pageSize)->all();
         //判断是否有地址
