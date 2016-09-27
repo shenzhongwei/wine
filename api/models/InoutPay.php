@@ -84,7 +84,7 @@ class InoutPay extends \yii\db\ActiveRecord
             return false;
         }
         $log->log_result('开启事务');
-        //开始事务
+        //开始事务..
         $transaction = Yii::$app->db->beginTransaction();
         try{
             //判断订单状态
