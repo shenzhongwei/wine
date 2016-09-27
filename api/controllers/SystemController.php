@@ -14,9 +14,8 @@ namespace api\controllers;
          * 设置页面关于我们和联系电话api
          */
         public function actionSetting(){
-            //调取参数
-            $servicePhone = Yii::$app->params['servicePhone'];
-            $aboutUs = Yii::$app->params['aboutUs'];
+            $servicePhone = Yii::$app->params['servicePhone'];//客服电话
+            $aboutUs = Yii::$app->params['aboutUs'];//关于我们
             $data = [
                 'service_phone'=>$servicePhone,
                 'about_us'=>$aboutUs,
