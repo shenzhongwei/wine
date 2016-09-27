@@ -330,8 +330,8 @@ class OrderController extends ApiController{
         $user_id = Yii::$app->user->identity->getId();
         $bill = Yii::$app->request->post('bill'); //充值金额
         $billPromotions = PromotionInfo::find()->where(
-            'pt_id=2 and condition>0 and discount>0 and is_active=1 start_at<='.time().' and end_at>='.time().' and condition<='.$bill)
-            ->orderBy(['condition'=>SORT_DESC])->all();
+            'pt_id=2 and `condition`>0 and discount>0 and is_active=1 start_at<='.time().' and end_at>='.time().' and `condition`<='.$bill)
+            ->orderBy(['`condition`'=>SORT_DESC])->all();
         $discount = 0;
         if(!empty($billPromotions)){
             foreach($billPromotions as $promotion){
