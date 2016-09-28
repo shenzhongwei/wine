@@ -297,7 +297,7 @@ class OrderController extends ApiController{
             return $this->showResult(301,'读取订单信息失败');
         }
         $userOrder = OrderInfo::findOne(['uid'=>$user_id,'id'=>$order_id]);//查找订单
-        if(empty($userOrder)||$userOrder->state<3||$userOrder->state>6||empty($userOrder->orderDetails)){//判断订单状态
+        if(empty($userOrder)||$userOrder->state<2||$userOrder->state>6||empty($userOrder->orderDetails)){//判断订单状态
             return $this->showResult(304,'订单数据异常，请重试');
         }
         //数据处理
