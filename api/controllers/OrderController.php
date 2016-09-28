@@ -274,7 +274,7 @@ class OrderController extends ApiController{
                 throw new Exception('取消订单失败');
             }
             $transaction->commit();
-            return $this->showList(200,'取消订单成功');
+            return $this->showResult(200,'取消订单成功');
         }catch (Exception $e){
             $transaction->rollBack();
             return $this->showResult(400,$e->getMessage());
