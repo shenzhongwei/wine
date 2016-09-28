@@ -56,6 +56,9 @@ class OrderController extends ApiController{
         //验证商品总价格和付款价格以及购物车信息是否有效
         $total=0;
         foreach($from_val as $value){
+            if(empty($value['unit_price']||empty($value['good_id'])||empty($value['amount']))){
+                return $this->showResult(304,'未读取到商品信息');
+            }
             $total += ($value['unit_price']*$value['amount']);
             if($from ==2 ){
                 $userCert = ShoppingCert::findOne(['gid'=>$value['good_id'],'amount'=>$value['amount'],'uid'=>$user_id]);
