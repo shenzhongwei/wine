@@ -61,8 +61,6 @@ class CommentController extends  ApiController{
             return $this->showResult(301,'获取评价内容失败');
         }
         $userOrder = OrderInfo::findOne(['uid'=>$user_id,'id'=>$order_id,'state'=>6]);//查找订单
-        var_dump($userOrder);
-        exit;
         if(empty($userOrder)){//判断订单状态
             return $this->showResult(304,'订单数据异常，请重试');
         }
