@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="order-info-index">
 
     <?php
-    Pjax::begin();
+//    Pjax::begin();
     echo GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
@@ -155,7 +155,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'showFooter'=>false
         ],
     ]);
-    Pjax::end();
+//    Pjax::end();
     ?>
 
 </div>

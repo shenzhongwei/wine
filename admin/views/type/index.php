@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ]), ['create'], ['class' => 'btn btn-success'])*/  ?>
     </p>
 
-    <?php Pjax::begin(['id'=>'typeinfos','timeout'=>5000]);
+<!--    --><?php //Pjax::begin(['id'=>'typeinfos','timeout'=>5000]);
     echo GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -188,6 +188,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'fontAwesome'=>true
         ],
     ]);
-    Pjax::end(); ?>
+//    Pjax::end(); ?>
 
 </div>
