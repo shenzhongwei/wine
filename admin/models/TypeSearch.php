@@ -15,8 +15,8 @@ class TypeSearch extends GoodType
     public function rules()
     {
         return [
-            [['id', 'regist_at', 'is_active', 'active_at'], 'integer'],
-            [['name', 'logo'], 'safe'],
+            [['id', 'is_active', 'active_at'], 'integer'],
+            [['name', 'logo','regist_at'], 'safe'],
         ];
     }
 
@@ -39,15 +39,10 @@ class TypeSearch extends GoodType
         }
 
         $query->andFilterWhere([
-            'id' => $this->id,
-            'regist_at' => $this->regist_at,
+            'name' => $this->name,
             'is_active' => $this->is_active,
-            'active_at' => $this->active_at,
         ]);
-
-        $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'logo', $this->logo]);
-
+        $query->andFilterWhere(['>=',"FROM_UNIXTIME(regist_at,'%Y年%m月%d日')",$this->regist_at]);
         return $dataProvider;
     }
 }

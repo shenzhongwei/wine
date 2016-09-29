@@ -44,6 +44,7 @@ class GoodType extends \yii\db\ActiveRecord
     {
         return [
             [['regist_at', 'is_active', 'active_at'], 'integer'],
+            [['name',],'required'],
             [['name'], 'string', 'max' => 25],
             [['logo'], 'string', 'max' => 255],
         ];
@@ -168,6 +169,12 @@ class GoodType extends \yii\db\ActiveRecord
         $types = $query->all();
         return ArrayHelper::map($types,'id','name');
     }
+
+
+    public static function GetAllTypes(){
+        return ArrayHelper::map(self::find()->all(),'name','name');
+    }
+
 
     public static function GetChilds($type,$key){
         $type = self::findOne($type);

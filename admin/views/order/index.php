@@ -75,6 +75,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'label'=>'配送人员',
                 'attribute'=>'send_id',
+                'refreshGrid'=>true,
                 'value'=>function($data){
                     return $data->send['name'];
                 },

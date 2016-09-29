@@ -29,7 +29,7 @@ $this->registerJsFile("@web/js/good/_script.js");
             'containerOptions'=>['style'=>'overflow: auto'], // only set when $responsive = false
             'headerRowOptions'=>['class'=>'kartik-sheet-style'],
             'filterRowOptions'=>['class'=>'kartik-sheet-style'],
-            'pjax'=>true, // pjax is set to always true for this demo
+            //   'pjax'=>true,  pjax is set to always true for this demo
             'columns' => [
                 [
                     'class'=>'kartik\grid\SerialColumn',
@@ -164,7 +164,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                     'attribute'=>'pic',
                     "format" => "raw",
                     'value'=>function($model){
-                        return Html::img('../../../photo'.$model->pic,[
+                        return empty($model->pic) ? '<label class="label label-primary">暂无</label>':Html::img('../../../photo'.$model->pic,[
                             'width'=>"50px",'height'=>"50px","onclick"=>"ShowImg(this);",'style'=>'cursor:pointer','title'=>"点击放大"
                         ]);
                     }

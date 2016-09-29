@@ -20,7 +20,7 @@ class TypeController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['post'],
+                    'delete' => ['post','get'],
                 ],
             ],
         ];
@@ -34,7 +34,9 @@ class TypeController extends Controller
     {
         $searchModel = new TypeSearch;
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
-
+        $dataProvider->pagination = [
+            'pageSize'=>15,
+        ];
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
@@ -51,7 +53,7 @@ class TypeController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->runAction(['index']);
         } else {
             return $this->render('view', ['model' => $model]);
         }
@@ -67,7 +69,7 @@ class TypeController extends Controller
         $model = new GoodType;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->runAction(['index']);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -81,16 +83,24 @@ class TypeController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($id)
+    public function actionUpdate()
     {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+        $hasEditable = Yii::$app->request->post('hasEditable');
+        $id = Yii::$app->request->post('editableKey');
+        if($hasEditable&&$id){
+            $model = $this->findModel($id);
+            if(!empty($model)){
+                $post['GoodType'] = current($_POST['GoodType']);
+                if($model->load($post)&&$model->save()){
+                    return json_encode(['output'=>empty($post['GoodType']['name']) ? (empty($post['GoodType']['logo']) ? '':$post['GoodType']['logo']):$post['GoodType']['name'], 'message'=>'']);
+                }else{
+                    return json_encode(['output'=>'','message'=>array_values($model->getFirstErrors())[0]]);
+                }
+            }else{
+                return json_encode(['output'=>'', 'message'=>'未找到该条数据']);
+            }
+        }else{
+            return json_encode(['output'=>'', 'message'=>'']);
         }
     }
 
@@ -102,9 +112,9 @@ class TypeController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $this->findModel($id);
 
-        return $this->redirect(['index']);
+        return $this->runAction(['index']);
     }
 
     /**
