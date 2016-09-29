@@ -489,4 +489,13 @@ return array (
       '@kartik/sortinput' => $vendorDir . '/kartik-v/yii2-sortable-input',
     ),
   ),
+  'kartik-v/yii2-popover-x' => 
+  array (
+    'name' => 'kartik-v/yii2-popover-x',
+    'version' => '1.3.3.0',
+    'alias' => 
+    array (
+      '@kartik/popover' => $vendorDir . '/kartik-v/yii2-popover-x',
+    ),
+  ),
 );

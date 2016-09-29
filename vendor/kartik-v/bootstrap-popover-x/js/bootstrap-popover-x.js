@@ -15,20 +15,17 @@
         self.$element = $(element);
         self.$dialog = self.$element;
         self.init();
-    }, addCss = function($el, css) {
-        $el.removeClass(css).addClass(css);
     };
 
     PopoverX.prototype = $.extend({}, $.fn.modal.Constructor.prototype, {
         constructor: PopoverX,
         init: function () {
             var self = this, $dialog = self.$element;
-            addCss($dialog, 'popover-x');
             self.$body = $(document.body);
             self.$target = self.options.$target;
             self.useOffsetForPos = self.options.useOffsetForPos === undefined ? false : self.options.useOffsetForPos;
             if ($dialog.find('.popover-footer').length) {
-                addCss($dialog, 'has-footer');
+                $dialog.removeClass('has-footer').addClass('has-footer');
             }
             if (self.options.remote) {
                 $dialog.find('.popover-content').load(self.options.remote, function () {
@@ -36,15 +33,6 @@
                 });
             }
             $dialog.on('click.dismiss.popoverX', '[data-dismiss="popover-x"]', $.proxy(self.hide, self));
-            $dialog.on('shown.bs.modal', function() {
-                if (self.options.closeOtherPopovers) {
-                    $dialog.removeClass('popover-x');
-                    $('.popover-x').each(function() {
-                        $(this).popoverX('hide');
-                    });
-                    addCss($dialog, 'popover-x');
-                }
-            });
         },
         getPosition: function () {
             var self = this, $element = self.$target,
@@ -95,8 +83,10 @@
                 default:
                     throw "Invalid popover placement '" + placement + "'.";
             }
-            $dialog.css(position);
-            addCss($dialog, placement + ' in');
+            $dialog
+                .css(position)
+                .addClass(placement)
+                .addClass('in');
         },
         show: function () {
             var self = this, $dialog = self.$element;
@@ -132,14 +122,13 @@
 
     $.fn.popoverX.defaults = $.extend({}, $.fn.modal.defaults, {
         placement: 'right',
-        keyboard: true,
-        closeOtherPopovers: true
+        keyboard: true
     });
     
     $.fn.popoverX.Constructor = PopoverX;
 
     $(document).ready(function () {
-        $(document).on('click', '[data-toggle="popover-x"]', function (e) {
+        $("[data-toggle='popover-x']").on('click', function (e) {
             var $this = $(this), href = $this.attr('href'),
                 $dialog = $($this.attr('data-target') || (href && href.replace(/.*(?=#[^\s]+$)/, ''))), //strip for ie7
                 option = $dialog.data('popover-x') ? 'toggle' : $.extend({remote: !/#/.test(href) && href},
@@ -164,7 +153,7 @@
             }
         });
 
-        $(document).on('keyup', '[data-toggle="popover-x"]', function (e) {
+        $('[data-toggle="popover-x"]').on('keyup', function (e) {
             var $this = $(this), href = $this.attr('href'),
                 $dialog = $($this.attr('data-target') || (href && href.replace(/.*(?=#[^\s]+$)/, ''))); //strip for ie7
             if ($dialog && e.which === 27) {

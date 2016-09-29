@@ -650,8 +650,8 @@ HTML;
     {
         $submitOpts = $this->submitButton;
         $resetOpts = $this->resetButton;
-        $submitIcon = ArrayHelper::remove($submitOpts, 'icon', '<i class="glyphicon glyphicon-ok"></i>');
-        $resetIcon = ArrayHelper::remove($resetOpts, 'icon', '<i class="glyphicon glyphicon-remove"></i>');
+        $submitIcon = ArrayHelper::remove($submitOpts, 'icon', '<i class="glyphicon glyphicon-save"></i>');
+        $resetIcon = ArrayHelper::remove($resetOpts, 'icon', '<i class="glyphicon glyphicon-ban-circle"></i>');
         $submitLabel = ArrayHelper::remove($submitOpts, 'label', Yii::t('kveditable', 'Apply'));
         $resetLabel = ArrayHelper::remove($resetOpts, 'label', Yii::t('kveditable', 'Reset'));
         if ($this->showButtonLabels === false) {
