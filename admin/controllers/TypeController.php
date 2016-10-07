@@ -5,14 +5,17 @@ namespace admin\controllers;
 use Yii;
 use admin\models\GoodType;
 use admin\models\TypeSearch;
+use yii\helpers\FileHelper;
+use yii\helpers\Html;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * TypeController implements the CRUD actions for GoodType model.
  */
-class TypeController extends Controller
+class TypeController extends BaseController
 {
     public function behaviors()
     {
@@ -43,21 +46,46 @@ class TypeController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single GoodType model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->runAction(['index']);
-        } else {
-            return $this->render('view', ['model' => $model]);
+    public function actionUpload(){
+        $goodType = new GoodType();
+        $file_name = 'good_type_'.time();
+
+        if(Yii::$app->request->isPost) {
+            $image = UploadedFile::getInstance($goodType, 'url');
+            $path = '../../photo/type/';
+            if(!is_dir($path) || !is_writable($path)){
+                FileHelper::createDirectory($path,0777,true);
+            }
+            $filePath = $path.'/'.$file_name.'.'.$image->extension;
+            if( $image->saveAs($filePath)){
+                echo json_encode([
+                    'imageUrl'=>'/type/'.$file_name.'.'.$image->extension,
+                    'error'=>'',
+                ]);
+                exit;
+            }else{
+                echo json_encode([
+                    'imageUrl'=>'',
+                    'error'=>'保存图片失败，请重试',
+                ]);
+                exit;
+            }
+        }else{
+            echo json_encode([
+                'imageUrl'=>'',
+                'error'=>'未获取到图片信息',
+            ]);
+            exit;
         }
     }
+
+    public function actionChilds(){
+        $id = Yii::$app->request->post('id');
+        $model = $this->findModel($id);
+        return $this->render('view',['model'=>$model]);
+    }
+
 
     /**
      * Creates a new GoodType model.
@@ -67,9 +95,8 @@ class TypeController extends Controller
     public function actionCreate()
     {
         $model = new GoodType;
-
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->runAction(['index']);
+            return $this->runAction('index');
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -87,12 +114,28 @@ class TypeController extends Controller
     {
         $hasEditable = Yii::$app->request->post('hasEditable');
         $id = Yii::$app->request->post('editableKey');
+        $url = empty($_POST['GoodType']['url']) ? '':$_POST['GoodType']['url'];
         if($hasEditable&&$id){
             $model = $this->findModel($id);
             if(!empty($model)){
                 $post['GoodType'] = current($_POST['GoodType']);
+                if(!empty($url)){
+                    $post['GoodType']=[
+                        'logo'=>$url,
+                    ];
+                }
+                if(empty($url)&&empty($post['GoodType']['name'])){
+                    $post['GoodType']=[
+                        'logo'=>$model->logo,
+                    ];
+                }
+                $pic = $model->logo;
                 if($model->load($post)&&$model->save()){
-                    return json_encode(['output'=>empty($post['GoodType']['name']) ? (empty($post['GoodType']['logo']) ? '':$post['GoodType']['logo']):$post['GoodType']['name'], 'message'=>'']);
+                    if($post['GoodType']['logo']!=$pic && !empty($pic)&&!empty($url)){
+                        @unlink('../../photo'.$pic);
+                    }
+                    return json_encode(['output'=>empty($post['GoodType']['name']) ? (empty($post['GoodType']['logo']) ? '':Html::img('../../../photo'.$model->logo,[
+                        'width'=>"20px",'height'=>"20px"])):$post['GoodType']['name'], 'message'=>'']);
                 }else{
                     return json_encode(['output'=>'','message'=>array_values($model->getFirstErrors())[0]]);
                 }
@@ -112,9 +155,13 @@ class TypeController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id);
-
-        return $this->runAction(['index']);
+        $model = $this->findModel($id);
+        if(!empty($model)){
+            $model->is_active = empty($model->is_active) ? 1:0;
+            $model->active_at = time();
+            $model->save();
+        }
+        return $this->runAction('index');
     }
 
     /**

@@ -130,7 +130,7 @@ class GoodController extends BaseController
         $model->active_at = strtotime(date('Y-m-d 00:00:00'));
         $model->number = GoodInfo::generateCode().rand(1000,9999).date('is',time());
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->render('view', ['model' => $model]);
         } else {
             if($admin->wa_type>=2){
                 $model->merchant = MerchantInfo::findOne(['wa_id'=>$admin->id])->id;
@@ -172,15 +172,21 @@ class GoodController extends BaseController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $url = $model->pic;
         if ($model->load(Yii::$app->request->post())) {
             $pic = $model->pic;
-            if($pic != 'good_pic_'.$model->id){
-                $extension = substr($model->pic,strrpos($model->pic,'.')+1);
-                @rename('../../photo'.$model->pic,'../../photo/goods/good_pic_'.$model->id.'.'.$extension);
-                $model->pic = '/goods/good_pic_'.$model->id.'.'.$extension;
+            $extension = substr($pic,strrpos($pic,'.')+1);
+            if($pic == '/goods/good_pic_'.$model->id.'.'.$extension){
+                $filename = '/goods/good_pic_'.$model->id.'_'.time().'.'.$extension;
+                @copy('../../photo'.$model->pic,'../../photo'.$filename);
+                $model->pic = $filename;
             }
             if($model->save()){
-                return $this->redirect(['view', 'id' => $model->id]);
+                @unlink('../../photo'.$pic);
+                if(!empty($url)){
+                    @unlink('../../photo'.$url);
+                }
+                return $this->render('view', ['model' => $model]);
             }else{
                 return $this->render('update', [
                     'model' => $model,

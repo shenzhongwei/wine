@@ -174,6 +174,7 @@ class OrderController extends ApiController{
                         'pay_price'=>$element->pay_bill,
                         'order_date'=>date('Y-m-d H:i:s',$element->order_date),
                         'order_code'=>$element->order_code,
+                        'pay_mode'=>$element->pay_id,
                         'detail'=>ArrayHelper::getColumn($element->orderDetails,function($detail){
                             return [
                                 'good_id'=>$detail->gid,

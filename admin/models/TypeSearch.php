@@ -33,7 +33,7 @@ class TypeSearch extends GoodType
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
+        $dataProvider->sort->defaultOrder=['is_active'=>SORT_DESC];
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }

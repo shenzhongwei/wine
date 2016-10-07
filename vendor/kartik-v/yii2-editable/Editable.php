@@ -341,7 +341,10 @@ HTML;
      * - label: string, the label of the button. This is Html encoded. Defaults to 'Apply' and is translated via yii
      *     i18n message files.
      */
-    public $submitButton = ['class' => 'btn btn-sm btn-primary'];
+    public $submitButton = [
+        'class' => 'btn btn-sm btn-success',
+        'icon'=>'<i class="glyphicon glyphicon-floppy-save"></i> '
+    ];
 
     /**
      * @var array the HTML attributes for the form reset button. The following special properties are additionally

@@ -14,7 +14,7 @@ use yii\bootstrap\Modal;
 $this->title = '会员商品表';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="good-vip-index">
+<div class="good-vip-index col-sm-8">
     <?php Pjax::begin(['id'=>'goodvips','timeout'=>3000]);
     echo GridView::widget([
         'dataProvider' => $dataProvider,

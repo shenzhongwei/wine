@@ -216,6 +216,7 @@ $wa_type = $admin->wa_type;
                                                 'uploadExtraData' => [
                                                     'id' => empty($model->id) ? 0:$model->id,
                                                 ],
+                                                'maxFileSize'=>2800,
                                                 'previewFileType' => 'image',
                                                 'initialPreviewAsData' => true,
                                                 'showUpload'=>true,
@@ -232,6 +233,9 @@ $wa_type = $admin->wa_type;
                                                 ],
                                             ],
                                             'pluginEvents'=>[
+                                                'fileuploaderror'=>"function(){
+                                                 $('.fileinput-upload-button').attr('disabled',true);
+                                                }",
                                                 'fileclear'=>"function(){
                                     $('#goodinfo-pic').val('');
                                     }",

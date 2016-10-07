@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="order-info-index">
 
     <?php
-//    Pjax::begin();
+    Pjax::begin();
     echo GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
@@ -75,7 +75,6 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'label'=>'配送人员',
                 'attribute'=>'send_id',
-                'refreshGrid'=>true,
                 'value'=>function($data){
                     return $data->send['name'];
                 },
@@ -155,7 +154,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'showFooter'=>false
         ],
     ]);
-//    Pjax::end();
+    Pjax::end();
     ?>
 
 </div>

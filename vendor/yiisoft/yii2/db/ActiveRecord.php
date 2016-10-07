@@ -78,6 +78,7 @@ use yii\helpers\StringHelper;
  */
 class ActiveRecord extends BaseActiveRecord
 {
+    public $url;
     /**
      * The insert operation. This is mainly used when overriding [[transactions()]] to specify which operations are transactional.
      */

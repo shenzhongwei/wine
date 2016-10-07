@@ -7,6 +7,7 @@ use admin\models\GoodType;
 use kartik\grid\EditableColumn;
 use kartik\editable\Editable;
 use yii\helpers\Url;
+use kartik\widgets\FileInput;
 
 /**
  * @var yii\web\View $this
@@ -33,6 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'containerOptions'=>['style'=>'overflow: auto'], // only set when $responsive = false
         'headerRowOptions'=>['class'=>'kartik-sheet-style'],
         'filterRowOptions'=>['class'=>'kartik-sheet-style'],
+        'pjax'=>true,  //pjax is set to always true for this demo
         'columns' => [
             [
                 'class'=>'kartik\grid\SerialColumn',
@@ -101,11 +103,65 @@ $this->params['breadcrumbs'][] = $this->title;
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
                 'mergeHeader'=>true,
-                'attribute'=>'pic',
+                'attribute'=>'logo',
+                'class'=>EditableColumn::className(),
+                'editableOptions'=>[
+                    'format' => Editable::FORMAT_LINK,
+                    'inputType' => Editable::INPUT_FILEINPUT,
+                    'asPopover' => true,
+                    'formOptions'=>[
+                        'action'=>Url::toRoute(['type/update']),
+                    ],
+                    'size'=>'lg',
+                    'options' => [
+                        'options'=>[
+//                            'id'=>'goodtype-url',
+                            'name'=>'GoodType[url]',
+                            'accept'=>'image/*',
+                            'showUpload'=>false,
+                            'showRemove'=>false,
+                        ],
+                        'pluginOptions'=>[
+                            'showPreview' => false,
+                            'initialPreview'=>false,
+                            'uploadUrl' => Url::toRoute(['type/upload']),
+                            'maxFileSize'=>200,
+                            'previewFileType' => 'image',
+//                            'initialPreviewAsData' => true,
+                            'showUpload'=>true,
+                            'showRemove'=>true,
+                            'autoReplace'=>true,
+                            'browseClass' => 'btn btn-success',
+                            'uploadClass' => 'btn btn-info',
+                            'removeClass' => 'btn btn-danger',
+                            'maxFileCount'=>1,
+                            'fileActionSettings' => [
+                                'showZoom' => false,
+                                'showUpload' => false,
+                                'showRemove' => false,
+                            ],
+                        ],
+                        'pluginEvents'=>[
+                            'fileuploaderror'=>"function(){
+                                                 $(this).parents('tr').find('.fileinput-upload-button').attr('disabled',true);
+                                                }",
+                            'fileclear'=>"function(){
+                                    $(this).parents('.form-group').children().val('');
+                                    }",
+                            'fileuploaded'  => "function (object,data){
+			                    $(this).parents('.form-group').children().val(data.response.imageUrl);
+		                    }",
+                            //错误的冗余机制
+                            'error' => "function (){
+			                    alert('data.error');
+		                    }"
+                        ]
+                    ],
+                ],
                 "format" => "raw",
                 'value'=>function($model){
-                    return empty($model->pic) ? '<label class="label label-primary">暂无</label>':Html::img('../../../photo'.$model->pic,[
-                        'width'=>"50px",'height'=>"50px","onclick"=>"ShowImg(this);",'style'=>'cursor:pointer','title'=>"点击放大"
+                    return empty($model->logo) ? '<label class="label label-primary">暂无</label>':Html::img('../../../photo'.$model->logo,[
+                        'width'=>"20px",'height'=>"20px"
                     ]);
                 }
             ],
@@ -165,7 +221,7 @@ $this->params['breadcrumbs'][] = $this->title;
         // set your toolbar
         'toolbar'=> [
             ['content'=>
-                Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create'],['type'=>'button', 'title'=>'发布商品', 'class'=>'btn btn-primary']).
+                Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create'],['type'=>'button', 'title'=>'发布大类', 'class'=>'btn btn-success']).
                 Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index'], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>'刷新列表'])
             ],
             '{toggleData}',
