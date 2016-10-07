@@ -44,10 +44,10 @@ class GoodType extends \yii\db\ActiveRecord
     {
         return [
             [['regist_at', 'is_active', 'active_at'], 'integer'],
-//            [['name','logo'],'required'],
+            [['name','logo'],'required'],
             [['name'], 'string', 'max' => 25],
             [['logo'], 'string', 'max' => 255],
-            [['name','logo'],'validName']
+            [['name'],'validName']
         ];
     }
 
@@ -183,11 +183,6 @@ class GoodType extends \yii\db\ActiveRecord
     }
 
     public function validName(){
-        if(empty($this->name)){
-            $this->addError('name','类型名称不能为空。');
-        }elseif (empty($this->logo)){
-            $this->addError('logo','请上传类型图标。');
-        }
         $id = $this->id;
         $query = GoodType::find()->where("name=\"$this->name\"");
         if(!empty($id)){
