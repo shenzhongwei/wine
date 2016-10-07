@@ -44,11 +44,19 @@ class GoodType extends \yii\db\ActiveRecord
     {
         return [
             [['regist_at', 'is_active', 'active_at'], 'integer'],
-            [['name','logo'],'required'],
+            [['name','logo'],'required','on'=>'create'],
             [['name'], 'string', 'max' => 25],
             [['logo'], 'string', 'max' => 255],
-            [['name'],'validName']
+            [['name'],'validName','on'=>['create','update']]
         ];
+    }
+
+    public function scenarios()
+    {
+        $scen = parent::scenarios();
+        $scen['create'] = ['id','name','regist_at','logo','is_active','active_at'];
+        $scen['update'] = ['id','name','regist_at','logo','is_active','active_at'];
+        return $scen;
     }
 
     /**

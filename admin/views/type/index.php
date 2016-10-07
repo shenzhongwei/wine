@@ -113,9 +113,11 @@ $this->params['breadcrumbs'][] = $this->title;
                         'action'=>Url::toRoute(['type/update']),
                     ],
                     'size'=>'lg',
+                    'pluginEvents' => [
+                        "editableReset"=>"function(event) { $(this).parents('td').find('.form-group').children().val(''); }",
+                    ],
                     'options' => [
                         'options'=>[
-//                            'id'=>'goodtype-url',
                             'name'=>'GoodType[url]',
                             'accept'=>'image/*',
                             'showUpload'=>false,

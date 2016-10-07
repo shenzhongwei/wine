@@ -94,7 +94,7 @@ class TypeController extends BaseController
      */
     public function actionCreate()
     {
-        $model = new GoodType;
+        $model = new GoodType(['scenario'=>'create']);
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->runAction('index');
         } else {
@@ -118,20 +118,25 @@ class TypeController extends BaseController
         if($hasEditable&&$id){
             $model = $this->findModel($id);
             if(!empty($model)){
+                $url = empty($url) ? $model->logo:$url;
                 $post['GoodType'] = current($_POST['GoodType']);
+                if(empty($post['GoodType']['name'])&&empty($url)){
+                    if(empty($post['GoodType']['name'])&&empty($model->name)){
+                        return json_encode(['output'=>'', 'message'=>'请填写类型名称']);
+                    }
+                    if(empty($url)){
+                        return json_encode(['output'=>'', 'message'=>'上传类型图标']);
+                    }
+                }
                 if(!empty($url)){
                     $post['GoodType']=[
                         'logo'=>$url,
                     ];
                 }
-                if(empty($url)&&empty($post['GoodType']['name'])){
-                    $post['GoodType']=[
-                        'logo'=>$model->logo,
-                    ];
-                }
                 $pic = $model->logo;
+                $model->scenario='update';
                 if($model->load($post)&&$model->save()){
-                    if($post['GoodType']['logo']!=$pic && !empty($pic)&&!empty($url)){
+                    if(!empty($post['GoodType']['logo'])&&$post['GoodType']['logo']!=$pic && !empty($pic)&&!empty($url)){
                         @unlink('../../photo'.$pic);
                     }
                     return json_encode(['output'=>empty($post['GoodType']['name']) ? (empty($post['GoodType']['logo']) ? '':Html::img('../../../photo'.$model->logo,[
