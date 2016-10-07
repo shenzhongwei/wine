@@ -27,7 +27,7 @@ class ProductController extends ApiController{
      */
     public function actionSearchList(){
         $data = [];
-        $types = GoodType::findAll(['is_active'=>1]);
+        $types = GoodType::find()->where("is_active=1 and name<>''")->all();
         foreach($types as $type){
             $smell = $type->getTypes($type->goodSmells);
             $boot = $type->getTypes($type->goodBoots);

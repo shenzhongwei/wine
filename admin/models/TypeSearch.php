@@ -28,7 +28,7 @@ class TypeSearch extends GoodType
 
     public function search($params)
     {
-        $query = GoodType::find();
+        $query = GoodType::find()->where("name<>''");
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
