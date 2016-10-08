@@ -29,6 +29,10 @@ class ProductController extends ApiController{
         $data = [];
         $types = GoodType::find()->where("is_active=1 and name<>''")->all();
         foreach($types as $type){
+            if(empty($type->goodSmells)&&empty($type->goodBoots)&&empty($type->goodBrands)&&empty($type->goodBreeds)&&empty($type->goodColors)&&empty($type->goodCountries)&&
+                empty($type->goodDries)&&empty($type->goodModels)&&empty($type->goodPriceFields)&&empty($type->goodStyles)){
+                continue;
+            }
             $smell = $type->getTypes($type->goodSmells);
             $boot = $type->getTypes($type->goodBoots);
             $brand = $type->getBrands($type->goodBrands);
@@ -42,6 +46,7 @@ class ProductController extends ApiController{
             $data[] = [
                 'id'=>$type->id,
                 'name'=>$type->name,
+                'logo'=>empty($type->logo) ? '':Yii::$app->params['img_path'].$type->logo,
                 'brand'=>$brand,
                 'smell'=>$smell,
                 'boot'=>$boot,
