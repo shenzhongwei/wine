@@ -174,12 +174,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'headerOptions'=>['class'=>'kartik-sheet-style'],
                 'buttons'=>[
                     'view' => function ($url, $model) {
-                        return Html::a('点击查看', '#', [
-                            'id'=>'detail',//属性
-                            'data-toggle' => 'modal',    //弹框
-                            'data-target' => '#type-modal',    //指定弹框的id
+                        return Html::a('点击查看', ['type/view', 'id' => $model->id,'key'=>'brand'], [//指定弹框的id
                             'class' => 'detail btn btn-link btn-xs',
-                            'data-id' => $model->id,
                         ]);
                     },
                     'update' =>  function ($url, $model) {

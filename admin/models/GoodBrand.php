@@ -87,4 +87,9 @@ class GoodBrand extends \yii\db\ActiveRecord
         return ArrayHelper::map($brands,'id','name');
     }
 
+    public static function GetAllBrands($id){
+        $brands = self::findAll(['type'=>$id]);
+        return ArrayHelper::map($brands,'name','name');
+    }
+
 }

@@ -2,6 +2,7 @@
 
 namespace admin\controllers;
 
+use admin\models\BrandSearch;
 use Yii;
 use admin\models\GoodType;
 use admin\models\TypeSearch;
@@ -80,10 +81,19 @@ class TypeController extends BaseController
         }
     }
 
-    public function actionChilds(){
-        $id = Yii::$app->request->post('id');
+    public function actionView($id){
         $model = $this->findModel($id);
-        return $this->render('view',['model'=>$model]);
+        $key = Yii::$app->request->get('key');
+        $searchModel = new BrandSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams(),$id);
+        $dataProvider->pagination=[
+            'pageSize'=>15,
+        ];
+        return $this->render('view',[
+            'key'=>$key,
+            'model'=>$model,
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel]);
     }
 
 

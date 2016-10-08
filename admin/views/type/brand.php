@@ -17,7 +17,7 @@ use kartik\editable\Editable;
 $this->title = Yii::t('app', '品牌');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="good-brand-index col-sm-8">
+<div class="col-sm-8">
 
     <?php  echo GridView::widget([
         'dataProvider' => $dataProvider,
