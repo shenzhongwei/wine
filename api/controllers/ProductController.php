@@ -46,7 +46,7 @@ class ProductController extends ApiController{
             $data[] = [
                 'id'=>$type->id,
                 'name'=>$type->name,
-                'logo'=>empty($type->logo) ? '':Yii::$app->params['img_path'].$type->logo,
+                'logo'=>Yii::$app->params['img_path'].$type->logo,
                 'brand'=>$brand,
                 'smell'=>$smell,
                 'boot'=>$boot,
@@ -68,7 +68,7 @@ class ProductController extends ApiController{
      */
     public function actionHome(){
         //产品类型
-        $type = GoodType::find()->select(['id','name','logo'])->where(['is_active'=>1])->asArray()->all();
+        $type = GoodType::find()->select(['id','name',"CONCAT('".Yii::$app->params['img_path']."',logo) as logo"])->where(['is_active'=>1])->asArray()->all();
         //抢购产品  抢购商品和商品信息关联
         $rushList = GoodRush::find()->joinWith('g')->where("good_rush.is_active=1 and start_at<='".date('H:i:s')."' and end_at>='".date('H:i:s')."'")->one();
         $rush = [];
