@@ -46,7 +46,7 @@ class ProductController extends ApiController{
             $data[] = [
                 'id'=>$type->id,
                 'name'=>$type->name,
-                'logo'=>Yii::$app->params['img_path'].$type->logo,
+//                'logo'=>Yii::$app->params['img_path'].$type->logo,
                 'brand'=>$brand,
                 'smell'=>$smell,
                 'boot'=>$boot,
