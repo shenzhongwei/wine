@@ -88,6 +88,7 @@ return [
         'class' => 'mdm\admin\components\AccessControl',
         'allowActions' => [
             'debug/*',
+            'good/info',
             'site/login',
             'site/error',
         ],

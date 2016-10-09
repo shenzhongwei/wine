@@ -13,6 +13,7 @@ $this->title = '双天酒';
 <?=Html::jsFile('@web/js/hplus.min.js')?>
 <?=Html::jsFile('@web/js/contabs.min.js')?>
 <?=Html::jsFile('@web/js/plugins/pace/pace.min.js')?>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <div id="wrapper">
         <!--左侧导航开始-->
         <nav class="navbar-default navbar-static-side" role="navigation">

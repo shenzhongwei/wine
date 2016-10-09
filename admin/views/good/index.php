@@ -241,7 +241,7 @@ $this->registerJsFile("@web/js/good/_script.js");
             'condensed'=>true,
             'bordered'=>true,
             'striped'=>false,
-            'floatHeader'=>true,
+            'floatHeader'=>false,
             'persistResize'=>false,
             'panel' => [
                 'type'=>'info',

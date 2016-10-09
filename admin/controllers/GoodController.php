@@ -34,6 +34,30 @@ class GoodController extends BaseController
         ];
     }
 
+    public function actionInfo(){
+        $id = Yii::$app->request->get('id');
+        $model = GoodInfo::findOne($id);
+        echo '<html>
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
+    <meta name="HandheldFriendly" content="true">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0">
+    <meta name="" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <style>
+        body{ font-size: 12px; line-height: 20px; color: #333; font-family: " Microsoft YaHei";}
+        table{ width: 100% !important;}
+        img{ width: 100%; background-size: 100% 100%;}
+    </style>
+</head>
+<body>';
+        echo empty($model)?'商品不存在':stripslashes($model->detail);
+        echo '</body>';
+        echo '</html>';
+        exit;
+    }
 
     /**
      * Lists all GoodInfo models.

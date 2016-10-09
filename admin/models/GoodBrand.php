@@ -58,6 +58,14 @@ class GoodBrand extends \yii\db\ActiveRecord
         ];
     }
 
+    public function scenarios()
+    {
+        $scen = parent::scenarios();
+        $scen['create'] = ['id','name','regist_at','logo','is_active','active_at','type'];
+        $scen['update'] = ['id','name','regist_at','logo','is_active','active_at','type'];
+        return $scen;
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */

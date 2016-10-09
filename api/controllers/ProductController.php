@@ -340,6 +340,8 @@ class ProductController extends ApiController{
             'is_active'=>$goodInfo->is_active,
             'detail'=>stripcslashes($goodInfo->detail),
         ];
+//        var_dump($goodInfo->detail);
+//        exit;
         return $this->showResult(200,'详情如下',$data);
     }
 }

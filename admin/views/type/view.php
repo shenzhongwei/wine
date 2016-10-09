@@ -19,15 +19,14 @@ use yii\helpers\Json;
 $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', '子检索'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-$brand =
-    '<div class="col-sm-8"> '.Json::encode(GridView::widget([
+$brand = '<div class="col-sm-8"> '.GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'containerOptions'=>['style'=>'overflow: auto'], // only set when $responsive = false
         'headerRowOptions'=>['class'=>'kartik-sheet-style'],
         'filterRowOptions'=>['class'=>'kartik-sheet-style'],
         'floatHeader'=>false,
-        'pjax'=>true,
+//        'pjax'=>true,
         'columns' => [
             [
                 'class'=>'kartik\grid\SerialColumn',
@@ -45,7 +44,7 @@ $brand =
                 'editableOptions'=>[
                     'asPopover' => true,
                     'formOptions'=>[
-                        'action'=>Url::toRoute(['type/update']),
+                        'action'=>Url::toRoute(['type/update-brand']),
                     ],
                     'size'=>'sm',
                     'options' => ['class'=>'form-control', 'placeholder'=>'输入名称']
@@ -53,7 +52,7 @@ $brand =
                 'filterType'=>GridView::FILTER_SELECT2,
                 'filterWidgetOptions'=>[
                     'data'=>GoodBrand::GetAllBrands($model->id),
-                    'options'=>['placeholder'=>'请选择类型'],
+                    'options'=>['placeholder'=>'请选择品牌'],
                     'pluginOptions' => ['allowClear' => true],
                 ],
             ],
@@ -90,7 +89,7 @@ $brand =
             ],
             [
 
-                'header'=>'品牌logo',
+                'header'=>'品牌logo(建议：100*200)',
                 'width'=>'200px',
                 'headerOptions'=>['class'=>'kartik-sheet-style'],
                 'hAlign'=>'center',
@@ -103,7 +102,7 @@ $brand =
                     'inputType' => Editable::INPUT_FILEINPUT,
                     'asPopover' => true,
                     'formOptions'=>[
-                        'action'=>Url::toRoute(['type/update']),
+                        'action'=>Url::toRoute(['type/update-brand']),
                     ],
                     'size'=>'lg',
                     'pluginEvents' => [
@@ -111,7 +110,7 @@ $brand =
                     ],
                     'options' => [
                         'options'=>[
-                            'name'=>'GoodType[url]',
+                            'name'=>'GoodBrand[url]',
                             'accept'=>'image/*',
                             'showUpload'=>false,
                             'showRemove'=>false,
@@ -119,8 +118,8 @@ $brand =
                         'pluginOptions'=>[
                             'showPreview' => false,
                             'initialPreview'=>false,
-                            'uploadUrl' => Url::toRoute(['brand/upload']),
-                            'maxFileSize'=>2000,
+                            'uploadUrl' => Url::toRoute(['type/brand-upload']),
+                            'maxFileSize'=>1000,
                             'previewFileType' => 'image',
 //                            'initialPreviewAsData' => true,
                             'showUpload'=>true,
@@ -209,11 +208,11 @@ $brand =
         'export'=>[
             'fontAwesome'=>true
         ],
-    ])).'</div>';
+    ]).'</div>';
 $items = [
     [
         'label'=>'<button class="btn btn-link btn-xs" id="brand">品 牌</button>',
-        'content'=>Json::encode($brand),
+        'content'=>$brand,
         'active'=>$key == 'brand' ? true:false,
     ],
     [
