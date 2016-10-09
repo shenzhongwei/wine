@@ -18,8 +18,8 @@ use admin\models\GoodSmell;
             'id' => 'smell-form',
             'type' => ActiveForm::TYPE_VERTICAL,
             'enableAjaxValidation' => true, //开启ajax验证
-            'validationUrl' => Url::toRoute(['valid-form', 'key' => 'smell']), //验证url
-            'action' => Url::toRoute(['type/child-create', 'key' => 'smell']),
+            'validationUrl' => Url::toRoute(['valid-form', 'key' => 'boot']), //验证url
+            'action' => Url::toRoute(['type/child-create', 'key' => 'boot' ,'type' => $model->type]),
         ]);
         echo Form::widget([
             'model' => $model,

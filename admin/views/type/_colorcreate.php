@@ -11,15 +11,15 @@ use admin\models\GoodColor;
  * @var admin\models\GoodSmell $model
  */
 ?>
-<div class="good-smell-create">
-    <div class="good-smell-form">
+<div class="good-color-create">
+    <div class="good-color-form">
 
         <?php $form = ActiveForm::begin([
-            'id' => 'smell-form',
+            'id' => 'color-form',
             'type' => ActiveForm::TYPE_VERTICAL,
+            'action' => Url::toRoute(['type/child-create', 'key' => 'color','type' => $model->type]),
             'enableAjaxValidation' => true, //开启ajax验证
             'validationUrl' => Url::toRoute(['valid-form', 'key' => 'color']), //验证url
-            'action' => Url::toRoute(['type/child-create', 'key' => 'color', 'type' => $model->id]),
         ]);
         echo Form::widget([
             'model' => $model,
@@ -33,7 +33,7 @@ use admin\models\GoodColor;
                 ],],
             ]
         ]);
-        echo Html::submitButton('保存', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']);
+        echo Html::submitButton('保存', ['class' =>'btn btn-success']);
         ActiveForm::end(); ?>
 
     </div>

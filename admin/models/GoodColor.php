@@ -36,23 +36,12 @@ class GoodColor extends \yii\db\ActiveRecord
         return [
             [['type', 'regist_at', 'is_active', 'active_at'], 'integer'],
             [['name'], 'string', 'max' => 50],
+            [['name','type'],'required'],
             [['type'], 'exist', 'skipOnError' => true, 'targetClass' => GoodType::className(), 'targetAttribute' => ['type' => 'id']],
             [['name'], 'validName'],
         ];
     }
 
-    public function validName()
-    {
-        $id = $this->id;
-        $query = self::find()->where("name=\"$this->name\" and type=$this->type");
-        if (!empty($id)) {
-            $query->andWhere("id<>$this->id");
-        }
-        $model = $query->one();
-        if (!empty($model)) {
-            $this->addError('name', '色型' . $this->name . '已存在');
-        }
-    }
 
     /**
      * @inheritdoc
@@ -61,8 +50,8 @@ class GoodColor extends \yii\db\ActiveRecord
     {
         return [
             'id' => '主键',
-            'name' => '颜色类型',
-            'type' => '类型id',
+            'name' => '色型名',
+            'type' => '类型',
             'regist_at' => '添加时间',
             'is_active' => '是否上架',
             'active_at' => '上架状态更改时间',
@@ -85,6 +74,18 @@ class GoodColor extends \yii\db\ActiveRecord
         return $this->hasMany(GoodInfo::className(), ['color' => 'id']);
     }
 
+    public function validName()
+    {
+        $id = $this->id;
+        $query = self::find()->where("name=\"$this->name\" and type=$this->type");
+        if (!empty($id)) {
+            $query->andWhere("id<>$this->id");
+        }
+        $model = $query->one();
+        if (!empty($model)) {
+            $this->addError('name', '色型' . $this->name . '已存在');
+        }
+    }
     public static function GetAllTypes()
     {
         return ArrayHelper::map(GoodType::find()->all(), 'id', 'name');

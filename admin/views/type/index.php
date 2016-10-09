@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'containerOptions'=>['style'=>'overflow: auto'], // only set when $responsive = false
         'headerRowOptions'=>['class'=>'kartik-sheet-style'],
         'filterRowOptions'=>['class'=>'kartik-sheet-style'],
-        'pjax'=>true,  //pjax is set to always true for this demo
+//        'pjax'=>true,  //pjax is set to always true for this demo
         'columns' => [
             [
                 'class'=>'kartik\grid\SerialColumn',
