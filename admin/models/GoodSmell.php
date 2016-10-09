@@ -81,7 +81,7 @@ class GoodSmell extends \yii\db\ActiveRecord
         }
         $model = $query->one();
         if(!empty($model)){
-            $this->addError('name',$this->name.'类型已存在');
+            $this->addError('name', '香型' . $this->name . '已存在');
         }
     }
     public static function GetAllTypes(){

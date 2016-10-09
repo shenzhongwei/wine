@@ -31,6 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
     echo GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'filterPosition' => GridView::FILTER_POS_HEADER,
         'containerOptions'=>['style'=>'overflow: auto'], // only set when $responsive = false
         'headerRowOptions'=>['class'=>'kartik-sheet-style'],
         'filterRowOptions'=>['class'=>'kartik-sheet-style'],
@@ -46,7 +47,6 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'header'=>'类型名称',
                 'attribute'=>'name',
-                'refreshGrid'=>true,
                 'class'=>EditableColumn::className(),
                 'editableOptions'=>[
                     'asPopover' => true,
@@ -104,6 +104,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'vAlign'=>'middle',
                 'mergeHeader'=>true,
                 'attribute'=>'logo',
+                'refreshGrid' => true,
                 'class'=>EditableColumn::className(),
                 'editableOptions'=>[
                     'format' => Editable::FORMAT_LINK,

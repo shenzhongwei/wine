@@ -35,7 +35,21 @@ class GoodModel extends \yii\db\ActiveRecord
             [['type', 'regist_at', 'is_active', 'active_at'], 'integer'],
             [['name'], 'string', 'max' => 50],
             [['type'], 'exist', 'skipOnError' => true, 'targetClass' => GoodType::className(), 'targetAttribute' => ['type' => 'id']],
+            [['name'], 'validName'],
         ];
+    }
+
+    public function validName()
+    {
+        $id = $this->id;
+        $query = self::find()->where("name=\"$this->name\" and type=$this->type");
+        if (!empty($id)) {
+            $query->andWhere("id<>$this->id");
+        }
+        $model = $query->one();
+        if (!empty($model)) {
+            $this->addError('name', '规格' . $this->name . '已存在');
+        }
     }
 
     /**

@@ -16,7 +16,7 @@ class BrandSearch extends GoodBrand
     {
         return [
             [['is_active'], 'integer'],
-            [['name', 'logo','regist_at'], 'safe'],
+            [['name', 'regist_at'], 'safe'],
         ];
     }
 
@@ -39,7 +39,6 @@ class BrandSearch extends GoodBrand
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }
-
         $query->andFilterWhere([
 //            'id' => $this->id,
 //            'type' => $this->type,

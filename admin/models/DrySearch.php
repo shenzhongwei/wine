@@ -15,8 +15,8 @@ class DrySearch extends GoodDry
     public function rules()
     {
         return [
-            [['id', 'type', 'regist_at', 'is_active', 'active_at'], 'integer'],
-            [['name'], 'safe'],
+            [['id', 'is_active'], 'integer'],
+            [['name', 'regist_at'], 'safe'],
         ];
     }
 
@@ -26,28 +26,25 @@ class DrySearch extends GoodDry
         return Model::scenarios();
     }
 
-    public function search($params)
+    public function search($params, $id)
     {
-        $query = GoodDry::find();
-
+        $query = GoodDry::find()->where(['type' => $id]);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
 
+        $dataProvider->sort->defaultOrder = [
+            'is_active' => SORT_DESC,
+        ];
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }
 
         $query->andFilterWhere([
-            'id' => $this->id,
-            'type' => $this->type,
-            'regist_at' => $this->regist_at,
             'is_active' => $this->is_active,
-            'active_at' => $this->active_at,
         ]);
-
         $query->andFilterWhere(['like', 'name', $this->name]);
-
+        $query->andFilterWhere(['>=', "FROM_UNIXTIME(regist_at,'%Y年%m月%d日')", $this->regist_at]);
         return $dataProvider;
     }
 }

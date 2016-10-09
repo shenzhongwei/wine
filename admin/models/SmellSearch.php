@@ -15,7 +15,7 @@ class SmellSearch extends GoodSmell
     public function rules()
     {
         return [
-            [['id', 'type', 'is_active', 'active_at'], 'integer'],
+            [['is_active'], 'integer'],
             [['name','regist_at'], 'safe'],
         ];
     }
@@ -28,7 +28,7 @@ class SmellSearch extends GoodSmell
 
     public function search($params,$id)
     {
-        $query = self::find()->where(['type'=>$id]);
+        $query = GoodSmell::find()->where(['type' => $id]);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);

@@ -20,7 +20,7 @@ class GoodSearch extends GoodInfo
     {
         return [
             [['id', 'merchant', 'type', 'brand', 'smell', 'color', 'dry', 'boot', 'breed', 'country', 'style', 'order', 'is_active', 'active_at'], 'integer'],
-            [['name', 'volum', 'unit', 'pic', 'number', 'detail','regist_at'], 'safe'],
+            [['name', 'volum', 'unit', 'number', 'detail', 'regist_at'], 'safe'],
             [['price','start_price','end_price'], 'number'],
         ];
     }

@@ -18,7 +18,9 @@ use admin\models\GoodBrand;
         <?php $form = ActiveForm::begin([
             'id'=>'brand-form',
             'type'=>ActiveForm::TYPE_VERTICAL,
-            'action'=>Url::toRoute(['type/brand-create']),
+            'action' => Url::toRoute(['type/child-create', 'key' => 'brand', 'type' => $model->id]),
+            'enableAjaxValidation' => true, //开启ajax验证
+            'validationUrl' => Url::toRoute(['valid-form', 'key' => 'brand']), //验证url
         ]);
         echo Form::widget([
             'model' => $model,

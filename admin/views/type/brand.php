@@ -22,6 +22,8 @@ $brandModel->type = $model->id;
 GridView::widget([
     'dataProvider' => $dataProvider,
     'filterModel' => $searchModel,
+    'filterUrl' => Url::toRoute(['view', 'id' => $model->id, 'key' => 'brand']),
+    'filterPosition' => GridView::FILTER_POS_HEADER,
     'containerOptions'=>['style'=>'overflow: auto'], // only set when $responsive = false
     'headerRowOptions'=>['class'=>'kartik-sheet-style'],
     'filterRowOptions'=>['class'=>'kartik-sheet-style'],
@@ -125,6 +127,7 @@ GridView::widget([
             'vAlign'=>'middle',
             'mergeHeader'=>true,
             'attribute'=>'logo',
+            'refreshGrid' => true,
             'class'=>EditableColumn::className(),
             'editableOptions'=>[
                 'format' => Editable::FORMAT_LINK,
@@ -203,13 +206,13 @@ GridView::widget([
                 },
                 'delete' => function ($url, $model) {
                     if($model->is_active == 0){
-                        return Html::a(Yii::t('app','Up'), ['brand-delete','type'=>$model->type,'id'=>$model->id], [
+                        return Html::a(Yii::t('app', 'Up'), ['child-delete', 'key' => 'brand', 'id' => $model->id], [
                             'title' => Yii::t('app', '上架该检索'),
                             'class' => 'btn btn-success btn-xs',
                             'data-confirm' => '确认上架该检索？',
                         ]);
                     }else{
-                        return Html::a(Yii::t('app','Down'), ['brand-delete','type'=>$model->type,'id'=>$model->id], [
+                        return Html::a(Yii::t('app', 'Down'), ['child-delete', 'key' => 'brand', 'id' => $model->id], [
                             'title' => Yii::t('app', '下架该检索'),
                             'class' => 'btn btn-danger btn-xs',
                             'data-confirm' => '确认下架该检索？',

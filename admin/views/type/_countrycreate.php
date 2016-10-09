@@ -5,6 +5,7 @@ use kartik\widgets\ActiveForm;
 use kartik\builder\Form;
 use yii\helpers\Url;
 use admin\models\GoodSmell;
+
 /**
  * @var yii\web\View $this
  * @var admin\models\GoodSmell $model
@@ -17,8 +18,8 @@ use admin\models\GoodSmell;
             'id' => 'smell-form',
             'type' => ActiveForm::TYPE_VERTICAL,
             'enableAjaxValidation' => true, //开启ajax验证
-            'validationUrl' => Url::toRoute(['valid-form', 'key' => 'smell']), //验证url
-            'action' => Url::toRoute(['type/child-create', 'key' => 'smell', 'type' => $model->id]),
+            'validationUrl' => Url::toRoute(['valid-form', 'key' => 'country']), //验证url
+            'action' => Url::toRoute(['type/child-create', 'key' => 'country', 'type' => $model->id]),
         ]);
         echo Form::widget([
             'model' => $model,

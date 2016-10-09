@@ -16,7 +16,7 @@ class TypeSearch extends GoodType
     {
         return [
             [['id', 'is_active', 'active_at'], 'integer'],
-            [['name', 'logo','regist_at'], 'safe'],
+            [['name', 'regist_at'], 'safe'],
         ];
     }
 

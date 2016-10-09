@@ -4,7 +4,8 @@ use yii\helpers\Html;
 use kartik\widgets\ActiveForm;
 use kartik\builder\Form;
 use yii\helpers\Url;
-use admin\models\GoodSmell;
+use admin\models\GoodColor;
+
 /**
  * @var yii\web\View $this
  * @var admin\models\GoodSmell $model
@@ -17,8 +18,8 @@ use admin\models\GoodSmell;
             'id' => 'smell-form',
             'type' => ActiveForm::TYPE_VERTICAL,
             'enableAjaxValidation' => true, //开启ajax验证
-            'validationUrl' => Url::toRoute(['valid-form', 'key' => 'smell']), //验证url
-            'action' => Url::toRoute(['type/child-create', 'key' => 'smell', 'type' => $model->id]),
+            'validationUrl' => Url::toRoute(['valid-form', 'key' => 'color']), //验证url
+            'action' => Url::toRoute(['type/child-create', 'key' => 'color', 'type' => $model->id]),
         ]);
         echo Form::widget([
             'model' => $model,
@@ -26,7 +27,7 @@ use admin\models\GoodSmell;
             'columns' => 1,
             'attributes' => [
                 'name' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => '请输入名称', 'maxlength' => 25]],
-                'type' => ['type' => Form::INPUT_DROPDOWN_LIST, 'items' => GoodSmell::GetAllTypes(), 'options' => [
+                'type' => ['type' => Form::INPUT_DROPDOWN_LIST, 'items' => GoodColor::GetAllTypes(), 'options' => [
                     'readonly' => true,
                     'options' => ['placeholder' => '请选择类型'],
                 ],],

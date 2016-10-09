@@ -2,10 +2,27 @@
 
 namespace admin\controllers;
 
+use admin\models\BootSearch;
 use admin\models\BrandSearch;
+use admin\models\BreedSearch;
+use admin\models\ColorSearch;
+use admin\models\CountrySearch;
+use admin\models\DrySearch;
+use admin\models\GoodBoot;
 use admin\models\GoodBrand;
+use admin\models\GoodBreed;
+use admin\models\GoodColor;
+use admin\models\GoodCountry;
+use admin\models\GoodDry;
+use admin\models\GoodModel;
+use admin\models\GoodPic;
 use admin\models\GoodSmell;
+use admin\models\GoodStyle;
+use admin\models\ModelSearch;
+use admin\models\PriceSearch;
 use admin\models\SmellSearch;
+use admin\models\StyleSearch;
+use kartik\form\ActiveForm;
 use Yii;
 use admin\models\GoodType;
 use admin\models\TypeSearch;
@@ -14,6 +31,7 @@ use yii\helpers\Html;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 use yii\web\UploadedFile;
 
 /**
@@ -126,8 +144,48 @@ class TypeController extends BaseController
         ];
         $smellSearch = new SmellSearch();
         $smellData = $smellSearch->search(Yii::$app->request->getQueryParams(),$id);
-        $dataProvider->pagination=[
+        $smellData->pagination = [
             'pageSize'=>15,
+        ];
+        $bootSearch = new BootSearch();
+        $bootData = $bootSearch->search(Yii::$app->request->getQueryParams(), $id);
+        $bootData->pagination = [
+            'pageSize' => 15,
+        ];
+//        $priceSearch = new PriceSearch();
+//        $priceData = $priceSearch->search(Yii::$app->request->getQueryParams(),$id);
+//        $priceData->pagination=[
+//            'pageSize'=>15,
+//        ];
+        $colorSearch = new ColorSearch();
+        $colorData = $colorSearch->search(Yii::$app->request->getQueryParams(), $id);
+        $colorData->pagination = [
+            'pageSize' => 15,
+        ];
+        $breedSearch = new BreedSearch();
+        $breedData = $breedSearch->search(Yii::$app->request->getQueryParams(), $id);
+        $breedData->pagination = [
+            'pageSize' => 15,
+        ];
+        $drySearch = new DrySearch();
+        $dryData = $drySearch->search(Yii::$app->request->getQueryParams(), $id);
+        $dryData->pagination = [
+            'pageSize' => 15,
+        ];
+        $volumSearch = new ModelSearch();
+        $volumData = $volumSearch->search(Yii::$app->request->getQueryParams(), $id);
+        $volumData->pagination = [
+            'pageSize' => 15,
+        ];
+        $countrySearch = new CountrySearch();
+        $countryData = $countrySearch->search(Yii::$app->request->getQueryParams(), $id);
+        $countryData->pagination = [
+            'pageSize' => 15,
+        ];
+        $styleSearch = new StyleSearch();
+        $styleData = $styleSearch->search(Yii::$app->request->getQueryParams(), $id);
+        $styleData->pagination = [
+            'pageSize' => 15,
         ];
         return $this->render('view',[
             'key'=>$key,
@@ -136,9 +194,55 @@ class TypeController extends BaseController
             'searchModel' => $searchModel,
             'smellData' =>$smellData,
             'smellSearch'=>$smellSearch,
+            'bootData' => $bootData,
+            'bootSearch' => $bootSearch,
+            'colorData' => $colorData,
+            'colorSearch' => $colorSearch,
+            'breedData' => $breedData,
+            'breedSearch' => $breedSearch,
+            'dryData' => $dryData,
+            'drySearch' => $drySearch,
+            'volumData' => $volumData,
+            'volumSearch' => $volumSearch,
+            'countryData' => $countryData,
+            'countrySearch' => $countrySearch,
+            'styleData' => $styleData,
+            'styleSearch' => $styleSearch,
         ]);
     }
 
+    public function actionValidForm()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $data = Yii::$app->request->post();
+        $key = Yii::$app->request->get('key');
+        if ($key == 'brand') {
+            $model = new GoodBrand(['scenario' => 'create']);
+        } elseif ($key == 'smell') {
+            $model = new GoodSmell();
+        } elseif ($key == 'boot') {
+            $model = new GoodBoot();
+        } elseif ($key == 'price') {
+            $model = new GoodPic();
+        } elseif ($key == 'color') {
+            $model = new GoodColor();
+        } elseif ($key == 'breed') {
+            $model = new GoodSmell();
+        } elseif ($key == 'dry') {
+            $model = new GoodDry();
+        } elseif ($key == 'volum') {
+            $model = new GoodModel();
+        } elseif ($key == 'country') {
+            $model = new GoodCountry();
+        } elseif ($key == 'style') {
+            $model = new GoodStyle();
+        } else {
+            Yii::$app->session->setFlash('danger', '参数异常');
+            return $this->runAction('index');
+        }
+        $model->load($data);
+        return ActiveForm::validate($model);
+    }
 
     /**
      * Creates a new GoodType model.
@@ -160,18 +264,41 @@ class TypeController extends BaseController
         }
     }
 
-    public function actionBrandCreate()
+    public function actionChildCreate()
     {
-        $model = new GoodBrand(['scenario'=>'create']);
+        $key = Yii::$app->request->get('key');
+        $type = Yii::$app->request->get('type');
+        if ($key == 'brand') {
+            $model = new GoodBrand(['scenario' => 'create']);
+        } elseif ($key == 'smell') {
+            $model = new GoodSmell();
+        } elseif ($key == 'boot') {
+            $model = new GoodBoot();
+        } elseif ($key == 'color') {
+            $model = new GoodColor();
+        } elseif ($key == 'breed') {
+            $model = new GoodSmell();
+        } elseif ($key == 'dry') {
+            $model = new GoodDry();
+        } elseif ($key == 'volum') {
+            $model = new GoodModel();
+        } elseif ($key == 'country') {
+            $model = new GoodCountry();
+        } elseif ($key == 'style') {
+            $model = new GoodStyle();
+        } else {
+            Yii::$app->session->setFlash('danger', '参数异常');
+            return $this->runAction('index');
+        }
         $model->regist_at = time();
         $model->is_active = 1;
         $model->active_at = time();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success','操作成功');
-            return $this->runAction('view',['id'=>$model->type,'key'=>'brand']);
+            return $this->redirect(['type/view', 'id' => $model->type, 'key' => $key]);
         } else {
-            Yii::$app->session->setFlash('danger','操作失败');
-            return $this->runAction('view',['id'=>$model->type,'key'=>'brand']);
+            Yii::$app->session->setFlash('danger', '发生异常，请重试');
+            return $this->redirect(['type/view', 'id' => $type, 'key' => $key]);
         }
     }
 
@@ -269,6 +396,57 @@ class TypeController extends BaseController
         }
     }
 
+    public function actionUpdateChild()
+    {
+        $hasEditable = Yii::$app->request->post('hasEditable');
+        $id = Yii::$app->request->post('editableKey');
+        $key = Yii::$app->request->get('key');
+        if ($hasEditable && $id) {
+            if ($key == 'smell') {
+                $model = GoodSmell::findOne($id);
+            } elseif ($key == 'boot') {
+                $model = GoodBoot::findOne($id);
+            } elseif ($key == 'color') {
+                $model = GoodColor::findOne($id);
+            } elseif ($key == 'breed') {
+                $model = GoodBreed::findOne($id);
+            } elseif ($key == 'dry') {
+                $model = GoodDry::findOne($id);
+            } elseif ($key == 'volum') {
+                $model = GoodModel::findOne($id);
+            } elseif ($key == 'country') {
+                $model = GoodCountry::findOne($id);
+            } elseif ($key == 'style') {
+                $model = GoodStyle::findOne($id);
+            } else {
+                Yii::$app->session->setFlash('danger', '参数异常');
+                return $this->runAction('index');
+            }
+            $arr = array_keys($_POST);
+            $target = $arr[count($arr) - 1];
+            if (!empty($model)) {
+                $post[$target] = current($_POST[$target]);
+                if (empty($post[$target]['name']) && empty($post[$target]['type'])) {
+                    if (isset($post[$target]['name'])) {
+                        return json_encode(['output' => '', 'message' => '请填写品牌名称']);
+                    }
+                    if (isset($post[$target]['type'])) {
+                        return json_encode(['output' => '', 'message' => '请选择类型']);
+                    }
+                }
+                if ($model->load($post) && $model->save()) {
+                    return json_encode(['output' => empty($post[$target]['name']) ? $model->type0->name : $post[$target]['name'], 'message' => '']);
+                } else {
+                    return json_encode(['output' => '', 'message' => array_values($model->getFirstErrors())[0]]);
+                }
+            } else {
+                return json_encode(['output' => '', 'message' => '未找到该条数据']);
+            }
+        } else {
+            return json_encode(['output' => '', 'message' => '']);
+        }
+    }
+
     /**
      * Deletes an existing GoodType model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -283,21 +461,47 @@ class TypeController extends BaseController
             $model->active_at = time();
             $model->save();
         }
+        Yii::$app->session->setFlash('success', '删除成功');
         return $this->runAction('index');
     }
 
 
-    public function actionBrandDelete($id)
+    public function actionChildDelete($id)
     {
-        $type = Yii::$app->request->get('type');
-        $model = GoodBrand::findOne($id);
+        $key = Yii::$app->request->get('key');
+        if ($key == 'brand') {
+            $model = GoodBrand::findOne($id);
+        } elseif ($key == 'smell') {
+            $model = GoodSmell::findOne($id);
+        } elseif ($key == 'boot') {
+            $model = GoodBoot::findOne($id);
+        } elseif ($key == 'color') {
+            $model = GoodColor::findOne($id);
+        } elseif ($key == 'breed') {
+            $model = GoodBreed::findOne($id);
+        } elseif ($key == 'dry') {
+            $model = GoodDry::findOne($id);
+        } elseif ($key == 'volum') {
+            $model = GoodModel::findOne($id);
+        } elseif ($key == 'country') {
+            $model = GoodCountry::findOne($id);
+        } elseif ($key == 'style') {
+            $model = GoodStyle::findOne($id);
+        } else {
+            Yii::$app->session->setFlash('danger', '参数异常');
+            return $this->runAction('index');
+        }
         if(!empty($model)){
             $model->is_active = empty($model->is_active) ? 1:0;
             $model->active_at = time();
             $model->save();
+            Yii::$app->session->setFlash('success', empty($model->is_active) ? '下架成功' : '上架成功');
+        } else {
+            Yii::$app->session->setFlash('danger', '未找到该数据');
         }
-        return $this->runAction('view',['id'=>$type,'key'=>'brand']);
+        return $this->redirect(['view', 'id' => $model->type, 'key' => $key]);
     }
+
 
     /**
      * Finds the GoodType model based on its primary key value.

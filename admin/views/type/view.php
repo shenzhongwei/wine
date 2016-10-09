@@ -3,56 +3,97 @@
 use kartik\tabs\TabsX;
 
 /**
- * * @var yii\web\View $this
+ * @var yii\web\View $this
  * @var yii\data\ActiveDataProvider $dataProvider
  * @var admin\models\BrandSearch $searchModel
  * @var yii\data\ActiveDataProvider $smellData
  * @var admin\models\SmellSearch $smellSearch
+ * @var yii\data\ActiveDataProvider $bootData
+ * @var admin\models\BootSearch $bootSearch
+ * @var yii\data\ActiveDataProvider $priceData
+ * @var admin\models\PriceSearch $priceSearch
+ * @var yii\data\ActiveDataProvider $colorData
+ * @var admin\models\ColorSearch $colorSearch
+ * @var yii\data\ActiveDataProvider $breedData
+ * @var admin\models\BreedSearch $breedSearch
+ * @var yii\data\ActiveDataProvider $dryData
+ * @var admin\models\DrySearch $drySearch
+ * @var yii\data\ActiveDataProvider $volumData
+ * @var admin\models\ModelSearch $volumSearch
+ * @var yii\data\ActiveDataProvider $countryData
+ * @var admin\models\CountrySearch $countrySearch
+ * @var yii\data\ActiveDataProvider $styleData
+ * @var admin\models\StyleSearch $styleSearch
  * @var admin\models\GoodType $model
+ * @var string $key
  */
 $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', '子检索'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 $brand = $this->render('brand',['model'=>$model,'searchModel'=>$searchModel,'dataProvider'=>$dataProvider]);
 $smell = $this->render('smell',['model'=>$model,'searchModel'=>$smellSearch,'dataProvider'=>$smellData]);
+$boot = $this->render('boot', ['model' => $model, 'searchModel' => $bootSearch, 'dataProvider' => $bootData]);
+//$price = $this->render('price',['model'=>$model,'searchModel'=>$priceSearch,'dataProvider'=>$priceData]);
+$color = $this->render('color', ['model' => $model, 'searchModel' => $colorSearch, 'dataProvider' => $colorData]);
+$breed = $this->render('breed', ['model' => $model, 'searchModel' => $breedSearch, 'dataProvider' => $breedData]);
+$dry = $this->render('dry', ['model' => $model, 'searchModel' => $drySearch, 'dataProvider' => $dryData]);
+$volum = $this->render('volum', ['model' => $model, 'searchModel' => $volumSearch, 'dataProvider' => $volumData]);
+$country = $this->render('country', ['model' => $model, 'searchModel' => $countrySearch, 'dataProvider' => $countryData]);
+$style = $this->render('style', ['model' => $model, 'searchModel' => $styleSearch, 'dataProvider' => $styleData]);
 $items = [
     [
-        'label'=>'<button class="btn btn-link btn-xs" id="brand">品 牌</button>',
+        'label' => '<i class="btn btn-link btn-xs" id="brand">品 牌</i>',
         'content'=>$brand,
         'active'=>$key == 'brand' ? true:false,
     ],
     [
-        'label'=>'<button class="btn btn-link btn-xs" id="smell">香 型</button>',
+        'label' => '<i class="btn btn-link btn-xs" id="smell">香 型</i>',
         'content'=>$smell,
-        'active'=>$key == 'brand' ? true:false,
+        'active' => $key == 'smell' ? true : false,
     ],
     [
-        'label'=>'<button class="btn btn-link btn-xs">产 地</button>',
+        'label' => '<i class="btn btn-link btn-xs">产 地</i>',
+        'content' => $boot,
+        'active' => $key == 'boot' ? true : false,
+    ],
+//    [
+//        'label'=>'<i class="btn btn-link btn-xs">价格区间</i>',
+//        'content'=>$price,
+//        'active'=>$key == 'price' ? true:false,
+//    ],
+    [
+        'label' => '<i class="btn btn-link btn-xs">颜 色</i>',
+        'content' => $color,
+        'active' => $key == 'color' ? true : false,
     ],
     [
-        'label'=>'<button class="btn btn-link btn-xs">价格区间</button>',
+        'label' => '<i class="btn btn-link btn-xs">品 种</i>',
+        'content' => $breed,
+        'active' => $key == 'breed' ? true : false,
     ],
     [
-        'label'=>'<button class="btn btn-link btn-xs">颜 色</button>',
+        'label' => '<i class="btn btn-link btn-xs">干 型</i>',
+        'content' => $dry,
+        'active' => $key == 'dry' ? true : false,
     ],
     [
-        'label'=>'<button class="btn btn-link btn-xs">品 种</button>',
+        'label' => '<i class="btn btn-link btn-xs">规 格</i>',
+        'content' => $volum,
+        'active' => $key == 'volum' ? true : false,
     ],
     [
-        'label'=>'<button class="btn btn-link btn-xs">干 型</button>',
+        'label' => '<i class="btn btn-link btn-xs">国 家</i>',
+        'content' => $country,
+        'active' => $key == 'country' ? true : false,
     ],
     [
-        'label'=>'<button class="btn btn-link btn-xs">规 格</button>',
-    ],
-    [
-        'label'=>'<button class="btn btn-link btn-xs">国 家</button>',
-    ],
-    [
-        'label'=>'<button class="btn btn-link btn-xs">类 型</button>',
+        'label' => '<i class="btn btn-link btn-xs">类 型</i>',
+        'content' => $style,
+        'active' => $key == 'style' ? true : false,
     ],
 ];
 ?>
-<div class="good-type-view col-sm-12">
+<div class="good-type-view">
     <div class="panel panel-info">
         <div class="panel-heading">
             <?= '检索：'.$model->name ?>
@@ -64,8 +105,10 @@ $items = [
         'position'=>TabsX::POS_ABOVE,
         'encodeLabels'=>false,
         'align'=>TabsX::SIZE_LARGE,
-//        'height'=>TabsX::SIZE_MEDIUM,
         'bordered'=>false,
+        'options' => [
+            'style' => 'width:100%'
+        ]
     ]);
     ?>
             </div>

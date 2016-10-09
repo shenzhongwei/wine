@@ -8,7 +8,7 @@ use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
-use common\widgets\Alert;
+use kartik\alert\Alert;
 
 // AppAsset::register($this);
 ?>
@@ -55,6 +55,27 @@ use common\widgets\Alert;
     <?php $this->head() ?>
 </head>
 <body class="fixed-sidebar full-height-layout gray-bg">
+<?php if (Yii::$app->session->hasFlash('success')) {
+    echo Alert::widget([
+        'type' => Alert::TYPE_SUCCESS,
+        'title' => null,
+        'icon' => 'glyphicon glyphicon-ok-sign',
+        'body' => Yii::$app->session->getFlash('success'),
+        'showSeparator' => true,
+        'delay' => 3000
+    ]);
+}
+if (Yii::$app->session->hasFlash('danger')) {
+    echo Alert::widget([
+        'type' => Alert::TYPE_WARNING,
+        'title' => null,
+        'icon' => 'glyphicon glyphicon-exclamation-sign',
+        'body' => Yii::$app->session->getFlash('danger'),
+        'showSeparator' => true,
+        'delay' => 3000,
+    ]);
+}
+?>
 <?php $this->beginBody() ?>
 <?php $this->endBody() ?>
 <?= $content ?>
