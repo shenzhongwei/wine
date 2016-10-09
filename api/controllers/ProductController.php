@@ -338,7 +338,7 @@ class ProductController extends ApiController{
             'is_collected'=>$is_collected,
             'collection_id'=>$collection_id,
             'is_active'=>$goodInfo->is_active,
-            'detail'=>stripcslashes($goodInfo->detail),
+            'detail'=>'http://120.25.144.153/wine/admin/web/index.php/good/info?id='.$goodInfo->id,
         ];
 //        var_dump($goodInfo->detail);
 //        exit;
