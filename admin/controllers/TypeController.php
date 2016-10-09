@@ -4,6 +4,8 @@ namespace admin\controllers;
 
 use admin\models\BrandSearch;
 use admin\models\GoodBrand;
+use admin\models\GoodSmell;
+use admin\models\SmellSearch;
 use Yii;
 use admin\models\GoodType;
 use admin\models\TypeSearch;
@@ -85,7 +87,6 @@ class TypeController extends BaseController
     public function actionBrandUpload(){
         $goodBrand = new GoodBrand();
         $file_name = 'good_brand_'.time();
-
         if(Yii::$app->request->isPost) {
             $image = UploadedFile::getInstance($goodBrand, 'url');
             $path = '../../photo/brand/';
@@ -123,11 +124,19 @@ class TypeController extends BaseController
         $dataProvider->pagination=[
             'pageSize'=>15,
         ];
+        $smellSearch = new SmellSearch();
+        $smellData = $smellSearch->search(Yii::$app->request->getQueryParams(),$id);
+        $dataProvider->pagination=[
+            'pageSize'=>15,
+        ];
         return $this->render('view',[
             'key'=>$key,
             'model'=>$model,
             'dataProvider' => $dataProvider,
-            'searchModel' => $searchModel]);
+            'searchModel' => $searchModel,
+            'smellData' =>$smellData,
+            'smellSearch'=>$smellSearch,
+        ]);
     }
 
 
@@ -139,6 +148,9 @@ class TypeController extends BaseController
     public function actionCreate()
     {
         $model = new GoodType(['scenario'=>'create']);
+        $model->regist_at = time();
+        $model->is_active = 1;
+        $model->active_at = time();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->runAction('index');
         } else {
@@ -148,18 +160,21 @@ class TypeController extends BaseController
         }
     }
 
-    public function actionCreateBrand()
+    public function actionBrandCreate()
     {
-        $type = Yii::$app->request->get('type');
         $model = new GoodBrand(['scenario'=>'create']);
+        $model->regist_at = time();
+        $model->is_active = 1;
+        $model->active_at = time();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->runAction('index',['id'=>$type,'key'=>'brand']);
+            Yii::$app->session->setFlash('success','操作成功');
+            return $this->runAction('view',['id'=>$model->type,'key'=>'brand']);
         } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+            Yii::$app->session->setFlash('danger','操作失败');
+            return $this->runAction('view',['id'=>$model->type,'key'=>'brand']);
         }
     }
+
 
     /**
      * Updates an existing GoodType model.
@@ -175,14 +190,13 @@ class TypeController extends BaseController
         if($hasEditable&&$id){
             $model = $this->findModel($id);
             if(!empty($model)){
-                $url = empty($url) ? $model->logo:$url;
                 $post['GoodType'] = current($_POST['GoodType']);
                 if(empty($post['GoodType']['name'])&&empty($url)){
-                    if(empty($post['GoodType']['name'])&&empty($model->name)){
+                    if(isset($post['GoodType']['name'])){
                         return json_encode(['output'=>'', 'message'=>'请填写类型名称']);
                     }
-                    if(empty($url)){
-                        return json_encode(['output'=>'', 'message'=>'上传类型图标']);
+                    if(empty($model->logo)){
+                        return json_encode(['output'=>'', 'message'=>'请上传类型logo']);
                     }
                 }
                 if(!empty($url)){
@@ -212,20 +226,23 @@ class TypeController extends BaseController
 
     public function actionUpdateBrand()
     {
+//        $type = Yii::$app->request->get('type');
         $hasEditable = Yii::$app->request->post('hasEditable');
         $id = Yii::$app->request->post('editableKey');
         $url = empty($_POST['GoodBrand']['url']) ? '':$_POST['GoodBrand']['url'];
         if($hasEditable&&$id){
             $model = GoodBrand::findOne($id);
             if(!empty($model)){
-                $url = empty($url) ? $model->logo:$url;
                 $post['GoodBrand'] = current($_POST['GoodBrand']);
-                if(empty($post['GoodBrand']['name'])&&empty($url)){
-                    if(empty($post['GoodBrand']['name'])&&empty($model->name)){
-                        return json_encode(['output'=>'', 'message'=>'请填写类型名称']);
+                if(empty($post['GoodBrand']['name'])&&empty($url)&&empty($post['GoodBrand']['type'])){
+                    if(isset($post['GoodBrand']['name'])){
+                        return json_encode(['output'=>'', 'message'=>'请填写品牌名称']);
                     }
-                    if(empty($url)){
-                        return json_encode(['output'=>'', 'message'=>'上传类型图标']);
+                    if(isset($post['GoodBrand']['type'])){
+                        return json_encode(['output'=>'', 'message'=>'请选择类型']);
+                    }
+                    if(empty($model->logo)){
+                        return json_encode(['output'=>'', 'message'=>'请上传品牌logo']);
                     }
                 }
                 if(!empty($url)){
@@ -239,8 +256,8 @@ class TypeController extends BaseController
                     if(!empty($post['GoodBrand']['logo'])&&$post['GoodBrand']['logo']!=$pic && !empty($pic)&&!empty($url)){
                         @unlink('../../photo'.$pic);
                     }
-                    return json_encode(['output'=>empty($post['GoodBrand']['name']) ? (empty($post['GoodBrand']['logo']) ? '':Html::img('../../../photo'.$model->logo,[
-                        'width'=>"20px",'height'=>"20px"])):$post['GoodBrand']['name'], 'message'=>'']);
+                    return json_encode(['output'=>empty($post['GoodBrand']['type']) ? (empty($post['GoodBrand']['name']) ? (empty($post['GoodBrand']['logo']) ? '':Html::img('../../../photo'.$model->logo,[
+                        'width'=>"70px",'height'=>"30px"])):$post['GoodBrand']['name']):$model->type0->name, 'message'=>'']);
                 }else{
                     return json_encode(['output'=>'','message'=>array_values($model->getFirstErrors())[0]]);
                 }
@@ -267,6 +284,19 @@ class TypeController extends BaseController
             $model->save();
         }
         return $this->runAction('index');
+    }
+
+
+    public function actionBrandDelete($id)
+    {
+        $type = Yii::$app->request->get('type');
+        $model = GoodBrand::findOne($id);
+        if(!empty($model)){
+            $model->is_active = empty($model->is_active) ? 1:0;
+            $model->active_at = time();
+            $model->save();
+        }
+        return $this->runAction('view',['id'=>$type,'key'=>'brand']);
     }
 
     /**

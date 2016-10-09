@@ -37,8 +37,10 @@ class GoodBrand extends \yii\db\ActiveRecord
         return [
             [['type', 'regist_at', 'is_active', 'active_at'], 'integer'],
             [['name'], 'string', 'max' => 50],
+            [['name','logo','type'],'required','on'=>'create'],
             [['logo'], 'string', 'max' => 128],
             [['type'], 'exist', 'skipOnError' => true, 'targetClass' => GoodType::className(), 'targetAttribute' => ['type' => 'id']],
+            [['name'],'validName','on'=>['create','update']],
         ];
     }
 
@@ -50,8 +52,8 @@ class GoodBrand extends \yii\db\ActiveRecord
         return [
             'id' => '品牌id',
             'name' => '品牌名',
-            'logo' => '品牌log',
-            'type' => '类型id',
+            'logo' => '品牌logo',
+            'type' => '类型',
             'regist_at' => '添加时间',
             'is_active' => '是否上架',
             'active_at' => '上架状态更改时间',
@@ -80,6 +82,22 @@ class GoodBrand extends \yii\db\ActiveRecord
     public function getGoodInfos()
     {
         return $this->hasMany(GoodInfo::className(), ['brand' => 'id']);
+    }
+
+    public static function GetAllTypes(){
+        return ArrayHelper::map(GoodType::find()->all(),'id','name');
+    }
+
+    public function validName(){
+        $id = $this->id;
+        $query = self::find()->where("name=\"$this->name\" and type=$this->type");
+        if(!empty($id)){
+            $query->andWhere("id<>$this->id");
+        }
+        $model = $query->one();
+        if(!empty($model)){
+            $this->addError('name',$this->name.'类型已存在');
+        }
     }
 
     public static function GetBrands(){

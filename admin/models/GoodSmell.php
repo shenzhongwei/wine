@@ -3,6 +3,7 @@
 namespace admin\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "good_smell".
@@ -34,8 +35,10 @@ class GoodSmell extends \yii\db\ActiveRecord
     {
         return [
             [['type', 'regist_at', 'is_active', 'active_at'], 'integer'],
+            [['type','name'],'required'],
             [['name'], 'string', 'max' => 50],
             [['type'], 'exist', 'skipOnError' => true, 'targetClass' => GoodType::className(), 'targetAttribute' => ['type' => 'id']],
+            [['name'],'validName'],
         ];
     }
 
@@ -68,6 +71,26 @@ class GoodSmell extends \yii\db\ActiveRecord
     public function getType0()
     {
         return $this->hasOne(GoodType::className(), ['id' => 'type']);
+    }
+
+    public function validName(){
+        $id = $this->id;
+        $query = self::find()->where("name=\"$this->name\" and type=$this->type");
+        if(!empty($id)){
+            $query->andWhere("id<>$this->id");
+        }
+        $model = $query->one();
+        if(!empty($model)){
+            $this->addError('name',$this->name.'类型已存在');
+        }
+    }
+    public static function GetAllTypes(){
+        return ArrayHelper::map(GoodType::find()->all(),'id','name');
+    }
+
+    public static function GetAllSmells($id){
+        $brands = self::findAll(['type'=>$id]);
+        return ArrayHelper::map($brands,'name','name');
     }
 
 }

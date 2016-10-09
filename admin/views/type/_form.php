@@ -14,7 +14,7 @@ use yii\helpers\Url;
  */
 ?>
 
-<div class="good-type-form col-sm-3">
+<div class="good-type-form col-sm-8">
 
     <?php $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_VERTICAL]); echo Form::widget([
 

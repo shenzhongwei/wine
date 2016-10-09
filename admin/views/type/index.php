@@ -18,7 +18,7 @@ use kartik\widgets\FileInput;
 $this->title = Yii::t('app', 'Good Types');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="good-type-index col-sm-8">
+<div class="good-type-index col-sm-12">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
@@ -112,7 +112,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     'formOptions'=>[
                         'action'=>Url::toRoute(['type/update']),
                     ],
-                    'size'=>'lg',
+                    'size'=>'md',
+                    'placement'=>'bottom',
                     'pluginEvents' => [
                         "editableReset"=>"function(event) { $(this).parents('td').find('.form-group').children().val(''); }",
                     ],

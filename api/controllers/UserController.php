@@ -485,12 +485,16 @@ class UserController extends ApiController{
             return $this->showResult(302,'用户信息异常');
         }
         //接收数据
+        $phone = Yii::$app->request->post('phone');
         $code = Yii::$app->request->post('code','');//验证码
         $old_pwd = Yii::$app->request->post('oldPwd');//原密码
         $password = Yii::$app->request->post('password','');//密码
         $confirmPwd = Yii::$app->request->post('confirmPwd','');//确认密码
-        if(empty($code)||empty($password)||empty($confirmPwd)||empty($old_pwd)){//判断是否接受完整
+        if(empty($code)||empty($password)||empty($confirmPwd)||empty($old_pwd)||empty($phone)){//判断是否接受完整
             return $this->showResult(301,'获取数据出错');
+        }
+        if($phone!=$userInfo->phone){
+            return $this->showResult(303,'请使用您登录的手机号进行验证');
         }
         if($confirmPwd!=$password){//判断两次输入密码是否一致
             return $this->showResult(301,'两次输入的密码不一致');
