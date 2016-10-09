@@ -256,8 +256,10 @@ class TypeController extends BaseController
         $model->is_active = 1;
         $model->active_at = time();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success','操作成功');
             return $this->runAction('index');
         } else {
+            Yii::$app->session->setFlash('danger', '发生异常，请重试');
             return $this->render('create', [
                 'model' => $model,
             ]);
@@ -461,7 +463,7 @@ class TypeController extends BaseController
             $model->active_at = time();
             $model->save();
         }
-        Yii::$app->session->setFlash('success', '删除成功');
+        Yii::$app->session->setFlash('success', empty($model->is_active) ? '下架成功' : '上架成功');
         return $this->runAction('index');
     }
 
