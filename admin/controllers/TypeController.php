@@ -259,7 +259,9 @@ class TypeController extends BaseController
             Yii::$app->session->setFlash('success','操作成功');
             return $this->runAction('index');
         } else {
-            Yii::$app->session->setFlash('danger', '发生异常，请重试');
+            if(Yii::$app->request->post()){
+                Yii::$app->session->setFlash('danger', '发生异常，请重试');
+            }
             return $this->render('create', [
                 'model' => $model,
             ]);
