@@ -153,6 +153,8 @@ class OrderController extends ApiController{
             //找用户订单,查找用户一个月内的订单
             $query = OrderInfo::find()->joinWith('orderDetails')->where([
                 'and','uid='.$user_id,'is_del=0','order_date+2592000>'.time(),'state in (1,2,3,4,5,6,7,99)']);
+//            var_dump($query);
+//            exit;
             if(!empty($state)){//筛选
                 if($state == 2){
                     $query->andWhere(['and','state between 2 and 5']);
@@ -170,6 +172,7 @@ class OrderController extends ApiController{
                 $data = ArrayHelper::getColumn($orders,function($element){
                     return [
                         'order_id'=>$element->id,
+                        'send_bill'=>$element->send_bill,
                         'state'=>$element->state,
                         'pay_price'=>$element->pay_bill,
                         'order_date'=>date('Y-m-d H:i:s',$element->order_date),
