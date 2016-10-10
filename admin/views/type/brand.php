@@ -18,8 +18,8 @@ $brandModel = new GoodBrand(['scenario'=>'create']);
 $brandModel->type = $model->id;
 
 ?>
-<?php echo
-GridView::widget([
+<?php
+echo GridView::widget([
     'dataProvider' => $dataProvider,
     'filterModel' => $searchModel,
     'filterUrl' => Url::toRoute(['view', 'id' => $model->id, 'key' => 'brand']),
@@ -247,7 +247,7 @@ GridView::widget([
     'export'=>[
         'fontAwesome'=>true
     ],
-])
+]);
 ?>
 <?php
 

@@ -100,6 +100,7 @@ $items = [
         </div>
         <div class="panel-body">
         <?php
+        \yii\widgets\Pjax::begin(['timeout'=>6000]);
     echo TabsX::widget([
         'items'=>$items,
         'position'=>TabsX::POS_ABOVE,
@@ -110,6 +111,7 @@ $items = [
             'style' => 'width:100%'
         ]
     ]);
+        \yii\widgets\Pjax::end();
     ?>
             </div>
         </div>
