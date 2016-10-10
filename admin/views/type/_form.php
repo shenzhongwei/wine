@@ -44,9 +44,6 @@ use yii\helpers\Url;
                             "../../../photo".$model->logo,
                         ],
                         'uploadUrl' => Url::to(['/type/upload']),
-                        'uploadExtraData' => [
-                            'id' => empty($model->id) ? 0:$model->id,
-                        ],
                         'maxFileSize'=>200,
                         'previewFileType' => 'image',
                         'initialPreviewAsData' => true,
