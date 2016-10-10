@@ -158,7 +158,7 @@ GridView::widget([
             Html::a('<i class="glyphicon glyphicon-plus"></i>', '',[
                 'data-toggle' => 'modal',    //弹框
                 'data-target' => '#smell-modal',    //指定弹框的id
-                'type'=>'button', 'title'=>'新增品牌', 'class'=>'btn btn-success'
+                'type'=>'button', 'title'=>'新增香型', 'class'=>'btn btn-success'
             ]).
             Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['view','id'=>$model->id,'key'=>'smell'], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>'刷新列表'])
         ],
@@ -180,7 +180,7 @@ GridView::widget([
     'options' => [
         'tabindex' => false
     ],
-    'header' => '<h4 class="modal-title">新增品牌</h4>',
+    'header' => '<h4 class="modal-title">新增香型</h4>',
 ]);
 echo $this->render('_smellcreate',['model'=>$smellModel]);
 \yii\bootstrap\Modal::end();

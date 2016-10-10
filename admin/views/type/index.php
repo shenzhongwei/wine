@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ]), ['create'], ['class' => 'btn btn-success'])*/  ?>
     </p>
 
-<!--    --><?php //Pjax::begin(['id'=>'typeinfos','timeout'=>5000]);
+    <?php Pjax::begin(['id'=>'typeinfo','timeout'=>5000]);
     echo GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -35,18 +35,11 @@ $this->params['breadcrumbs'][] = $this->title;
         'containerOptions'=>['style'=>'overflow: auto'], // only set when $responsive = false
         'headerRowOptions'=>['class'=>'kartik-sheet-style'],
         'filterRowOptions'=>['class'=>'kartik-sheet-style'],
-        'pjax'=>true,  //pjax is set to always true for this demo
-        'pjaxSettings'=>[
-            'options'=>[
-                'id'=>'type',
-            ],
-            'neverTimeout'=>true,
-        ],
         'columns' => [
             [
                 'class'=>'kartik\grid\SerialColumn',
                 'contentOptions'=>['class'=>'kartik-sheet-style'],
-                'width'=>'1%',
+                'width'=>'4%',
                 'header'=>'',
                 'headerOptions'=>['class'=>'kartik-sheet-style']
             ],
@@ -62,7 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'size'=>'sm',
                     'options' => ['class'=>'form-control', 'placeholder'=>'输入名称']
                 ],
-                'width'=>'6%',
+                'width'=>'19%',
                 'filterType'=>GridView::FILTER_SELECT2,
                 'filterWidgetOptions'=>[
                     'data'=>GoodType::GetAllTypes(),
@@ -74,7 +67,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label'=>'发布时间',
                 'attribute'=>'regist_at',
                 'hAlign'=>GridView::ALIGN_CENTER,
-                'width'=>'6%',
+                'width'=>'19%',
                 'format'=>['date','php:Y年m月d日'],
                 'value'=>function($model){
                     return $model->regist_at;
@@ -93,7 +86,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'label'=>'状态',
                 'class'=>'kartik\grid\BooleanColumn',
-                'width'=>'5%',
+                'width'=>'16%',
                 'attribute' => 'is_active',
                 'vAlign'=>GridView::ALIGN_LEFT,
                 'trueLabel'=>'上架中',
@@ -104,7 +97,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
 
                 'header'=>'图标',
-                'width'=>'8%',
+                'width'=>'16%',
                 'headerOptions'=>['class'=>'kartik-sheet-style'],
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
@@ -178,7 +171,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'header'=>'子检索',
                 'class' =>  'kartik\grid\ActionColumn',
-                'width'=>'5%',
+                'width'=>'16%',
                 'headerOptions'=>['class'=>'kartik-sheet-style'],
                 'buttons'=>[
                     'view' => function ($url, $model) {
@@ -197,7 +190,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             [
                 'header' => '操作',
-                'width'=>'5%',
+                'width'=>'10%',
                 'class' =>  'kartik\grid\ActionColumn',
                 'buttons' => [
                     'view' => function ($url, $model) {
@@ -250,6 +243,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'fontAwesome'=>true
         ],
     ]);
-//    Pjax::end(); ?>
+    Pjax::end(); ?>
 
 </div>

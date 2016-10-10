@@ -285,31 +285,24 @@ class ProductController extends ApiController{
         $query->offset(0)->limit(2);
         $comments = $query->all();
         $comment = CommentDetail::data($comments);
-        //处理详情
-        $is_rush = empty($goodInfo->goodRush) ? 0:1;
-        $is_vip = empty($goodInfo->goodVip) ? 0:1;
-        if($is_rush == 1){
-            $salePrice = $goodInfo->goodRush->price;
-            $limit = $goodInfo->goodRush->limit;
-        }elseif($is_vip == 1){
-            $salePrice = $goodInfo->goodVip->price;
-            $limit = 0;
-//            $limit = $goodInfo->goodVip->limit;
-        }else{
-            $limit = 0;
-            $salePrice = $goodInfo->price;
-        }
         //根据用户是否登录判断是否可收藏
         $token = Yii::$app->request->post('token');
+        $user_vip = 0;
         if(empty($token)){
+            $user_vip = 1;
             $is_collected = 0;
             $collection_id = 0;
         }else{
             $userLogin = UserLogin::findOne(['token'=>$token]);
-            if(empty($userLogin)||empty($userLogin->uid)){
+            if(empty($userLogin)||empty($userLogin->uid)||empty($userLogin->userInfo)){
                 $is_collected = 0;
                 $collection_id = 0;
             }else{
+                //判断用户是否为会员
+                $userInfo = $userLogin->userInfo;
+                if($userInfo->is_vip){
+                    $user_vip = 1;
+                }
                 //判断该商品是否已收藏
                 $collectedGood = GoodCollection::find()->where(['uid'=>$userLogin->uid,'gid'=>$good_id,'status'=>1])->one();
                 if(!empty($collectedGood)){
@@ -320,6 +313,20 @@ class ProductController extends ApiController{
                     $collection_id = 0;
                 }
             }
+        }
+        //处理详情
+        $is_rush = empty($goodInfo->goodRush) ? 0:1;
+        $is_vip = empty($goodInfo->goodVip)||empty($user_vip) ? 0:1;
+        if($is_rush == 1){
+            $salePrice = $goodInfo->goodRush->price;
+            $limit = $goodInfo->goodRush->limit;
+        }elseif($is_vip == 1){//会员的同时
+            $salePrice = $goodInfo->goodVip->price;
+            $limit = 0;
+//            $limit = $goodInfo->goodVip->limit;
+        }else{
+            $limit = 0;
+            $salePrice = $goodInfo->pro_price;
         }
         $data = [
             'good_id'=>$goodInfo->id,

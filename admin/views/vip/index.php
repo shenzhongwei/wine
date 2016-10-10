@@ -15,7 +15,7 @@ $this->title = '会员商品表';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="good-vip-index col-sm-8">
-    <?php Pjax::begin(['id'=>'goodvips','timeout'=>3000]);
+    <?php Pjax::begin(['id'=>'goodvip','timeout'=>5000]);
     echo GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [

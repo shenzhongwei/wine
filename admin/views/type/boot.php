@@ -4,24 +4,25 @@ use yii\helpers\Url;
 use kartik\grid\GridView;
 use yii\helpers\Html;
 use kartik\grid\EditableColumn;
-use admin\models\GoodSmell;
+use admin\models\GoodBoot;
 use kartik\editable\Editable;
-
+use common\helpers\ArrayHelper;
+use admin\models\Zone;
 /**
  * @var yii\web\View $this
  * @var yii\data\ActiveDataProvider $dataProvider
- * @var admin\models\SmellSearch $searchModel
+ * @var admin\models\BootSearch $searchModel
  * @var admin\models\GoodType $model
  */
-$smellModel = new GoodSmell();
-$smellModel->type = $model->id;
+$bootModel = new GoodBoot();
+$bootModel->type = $model->id;
 
 ?>
 <?php echo
 GridView::widget([
     'dataProvider' => $dataProvider,
     'filterModel' => $searchModel,
-    'filterUrl' => Url::toRoute(['view', 'id' => $model->id, 'key' => 'smell']),
+    'filterUrl' => Url::toRoute(['view', 'id' => $model->id, 'key' => 'boot']),
     'filterPosition' => GridView::FILTER_POS_HEADER,
     'containerOptions' => ['style' => 'overflow: auto'], // only set when $responsive = false
     'headerRowOptions' => ['class' => 'kartik-sheet-style'],
@@ -37,23 +38,30 @@ GridView::widget([
             'headerOptions' => ['class' => 'kartik-sheet-style']
         ],
         [
-            'header' => '香型名称',
+            'header' => '产地名称',
             'attribute' => 'name',
             'width' => '12%',
 //                'refreshGrid'=>true,
             'class' => EditableColumn::className(),
             'editableOptions' => [
+                'inputType' => Editable::INPUT_SELECT2,
                 'asPopover' => true,
                 'formOptions' => [
-                    'action' => Url::toRoute(['type/update-child', 'key' => 'smell']),
+                    'action' => Url::toRoute(['type/update-child', 'key' => 'boot']),
                 ],
-                'size' => 'sm',
-                'options' => ['class' => 'form-control', 'placeholder' => '输入名称']
+                'size' => 'md',
+                'options'=>[
+                    'data' => ArrayHelper::map(Zone::GetAllProvince(),'shortname','shortname'),
+                    'options' => ['placeholder' => '请选择产地'],
+                    'pluginOptions' => [
+                        'allowClear' => true
+                    ],
+                ],
             ],
             'filterType' => GridView::FILTER_SELECT2,
             'filterWidgetOptions' => [
-                'data' => GoodSmell::GetAllSmells($model->id),
-                'options' => ['placeholder' => '请选择香型'],
+                'data' => GoodBoot::GetAllBoots($model->id),
+                'options' => ['placeholder' => '请选择产地'],
                 'pluginOptions' => ['allowClear' => true],
             ],
         ],
@@ -103,12 +111,12 @@ GridView::widget([
                 'asPopover' => true,
                 'placement' => 'bottom',
                 'formOptions' => [
-                    'action' => Url::toRoute(['type/update-child', 'key' => 'smell']),
+                    'action' => Url::toRoute(['type/update-child', 'key' => 'boot']),
                 ],
                 'size' => 'md',
                 'options' => [
                     'class' => 'form-control',
-                    'data' => GoodSmell::GetAllTypes(),
+                    'data' => GoodBoot::GetAllTypes(),
                     'options' => ['placeholder' => '请选择类型'],
                     'pluginOptions' => ['allowClear' => true],
                 ]
@@ -130,13 +138,13 @@ GridView::widget([
                 },
                 'delete' => function ($url, $model) {
                     if ($model->is_active == 0) {
-                        return Html::a(Yii::t('app', 'Up'), ['child-delete', 'key' => 'smell', 'id' => $model->id], [
+                        return Html::a(Yii::t('app', 'Up'), ['child-delete', 'key' => 'boot', 'id' => $model->id], [
                             'title' => Yii::t('app', '上架该检索'),
                             'class' => 'btn btn-success btn-xs',
                             'data-confirm' => '确认上架该检索？',
                         ]);
                     } else {
-                        return Html::a(Yii::t('app', 'Down'), ['child-delete', 'key' => 'smell', 'id' => $model->id], [
+                        return Html::a(Yii::t('app', 'Down'), ['child-delete', 'key' => 'boot', 'id' => $model->id], [
                             'title' => Yii::t('app', '下架该检索'),
                             'class' => 'btn btn-danger btn-xs',
                             'data-confirm' => '确认下架该检索？',
@@ -156,10 +164,10 @@ GridView::widget([
         ['content' =>
             Html::a('<i class="glyphicon glyphicon-plus"></i>', '', [
                 'data-toggle' => 'modal',    //弹框
-                'data-target' => '#smell-modal',    //指定弹框的id
-                'type' => 'button', 'title' => '新增品牌', 'class' => 'btn btn-success'
+                'data-target' => '#boot-modal',    //指定弹框的id
+                'type' => 'button', 'title' => '新增产地', 'class' => 'btn btn-success'
             ]) .
-            Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['view', 'id' => $model->id, 'key' => 'smell'], ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => '刷新列表'])
+            Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['view', 'id' => $model->id, 'key' => 'boot'], ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => '刷新列表'])
         ],
         '{toggleData}',
         '{export}',
@@ -175,17 +183,17 @@ GridView::widget([
 <?php
 
 \yii\bootstrap\Modal::begin([
-    'id' => 'smell-modal',
+    'id' => 'boot-modal',
     'options' => [
         'tabindex' => false
     ],
-    'header' => '<h4 class="modal-title">新增品牌</h4>',
+    'header' => '<h4 class="modal-title">新增产地</h4>',
 ]);
-echo $this->render('_smellcreate', ['model' => $smellModel]);
+echo $this->render('_bootcreate', ['model' => $bootModel]);
 \yii\bootstrap\Modal::end();
 ?>
 <script>
-    $("#smell-modal").on("hidden.bs.modal", function () {
-        $("#smell-form")[0].reset();//重置表单
+    $("#boot-modal").on("hidden.bs.modal", function () {
+        $("#boot-form")[0].reset();//重置表单
     });
 </script>

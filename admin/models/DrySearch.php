@@ -28,14 +28,12 @@ class DrySearch extends GoodDry
 
     public function search($params, $id)
     {
-        $query = GoodDry::find()->where(['type' => $id]);
+        $query = GoodBreed::find()->where(['type' => $id])->orderBy(['is_active'=>SORT_DESC]);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
 
-        $dataProvider->sort->defaultOrder = [
-            'is_active' => SORT_DESC,
-        ];
+        $dataProvider->sort = false;
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }

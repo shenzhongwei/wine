@@ -69,9 +69,9 @@ class ShopController extends BaseController
         $data = Yii::$app->request->post();
         $id=Yii::$app->request->get();
         if(empty($id)){
-            $model = new MerchantInfo();
+            $model = new ShopInfo(['scenario'=>'create']);
         }else{ //指定场景，验证哪些必填
-            $model = new MerchantInfo(['scenario'=>'create']);
+            $model = new ShopInfo();
         }
         $model->load($data);
         return ActiveForm::validate($model);
@@ -87,7 +87,7 @@ class ShopController extends BaseController
         $item = $auth->getRolesByType(Yii::$app->user->identity->wa_type);
         $itemArr =ArrayHelper::map($item,'level','name');
 
-        $model = new ShopInfo;
+        $model = new ShopInfo(['scenario'=>'create']);
         $p1 = $p2='';
         $P= [];
 
@@ -128,9 +128,8 @@ class ShopController extends BaseController
                     'updated_time'=>date('Y-m-d H:i:s')
                 ];
                 if(!$admin->save()){
-                    throw new Exception;
+                    throw new Exception('创建后台管理员失败');
                 }
-
                 $p=Zone::getDetailName($shop['province']);
                 $c=$d='';
                 if(isset($shop['city'])){
@@ -158,7 +157,6 @@ class ShopController extends BaseController
                     'province'=>$p,
                     'city'=>$c,
                     'district'=>$d,
-
                     'lng'=>empty($d)?(empty($c)?(empty($p)?'':Zone::getLngLat($c)['lng']*1000000):Zone::getLngLat($p)['lng']*1000000):Zone::getLngLat($d)['lng']*1000000,
                     'lat'=>empty($d)?(empty($c)?(empty($p)?'':Zone::getLngLat($c)['lat']*1000000):Zone::getLngLat($p)['lat']*1000000):Zone::getLngLat($d)['lat']*1000000,
 
@@ -174,6 +172,7 @@ class ShopController extends BaseController
                 Yii::$app->session->setFlash('success','门店添加成功');
                 return $this->redirect(['view', 'id' => $model->id]);
             }catch(Exception $e){
+                var_dump($e);
                 $transaction->rollBack();
             }
         } else {
@@ -188,7 +187,6 @@ class ShopController extends BaseController
                 'item_arr'=>$itemArr,
                 'p1'=>$p1,'p2'=>$p2,
                 'PreviewConfig' =>$P,
-
                 'province'=>$province,
                 'city'=>$city,
                 'district'=>$district

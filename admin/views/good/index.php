@@ -21,8 +21,8 @@ $this->params['breadcrumbs'][] = $this->title;
 // here
 $this->registerJsFile("@web/js/good/_script.js");
 ?>
-<div class="good-info-index">
-    <?php Pjax::begin(['id'=>'goodinfos','timeout'=>5000]);
+<div class="good-info-index col-sm-12">
+    <?php Pjax::begin(['id'=>'goodinfo','timeout'=>5000]);
         echo GridView::widget([
         'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
@@ -35,15 +35,15 @@ $this->registerJsFile("@web/js/good/_script.js");
                 [
                     'class'=>'kartik\grid\SerialColumn',
                     'contentOptions'=>['class'=>'kartik-sheet-style'],
-                    'width'=>'36px',
+                    'width'=>'1%',
                     'header'=>'',
-                    'headerOptions'=>['class'=>'kartik-sheet-style']
                 ],
                 [
                     'header'=>'商品名称',
+                    'hAlign'=>GridView::ALIGN_CENTER,
                     'attribute'=>'name',
                     'format' => 'html',
-                    'width'=>'12%',
+                    'width'=>'10%',
                     'value'=> function($model){
                         return Html::a($model->name.$model->volum,['good/view', 'id' => $model->id],
                             ['title' => '查看商品详细','class'=>'btn btn-link btn-sm']
@@ -59,6 +59,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                 [
                     'header'=>'归属商户',
                     'attribute'=>'merchant',
+                    'hAlign'=>GridView::ALIGN_CENTER,
                     'width'=>'8%',
                     'format' => 'html',
                     'value'=> function($model){
@@ -66,7 +67,6 @@ $this->registerJsFile("@web/js/good/_script.js");
                             ['title' => '查看商品详细','class'=>'btn btn-link btn-sm']
                         );
                     },
-                    'headerOptions'=>['width'=>120],
                     'filterType'=>GridView::FILTER_SELECT2,
                     'filterWidgetOptions'=>[
                         'data'=>MerchantInfo::GetMerchants(),
@@ -76,6 +76,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                 ],
                 [
                     'header'=>'类型',
+                    'hAlign'=>GridView::ALIGN_CENTER,
                     'attribute'=>'type',
                     'width'=>'8%',
                     'value'=> function($model){
@@ -91,6 +92,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                 [
                     'header'=>'品牌',
                     'attribute'=>'brand',
+                    'hAlign'=>GridView::ALIGN_CENTER,
                     'width'=>'8%',
                     'value'=> function($model){
                         return $model->brand0->name;
@@ -104,18 +106,29 @@ $this->registerJsFile("@web/js/good/_script.js");
                 ],
                 [
                     'attribute'=>'price',
-                    'label' => '单价',
-                    'width'=>'8%',
+                    'label' => '原价',
+                    'hAlign'=>GridView::ALIGN_CENTER,
+                    'width'=>'7%',
                     'value'=> function($model){
                         return '¥'.$model->price.'/'.$model->unit;
                     },
                     'filterInputOptions'=>['onkeyup'=>'clearNoNum(this)','class'=>'form-control'],
                 ],
-
+                [
+                    'attribute'=>'pro_price',
+                    'hAlign'=>GridView::ALIGN_CENTER,
+                    'label' => '优惠价',
+                    'width'=>'7%',
+                    'value'=> function($model){
+                        return '¥'.$model->pro_price.'/'.$model->unit;
+                    },
+                    'filterInputOptions'=>['onkeyup'=>'clearNoNum(this)','class'=>'form-control'],
+                ],
                 [
                     'header'=>'编号',
+                    'hAlign'=>GridView::ALIGN_CENTER,
                     'attribute'=>'number',
-                    'width'=>'9%',
+                    'width'=>'7%',
                     'filterType'=>AutoComplete::className(),
                     'filterWidgetOptions'=>[
                         'clientOptions' => [
@@ -125,7 +138,9 @@ $this->registerJsFile("@web/js/good/_script.js");
                 ],
                 [
                     'label'=>'发布时间',
+                    'hAlign'=>GridView::ALIGN_CENTER,
                     'attribute'=>'regist_at',
+                    'width'=>'13%',
                     'format'=>['date','php:Y年m月d日'],
                     'value'=>function($model){
                         return $model->regist_at;
@@ -144,6 +159,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                 ],
                 [
                     'label'=>'状态',
+                    'hAlign'=>GridView::ALIGN_CENTER,
                     'class'=>'kartik\grid\BooleanColumn',
                     'width'=>'8%',
                     'attribute' => 'is_active',
@@ -157,9 +173,8 @@ $this->registerJsFile("@web/js/good/_script.js");
                 [
 
                     'header'=>'图片',
+                    'hAlign'=>GridView::ALIGN_CENTER,
                     'width'=>'5%',
-                    'headerOptions'=>['class'=>'kartik-sheet-style'],
-                    'hAlign'=>'center',
                     'vAlign'=>'middle',
                     'mergeHeader'=>true,
                     'attribute'=>'pic',
@@ -172,9 +187,9 @@ $this->registerJsFile("@web/js/good/_script.js");
                 ],
                 [
                     'header'=>'详情',
+                    'hAlign'=>GridView::ALIGN_CENTER,
                     'class' =>  'kartik\grid\ActionColumn',
-                    'width'=>'5%',
-                    'headerOptions'=>['class'=>'kartik-sheet-style'],
+                    'width'=>'6%',
                     'buttons'=>[
                         'view' => function ($url, $model) {
                             return Html::a('点击查看', '#', [
@@ -196,6 +211,8 @@ $this->registerJsFile("@web/js/good/_script.js");
 
                 [
                     'header' => '操作',
+                    'hAlign'=>GridView::ALIGN_CENTER,
+                    'width'=>'12%',
                     'class' =>  'kartik\grid\ActionColumn',
                     'buttons' => [
                         'view' => function ($url, $model) {

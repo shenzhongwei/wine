@@ -36,6 +36,7 @@ class GoodVip extends \yii\db\ActiveRecord
             [['gid','price'],'required','on'=>['add','update']],
             [['gid'],'unique','on'=>'add','message'=>'该会员产品的已存在'],
             [['gid'],'validGid','on'=>'update','message'=>'该会员产品的已存在'],
+            [['price'],'validPrice','on'=>['update','create'],'message'=>'该会员产品的已存在'],
             [['price'], 'number'],
             [['gid'], 'exist', 'skipOnError' => true, 'targetClass' => GoodInfo::className(), 'targetAttribute' => ['gid' => 'id']],
         ];
@@ -76,6 +77,10 @@ class GoodVip extends \yii\db\ActiveRecord
         if(!empty($vip)){
             return $this->addError('gid','该产品已参与会员活动');
         }
+    }
+
+    public function validPrice(){
+//        $good =
     }
 
     public static function GetGoods(){

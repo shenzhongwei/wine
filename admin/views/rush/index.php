@@ -15,14 +15,15 @@ use admin\models\GoodRush;
 $this->title = '抢购管理';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="good-rush-index">
+<div class="good-rush-index col-sm-12">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
         <?php /* echo Html::a('Create Good Rush', ['create'], ['class' => 'btn btn-success'])*/  ?>
     </p>
 
-    <?php Pjax::begin(); echo GridView::widget([
+    <?php Pjax::begin(['id'=>'goodrush','timeout'=>5000]);
+    echo GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'filterPosition' => GridView::FILTER_POS_HEADER,

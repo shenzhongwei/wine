@@ -84,9 +84,14 @@ $this->registerJsFile("@web/js/good/_script.js");
                                 'value'=> empty($model->style0) ? null:$model->style0->name,
                             ],
                             [
-                                'label'=>'单价',
+                                'label'=>'原价',
                                 'attribute'=>'price',
                                 'value'=> $model->price.'/'.$model->unit,
+                            ],
+                            [
+                                'label'=>'优惠价',
+                                'attribute'=>'pro_price',
+                                'value'=> $model->pro_price.'/'.$model->unit,
                             ],
                             'number',
                             [

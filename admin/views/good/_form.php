@@ -175,6 +175,8 @@ $wa_type = $admin->wa_type;
 
                                     'price'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'单价:单位：元', 'maxlength'=>10,'onkeyup'=>'this.value=this.value.replace(/\D/gi,"")']],
 
+                                    'pro_price'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'单价:单位：元', 'maxlength'=>10,'onkeyup'=>'this.value=this.value.replace(/\D/gi,"")']],
+
                                     'unit'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'单位：如：瓶', 'maxlength'=>10]],
 
                                     'type'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>Select2::className(),

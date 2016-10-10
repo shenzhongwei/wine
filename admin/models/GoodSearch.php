@@ -21,7 +21,7 @@ class GoodSearch extends GoodInfo
         return [
             [['id', 'merchant', 'type', 'brand', 'smell', 'color', 'dry', 'boot', 'breed', 'country', 'style', 'order', 'is_active', 'active_at'], 'integer'],
             [['name', 'volum', 'unit', 'number', 'detail', 'regist_at'], 'safe'],
-            [['price','start_price','end_price'], 'number'],
+            [['price','start_price','end_price','pro_price'], 'number'],
         ];
     }
 
@@ -59,6 +59,7 @@ class GoodSearch extends GoodInfo
             ->andFilterWhere(['like', 'volum', $this->volum])
             ->andFilterWhere(['like', 'number', $this->number]);
         $query->andFilterWhere(['>=','price',$this->price])
+            ->andFilterWhere(['>=','pro_price',$this->pro_price])
 //            ->andFilterWhere(['>=','price',$this->start_price])
 //            ->andFilterWhere(['<=','price',$this->end_price])
             ->andFilterWhere(['>=',"FROM_UNIXTIME(regist_at,'%Y年%m月%d日')",$this->regist_at]);

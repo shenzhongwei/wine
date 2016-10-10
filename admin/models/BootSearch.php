@@ -28,14 +28,12 @@ class BootSearch extends GoodBoot
 
     public function search($params, $id)
     {
-        $query = GoodBoot::find()->where(['type' => $id]);
+        $query = GoodBoot::find()->where(['type' => $id])->orderBy(['is_active'=>SORT_DESC]);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
 
-        $dataProvider->sort->defaultOrder = [
-            'is_active' => SORT_DESC,
-        ];
+        $dataProvider->sort = false;
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }

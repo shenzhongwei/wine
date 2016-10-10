@@ -16,7 +16,6 @@ use admin\models\GoodVip;
 ?>
 
 <div class="good-vip-form">
-    <div class="col-sm-4">
         <?php $form = ActiveForm::begin([
                 'type'=>ActiveForm::TYPE_VERTICAL,
                 'formConfig' => [
@@ -47,10 +46,7 @@ use admin\models\GoodVip;
 
         ]);
         ?>
-        <div style="text-align: center;position: absolute;left: 45%;right: 45%">
             <?php
-            echo Html::submitButton( Yii::t('app', 'Save'), ['class' => $model->isNewRecord ? 'btn btn-success btn-block' : 'btn btn-primary btn-block']);
+            echo Html::submitButton( Yii::t('app', 'Save'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']);
             ActiveForm::end(); ?>
-        </div>
-    </div>
 </div>

@@ -4,18 +4,20 @@ use yii\helpers\Html;
 use kartik\widgets\ActiveForm;
 use kartik\builder\Form;
 use yii\helpers\Url;
-use admin\models\GoodSmell;
+use admin\models\GoodBoot;
+use admin\models\Zone;
+use common\helpers\ArrayHelper;
 
 /**
  * @var yii\web\View $this
- * @var admin\models\GoodSmell $model
+ * @var admin\models\GoodBoot $model
  */
 ?>
-<div class="good-smell-create">
-    <div class="good-smell-form">
+<div class="good-boot-create">
+    <div class="good-boot-form">
 
         <?php $form = ActiveForm::begin([
-            'id' => 'smell-form',
+            'id' => 'boot-form',
             'type' => ActiveForm::TYPE_VERTICAL,
             'enableAjaxValidation' => true, //开启ajax验证
             'validationUrl' => Url::toRoute(['valid-form', 'key' => 'boot']), //验证url
@@ -26,10 +28,19 @@ use admin\models\GoodSmell;
             'form' => $form,
             'columns' => 1,
             'attributes' => [
-                'name' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => '请输入名称', 'maxlength' => 25]],
-                'type' => ['type' => Form::INPUT_DROPDOWN_LIST, 'items' => GoodSmell::GetAllTypes(), 'options' => [
-                    'readonly' => true,
+                'name' => ['type' => Form::INPUT_WIDGET, 'widgetClass'=>\kartik\select2\Select2::className(),'options'=>[
+                    'data' => ArrayHelper::map(Zone::GetAllProvince(),'shortname','shortname'),
+                    'options' => ['placeholder' => '请选择产地'],
+                    'pluginOptions' => [
+                        'allowClear' => true
+                    ],
+                ]],
+                'type'=>['type'=> Form::INPUT_WIDGET, 'widgetClass'=>\kartik\select2\Select2::className(),'options'=>[
+                    'data' => GoodBoot::GetAllTypes(),
                     'options' => ['placeholder' => '请选择类型'],
+                    'pluginOptions' => [
+                        'allowClear' => true
+                    ],
                 ],],
             ]
         ]);

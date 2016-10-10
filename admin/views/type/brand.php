@@ -28,7 +28,12 @@ echo GridView::widget([
     'headerRowOptions'=>['class'=>'kartik-sheet-style'],
     'filterRowOptions'=>['class'=>'kartik-sheet-style'],
     'floatHeader'=>false,
-//        'pjax'=>true,
+    'pjax'=>true,
+    'pjaxSettings'=>[
+        'options'=>[
+            'id'=>'brand',
+        ],
+    ],
     'columns' => [
         [
             'class'=>'kartik\grid\SerialColumn',

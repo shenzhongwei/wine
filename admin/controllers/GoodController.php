@@ -239,7 +239,7 @@ class GoodController extends BaseController
         }
         $model->active_at = time();
         $model->save();
-        return $this->runAction('index');
+        return $this->redirect('index');
     }
 
 

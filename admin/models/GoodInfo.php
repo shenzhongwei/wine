@@ -22,6 +22,7 @@ use yii\helpers\ArrayHelper;
  * @property string $name
  * @property string $volum
  * @property string $price
+ * @property string $pro_price
  * @property string $unit
  * @property string $pic
  * @property string $number
@@ -69,9 +70,12 @@ class GoodInfo extends \yii\db\ActiveRecord
     {
         return [
             [['merchant', 'type', 'brand', 'smell', 'color', 'dry', 'boot', 'breed', 'country', 'style', 'order', 'regist_at', 'is_active', 'active_at'], 'integer'],
-            [['name', 'detail','type','price','detail','volum','unit','merchant'], 'required'],
+            [['name', 'detail','type','price','detail','volum','unit','merchant','pro_price'], 'required'],
+            ['price','compare','compareAttribute'=>'pro_price','operator'=>'>='],
+            ['pro_price','compare','compareAttribute'=>'price','operator'=>'<='],
+            [['price','pro_price'],'compare','compareValue'=>0,'operator'=>'>'],
             [['pic'],'required','message'=>'请上传产品图片'],
-            [['price'], 'number'],
+            [['price','pro_price'], 'number'],
             [['detail'], 'string'],
             [['name'], 'string', 'max' => 50],
             [['volum'], 'string', 'max' => 128],
@@ -110,7 +114,8 @@ class GoodInfo extends \yii\db\ActiveRecord
             'style' => '类型',
             'name' => '商品名',
             'volum' => '容量',
-            'price' => '价格',
+            'price' => '原价',
+            'pro_price'=> '优惠价',
             'unit' => '单位',
             'pic' => '产品图片',
             'img'=>'产品图片',

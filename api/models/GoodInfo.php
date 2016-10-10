@@ -22,6 +22,7 @@ use Yii;
  * @property string $name
  * @property string $volum
  * @property string $price
+ * @property string $pro_price
  * @property string $unit
  * @property string $number
  * @property string $pic
@@ -67,7 +68,7 @@ class GoodInfo extends \yii\db\ActiveRecord
     {
         return [
             [['merchant', 'type', 'brand', 'smell', 'color', 'dry', 'boot', 'breed', 'country', 'style', 'regist_at', 'is_active', 'active_at','order'], 'integer'],
-            [['price'], 'number'],
+            [['price','pro_price'], 'number'],
             [['detail'], 'required'],
             [['detail'], 'string'],
             [['number'], 'string','max'=>8],
@@ -107,7 +108,8 @@ class GoodInfo extends \yii\db\ActiveRecord
             'style' => '类型',
             'name' => '商品名',
             'volum' => '容量',
-            'price' => '价格',
+            'price' => '原价',
+            'pro_price' => '优惠价',
             'unit' => '单位',
             'pic'=>'图片',
             'detail' => '详情',

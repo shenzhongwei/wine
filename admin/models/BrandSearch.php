@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use admin\models\GoodBrand;
+use yii\helpers\Url;
 
 /**
  * BrandSearch represents the model behind the search form about `admin\models\GoodBrand`.
@@ -28,14 +29,14 @@ class BrandSearch extends GoodBrand
 
     public function search($params,$id)
     {
-        $query = GoodBrand::find()->where(['type'=>$id]);
+        $query = GoodBrand::find()->where(['type'=>$id])->orderBy(['is_active'=>SORT_DESC]);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
-        $dataProvider->sort->defaultOrder=[
-            'is_active'=>SORT_DESC,
-        ];
+//        $dataProvider->sort->defaultOrder=[
+//            'is_active'=>SORT_DESC,
+//        ];
+        $dataProvider->sort = false;
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }
