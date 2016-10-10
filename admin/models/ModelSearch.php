@@ -33,9 +33,7 @@ class ModelSearch extends GoodModel
             'query' => $query,
         ]);
 
-        $dataProvider->sort->defaultOrder = [
-            'is_active' => SORT_DESC,
-        ];
+        $dataProvider->sort=false;
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }

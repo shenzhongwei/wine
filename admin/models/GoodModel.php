@@ -2,6 +2,7 @@
 
 namespace admin\models;
 
+use common\helpers\ArrayHelper;
 use Yii;
 
 /**
@@ -34,6 +35,7 @@ class GoodModel extends \yii\db\ActiveRecord
         return [
             [['type', 'regist_at', 'is_active', 'active_at'], 'integer'],
             [['name'], 'string', 'max' => 50],
+            [['name','type'],'required'],
             [['type'], 'exist', 'skipOnError' => true, 'targetClass' => GoodType::className(), 'targetAttribute' => ['type' => 'id']],
             [['name'], 'validName'],
         ];
@@ -73,5 +75,16 @@ class GoodModel extends \yii\db\ActiveRecord
     public function getType0()
     {
         return $this->hasOne(GoodType::className(), ['id' => 'type']);
+    }
+
+    public static function GetAllTypes()
+    {
+        return ArrayHelper::map(GoodType::find()->all(), 'id', 'name');
+    }
+
+    public static function GetAllVolums($id)
+    {
+        $brands = self::findAll(['type' => $id]);
+        return ArrayHelper::map($brands, 'name', 'name');
     }
 }

@@ -28,7 +28,7 @@ class CountrySearch extends GoodCountry
 
     public function search($params, $id)
     {
-        $query = GoodBreed::find()->where(['type' => $id])->orderBy(['is_active'=>SORT_DESC]);
+        $query = GoodCountry::find()->where(['type' => $id])->orderBy(['is_active'=>SORT_DESC]);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);

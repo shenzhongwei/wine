@@ -227,7 +227,7 @@ class TypeController extends BaseController
         } elseif ($key == 'color') {
             $model = new GoodColor();
         } elseif ($key == 'breed') {
-            $model = new GoodSmell();
+            $model = new GoodBreed();
         } elseif ($key == 'dry') {
             $model = new GoodDry();
         } elseif ($key == 'volum') {
@@ -279,7 +279,7 @@ class TypeController extends BaseController
         } elseif ($key == 'color') {
             $model = new GoodColor();
         } elseif ($key == 'breed') {
-            $model = new GoodSmell();
+            $model = new GoodBreed();
         } elseif ($key == 'dry') {
             $model = new GoodDry();
         } elseif ($key == 'volum') {
@@ -299,6 +299,7 @@ class TypeController extends BaseController
             Yii::$app->session->setFlash('success','操作成功');
             return $this->redirect(['type/view', 'id' => $model->type, 'key' => $key]);
         } else {
+            var_dump($model->getErrors());
             Yii::$app->session->setFlash('danger', '发生异常，请重试');
             return $this->redirect(['type/view', 'id' => $type, 'key' => $key]);
         }

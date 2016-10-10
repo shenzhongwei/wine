@@ -2,6 +2,7 @@
 
 namespace admin\models;
 
+use common\helpers\ArrayHelper;
 use Yii;
 
 /**
@@ -35,6 +36,7 @@ class GoodBreed extends \yii\db\ActiveRecord
         return [
             [['type', 'regist_at', 'is_active', 'active_at'], 'integer'],
             [['name'], 'string', 'max' => 50],
+            [['name','type'],'required'],
             [['type'], 'exist', 'skipOnError' => true, 'targetClass' => GoodType::className(), 'targetAttribute' => ['type' => 'id']],
             [['name'], 'validName'],
         ];
@@ -82,6 +84,18 @@ class GoodBreed extends \yii\db\ActiveRecord
     public function getGoodInfos()
     {
         return $this->hasMany(GoodInfo::className(), ['breed' => 'id']);
+    }
+
+
+    public static function GetAllTypes()
+    {
+        return ArrayHelper::map(GoodType::find()->all(), 'id', 'name');
+    }
+
+    public static function GetAllBreeds($id)
+    {
+        $brands = self::findAll(['type' => $id]);
+        return ArrayHelper::map($brands, 'name', 'name');
     }
 
 

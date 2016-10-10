@@ -28,7 +28,7 @@ class StyleSearch extends GoodStyle
 
     public function search($params, $id)
     {
-        $query = GoodBreed::find()->where(['type' => $id])->orderBy(['is_active'=>SORT_DESC]);
+        $query = GoodStyle::find()->where(['type' => $id])->orderBy(['is_active'=>SORT_DESC]);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
