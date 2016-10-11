@@ -63,7 +63,7 @@ class ShopInfo extends \yii\db\ActiveRecord
             [['wa_id'], 'exist', 'skipOnError' => true, 'targetClass' =>Admin::className(), 'targetAttribute' => ['wa_id' => 'wa_id']],
             [['merchant'], 'exist', 'skipOnError' => true, 'targetClass' => MerchantInfo::className(), 'targetAttribute' => ['merchant' => 'id']],
             [['merchant','limit','least_money','send_bill','name','phone','province','city','district','region','address'],'required','message'=>'不能为空'],
-            [['wa_username','wa_password'],'required','on'=>'create'],
+            [['wa_username','wa_password','wa_type'],'required','on'=>'create'],
             [['wa_username'],'validusername','on'=>'create'],
             ['wa_password','match','pattern'=>'/^[\w\W]{5,16}$/','message'=>'密码长度为5~16位'],
 
@@ -109,7 +109,7 @@ class ShopInfo extends \yii\db\ActiveRecord
     public function scenarios()
     {
         $n=parent::scenarios();
-        $n['create']=['merchant','phone','name','limit','least_money','send_bill','no_send_need','bus_pic','logo','province','city','district','region','address','wa_username','wa_password','wa_type','wa_logo','lat','lng'];
+        $n['create']=['wa_id','merchant','phone','name','limit','least_money','send_bill','no_send_need','bus_pic','logo','province','city','district','region','address','registe_at','active_at','lat','lng'];
         return $n;
     }
 
@@ -139,7 +139,11 @@ class ShopInfo extends \yii\db\ActiveRecord
 
     //判断商户后台用户名是否唯一
     public function validusername(){
-        $model=Admin::findIdentityByUsername($this->wa_username);
+        $query = Admin::find()->where(['wa_username'=>"\"$this->wa_username\""]);
+        if(!empty($this->wa_id)){
+            $query->andWhere("wa_id <> $this->wa_id");
+        }
+        $model=$query->one();
         if(!empty($model)){
             return $this->addError('wa_username','用户名已存在');
         }

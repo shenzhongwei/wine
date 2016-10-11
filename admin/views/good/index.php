@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
 $this->registerJsFile("@web/js/good/_script.js");
 ?>
 <div class="good-info-index col-sm-12">
-    <?php Pjax::begin(['id'=>'goodinfo','timeout'=>5000]);
+    <?php
         echo GridView::widget([
         'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
@@ -30,7 +30,13 @@ $this->registerJsFile("@web/js/good/_script.js");
             'containerOptions'=>['style'=>'overflow: auto'], // only set when $responsive = false
             'headerRowOptions'=>['class'=>'kartik-sheet-style'],
             'filterRowOptions'=>['class'=>'kartik-sheet-style'],
-            //   'pjax'=>true,  pjax is set to always true for this demo
+            'pjax'=>true,  //pjax is set to always true for this demo
+            'pjaxSettings'=>[
+                'options'=>[
+                    'id'=>'goodinfo',
+                ],
+                'neverTimeout'=>true,
+            ],
             'columns' => [
                 [
                     'class'=>'kartik\grid\SerialColumn',
@@ -270,7 +276,7 @@ $this->registerJsFile("@web/js/good/_script.js");
             'export'=>[
                 'fontAwesome'=>true
             ],
-    ]); Pjax::end(); ?>
+    ]); ?>
 
 </div>
 <!--查看看详情弹出框  start-->
@@ -295,13 +301,13 @@ $this->registerJs($Js);
 \yii\bootstrap\Modal::end();
 ?>
 <!--查看看详情弹出框  end-->
-<script language="JavaScript">
-    $(function (){
-        $('.panel').find('.dropdown-toggle').unbind();
-        $('.panel').find('.dropdown-toggle').attr('class','btn btn-default dropdown-toggle');
-        $('.ui-autocomplete').css('z-index','99999');
-        $('.datepicker-days').css('z-index','99999');
-    });
-</script>
+<!--<script language="JavaScript">-->
+<!--    $(function (){-->
+<!--        $('.panel').find('.dropdown-toggle').unbind();-->
+<!--        $('.panel').find('.dropdown-toggle').attr('class','btn btn-default dropdown-toggle');-->
+<!--        $('.ui-autocomplete').css('z-index','99999');-->
+<!--        $('.datepicker-days').css('z-index','99999');-->
+<!--    });-->
+<!--</script>-->
 
 

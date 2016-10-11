@@ -61,30 +61,24 @@ $wa_type = $admin->wa_type;
                                         ]
                                     ],
 
-                                    'brand'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>DepDrop::className(),
+                                    'type'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>Select2::className(),
                                         'options'=>[
-                                            'type' => DepDrop::TYPE_SELECT2,
-                                            'data'=> empty($model->id) ? []:GoodType::GetChilds($model->type,'goodBrands'),
-                                            'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
-                                            'pluginOptions'=>[
-                                                'placeholder'=>'请选择品牌',
-                                                'depends'=>['goodinfo-type'],
-                                                'url' => Url::toRoute(['good/childs','key'=>'goodBrands']),
-                                                'loadingText' => 'Searching ...',
-                                            ]
-                                        ],
+                                            'data'=>GoodType::GetTypes(),
+                                            'options'=>['placeholder'=>'请选择商品大类'],
+                                            'pluginOptions' => ['allowClear' => true],
+                                        ]
                                     ],
 
                                     'color'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>DepDrop::className(),
                                         'options'=>[
                                             'type' => DepDrop::TYPE_SELECT2,
                                             'data'=> empty($model->id) ? []:GoodType::GetChilds($model->type,'goodColors'),
+                                            'options'=>[ 'placeholder'=>'请选择颜色'],
                                             'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
                                             'pluginOptions'=>[
                                                 'placeholder'=>'请选择颜色',
                                                 'depends'=>['goodinfo-type'],
                                                 'url' => Url::toRoute(['good/childs','key'=>'goodColors']),
-                                                'loadingText' => 'Searching ...',
                                             ]
                                         ],
                                     ],
@@ -94,11 +88,11 @@ $wa_type = $admin->wa_type;
                                             'type' => DepDrop::TYPE_SELECT2,
                                             'data'=> empty($model->id) ? []:GoodType::GetChilds($model->type,'goodDries'),
                                             'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+                                            'options'=>[ 'placeholder'=>'请选择干型'],
                                             'pluginOptions'=>[
                                                 'placeholder'=>'请选择干型',
                                                 'depends'=>['goodinfo-type'],
                                                 'url' => Url::toRoute(['good/childs','key'=>'goodDries']),
-                                                'loadingText' => 'Searching ...',
                                             ]
                                         ],
                                     ],
@@ -108,11 +102,11 @@ $wa_type = $admin->wa_type;
                                             'type' => DepDrop::TYPE_SELECT2,
                                             'data'=> empty($model->id) ? []:GoodType::GetChilds($model->type,'goodBoots'),
                                             'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+                                            'options'=>[ 'placeholder'=>'请选择产地'],
                                             'pluginOptions'=>[
                                                 'placeholder'=>'请选择产地',
                                                 'depends'=>['goodinfo-type'],
                                                 'url' => Url::toRoute(['good/childs','key'=>'goodBoots']),
-                                                'loadingText' => 'Searching ...',
                                             ]
                                         ],
                                     ],
@@ -122,11 +116,11 @@ $wa_type = $admin->wa_type;
                                             'type' => DepDrop::TYPE_SELECT2,
                                             'data'=> empty($model->id) ? []:GoodType::GetChilds($model->type,'goodBreeds'),
                                             'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+                                            'options'=>[ 'placeholder'=>'请选择品种'],
                                             'pluginOptions'=>[
                                                 'placeholder'=>'请选择品种',
                                                 'depends'=>['goodinfo-type'],
                                                 'url' => Url::toRoute(['good/childs','key'=>'goodBreeds']),
-                                                'loadingText' => 'Searching ...',
                                             ]
                                         ],
                                     ],
@@ -136,11 +130,11 @@ $wa_type = $admin->wa_type;
                                             'type' => DepDrop::TYPE_SELECT2,
                                             'data'=> empty($model->id) ? []:GoodType::GetChilds($model->type,'goodCountries'),
                                             'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+                                            'options'=>[ 'placeholder'=>'请选择国家'],
                                             'pluginOptions'=>[
-                                                'placeholder' => '请选择国家',
+                                                'placeholder'=>'请选择国家',
                                                 'depends'=>['goodinfo-type'],
                                                 'url' => Url::toRoute(['good/childs','key'=>'goodCountries']),
-                                                'loadingText' => 'Searching ...',
                                             ]
                                         ],
                                     ],
@@ -150,11 +144,11 @@ $wa_type = $admin->wa_type;
                                             'type' => DepDrop::TYPE_SELECT2,
                                             'data'=> empty($model->id) ? []:GoodType::GetChilds($model->type,'goodStyles'),
                                             'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+                                            'options'=>[ 'placeholder'=>'请选择类型'],
                                             'pluginOptions'=>[
-                                                'placeholder' => '请选择类型',
+                                                'placeholder'=>'请选择类型',
                                                 'depends'=>['goodinfo-type'],
                                                 'url' => Url::toRoute(['good/childs','key'=>'goodStyles']),
-                                                'loadingText' => 'Searching ...',
                                             ]
                                         ],
                                     ],
@@ -179,12 +173,18 @@ $wa_type = $admin->wa_type;
 
                                     'unit'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'单位：如：瓶', 'maxlength'=>10]],
 
-                                    'type'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>Select2::className(),
+                                    'brand'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>DepDrop::className(),
                                         'options'=>[
-                                            'data'=>GoodType::GetTypes(),
-                                            'options'=>['placeholder'=>'请选择商品大类'],
-                                            'pluginOptions' => ['allowClear' => true],
-                                        ]
+                                            'type' => DepDrop::TYPE_SELECT2,
+                                            'data'=> empty($model->id) ? []:GoodType::GetChilds($model->type,'goodBrands'),
+                                            'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+                                            'options'=>['placeholder'=>'请选择品牌',],
+                                            'pluginOptions'=>[
+                                                'placeholder'=>'请选择品牌',
+                                                'depends'=>['goodinfo-type'],
+                                                'url' => Url::toRoute(['good/childs','key'=>'goodBrands']),
+                                            ]
+                                        ],
                                     ],
 
                                     'smell'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>DepDrop::className(),
@@ -192,11 +192,11 @@ $wa_type = $admin->wa_type;
                                             'type' => DepDrop::TYPE_SELECT2,
                                             'data'=> empty($model->id) ? []:GoodType::GetChilds($model->type,'goodSmells'),
                                             'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+                                            'options'=>['placeholder'=>'请选择香型',],
                                             'pluginOptions'=>[
                                                 'placeholder'=>'请选择香型',
                                                 'depends'=>['goodinfo-type'],
                                                 'url' => Url::toRoute(['good/childs','key'=>'goodSmells']),
-                                                'loadingText' => 'Searching ...',
                                             ]
                                         ],
                                     ],

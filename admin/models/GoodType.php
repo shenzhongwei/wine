@@ -167,16 +167,7 @@ class GoodType extends \yii\db\ActiveRecord
 
 
     public static function GetTypes(){
-        $admin = Yii::$app->user->identity;
-        $adminId = $admin->wa_id;
-        $adminType = $admin->wa_type;
-        $query = self::find()->joinWith('goodInfos')->where('good_info.id>0 and good_type.is_active=1');
-        if($adminType>2){
-            $manager = MerchantInfo::findOne(['wa_id'=>$adminId]);
-            $query->andWhere(['merchant'=>$manager->id]);
-        }
-        $types = $query->all();
-        return ArrayHelper::map($types,'id','name');
+        return ArrayHelper::map(self::find()->all(),'id','name');
     }
 
 

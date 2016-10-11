@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php /* echo Html::a('Create Good Rush', ['create'], ['class' => 'btn btn-success'])*/  ?>
     </p>
 
-    <?php Pjax::begin(['id'=>'goodrush','timeout'=>5000]);
+    <?php
     echo GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -30,7 +30,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'containerOptions'=>['style'=>'overflow: auto'], // only set when $responsive = false
         'headerRowOptions'=>['class'=>'kartik-sheet-style'],
         'filterRowOptions'=>['class'=>'kartik-sheet-style'],
-      //  'pjax'=>true, // pjax is set to always true for this demo
+        'pjax'=>true,  //pjax is set to always true for this demo
+        'pjaxSettings'=>[
+            'options'=>[
+                'id'=>'goodrush',
+            ],
+            'neverTimeout'=>true,
+        ],
         'columns' => [
             [
                 'class'=>'kartik\grid\SerialColumn',
@@ -247,14 +253,14 @@ $this->params['breadcrumbs'][] = $this->title;
         'export'=>[
             'fontAwesome'=>true
         ],
-    ]); Pjax::end(); ?>
+    ]); ?>
 
 </div>
 
-<script language="JavaScript">
-    $(function (){
-        $('.panel').find('.dropdown-toggle').unbind();
-        $('.panel').find('.dropdown-toggle').attr('class','btn btn-default dropdown-toggle');
-        $('.ui-autocomplete').css('z-index','99999');
-    });
-</script>
+<!--<script language="JavaScript">-->
+<!--    $(function (){-->
+<!--        $('.panel').find('.dropdown-toggle').unbind();-->
+<!--        $('.panel').find('.dropdown-toggle').attr('class','btn btn-default dropdown-toggle');-->
+<!--        $('.ui-autocomplete').css('z-index','99999');-->
+<!--    });-->
+<!--</script>-->

@@ -15,9 +15,16 @@ $this->title = '会员商品表';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="good-vip-index col-sm-8">
-    <?php Pjax::begin(['id'=>'goodvip','timeout'=>5000]);
+    <?php
     echo GridView::widget([
         'dataProvider' => $dataProvider,
+        'pjax'=>true,  //pjax is set to always true for this demo
+        'pjaxSettings'=>[
+            'options'=>[
+                'id'=>'goodvip',
+            ],
+            'neverTimeout'=>true,
+        ],
         'columns' => [
             [
                 'header'=>'序号',
@@ -116,13 +123,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'before'=>$this->render('_search', ['model' => $searchModel]),
             'showFooter'=>true
         ],
-    ]); Pjax::end(); ?>
+    ]);  ?>
 
 </div>
 
-<script language="JavaScript">
-    $(function (){
-        $('.panel').find('.dropdown-toggle').unbind();
-        $('.panel').find('.dropdown-toggle').attr('class','btn btn-default dropdown-toggle');
-    });
-</script>
+<!--<script language="JavaScript">-->
+<!--    $(function (){-->
+<!--        $('.panel').find('.dropdown-toggle').unbind();-->
+<!--        $('.panel').find('.dropdown-toggle').attr('class','btn btn-default dropdown-toggle');-->
+<!--    });-->
+<!--</script>-->

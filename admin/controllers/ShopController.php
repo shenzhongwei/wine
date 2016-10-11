@@ -159,10 +159,11 @@ class ShopController extends BaseController
                     'district'=>$d,
                     'lng'=>empty($d)?(empty($c)?(empty($p)?'':Zone::getLngLat($c)['lng']*1000000):Zone::getLngLat($p)['lng']*1000000):Zone::getLngLat($d)['lng']*1000000,
                     'lat'=>empty($d)?(empty($c)?(empty($p)?'':Zone::getLngLat($c)['lat']*1000000):Zone::getLngLat($p)['lat']*1000000):Zone::getLngLat($d)['lat']*1000000,
-
+                    'phone'=>$shop['phone'],
+                    'is_active'=>1,
                 ];
                 if(!$model->save()){
-                    throw new Exception;
+                    throw new Exception();
                 }
                 $user_id = $model->wa_id;
                 $role = $auth->createRole('门店管理员');      //创建角色对象
@@ -172,8 +173,22 @@ class ShopController extends BaseController
                 Yii::$app->session->setFlash('success','门店添加成功');
                 return $this->redirect(['view', 'id' => $model->id]);
             }catch(Exception $e){
-                var_dump($e);
+                Yii::$app->session->setFlash('danger','门店添加失败');
                 $transaction->rollBack();
+                //跳到 新建 页面
+                $model->wa_type='4';
+                $province=ArrayHelper::map(Zone::getProvince(),'id','name');
+                $city=[];
+                $district=[];
+                return $this->render('create', [
+                    'model' => $model,
+                    'item_arr'=>$itemArr,
+                    'p1'=>$p1,'p2'=>$p2,
+                    'PreviewConfig' =>$P,
+                    'province'=>$province,
+                    'city'=>$city,
+                    'district'=>$district
+                ]);
             }
         } else {
             //跳到 新建 页面
@@ -181,7 +196,6 @@ class ShopController extends BaseController
             $province=ArrayHelper::map(Zone::getProvince(),'id','name');
             $city=[];
             $district=[];
-
             return $this->render('create', [
                 'model' => $model,
                 'item_arr'=>$itemArr,

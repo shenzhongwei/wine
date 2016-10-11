@@ -197,7 +197,18 @@ class GoodController extends BaseController
     {
         $model = $this->findModel($id);
         $url = $model->pic;
-        if ($model->load(Yii::$app->request->post())) {
+        $post = Yii::$app->request->post();
+        if(!empty($post)){
+            $post['GoodInfo']['brand'] = empty($post['GoodInfo']['brand']) ? null:$post['GoodInfo']['brand'];
+            $post['GoodInfo']['color'] = empty($post['GoodInfo']['color']) ? null:$post['GoodInfo']['color'];
+            $post['GoodInfo']['smell'] = empty($post['GoodInfo']['smell']) ? null:$post['GoodInfo']['smell'];
+            $post['GoodInfo']['dry'] = empty($post['GoodInfo']['dry']) ? null:$post['GoodInfo']['dry'];
+            $post['GoodInfo']['boot'] = empty($post['GoodInfo']['boot']) ? null:$post['GoodInfo']['boot'];
+            $post['GoodInfo']['country'] = empty($post['GoodInfo']['country']) ? null:$post['GoodInfo']['country'];
+            $post['GoodInfo']['style'] = empty($post['GoodInfo']['style']) ? null:$post['GoodInfo']['style'];
+            $post['GoodInfo']['breed'] = empty($post['GoodInfo']['breed']) ? null:$post['GoodInfo']['breed'];
+        }
+        if ($model->load($post)) {
             $pic = $model->pic;
             $extension = substr($pic,strrpos($pic,'.')+1);
             if($pic == '/goods/good_pic_'.$model->id.'.'.$extension){
