@@ -15,6 +15,8 @@ use Yii;
  */
 class GoodPriceField extends \yii\db\ActiveRecord
 {
+    public $start;
+    public $end;
     /**
      * @inheritdoc
      */
@@ -29,7 +31,11 @@ class GoodPriceField extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['type'], 'integer'],
+            [['type','start'], 'integer'],
+            [['start','type'],'required'],
+            ['start','compare','compareValue'=>0,'>='],
+            [['start'],'validStart'],
+            [['end'],'validEnd'],
             [['discription'], 'string', 'max' => 200],
             [['type'], 'exist', 'skipOnError' => true, 'targetClass' => GoodType::className(), 'targetAttribute' => ['type' => 'id']],
         ];
@@ -44,6 +50,7 @@ class GoodPriceField extends \yii\db\ActiveRecord
             'id' => '主键id',
             'type' => '类型',
             'discription' => '区间',
+            ''
         ];
     }
 
@@ -53,5 +60,47 @@ class GoodPriceField extends \yii\db\ActiveRecord
     public function getType0()
     {
         return $this->hasOne(GoodType::className(), ['id' => 'type']);
+    }
+
+    /**
+     * valid规则
+     */
+    public function validStart(){
+        if(!empty($this->end)&&$this->start>=$this->end){
+            $this->addError('start','开始金额必须小于结束金额');
+        }
+        $query = self::find()->where(['type'=>$this->type]);
+        if(!empty($this->id)){
+            $query->andWhere('id<>'.$this->id);
+        }
+        $query->addSelect(["SUBSTR(SUBSTRING_INDEX(discription,',',1),2) as start",
+            "SUBSTRING_INDEX(SUBSTRING_INDEX(discription,',',-1),']',1) as end"]);
+        $query->having("start<=$this->start AND (end>$this->start or end='+∞')");
+        $model = $query->one();
+        if(!empty($model)){
+            $this->addError('start','该金额与已存在的区间存在冲突，请重新输入');
+        }
+    }
+
+    public function validEnd(){
+        if($this->end<=0){
+            $this->addError('end','结束金额必须为正整数');
+        }
+        if($this->start>=$this->end){
+            $this->addError('end','开始金额必须小于结束金额');
+        }
+        if(is_numeric($this->end)){
+            $query = self::find()->where(['type'=>$this->type]);
+            if(!empty($this->id)){
+                $query->andWhere('id<>'.$this->id);
+            }
+            $query->addSelect(["SUBSTR(SUBSTRING_INDEX(discription,',',1),2) as start",
+                "SUBSTRING_INDEX(SUBSTRING_INDEX(discription,',',-1),']',1) as end"]);
+            $query->having("start<$this->end AND (end>=$this->end or end='+∞')");
+            $model = $query->one();
+            if(!empty($model)){
+                $this->addError('end','该金额与已存在的区间存在冲突，请重新输入');
+            }
+        }
     }
 }

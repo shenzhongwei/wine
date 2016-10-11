@@ -47,17 +47,17 @@ $country = $this->render('country', ['model' => $model, 'searchModel' => $countr
 $style = $this->render('style', ['model' => $model, 'searchModel' => $styleSearch, 'dataProvider' => $styleData]);
 $items = [
     [
-        'label' => '<i class="btn btn-link btn-xs" id="brand">品 牌</i>',
+        'label' => '品 牌',
         'content'=>$brand,
         'active'=>$key == 'brand' ? true:false,
     ],
     [
-        'label' => '<i class="btn btn-link btn-xs" id="smell">香 型</i>',
+        'label' => '香 型',
         'content'=>$smell,
         'active' => $key == 'smell' ? true : false,
     ],
     [
-        'label' => '<i class="btn btn-link btn-xs">产 地</i>',
+        'label' => '产 地',
         'content' => $boot,
         'active' => $key == 'boot' ? true : false,
     ],
@@ -67,32 +67,32 @@ $items = [
 //        'active'=>$key == 'price' ? true:false,
 //    ],
     [
-        'label' => '<i class="btn btn-link btn-xs">颜 色</i>',
+        'label' => '颜 色',
         'content' => $color,
         'active' => $key == 'color' ? true : false,
     ],
     [
-        'label' => '<i class="btn btn-link btn-xs">品 种</i>',
+        'label' => '品 种',
         'content' => $breed,
         'active' => $key == 'breed' ? true : false,
     ],
     [
-        'label' => '<i class="btn btn-link btn-xs">干 型</i>',
+        'label' => '干 型',
         'content' => $dry,
         'active' => $key == 'dry' ? true : false,
     ],
     [
-        'label' => '<i class="btn btn-link btn-xs">规 格</i>',
+        'label' => '规 格',
         'content' => $volum,
         'active' => $key == 'volum' ? true : false,
     ],
     [
-        'label' => '<i class="btn btn-link btn-xs">国 家</i>',
+        'label' => '国 家',
         'content' => $country,
         'active' => $key == 'country' ? true : false,
     ],
     [
-        'label' => '<i class="btn btn-link btn-xs">类 型</i>',
+        'label' => '类 型',
         'content' => $style,
         'active' => $key == 'style' ? true : false,
     ],

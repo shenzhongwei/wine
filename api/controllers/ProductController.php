@@ -231,7 +231,7 @@ class ProductController extends ApiController{
         }
         if(!empty($key)&&!empty($value)){
             $query->andWhere(['and',$key=='price' ? "$key >= $value[0] ".(empty($value[1]) ? '' :
-                    "and $key <=$value[1]") : "$key=$value"]);
+                    "and $key <$value[1]") : "$key=$value"]);
         }
         $count = $query->count();
         //排序
