@@ -12,7 +12,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Good Infos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
-<div class="good-info-update ibox-content">
+<div class="good-info-update">
     <div class="row">
         <?= $this->render('_form', [
             'model' => $model,

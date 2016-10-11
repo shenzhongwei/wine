@@ -491,10 +491,9 @@ class UserController extends ApiController{
         //接收数据
         $phone = Yii::$app->request->post('phone');
         $code = Yii::$app->request->post('code','');//验证码
-        $old_pwd = Yii::$app->request->post('oldPwd');//原密码
         $password = Yii::$app->request->post('password','');//密码
         $confirmPwd = Yii::$app->request->post('confirmPwd','');//确认密码
-        if(empty($code)||empty($password)||empty($confirmPwd)||empty($old_pwd)||empty($phone)){//判断是否接受完整
+        if(empty($code)||empty($password)||empty($confirmPwd)||empty($phone)){//判断是否接受完整
             return $this->showResult(301,'获取数据出错');
         }
         if($phone!=$userInfo->phone){
@@ -512,9 +511,6 @@ class UserController extends ApiController{
         $userAccount = UserAccount::findOne(['target'=>$user_id,'type'=>1,'level'=>2]);//涨到用户余额
         if(empty($userAccount)||empty($userAccount->pay_password)){
             return $this->showResult(303,'该用户尚未设置余额支付密码，请前往设置');
-        }
-        if($userAccount->pay_password != (md5(Yii::$app->params['pay_pre'].$old_pwd))){
-            return $this->showResult(303,'原密码错误，请重新输入');
         }
         $userAccount->is_active = 1;
         $userAccount->pay_password = md5(Yii::$app->params['pay_pre'].$password);

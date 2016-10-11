@@ -104,6 +104,11 @@ $this->registerJsFile("@web/js/good/_script.js");
                                 ]),
                             ],
                             [
+                                'attribute'=>'detail',
+                                "format" => "html",
+                                'value'=>'<a class="btn btn-link btn-xs" href="'.Url::toRoute(['good/detail','id'=>$model->id]).'">点击查看</a>',
+                            ],
+                            [
                                 'label'=>'发布时间',
                                 'attribute'=>'regist_at',
                                 'format'=>["date", "php:Y年m月d日"],

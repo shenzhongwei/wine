@@ -11,8 +11,7 @@ $this->title = '发布会员产品';
 $this->params['breadcrumbs'][] = ['label' => '会员产品', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="good-vip-create col-sm-8">
-    <h2><?= Html::encode($this->title) ?></h2>
+<div class="good-vip-create">
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>

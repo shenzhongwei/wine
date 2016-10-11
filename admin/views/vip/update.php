@@ -12,8 +12,7 @@ $this->params['breadcrumbs'][] = ['label' => '会员产品', 'url' => ['index']]
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
-<div class="good-vip-update col-sm-8">
-        <h2><?= Html::encode($this->title) ?></h2>
+<div class="good-vip-update">
         <?= $this->render('_form', [
             'model' => $model,
         ]) ?>

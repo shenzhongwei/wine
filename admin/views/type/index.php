@@ -18,14 +18,7 @@ use kartik\widgets\FileInput;
 $this->title = Yii::t('app', 'Good Types');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="good-type-index col-sm-12">
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <p>
-        <?php /* echo Html::a(Yii::t('app', 'Create {modelClass}', [
-    'modelClass' => 'Good Type',
-]), ['create'], ['class' => 'btn btn-success'])*/  ?>
-    </p>
+<div class="good-type-index">
 
     <?php Pjax::begin(['id'=>'typeinfo','timeout'=>5000]);
     echo GridView::widget([
@@ -67,7 +60,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label'=>'发布时间',
                 'attribute'=>'regist_at',
                 'hAlign'=>GridView::ALIGN_CENTER,
-                'width'=>'19%',
+                'width'=>'25%',
                 'format'=>['date','php:Y年m月d日'],
                 'value'=>function($model){
                     return $model->regist_at;
@@ -86,7 +79,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'label'=>'状态',
                 'class'=>'kartik\grid\BooleanColumn',
-                'width'=>'16%',
+                'width'=>'14%',
                 'attribute' => 'is_active',
                 'vAlign'=>GridView::ALIGN_LEFT,
                 'trueLabel'=>'上架中',
@@ -97,7 +90,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
 
                 'header'=>'图标',
-                'width'=>'16%',
+                'width'=>'12%',
                 'headerOptions'=>['class'=>'kartik-sheet-style'],
                 'hAlign'=>'center',
                 'vAlign'=>'middle',

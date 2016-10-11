@@ -16,7 +16,11 @@ use dosamigos\datetimepicker\DateTimePicker;
 ?>
 
 <div class="good-rush-form">
-    <div class="col-sm-6">
+    <div class="panel panel-info" style="width: 70%">
+        <div class="panel-heading">
+            <?= $model->isNewRecord ? '发布抢购' : '编辑抢购' ?>
+        </div>
+        <div class="panel-body">
     <?php $form = ActiveForm::begin([
         'type'=>ActiveForm::TYPE_VERTICAL,
         'formConfig' => [
@@ -26,11 +30,7 @@ use dosamigos\datetimepicker\DateTimePicker;
         'validationUrl'=>Url::toRoute(['valid-form','id'=>empty($model['id'])?0:$model['id']]), //验证url
     ]);
     ?>
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <?= $model->isNewRecord ? '发布抢购' : '编辑抢购' ?>
-            </div>
-            <div class="panel-body">
+
                 <?php
 
                 echo Form::widget([
@@ -111,10 +111,10 @@ use dosamigos\datetimepicker\DateTimePicker;
 
                 echo Html::submitButton(Yii::t('app', 'Save') , ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']);
                 ?>
+
+    <?php
+    ActiveForm::end(); ?>
             </div>
 
         </div>
-        <?php
-    ActiveForm::end(); ?>
-</div>
 </div>

@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
 // here
 $this->registerJsFile("@web/js/good/_script.js");
 ?>
-<div class="good-info-index col-sm-12">
+<div class="good-info-index">
     <?php
         echo GridView::widget([
         'dataProvider' => $dataProvider,
@@ -301,13 +301,13 @@ $this->registerJs($Js);
 \yii\bootstrap\Modal::end();
 ?>
 <!--查看看详情弹出框  end-->
-<!--<script language="JavaScript">-->
-<!--    $(function (){-->
-<!--        $('.panel').find('.dropdown-toggle').unbind();-->
-<!--        $('.panel').find('.dropdown-toggle').attr('class','btn btn-default dropdown-toggle');-->
-<!--        $('.ui-autocomplete').css('z-index','99999');-->
-<!--        $('.datepicker-days').css('z-index','99999');-->
-<!--    });-->
-<!--</script>-->
+<script language="JavaScript">
+    $(function (){
+        $('.panel').find('.dropdown-toggle').unbind();
+        $('.panel').find('.dropdown-toggle').attr('class','btn btn-default dropdown-toggle');
+        $('.ui-autocomplete').css('z-index','99999');
+        $('.datepicker-days').css('z-index','99999');
+    });
+</script>
 
 

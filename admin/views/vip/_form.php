@@ -16,6 +16,11 @@ use admin\models\GoodVip;
 ?>
 
 <div class="good-vip-form">
+    <div class="panel panel-info" style="width: 70%">
+        <div class="panel-heading">
+            <?= $model->isNewRecord ? '发布会员商品' : '编辑会员商品' ?>
+        </div>
+        <div class="panel-body">
         <?php $form = ActiveForm::begin([
                 'type'=>ActiveForm::TYPE_VERTICAL,
                 'formConfig' => [
@@ -49,4 +54,6 @@ use admin\models\GoodVip;
             <?php
             echo Html::submitButton( Yii::t('app', 'Save'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']);
             ActiveForm::end(); ?>
+            </div>
+        </div>
 </div>

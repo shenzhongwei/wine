@@ -22,8 +22,6 @@ $merchants = MerchantInfo::GetMerchants();
 $wa_type = $admin->wa_type;
 ?>
 <div class="good-info-form">
-
-    <div class="col-sm-12">
     <?php $form = ActiveForm::begin([
         'type'=>ActiveForm::TYPE_VERTICAL,
         'fullSpan'=>12,
@@ -294,5 +292,4 @@ $wa_type = $admin->wa_type;
         <?php
         ActiveForm::end();
         ?>
-    </div>
 </div>

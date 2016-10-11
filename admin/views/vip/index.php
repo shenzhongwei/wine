@@ -14,7 +14,7 @@ use yii\bootstrap\Modal;
 $this->title = '会员商品表';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="good-vip-index col-sm-8">
+<div class="good-vip-index">
     <?php
     echo GridView::widget([
         'dataProvider' => $dataProvider,
@@ -127,9 +127,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
 </div>
 
-<!--<script language="JavaScript">-->
-<!--    $(function (){-->
-<!--        $('.panel').find('.dropdown-toggle').unbind();-->
-<!--        $('.panel').find('.dropdown-toggle').attr('class','btn btn-default dropdown-toggle');-->
-<!--    });-->
-<!--</script>-->
+<script language="JavaScript">
+    $(function (){
+        $('.panel').find('.dropdown-toggle').unbind();
+        $('.panel').find('.dropdown-toggle').attr('class','btn btn-default dropdown-toggle');
+    });
+</script>

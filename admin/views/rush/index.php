@@ -15,12 +15,8 @@ use admin\models\GoodRush;
 $this->title = '抢购管理';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="good-rush-index col-sm-12">
+<div class="good-rush-index">
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <p>
-        <?php /* echo Html::a('Create Good Rush', ['create'], ['class' => 'btn btn-success'])*/  ?>
-    </p>
 
     <?php
     echo GridView::widget([
@@ -257,10 +253,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
 </div>
 
-<!--<script language="JavaScript">-->
-<!--    $(function (){-->
-<!--        $('.panel').find('.dropdown-toggle').unbind();-->
-<!--        $('.panel').find('.dropdown-toggle').attr('class','btn btn-default dropdown-toggle');-->
-<!--        $('.ui-autocomplete').css('z-index','99999');-->
-<!--    });-->
-<!--</script>-->
+<script language="JavaScript">
+    $(function (){
+        $('.panel').find('.dropdown-toggle').unbind();
+        $('.panel').find('.dropdown-toggle').attr('class','btn btn-default dropdown-toggle');
+        $('.ui-autocomplete').css('z-index','99999');
+    });
+</script>
