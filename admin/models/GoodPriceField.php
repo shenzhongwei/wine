@@ -96,11 +96,13 @@ class GoodPriceField extends \yii\db\ActiveRecord
             if(!empty($this->id)){
                 $query->andWhere('id<>'.$this->id);
             }
-            $query->addSelect(["SUBSTR(SUBSTRING_INDEX(discription,',',1),2) as start",
-                "SUBSTRING_INDEX(SUBSTRING_INDEX(discription,',',-1),']',1) as end"]);
             $query->andWhere("(SUBSTR(SUBSTRING_INDEX(discription,',',1),2)>=$this->start 
             AND (SUBSTR(SUBSTRING_INDEX(discription,',',1),2)<$this->end) OR
-            (SUBSTRING_INDEX(SUBSTRING_INDEX(discription,',',-1),']',1)>)");
+            ((SUBSTRING_INDEX(SUBSTRING_INDEX(discription,',',-1),']',1)>$this->start AND 
+            SUBSTRING_INDEX(SUBSTRING_INDEX(discription,',',-1),']',1)<=$this->end AND 
+            SUBSTRING_INDEX(SUBSTRING_INDEX(discription,',',-1),']',1)<>'+∞') OR 
+            (SUBSTRING_INDEX(SUBSTRING_INDEX(discription,',',-1),']',1)='+∞' AND 
+            SUBSTRING_INDEX(SUBSTRING_INDEX(discription,',',-1),']',1)))");
             $model = $query->one();
             if(!empty($model)){
                 $this->addError('end','该金额与已存在的区间存在冲突，请重新输入');
