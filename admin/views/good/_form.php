@@ -165,9 +165,9 @@ $wa_type = $admin->wa_type;
                                 'columnSize'=>'sm',
                                 'attributes' => [
 
-                                    'price'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'单价:单位：元', 'maxlength'=>10,'onkeyup'=>'this.value=this.value.replace(/\D/gi,"")']],
+                                    'price'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'单价:单位：元', 'maxlength'=>10,'onkeyup'=>'clearNoNum(this)']],
 
-                                    'pro_price'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'单价:单位：元', 'maxlength'=>10,'onkeyup'=>'this.value=this.value.replace(/\D/gi,"")']],
+                                    'pro_price'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'单价:单位：元', 'maxlength'=>10,'onkeyup'=>'clearNoNum(this)']],
 
                                     'unit'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'单位：如：瓶', 'maxlength'=>10]],
 

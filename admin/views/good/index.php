@@ -283,6 +283,7 @@ $this->registerJsFile("@web/js/good/_script.js");
 <?php
 
 \yii\bootstrap\Modal::begin([
+    'size'=>\yii\bootstrap\Modal::SIZE_LARGE,
     'id' => 'good-modal',
     'header' => '<h4 class="modal-title">查看详情</h4>',
     'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">关闭</a>',

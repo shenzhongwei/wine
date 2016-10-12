@@ -16,6 +16,7 @@ use admin\models\GoodCountry;
 use admin\models\GoodDry;
 use admin\models\GoodModel;
 use admin\models\GoodPic;
+use admin\models\GoodPriceField;
 use admin\models\GoodSmell;
 use admin\models\GoodStyle;
 use admin\models\ModelSearch;
@@ -152,11 +153,11 @@ class TypeController extends BaseController
         $bootData->pagination = [
             'pageSize' => 15,
         ];
-//        $priceSearch = new PriceSearch();
-//        $priceData = $priceSearch->search(Yii::$app->request->getQueryParams(),$id);
-//        $priceData->pagination=[
-//            'pageSize'=>15,
-//        ];
+        $price = new GoodPriceField();
+        $priceData = $price->search($id);
+        $priceData->pagination=[
+            'pageSize'=>15,
+        ];
         $colorSearch = new ColorSearch();
         $colorData = $colorSearch->search(Yii::$app->request->getQueryParams(), $id);
         $colorData->pagination = [
@@ -199,6 +200,7 @@ class TypeController extends BaseController
             'colorData' => $colorData,
             'colorSearch' => $colorSearch,
             'breedData' => $breedData,
+            'priceData'=>$priceData,
             'breedSearch' => $breedSearch,
             'dryData' => $dryData,
             'drySearch' => $drySearch,
@@ -223,7 +225,7 @@ class TypeController extends BaseController
         } elseif ($key == 'boot') {
             $model = new GoodBoot();
         } elseif ($key == 'price') {
-            $model = new GoodPic();
+            $model = new GoodPriceField();
         } elseif ($key == 'color') {
             $model = new GoodColor();
         } elseif ($key == 'breed') {
@@ -304,6 +306,28 @@ class TypeController extends BaseController
             var_dump($model->getErrors());
             Yii::$app->session->setFlash('danger', '发生异常，请重试');
             return $this->redirect(['type/view', 'id' => $type, 'key' => $key]);
+        }
+    }
+
+    public function actionPriceCreate(){
+        $type = Yii::$app->request->get('type');
+        $model = new GoodPriceField();
+        $model->type = $type;
+        if ($model->load(Yii::$app->request->post())) {
+            $start = $model->start;
+            $end = $model->end;
+            $model->discription = "[$start,$end]";
+            if($model->save()){
+                Yii::$app->session->setFlash('success','操作成功');
+                return $this->redirect(['type/view', 'id' => $model->type, 'key' => 'price']);
+            }else{
+                Yii::$app->session->setFlash('danger', '发生异常，请重试');
+                return $this->redirect(['type/view', 'id' => $type, 'key' => 'price']);
+            }
+        } else {
+            return $this->render('_pricecreate', [
+                'model' => $model,
+            ]);
         }
     }
 
@@ -452,6 +476,39 @@ class TypeController extends BaseController
         }
     }
 
+
+    public function actionPriceUpdate($id)
+    {
+        $type = Yii::$app->request->get('type');
+        $model = GoodPriceField::find()->select(["SUBSTRING_INDEX(SUBSTRING_INDEX(discription,',',-1),']',1) as end",
+            "SUBSTR(SUBSTRING_INDEX(discription,',',1),2) as start",'type','id'])->where(['id' => $id])->one();
+        if(empty($model)){
+            Yii::$app->session->setFlash('danger','未找到该条数据');
+            return $this->redirect(['type/view', 'id' => $type, 'key' => 'price']);
+        }else{
+            if ($model->load(Yii::$app->request->post())) {
+                $start = $model->start;
+                $end = $model->end;
+                $model->discription = "[$start,$end]";
+                if($model->save()){
+                    Yii::$app->session->setFlash('success','操作成功');
+                    return $this->redirect(['type/view', 'id' => $model->type, 'key' => 'price']);
+                }else{
+                    Yii::$app->session->setFlash('danger', '发生异常，请重试');
+                    return $this->redirect(['type/view', 'id' => $type, 'key' => 'price']);
+                }
+            } else {
+                return $this->render('_priceupdate', [
+                    'model' => $model,
+                ]);
+            }
+        }
+    }
+
+    public function actionPriceUpdateForm($id){
+
+    }
+
     /**
      * Deletes an existing GoodType model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -505,6 +562,22 @@ class TypeController extends BaseController
             Yii::$app->session->setFlash('danger', '未找到该数据');
         }
         return $this->redirect(['view', 'id' => $model->type, 'key' => $key]);
+    }
+
+    public function actionPriceDelete($id)
+    {
+        $model = GoodPriceField::findOne($id);
+        if(!empty($model)){
+            if($model->delete()){
+                Yii::$app->session->setFlash('success','删除成功');
+            }else{
+                Yii::$app->session->setFlash('danger','删除失败');
+            }
+        }else{
+            Yii::$app->session->setFlash('danger', '未找到该数据');
+
+        }
+        return $this->redirect(['view', 'id' => $model->type, 'key' => 'price']);
     }
 
 

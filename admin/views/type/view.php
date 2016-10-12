@@ -16,7 +16,6 @@ use kartik\tabs\TabsX;
  * @var yii\data\ActiveDataProvider $bootData
  * @var admin\models\BootSearch $bootSearch
  * @var yii\data\ActiveDataProvider $priceData
- * @var admin\models\PriceSearch $priceSearch
  * @var yii\data\ActiveDataProvider $colorData
  * @var admin\models\ColorSearch $colorSearch
  * @var yii\data\ActiveDataProvider $breedData
@@ -38,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
 $brand = $this->render('brand',['model'=>$model,'searchModel'=>$searchModel,'dataProvider'=>$dataProvider]);
 $smell = $this->render('smell',['model'=>$model,'searchModel'=>$smellSearch,'dataProvider'=>$smellData]);
 $boot = $this->render('boot', ['model' => $model, 'searchModel' => $bootSearch, 'dataProvider' => $bootData]);
-//$price = $this->render('price',['model'=>$model,'searchModel'=>$priceSearch,'dataProvider'=>$priceData]);
+$price = $this->render('price',['model'=>$model,'dataProvider'=>$priceData]);
 $color = $this->render('color', ['model' => $model, 'searchModel' => $colorSearch, 'dataProvider' => $colorData]);
 $breed = $this->render('breed', ['model' => $model, 'searchModel' => $breedSearch, 'dataProvider' => $breedData]);
 $dry = $this->render('dry', ['model' => $model, 'searchModel' => $drySearch, 'dataProvider' => $dryData]);
@@ -61,11 +60,11 @@ $items = [
         'content' => $boot,
         'active' => $key == 'boot' ? true : false,
     ],
-//    [
-//        'label'=>'<i class="btn btn-link btn-xs">价格区间</i>',
-//        'content'=>$price,
-//        'active'=>$key == 'price' ? true:false,
-//    ],
+    [
+        'label'=>'价格区间',
+        'content'=>$price,
+        'active'=>$key == 'price' ? true:false,
+    ],
     [
         'label' => '颜 色',
         'content' => $color,

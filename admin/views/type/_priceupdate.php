@@ -8,14 +8,9 @@ use admin\models\GoodPriceField;
 /**
  * @var yii\web\View $this
  * @var admin\models\GoodPriceField $model
- */$model->end = '+∞';
+ */
 ?>
-<style>
-    .select2-dropdown--below{
-        z-index: 99999;
-    }
-</style>
-<div class="good-price-create">
+<div class="good-price-update">
     <div class="good-price-form">
 
         <?php $form = ActiveForm::begin([
@@ -23,15 +18,16 @@ use admin\models\GoodPriceField;
             'type' => ActiveForm::TYPE_VERTICAL,
             'enableAjaxValidation' => true, //开启ajax验证
             'validationUrl' => Url::toRoute(['valid-form', 'key' => 'price']), //验证url
-            'action' => Url::toRoute(['type/price-create', 'key' => 'price', 'type' => $model->type]),
+            'action' => Url::toRoute(['type/price-update',  'type' => $model->type,'id'=>$model->id]),
         ]);
         echo Form::widget([
             'model' => $model,
             'form' => $form,
             'columns' => 1,
             'attributes' => [
+                'id' => ['type'=>Form::INPUT_HIDDEN,'label'=>false],
                 'start' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => '请输入起始金额','maxlength'=>10,'onkeyup'=>'this.value=this.value.replace(/\D/gi,"")']],
-                'end_rep' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => '请输入终止金额(若要设置无限大，则无需输入)','maxlength'=>10,'onkeyup'=>'this.value=this.value.replace(/\D/gi,"")']],
+                'end_rep' => ['type' => Form::INPUT_TEXT, 'options' => ['value'=>$model->end=='+∞' ? '':$model->end,'placeholder' => '请输入终止金额(若要设置无限大，则无需输入)','maxlength'=>10,'onkeyup'=>'this.value=this.value.replace(/\D/gi,"")']],
                 'end' => ['type' => Form::INPUT_HIDDEN, 'options' => ['placeholder' => '请输入终止金额(若要设置无限大，则无需输入)'],'label'=>false],
                 'type'=>['type'=> Form::INPUT_WIDGET, 'widgetClass'=>\kartik\select2\Select2::className(),'options'=>[
                     'data' => GoodPriceField::GetAllTypes(),
