@@ -27,14 +27,18 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
         'columns' => [
             [
-                'header'=>'序号',
+                'header'=>'',
+                'width'=>'10%',
                 'class' => 'kartik\grid\SerialColumn'
             ],
 
             [
                 'header'=>'商品名称',
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
                 'attribute'=>'gid',
                 'format'=>'html',
+                'width'=>'15%',
                 'value'=>function($model) {
                     return Html::a($model->g->name.$model->g->volum,['good/view', 'id' => $model->id],
                         ['title' => '查看商品详细','class'=>'btn btn-link btn-sm']
@@ -44,20 +48,29 @@ $this->params['breadcrumbs'][] = $this->title;
 
             [
                 'label'=>'原价',
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
                 'attribute'=>'g.price',
+                'width'=>'15%',
                 'value'=>function($model) {
                     return '¥'.$model->g->price.'/'.$model->g->unit;
                 }
             ],
             [
                 'label'=>'会员价',
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
                 'attribute'=>'price',
+                'width'=>'15%',
                 'value'=>function($model) {
                     return '¥'.$model->price.'/'.$model->g->unit;
                 }
             ],
             [
                 'header'=>'商品状态',
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+                'width'=>'15%',
                 'format' => 'raw',
                 'value' => function ($model) {
                     $state =  $model->g->is_active==0 ? '<label class="label label-danger">已下架</label>':'<label class="label label-info">上架中</label>';
@@ -66,6 +79,9 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'label'=>'会员商品状态',
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+                'width'=>'15%',
                 'attribute' => 'is_active',
                 'format' => 'raw',
                 'value' => function ($model) {
@@ -76,7 +92,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
             [
                 'header' => '操作',
-                'class' => 'yii\grid\ActionColumn',
+                'class' => 'kartik\grid\ActionColumn',
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+                'width'=>'15%',
                 'buttons' => [
                     'view'=>function ($url, $model) {
                         return '';
@@ -107,8 +126,8 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
         'toolbar'=> [
             ['content'=>
-                Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create'],['type'=>'button', 'title'=>'发布会员产品', 'class'=>'btn btn-primary']).
-                Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index'], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>'刷新列表'])
+                Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create'],['data-pjax'=>0,'type'=>'button', 'title'=>'发布会员产品', 'class'=>'btn btn-primary']).
+                Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index'], ['class'=>'btn btn-default', 'title'=>'刷新列表'])
             ],
             '{toggleData}',
             '{export}',

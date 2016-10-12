@@ -213,8 +213,8 @@ $this->params['breadcrumbs'][] = $this->title;
         // set your toolbar
         'toolbar'=> [
             ['content'=>
-                Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create'],['type'=>'button', 'title'=>'发布大类', 'class'=>'btn btn-success']).
-                Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index'], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>'刷新列表'])
+                Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create'],['data-pjax'=>0,'type'=>'button', 'title'=>'发布大类', 'class'=>'btn btn-success']).
+                Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index'], ['class'=>'btn btn-default', 'title'=>'刷新列表'])
             ],
             '{toggleData}',
             '{export}',

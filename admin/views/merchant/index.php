@@ -63,11 +63,13 @@ $this->params['breadcrumbs'][] = $this->title;
                         if($model->is_active == 0){
                             return Html::a('<i class="fa fa-unlock-alt"> 激活</i>', $url, [
                                 'title' => Yii::t('app', '激活该商户'),
+                                'data-confirm'=>'确定激活该商户?一旦激活，改商户下的产品以及门店变为可见',
                                 'class' => 'del btn btn-info btn-xs',
                             ]);
                         }else{
                             return Html::a('<i class="fa fa-lock"> 冻结</i>', $url, [
                                 'title' => Yii::t('app', '冻结该商户'),
+                                'data-confirm'=>'确定冻结该商户?一旦冻结，改商户下的产品以及门店将不可见',
                                 'class' => 'del btn btn-danger btn-xs',
                             ]);
                         }
@@ -79,7 +81,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'responsive'=>true,
         'hover'=>true,
         'condensed'=>true,
-        'floatHeader'=>true,
+        'floatHeader'=>false,
         'panel' => [
             'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> '.Html::encode($this->title).' </h3>',
             'type'=>'info',

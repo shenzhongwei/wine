@@ -160,7 +160,7 @@ GridView::widget([
                 'data-target' => '#dry-modal',    //指定弹框的id
                 'type'=>'button', 'title'=>'新增干型', 'class'=>'btn btn-success'
             ]).
-            Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['view','id'=>$model->id,'key'=>'dry'], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>'刷新列表'])
+            Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['view','id'=>$model->id,'key'=>'dry'], ['class'=>'btn btn-default', 'title'=>'刷新列表'])
         ],
         '{toggleData}',
         '{export}',

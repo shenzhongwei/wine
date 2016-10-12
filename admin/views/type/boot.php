@@ -167,7 +167,7 @@ GridView::widget([
                 'data-target' => '#boot-modal',    //指定弹框的id
                 'type' => 'button', 'title' => '新增产地', 'class' => 'btn btn-success'
             ]) .
-            Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['view', 'id' => $model->id, 'key' => 'boot'], ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => '刷新列表'])
+            Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['view', 'id' => $model->id, 'key' => 'boot'], ['class' => 'btn btn-default', 'title' => '刷新列表'])
         ],
         '{toggleData}',
         '{export}',

@@ -160,7 +160,7 @@ GridView::widget([
                 'data-target' => '#breed-modal',    //指定弹框的id
                 'type'=>'button', 'title'=>'新增品种', 'class'=>'btn btn-success'
             ]).
-            Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['view','id'=>$model->id,'key'=>'breed'], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>'刷新列表'])
+            Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['view','id'=>$model->id,'key'=>'breed'], ['class'=>'btn btn-default', 'title'=>'刷新列表'])
         ],
         '{toggleData}',
         '{export}',

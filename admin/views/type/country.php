@@ -168,7 +168,7 @@ GridView::widget([
                 'data-target' => '#country-modal',    //指定弹框的id
                 'type'=>'button', 'title'=>'新增国家', 'class'=>'btn btn-success'
             ]).
-            Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['view','id'=>$model->id,'key'=>'country'], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>'刷新列表'])
+            Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['view','id'=>$model->id,'key'=>'country'], ['class'=>'btn btn-default', 'title'=>'刷新列表'])
         ],
         '{toggleData}',
         '{export}',

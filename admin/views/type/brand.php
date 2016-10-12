@@ -234,7 +234,7 @@ echo GridView::widget([
                 'data-target' => '#brand-modal',    //指定弹框的id
                 'type'=>'button', 'title'=>'新增品牌', 'class'=>'btn btn-success'
             ]).
-            Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['view','id'=>$model->id,'key'=>'brand'], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>'刷新列表'])
+            Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['view','id'=>$model->id,'key'=>'brand'], ['class'=>'btn btn-default', 'title'=>'刷新列表'])
         ],
         '{toggleData}',
         '{export}',

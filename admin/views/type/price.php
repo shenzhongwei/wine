@@ -102,7 +102,7 @@ GridView::widget([
                 'title'=>'新增区间',
                 'class'=>'btn btn-success create'
             ]).
-            Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['view','id'=>$model->id,'key'=>'price'], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>'刷新列表'])
+            Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['view','id'=>$model->id,'key'=>'price'], ['class'=>'btn btn-default', 'title'=>'刷新列表'])
         ],
         '{toggleData}',
         '{export}',

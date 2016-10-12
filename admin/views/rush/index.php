@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class'=>'kartik\grid\SerialColumn',
                 'contentOptions'=>['class'=>'kartik-sheet-style'],
-                'width'=>'36px',
+                'width'=>'2%',
                 'header'=>'',
                 'headerOptions'=>['class'=>'kartik-sheet-style']
             ],
@@ -46,7 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'header'=>'商品名称',
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
-                'width'=>'210px',
+                'width'=>'8%',
                 'format'=>'html',
                 'value'=>function($model) {
                     return Html::a($model->g->name.$model->g->volum,['good/view', 'id' => $model->id],
@@ -84,7 +84,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute'=>'start_at',
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
-                'width'=>'9%',
+                'width'=>'15%',
                 'headerOptions'=>['class'=>'kv-sticky-column'],
                 'contentOptions'=>['class'=>'kv-sticky-column'],
                 'format'=>[
@@ -123,7 +123,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute'=>'end_at',
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
-                'width'=>'9%',
+                'width'=>'15%',
                 'headerOptions'=>['class'=>'kv-sticky-column'],
                 'contentOptions'=>['class'=>'kv-sticky-column'],
                 'format'=>[
@@ -163,7 +163,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class'=>'kartik\grid\BooleanColumn',
                 'attribute'=>'is_active',
                 'vAlign'=>GridView::ALIGN_LEFT,
-                'width'=>'108px',
+                'width'=>'12%',
                 'trueLabel'=>'上架中',
                 'falseLabel'=>'已下架',
                 'trueIcon'=>'<label class="label label-info">上架中</label>',
@@ -187,7 +187,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class'=>'kartik\grid\BooleanColumn',
                 'attribute'=>'g.is_active',
                 'vAlign'=>GridView::ALIGN_LEFT,
-                'width'=>'108px',
+                'width'=>'12%',
                 'mergeHeader'=>true,
                 'headerOptions'=>['class'=>'kartik-sheet-style'],
                 'trueLabel'=>'上架中',
@@ -196,6 +196,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'header' => '操作',
                 'class' => 'kartik\grid\ActionColumn',
+                'width'=>'12%',
                 'buttons' => [
                     'view'=>function ($url, $model) {
                         return '';
@@ -227,8 +228,8 @@ $this->params['breadcrumbs'][] = $this->title;
         // set your toolbar
         'toolbar'=> [
             ['content'=>
-                Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create'],['type'=>'button', 'title'=>'发布抢购', 'class'=>'btn btn-primary']).
-                Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index'], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>'刷新列表'])
+                Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create'],['data-pjax'=>0,'type'=>'button', 'title'=>'发布抢购', 'class'=>'btn btn-primary']).
+                Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index'], ['class'=>'btn btn-default', 'title'=>'刷新列表'])
             ],
             '{toggleData}',
             '{export}',

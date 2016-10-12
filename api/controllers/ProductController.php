@@ -8,6 +8,7 @@ use api\models\GoodInfo;
 use api\models\GoodRush;
 use api\models\GoodType;
 use api\models\GoodVip;
+use api\models\HotSearch;
 use api\models\ShopInfo;
 use api\models\UserLogin;
 use Yii;
@@ -350,5 +351,16 @@ class ProductController extends ApiController{
 //        var_dump($goodInfo->detail);
 //        exit;
         return $this->showResult(200,'详情如下',$data);
+    }
+
+    public function actionHotSearch(){
+        $search = HotSearch::find()->orderBy(['order'=>SORT_ASC])->all();
+        $data = [];
+        if(!empty($search)){
+            $data = ArrayHelper::getColumn($search,function($element){
+                return ['name'=>$element->name];
+            });
+        }
+        return $this->showResult(200,'成功',$data);
     }
 }
