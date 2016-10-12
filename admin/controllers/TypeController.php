@@ -225,7 +225,11 @@ class TypeController extends BaseController
         } elseif ($key == 'boot') {
             $model = new GoodBoot();
         } elseif ($key == 'price') {
+            $price = Yii::$app->request->post('GoodPriceField');
             $model = new GoodPriceField();
+            if(!empty($price['id'])){
+                $model->id = $price['id'];
+            }
         } elseif ($key == 'color') {
             $model = new GoodColor();
         } elseif ($key == 'breed') {
