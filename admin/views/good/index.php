@@ -134,7 +134,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                     'header'=>'编号',
                     'hAlign'=>GridView::ALIGN_CENTER,
                     'attribute'=>'number',
-                    'width'=>'7%',
+                    'width'=>'6%',
                     'filterType'=>AutoComplete::className(),
                     'filterWidgetOptions'=>[
                         'clientOptions' => [
@@ -146,7 +146,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                     'label'=>'发布时间',
                     'hAlign'=>GridView::ALIGN_CENTER,
                     'attribute'=>'regist_at',
-                    'width'=>'13%',
+                    'width'=>'11%',
                     'format'=>['date','php:Y年m月d日'],
                     'value'=>function($model){
                         return $model->regist_at;
@@ -167,7 +167,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                     'label'=>'状态',
                     'hAlign'=>GridView::ALIGN_CENTER,
                     'class'=>'kartik\grid\BooleanColumn',
-                    'width'=>'8%',
+                    'width'=>'7%',
                     'attribute' => 'is_active',
                     'vAlign'=>GridView::ALIGN_LEFT,
                     'trueLabel'=>'上架中',
@@ -191,8 +191,9 @@ $this->registerJsFile("@web/js/good/_script.js");
                         ]);
                     }
                 ],
+
                 [
-                    'header'=>'详情',
+                    'header'=>'轮播图',
                     'hAlign'=>GridView::ALIGN_CENTER,
                     'class' =>  'kartik\grid\ActionColumn',
                     'width'=>'6%',
@@ -216,9 +217,33 @@ $this->registerJsFile("@web/js/good/_script.js");
                 ],
 
                 [
+                    'header'=>'详情',
+                    'hAlign'=>GridView::ALIGN_CENTER,
+                    'class' =>  'kartik\grid\ActionColumn',
+                    'width'=>'6%',
+                    'buttons'=>[
+                        'view' => function ($url, $model) {
+                            return Html::a('点击查看', '#', [
+                                'id'=>'detail',//属性
+                                'data-toggle' => 'modal',    //弹框
+                                'data-target' => '#good-modal',    //指定弹框的id
+                                'class' => 'pic btn btn-link btn-xs',
+                                'data-id' => $model->id,
+                            ]);
+                        },
+                        'update' =>  function ($url, $model) {
+                            return '';
+                        },
+                        'delete' =>function ($url, $model) {
+                            return '';
+                        },
+                    ],
+                ],
+
+                [
                     'header' => '操作',
                     'hAlign'=>GridView::ALIGN_CENTER,
-                    'width'=>'12%',
+                    'width'=>'10%',
                     'class' =>  'kartik\grid\ActionColumn',
                     'buttons' => [
                         'view' => function ($url, $model) {
@@ -289,9 +314,19 @@ $this->registerJsFile("@web/js/good/_script.js");
     'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">关闭</a>',
 ]);
 $requestUrl = \yii\helpers\Url::toRoute('detail');  //当前控制器下的view方法
+$picUrl = \yii\helpers\Url::toRoute('pic');  //当前控制器下的view方法
 $Js = <<<JS
          $('.detail').on('click', function () {  //查看详情的触发事件
+            $('.good-pic').remove();
             $.get('{$requestUrl}', { id:$(this).closest('tr').data('key')  },
+                function (data) {
+                    $('#good-modal').find('.modal-body').html(data);  //给该弹框下的body赋值
+                }
+             );
+         });
+         $('.detail').on('click', function () {  //查看详情的触发事件
+            $('.good-detail').remove();
+            $.get('{$picUrl}', { id:$(this).closest('tr').data('key')  },
                 function (data) {
                     $('#good-modal').find('.modal-body').html(data);  //给该弹框下的body赋值
                 }

@@ -136,8 +136,12 @@ class GoodController extends BaseController
     {
         $model = $this->findModel($id);
 
-        echo $model->detail;
+        echo '<div class="good-detail">'.$model->detail.'</div>';
         exit;
+    }
+
+    public function actionPic($id){
+        $model = 1;
     }
 
     /**

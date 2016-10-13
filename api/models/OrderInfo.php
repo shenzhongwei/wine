@@ -56,7 +56,7 @@ class OrderInfo extends \yii\db\ActiveRecord
         return [
             [['sid', 'uid', 'order_date', 'pay_id', 'pay_date', 'send_id', 'state', 'send_date', 'is_del', 'status','ticket_id','aid'], 'integer'],
             [['total', 'discount', 'send_bill', 'pay_bill'], 'number'],
-            [['order_code'], 'string', 'max' => 16],
+            [['order_code'], 'string', 'max' => 32],
             [['send_code'],'string','max'=>12],
             [['send_id'], 'exist', 'skipOnError' => true, 'targetClass' => EmployeeInfo::className(), 'targetAttribute' => ['send_id' => 'id']],
             [['sid'], 'exist', 'skipOnError' => true, 'targetClass' => ShopInfo::className(), 'targetAttribute' => ['sid' => 'id']],

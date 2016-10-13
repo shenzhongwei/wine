@@ -8,7 +8,7 @@ function ShowImg(obj){
         layer.open({
             area: ['360px', '360px'],
             type:1,
-            content:'<div style="text-align: center"><img src="'+path+'" height="360px" ></div>',
+            content:'<div style="text-align: center"><img src="'+path+'" width="360px" height="360px" ></div>',
             title:false,
             scrollbar:false,
             shadeClose:true,

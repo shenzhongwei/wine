@@ -20,11 +20,19 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="good-type-index">
 
-    <?php Pjax::begin(['id'=>'typeinfo','timeout'=>5000]);
+    <?php
+//    Pjax::begin(['id'=>'typeinfo','timeout'=>5000]);
     echo GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'filterPosition' => GridView::FILTER_POS_HEADER,
+        'pjax'=>true,
+        'pjaxSettings'=>[
+            'options'=>[
+                'id'=>'typeinfo'
+            ],
+            'neverTimeout'=>true,
+        ],
         'containerOptions'=>['style'=>'overflow: auto'], // only set when $responsive = false
         'headerRowOptions'=>['class'=>'kartik-sheet-style'],
         'filterRowOptions'=>['class'=>'kartik-sheet-style'],
@@ -236,6 +244,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'fontAwesome'=>true
         ],
     ]);
-    Pjax::end(); ?>
+//    Pjax::end();
+    ?>
 
 </div>

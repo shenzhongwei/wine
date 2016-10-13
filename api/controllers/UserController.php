@@ -276,7 +276,7 @@ class UserController extends ApiController{
             'isVip'=>$userInfo->is_vip,
             'status'=>$userInfo->status,
         ];
-        return $this->showResult(200,'登陆成功',$data);
+        return $this->showResult(200,'登录成功',$data);
     }
 
     /**
