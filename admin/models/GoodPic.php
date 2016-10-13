@@ -32,6 +32,7 @@ class GoodPic extends \yii\db\ActiveRecord
         return [
             [['gid', 'status'], 'integer'],
             [['pic'], 'string', 'max' => 250],
+            [['gid','pic'],'required'],
             [['gid'], 'exist', 'skipOnError' => true, 'targetClass' => GoodInfo::className(), 'targetAttribute' => ['gid' => 'id']],
         ];
     }

@@ -12,8 +12,7 @@ use yii\helpers\Url;
 $this->title = '热搜列表';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="hoot-search-index">
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+<div class="good-pic-index">
 
     <?php
     echo GridView::widget([
@@ -23,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'pjax'=>true,  //pjax is set to always true for this demo
         'pjaxSettings'=>[
             'options'=>[
-                'id'=>'hotsearch',
+                'id'=>'goodpic',
             ],
             'neverTimeout'=>true,
         ],
@@ -41,12 +40,25 @@ $this->params['breadcrumbs'][] = $this->title;
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
                 'width'=>'40%',
+                "format" => "html",
+                'value'=>function($model){
+                    return empty($model->pic) ? '<label class="label label-primary">暂无</label>':Html::img('../../../photo'.$model->pic,[
+                        'width'=>"60px",'height'=>"40px","onclick"=>"ShowPic(this);",'style'=>'cursor:pointer','title'=>"点击放大"
+                    ]);
+                }
             ],
             [
+                'header'=>'商品名称',
                 'attribute'=>'gid',
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
                 'width'=>'30%',
+                "format" => "html",
+                'value'=>function($model){
+                    return Html::a($model->g->name.$model->g->volum,['good/view', 'id' => $model->gid],
+                        ['title' => '查看商品详细','class'=>'btn btn-link btn-sm']
+                    );
+                }
             ],
             [
                 'header' => '操作',

@@ -16,9 +16,11 @@ namespace api\controllers;
         public function actionSetting(){
             $servicePhone = Yii::$app->params['servicePhone'];//客服电话
             $aboutUs = Yii::$app->params['aboutUs'];//关于我们
+            $shareUrl = Yii::$app->params['shareUrl'];//关于我们
             $data = [
                 'service_phone'=>$servicePhone,
                 'about_us'=>$aboutUs,
+                'share_url'=>$shareUrl,
             ];
             //返回
             return $this->showResult(200,'成功',$data);

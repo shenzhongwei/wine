@@ -310,19 +310,9 @@ $this->registerJsFile("@web/js/good/_script.js");
     'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">关闭</a>',
 ]);
 $requestUrl = \yii\helpers\Url::toRoute('detail');  //当前控制器下的view方法
-$picUrl = \yii\helpers\Url::toRoute('pic');  //当前控制器下的view方法
 $Js = <<<JS
          $('.detail').on('click', function () {  //查看详情的触发事件
-            $('.good-pic').remove();
             $.get('{$requestUrl}', { id:$(this).closest('tr').data('key')  },
-                function (data) {
-                    $('#good-modal').find('.modal-body').html(data);  //给该弹框下的body赋值
-                }
-             );
-         });
-         $('.detail').on('click', function () {  //查看详情的触发事件
-            $('.good-detail').remove();
-            $.get('{$picUrl}', { id:$(this).closest('tr').data('key')  },
                 function (data) {
                     $('#good-modal').find('.modal-body').html(data);  //给该弹框下的body赋值
                 }
