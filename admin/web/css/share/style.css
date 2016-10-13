@@ -93,3 +93,30 @@ button[disabled], html input[disabled] {
 	margin-top: 0.5rem;
 	width: 50%;
 }
+
+/*关于我们*/
+
+.contanier {
+	padding: 0.375rem;
+	overflow: hidden;
+}
+
+.title {
+	margin-top: 0.375rem;
+	margin-bottom: 0.375rem;
+	font-size: 18px;
+	font-weight: 600;
+	color: #222;
+}
+
+.information {
+	font-size: 14px;
+	text-align: justify;
+	color: #333;
+}
+
+.information li {
+	margin-top: 0.25rem;
+	line-height: 24px;;
+}
+

@@ -9,8 +9,9 @@ use yii\helpers\Url;
  * @var yii\data\ActiveDataProvider $dataProvider
  */
 
-$this->title = '热搜列表';
+$this->title = '轮播图列表';
 $this->params['breadcrumbs'][] = $this->title;
+$this->registerJsFile("@web/js/good/_script.js");
 ?>
 <div class="good-pic-index">
 
@@ -40,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
                 'width'=>'40%',
-                "format" => "html",
+                "format" => "raw",
                 'value'=>function($model){
                     return empty($model->pic) ? '<label class="label label-primary">暂无</label>':Html::img('../../../photo'.$model->pic,[
                         'width'=>"60px",'height'=>"40px","onclick"=>"ShowPic(this);",'style'=>'cursor:pointer','title'=>"点击放大"
@@ -71,26 +72,23 @@ $this->params['breadcrumbs'][] = $this->title;
                         return '';
                     },
                     'update' => function ($url, $model) {
-                        return '';
+                        return Html::a(Yii::t('app','Update'), '', [
+                            'title' => Yii::t('app', '编辑'),
+                            'class' => 'btn btn-primary btn-xs',
+                        ]);
                     },
                     'delete' => function ($url, $model) {
-                        return Html::a(Yii::t('app','Delete'), $url, [
-                            'title' => Yii::t('app', '删除该热搜'),
+                        return Html::a(Yii::t('app','Delete'), ['del-pic','id'=>$model->id,'key'=>$model->gid], [
+                            'title' => Yii::t('app', '删除该轮播图'),
                             'class' => 'btn btn-danger btn-xs',
-                            'data-confirm'=>'确认删除该热搜？一旦删除无法恢复！',
+                            'data-confirm'=>'确认删除该轮播图？一旦删除无法恢复！',
                         ]);
                     }
                 ],
             ],
         ],
         // set your toolbar
-        'toolbar'=> [
-            ['content'=>
-                $dataProvider->count >= 5 ? '':Html::a('<i class="fa fa-plus"> 发布热搜</i>', ['create'],['data-pjax'=>0,'type'=>'button', 'title'=>'发布热搜', 'class'=>'btn btn-primary'])
-            ],
-            '{toggleData}',
-            '{export}',
-        ],
+        'toolbar'=> false,
         'responsive'=>false,
         'hover'=>true,
         'condensed'=>true,
@@ -102,6 +100,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'type'=>'info',
             'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> '.Html::encode($this->title).' </h3>',
             'showPanel'=>true,
+            'before'=>$dataProvider->count >= 4 ? '':Html::a('<i class="fa fa-plus"> 添加轮播图</i>', ['#'],['type'=>'button', 'title'=>'添加轮播图', 'class'=>'btn btn-primary']),
             'showFooter'=>true
         ],
         'export'=>[
@@ -110,3 +109,46 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
 
 </div>
+
+<?php
+
+\yii\bootstrap\Modal::begin([
+    'id' => 'pic-modal',
+    'options' => [
+        'tabindex' => false
+    ],
+]);
+$updateUrl = \yii\helpers\Url::toRoute('pic-update');  //当前控制器下的view方法
+$createUrl = \yii\helpers\Url::toRoute(['pic-create','type'=>$key]);  //当前控制器下的view方法
+$Js = <<<JS
+         $('.update').on('click', function () {  //查看详情的触发事件
+          $('.good-price-create').remove();
+          $('#price-modal').find('.modal-title').html('更新区间');
+            $.get('{$updateUrl}', { id:$(this).closest('tr').data('key')  },
+                function (data) {
+                    $('#price-modal').find('.modal-body').html(data);  //给该弹框下的body赋值
+                }
+             );
+         });
+$('.create').on('click', function () {  //查看详情的触发事件
+          $('.good-price-update').remove();
+          $('#price-modal').find('.modal-title').html('新增区间');
+            $.get('{$createUrl}', {},
+                function (data) {
+                    $('#price-modal').find('.modal-body').html(data);  //给该弹框下的body赋值
+                }
+             );
+         });
+JS;
+$this->registerJs($Js);
+\yii\bootstrap\Modal::end();
+?>
+<script>
+    $("#price-modal").on("hidden.bs.modal", function(){
+        $("#price-form")[0].reset();//重置表单
+        $('#goodpricefield-end').val('+∞');
+    });
+    $("#update-modal").on("hidden.bs.modal", function(){
+        $("#update-form")[0].reset();//重置表单
+    });
+</script>

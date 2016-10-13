@@ -200,7 +200,8 @@ $this->registerJsFile("@web/js/good/_script.js");
                     'buttons'=>[
                         'view' => function ($url, $model) {
                             return Html::a('点击查看', ['good/pic','id'=>$model->id], [
-                                'class' => 'detail btn btn-link btn-xs',
+                                'data-pjax'=>0,
+                                'class' => 'btn btn-link btn-xs',
                             ]);
                         },
                         'update' =>  function ($url, $model) {
@@ -223,7 +224,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                                 'id'=>'detail',//属性
                                 'data-toggle' => 'modal',    //弹框
                                 'data-target' => '#good-modal',    //指定弹框的id
-                                'class' => 'pic btn btn-link btn-xs',
+                                'class' => 'detail btn btn-link btn-xs',
                                 'data-id' => $model->id,
                             ]);
                         },
@@ -244,12 +245,14 @@ $this->registerJsFile("@web/js/good/_script.js");
                     'buttons' => [
                         'view' => function ($url, $model) {
                             return Html::a('<i class="fa fa-eye">查看</i>', $url, [
+                                'data-pjax'=>0,
                                 'title' => Yii::t('app', Yii::t('app','View')),
                                 'class' => 'btn btn-info btn-xs',
                             ]);
                         },
                         'update' => function ($url, $model) {
                             return Html::a(Yii::t('app','Update'), $url, [
+                                'data-pjax'=>0,
                                 'title' => Yii::t('app', '编辑'),
                                 'class' => 'btn btn-primary btn-xs',
                             ]);

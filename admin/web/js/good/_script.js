@@ -8,7 +8,7 @@ function ShowImg(obj){
         layer.open({
             area: ['360px', '360px'],
             type:1,
-            content:'<div style="text-align: center"><img src="'+path+'" width="600px" height="400px" ></div>',
+            content:'<div style="text-align: center"><img src="'+path+'" width="360px" height="360px" ></div>',
             title:false,
             scrollbar:false,
             shadeClose:true,
@@ -26,9 +26,9 @@ function ShowPic(obj){
 // 为Image对象添加图片加载成功的处理方法
     img.onload = function(){
         layer.open({
-            area: ['360px', '360px'],
+            area: ['900px', '600px'],
             type:1,
-            content:'<div style="text-align: center"><img src="'+path+'" width="540px" height="360px" ></div>',
+            content:'<div style="text-align: center"><img src="'+path+'" width="900px" height="600px" ></div>',
             title:false,
             scrollbar:false,
             shadeClose:true,

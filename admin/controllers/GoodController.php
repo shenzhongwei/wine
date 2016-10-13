@@ -148,7 +148,23 @@ class GoodController extends BaseController
             'query'=>$query,
         ]);
         $dataProvider->sort= false;
-        return $this->render('_goodpic',['dataProvider'=>$dataProvider]);
+        return $this->render('_goodpic',['dataProvider'=>$dataProvider,'key'=>$id]);
+    }
+
+    public function actionDelPic($id){
+        $model = GoodPic::findOne($id);
+        $key = Yii::$app->request->get('key');
+        if(empty($model)){
+            Yii::$app->session->setFlash('danger','未找到该条数据');
+            return $this->redirect(['good/pic', 'id' => $key]);
+        }
+        if($model->delete()){
+            Yii::$app->session->setFlash('success','删除成功');
+            return $this->redirect(['good/pic', 'id' => $model->gid]);
+        }else{
+            Yii::$app->session->setFlash('danger','删除失败');
+            return $this->redirect(['good/pic', 'id' => $model->gid]);
+        }
     }
 
     /**
@@ -165,10 +181,14 @@ class GoodController extends BaseController
         $model->active_at = strtotime(date('Y-m-d 00:00:00'));
         $model->number = GoodInfo::generateCode().rand(1000,9999).date('is',time());
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success','保存成功');
             return $this->render('view', ['model' => $model]);
         } else {
             if($admin->wa_type>=2){
                 $model->merchant = MerchantInfo::findOne(['wa_id'=>$admin->id])->id;
+            }
+            if(Yii::$app->request->post()){
+                Yii::$app->session->setFlash('danger','保存失败');
             }
             return $this->render('create', [
                 'model' => $model,
@@ -228,12 +248,14 @@ class GoodController extends BaseController
                 $model->pic = $filename;
             }
             if($model->save()){
+                Yii::$app->session->setFlash('success','保存成功');
                 @unlink('../../photo'.$pic);
                 if(!empty($url)){
                     @unlink('../../photo'.$url);
                 }
                 return $this->render('view', ['model' => $model]);
             }else{
+                Yii::$app->session->setFlash('success','保存失败');
                 return $this->render('update', [
                     'model' => $model,
                 ]);
@@ -261,6 +283,7 @@ class GoodController extends BaseController
         }
         $model->active_at = time();
         $model->save();
+        Yii::$app->session->setFlash('success','操作成功');
         return $this->redirect('index');
     }
 

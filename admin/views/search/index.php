@@ -91,13 +91,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
         // set your toolbar
-        'toolbar'=> [
-            ['content'=>
-                $dataProvider->count >= 5 ? '':Html::a('<i class="fa fa-plus"> 发布热搜</i>', ['create'],['data-pjax'=>0,'type'=>'button', 'title'=>'发布热搜', 'class'=>'btn btn-primary'])
-            ],
-            '{toggleData}',
-            '{export}',
-        ],
+        'toolbar'=> false,
         'responsive'=>false,
         'hover'=>true,
         'condensed'=>true,
@@ -108,6 +102,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'panel' => [
             'type'=>'info',
             'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> '.Html::encode($this->title).' </h3>',
+            'before'=>$dataProvider->count >= 5 ? '':Html::a('<i class="fa fa-plus"> 发布热搜</i>', ['create'],['data-pjax'=>0,'type'=>'button', 'title'=>'发布热搜', 'class'=>'btn btn-primary']),
             'showPanel'=>true,
             'showFooter'=>true
         ],
