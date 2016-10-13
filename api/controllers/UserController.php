@@ -290,6 +290,7 @@ class UserController extends ApiController{
         if(!$post){
             return $this->showResult(301,'未上传图片');
         }
+
         //解析二进制数据到文件中
         $file = UploadedFile::getInstanceByName('head');
         //生成文件名和路径

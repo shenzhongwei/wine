@@ -283,7 +283,7 @@ class PayController extends ApiController{
         //查找账户余额，不足则提示
         $account = UserAccount::findOne(['target'=>$user_id,'type'=>1,'level'=>2,'is_active'=>1]);
         if(empty($account)||$account->end<$orderInfo->pay_bill){
-            return $this->showResult(305,'账户余额不足，请先充值');
+            return $this->showResult(303,'账户余额不足，请先充值');
         }
         if(empty($account->pay_password)){
             return $this->showResult(305,'未设置余额付款密码，请前往设置');

@@ -199,12 +199,8 @@ $this->registerJsFile("@web/js/good/_script.js");
                     'width'=>'6%',
                     'buttons'=>[
                         'view' => function ($url, $model) {
-                            return Html::a('点击查看', '#', [
-                                'id'=>'detail',//属性
-                                'data-toggle' => 'modal',    //弹框
-                                'data-target' => '#good-modal',    //指定弹框的id
+                            return Html::a('点击查看', ['good/pic','id'=>$model->id], [
                                 'class' => 'detail btn btn-link btn-xs',
-                                'data-id' => $model->id,
                             ]);
                         },
                         'update' =>  function ($url, $model) {

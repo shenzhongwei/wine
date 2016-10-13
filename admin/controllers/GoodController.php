@@ -2,12 +2,14 @@
 
 namespace admin\controllers;
 
+use admin\models\GoodPic;
 use admin\models\MerchantInfo;
 use admin\models\GoodType;
 use common\helpers\ArrayHelper;
 use Yii;
 use admin\models\GoodInfo;
 use admin\models\GoodSearch;
+use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\helpers\FileHelper;
 use yii\helpers\Json;
@@ -141,7 +143,12 @@ class GoodController extends BaseController
     }
 
     public function actionPic($id){
-        $model = 1;
+        $query = GoodPic::find()->where(['gid'=>$id]);
+        $dataProvider = new ActiveDataProvider([
+            'query'=>$query,
+        ]);
+        $dataProvider->sort= false;
+        return $this->render('_goodpic',['dataProvider'=>$dataProvider]);
     }
 
     /**

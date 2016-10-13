@@ -509,9 +509,6 @@ class TypeController extends BaseController
         }
     }
 
-    public function actionPriceUpdateForm($id){
-
-    }
 
     /**
      * Deletes an existing GoodType model.

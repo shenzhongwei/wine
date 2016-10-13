@@ -3,19 +3,12 @@
 
 use kartik\grid\GridView;
 use yii\helpers\Html;
-use admin\models\GoodPriceField;
 
 /**
  * @var yii\web\View $this
  * @var yii\data\ActiveDataProvider $dataProvider
  * @var admin\models\GoodType $model
  */
-$priceModel = new GoodPriceField();
-$priceModel->type = $model->id;
-//foreach ($dataProvider->models as $valu){
-//    var_dump($valu);
-//}
-//exit;
 ?>
 <?php echo
 GridView::widget([
