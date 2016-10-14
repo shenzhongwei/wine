@@ -77,7 +77,7 @@ class CollectController extends  ApiController{
             }elseif($is_vip == 1){
                 $salePrice = $collection->g->goodVip->price;
             }else{
-                $salePrice = $collection->g->price;
+                $salePrice = $collection->g->pro_price;
             }
             $data[] = [
                 'collection_id'=>$collection->id,
