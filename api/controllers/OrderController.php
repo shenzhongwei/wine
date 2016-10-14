@@ -440,4 +440,21 @@ class OrderController extends ApiController{
         return $this->showResult(200,'成功',$data);
     }
 
+    /**
+     * 我的页面订单数量
+     */
+    public function actionOrderNum(){
+        $user_id = Yii::$app->user->identity->getId();
+        $query = OrderInfo::find()->where(['uid'=>$user_id,'status'=>1]);
+        $payCount = $query->andWhere(['state'=>1])->count();
+        $receiveCount = $query->andWhere('state between 2 and 5')->count();
+        $commentCount = $query->andWhere(['state'=>6])->count();
+        $data = [
+            'pay'=>$payCount,
+            'receive'=>$receiveCount,
+            'comment'=>$commentCount,
+        ];
+        return $this->showResult(200,'成功',$data);
+    }
+
 }
