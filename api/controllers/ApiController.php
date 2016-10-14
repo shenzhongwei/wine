@@ -50,8 +50,12 @@ class ApiController extends Controller
 				$result['data'] = (string)$data;
 			}
 		}else{
-		    if(isset($data)&&$data!==0&&$data!==''){
-                $result['data'] = [];
+		    if(isset($data)){
+		        if($data!==''&&$data!==0&&$data!=='0'){
+                    $result['data'] = [];
+                }else{
+                    $result['data'] = $data;
+                }
             }
         }
         return $result;
