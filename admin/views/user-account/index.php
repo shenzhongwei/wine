@@ -99,7 +99,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'responsive'=>true,
         'hover'=>true,
         'condensed'=>true,
-        'floatHeader'=>true,
+        'floatHeader'=>false,
 
 
         'panel' => [
