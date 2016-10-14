@@ -152,7 +152,7 @@ class OrderController extends ApiController{
         if($res){
             //找用户订单,查找用户一个月内的订单
             $query = OrderInfo::find()->joinWith('orderDetails')->where([
-                'and','uid='.$user_id,'is_del=0','order_date+2592000>'.time(),'state in (1,2,3,4,5,6,7,99)']);
+                'and','uid='.$user_id,'is_del=0','order_date+2592000>'.time(),'state in (1,2,3,4,5,6,7,99)','is_del=0']);
 //            var_dump($query);
 //            exit;
             if(!empty($state)){//筛选
@@ -445,10 +445,9 @@ class OrderController extends ApiController{
      */
     public function actionOrderNum(){
         $user_id = Yii::$app->user->identity->getId();
-        $query = OrderInfo::find()->where(['uid'=>$user_id,'status'=>1]);
-        $payCount = $query->andWhere(['state'=>1])->count();
-        $receiveCount = $query->andWhere('state between 2 and 5')->count();
-        $commentCount = $query->andWhere(['state'=>6])->count();
+        $payCount = OrderInfo::find()->where("uid=$user_id and is_del=0")->andWhere('state=1')->count();
+        $receiveCount = OrderInfo::find()->where("uid=$user_id and is_del=0")->andWhere('state between 2 and 5')->count();
+        $commentCount = OrderInfo::find()->where("uid=$user_id and is_del=0")->andWhere('state=6')->count();
         $data = [
             'pay'=>$payCount,
             'receive'=>$receiveCount,
