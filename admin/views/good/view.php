@@ -84,6 +84,11 @@ $this->registerJsFile("@web/js/good/_script.js");
                                 'value'=> empty($model->style0) ? null:$model->style0->name,
                             ],
                             [
+                                'label'=>'成本价',
+                                'attribute'=>'cost',
+                                'value'=> $model->cost.'/'.$model->unit,
+                            ],
+                            [
                                 'label'=>'原价',
                                 'attribute'=>'price',
                                 'value'=> $model->price.'/'.$model->unit,
