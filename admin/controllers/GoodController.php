@@ -118,6 +118,39 @@ class GoodController extends BaseController
         }
     }
 
+
+    public function actionUploadPic(){
+        $goodInfo = new GoodInfo();
+        $file_name = 'good_pic_cir_'.time();
+        if(Yii::$app->request->isPost) {
+            $image = UploadedFile::getInstance($goodInfo, 'img');
+            $path = '../../photo/goods/circle/';
+            if(!is_dir($path) || !is_writable($path)){
+                FileHelper::createDirectory($path,0777,true);
+            }
+            $filePath = $path.'/'.$file_name.'.'.$image->extension;
+            if( $image->saveAs($filePath)){
+                echo json_encode([
+                    'imageUrl'=>'/goods/'.$file_name.'.'.$image->extension,
+                    'error'=>'',
+                ]);
+                exit;
+            }else{
+                echo json_encode([
+                    'imageUrl'=>'',
+                    'error'=>'保存图片失败，请重试',
+                ]);
+                exit;
+            }
+        }else{
+            echo json_encode([
+                'imageUrl'=>'',
+                'error'=>'未获取到图片信息',
+            ]);
+            exit;
+        }
+    }
+
     /**
      * Displays a single GoodInfo model.
      * @param integer $id
@@ -164,6 +197,49 @@ class GoodController extends BaseController
         }else{
             Yii::$app->session->setFlash('danger','删除失败');
             return $this->redirect(['good/pic', 'id' => $model->gid]);
+        }
+    }
+
+    public function actionPicUpdate($id){
+        $key = Yii::$app->request->get('key');
+        $model = GoodPic::findOne($id);
+        if(empty($model)){
+            Yii::$app->session->setFlash('danger','未找到该条数据');
+            return $this->redirect(['good/pic', 'id' => $key,]);
+        }else{
+            if ($model->load(Yii::$app->request->post())) {
+                if($model->save()){
+                    Yii::$app->session->setFlash('success','操作成功');
+                    return $this->redirect(['good/pic', 'id' => $model->gid]);
+                }else{
+                    Yii::$app->session->setFlash('danger', '发生异常，请重试');
+                    return $this->redirect(['good/pic', 'id' => $key,]);
+                }
+            } else {
+                return $this->render('_picform', [
+                    'model' => $model,
+                ]);
+            }
+        }
+    }
+
+
+    public function actionPicCreate(){
+        $key = Yii::$app->request->get('key');
+        $model = new GoodPic();
+        $model->gid = $key;
+        if ($model->load(Yii::$app->request->post())) {
+            if($model->save()){
+                Yii::$app->session->setFlash('success','操作成功');
+                return $this->redirect(['good/pic', 'id' => $model->gid]);
+            }else{
+                Yii::$app->session->setFlash('danger', '发生异常，请重试');
+                return $this->redirect(['type/view', 'id' => $key]);
+            }
+        } else {
+            return $this->render('_picform', [
+                'model' => $model,
+            ]);
         }
     }
 
