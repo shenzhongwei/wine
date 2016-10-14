@@ -286,7 +286,7 @@ class GoodInfo extends \yii\db\ActiveRecord
             }elseif($is_vip == 1){
                 $salePrice = $element->goodVip->price;
             }else{
-                $salePrice = $element->price;
+                $salePrice = $element->pro_price;
             }
             return [
                 'good_id'=>$element->id,
@@ -296,6 +296,7 @@ class GoodInfo extends \yii\db\ActiveRecord
                 'number'=>$element->number,
                 'sale_price'=>$salePrice,
                 'end_at' => $is_rush==1 ? $element->goodRush->end_at : '',
+                'promotion_price'=>$element->pro_price,
                 'original_price'=>$element->price,
                 'limit'=>$is_rush==1 ? $element->goodRush->limit : '',
                 'unit'=>$element->unit,

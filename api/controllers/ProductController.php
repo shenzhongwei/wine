@@ -83,6 +83,7 @@ class ProductController extends ApiController{
                 'number'=>$rushList->g->number,
                 'limit'=>$rushList->limit,
                 'sale_price'=>$rushList->price,
+                'promotion_price'=>$rushList->g->pro_price,
                 'original_price'=>$rushList->g->price,
                 'unit'=>$rushList->g->unit,
             ];
@@ -98,6 +99,7 @@ class ProductController extends ApiController{
                 'number'=>$vipList->g->number,
                 'volum'=>$vipList->g->volum,
                 'sale_price'=>$vipList->price,
+                'promotion_price'=>$vipList->g->pro_price,
                 'original_price'=>$vipList->g->price,
                 'unit'=>$vipList->g->unit,
             ];
@@ -139,6 +141,7 @@ class ProductController extends ApiController{
                     'number'=>$element->number,
                     'sale_price'=>$element->goodRush->price,
                     'end_at' => $element->goodRush->end_at,
+                    'promotion_price'=>$element->pro_price,
                     'original_price'=>$element->price,
                     'limit'=>$element->goodRush->limit,
                     'unit'=>$element->unit,
@@ -172,6 +175,7 @@ class ProductController extends ApiController{
                     'volum'=>$element->volum,
                     'number'=>$element->number,
                     'sale_price'=>$element->goodVip->price,
+                    'promotion_price'=>$element->pro_price,
                     'original_price'=>$element->price,
                     'unit'=>$element->unit,
                 ];
@@ -337,6 +341,7 @@ class ProductController extends ApiController{
             'number'=>$goodInfo->number,
             'sale_price'=>$salePrice,
             'end_at' => $is_rush==1 ? $goodInfo->goodRush->end_at : '',
+            'promotion_price'=>$goodInfo->pro_price,
             'original_price'=>$goodInfo->price,
             'unit'=>$goodInfo->unit,
             'is_rush'=>$is_rush,

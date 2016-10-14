@@ -7,6 +7,7 @@ use yii\helpers\Url;
 /**
  * @var yii\web\View $this
  * @var yii\data\ActiveDataProvider $dataProvider
+ * @var integer $key
  */
 
 $this->title = '轮播图列表';
@@ -73,8 +74,10 @@ $this->registerJsFile("@web/js/good/_script.js");
                     },
                     'update' => function ($url, $model) {
                         return Html::a(Yii::t('app','Update'), '', [
+                            'data-toggle' => 'modal',    //弹框
+                            'data-target'=>'#pic-modal',
                             'title' => Yii::t('app', '编辑'),
-                            'class' => 'btn btn-primary btn-xs',
+                            'class' => 'update btn btn-primary btn-xs',
                         ]);
                     },
                     'delete' => function ($url, $model) {
@@ -100,7 +103,10 @@ $this->registerJsFile("@web/js/good/_script.js");
             'type'=>'info',
             'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> '.Html::encode($this->title).' </h3>',
             'showPanel'=>true,
-            'before'=>$dataProvider->count >= 4 ? '':Html::a('<i class="fa fa-plus"> 添加轮播图</i>', ['#'],['type'=>'button', 'title'=>'添加轮播图', 'class'=>'btn btn-primary']),
+            'before'=>$dataProvider->count >= 4 ? '':Html::a('<i class="fa fa-plus"> 添加轮播图</i>', ['#'],[
+                'type'=>'button', 'title'=>'添加轮播图', 'class'=>'create btn btn-primary',
+                'data-target'=>'#pic-modal','data-toggle' => 'modal',    //弹框
+            ]),
             'showFooter'=>true
         ],
         'export'=>[
@@ -114,28 +120,29 @@ $this->registerJsFile("@web/js/good/_script.js");
 
 \yii\bootstrap\Modal::begin([
     'id' => 'pic-modal',
+    'size'=>'modal-lg',
     'options' => [
         'tabindex' => false
     ],
 ]);
-$updateUrl = \yii\helpers\Url::toRoute('pic-update');  //当前控制器下的view方法
-$createUrl = \yii\helpers\Url::toRoute(['pic-create','type'=>$key]);  //当前控制器下的view方法
+$updateUrl = \yii\helpers\Url::toRoute(['pic-update','key'=>$key]);  //
+$createUrl = \yii\helpers\Url::toRoute(['pic-create','key'=>$key]);  //
 $Js = <<<JS
          $('.update').on('click', function () {  //查看详情的触发事件
-          $('.good-price-create').remove();
-          $('#price-modal').find('.modal-title').html('更新区间');
+          $('.good-pic-form').remove();
+          $('#pic-modal').find('.modal-title').html('编辑轮播图');
             $.get('{$updateUrl}', { id:$(this).closest('tr').data('key')  },
                 function (data) {
-                    $('#price-modal').find('.modal-body').html(data);  //给该弹框下的body赋值
+                    $('#pic-modal').find('.modal-body').html(data);  //给该弹框下的body赋值
                 }
              );
          });
 $('.create').on('click', function () {  //查看详情的触发事件
-          $('.good-price-update').remove();
-          $('#price-modal').find('.modal-title').html('新增区间');
+          $('.good-pic-form').remove();
+          $('#pic-modal').find('.modal-title').html('新增轮播图');
             $.get('{$createUrl}', {},
                 function (data) {
-                    $('#price-modal').find('.modal-body').html(data);  //给该弹框下的body赋值
+                    $('#pic-modal').find('.modal-body').html(data);  //给该弹框下的body赋值
                 }
              );
          });
@@ -144,11 +151,7 @@ $this->registerJs($Js);
 \yii\bootstrap\Modal::end();
 ?>
 <script>
-    $("#price-modal").on("hidden.bs.modal", function(){
-        $("#price-form")[0].reset();//重置表单
-        $('#goodpricefield-end').val('+∞');
-    });
-    $("#update-modal").on("hidden.bs.modal", function(){
-        $("#update-form")[0].reset();//重置表单
+    $("#pic-modal").on("hidden.bs.modal", function(){
+        $("#pic-form")[0].reset();//重置表单
     });
 </script>

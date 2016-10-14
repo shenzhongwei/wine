@@ -22,8 +22,9 @@ use kartik\file\FileInput;
             'id' => 'pic-form',
             'type' => ActiveForm::TYPE_VERTICAL,
             'enableAjaxValidation' => true, //开启ajax验证
-            'validationUrl' => Url::toRoute(['valid-pic', empty($model->id) ? '':'id'=>$model->id]), //验证url
-            'action' => Url::toRoute([empty($model->id) ? 'type/pic-create':'type/pic-update', 'key' => $model->gid]),
+            'validationUrl' => Url::toRoute(['valid-form', empty($model->id) ? '':'id'=>$model->id]), //验证url
+            'action' => Url::toRoute([empty($model->id) ? 'good/pic-create':'good/pic-update',
+                'key' => $model->gid,empty($model->id)?'':'id'=>$model->id]),
         ]);
         echo Form::widget([
             'model' => $model,

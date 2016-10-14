@@ -71,7 +71,7 @@ class CollectController extends  ApiController{
         $data = [];
         foreach($collections as $collection){
             $is_rush = empty($collection->g->goodRush) ? 0:1;
-            $is_vip = !empty($collection->g->goodVip)&&$userInfo->is_vip == 1 ? 1:0;
+            $is_vip = !empty($collection->g->goodVip) ? 1:0;
             if($is_rush == 1){
                 $salePrice = $collection->g->goodRush->price;
             }elseif($is_vip == 1){
@@ -86,8 +86,9 @@ class CollectController extends  ApiController{
                 'name'=>$collection->g->name,
                 'volum'=>$collection->g->volum,
                 'number'=>$collection->g->number,
-                'sale_price'=>$salePrice,
                 'end_at' => $is_rush==1 ? $collection->g->goodRush->end_at : '',
+                'sale_price'=>$salePrice,
+                'promotion_price'=>$collection->g->pro_price,
                 'original_price'=>$collection->g->price,
                 'unit'=>$collection->g->unit,
                 'is_rush'=>$is_rush,

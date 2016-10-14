@@ -200,7 +200,7 @@ $wa_type = $admin->wa_type;
                                     ],
 
                                     'img'=>[
-                                        'label'=>'图片（建议200*200）',
+                                        'label'=>'图片（宽高比1:1）',
                                         'type'=> Form::INPUT_WIDGET, 'widgetClass'=>FileInput::className(),
                                         'options'=>[
                                             'options'=>[

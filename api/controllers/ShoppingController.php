@@ -44,7 +44,7 @@ class ShoppingController extends ApiController{
                 if($user_vip==1 && $good_vip==1){
                     $price = $element->g->goodVip->price;
                 }else{
-                    $price = $element->g->price;
+                    $price = $element->g->pro_price;
                 }
                 return [
                     'cert_id'=>$element->id,

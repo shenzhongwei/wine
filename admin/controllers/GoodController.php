@@ -6,6 +6,7 @@ use admin\models\GoodPic;
 use admin\models\MerchantInfo;
 use admin\models\GoodType;
 use common\helpers\ArrayHelper;
+use kartik\form\ActiveForm;
 use Yii;
 use admin\models\GoodInfo;
 use admin\models\GoodSearch;
@@ -16,6 +17,7 @@ use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 use yii\web\UploadedFile;
 
 /**
@@ -118,12 +120,23 @@ class GoodController extends BaseController
         }
     }
 
+    public function actionValidForm(){
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $data = Yii::$app->request->post();
+        $id=Yii::$app->request->get('id');
+        $model = new GoodPic();
+        if(!empty($id)){
+            $model->id = $id;
+        }
+        $model->load($data);
+        return ActiveForm::validate($model);
+    }
 
     public function actionUploadPic(){
-        $goodInfo = new GoodInfo();
+        $goodInfo = new GoodPic();
         $file_name = 'good_pic_cir_'.time();
         if(Yii::$app->request->isPost) {
-            $image = UploadedFile::getInstance($goodInfo, 'img');
+            $image = UploadedFile::getInstance($goodInfo, 'url');
             $path = '../../photo/goods/circle/';
             if(!is_dir($path) || !is_writable($path)){
                 FileHelper::createDirectory($path,0777,true);
@@ -131,7 +144,7 @@ class GoodController extends BaseController
             $filePath = $path.'/'.$file_name.'.'.$image->extension;
             if( $image->saveAs($filePath)){
                 echo json_encode([
-                    'imageUrl'=>'/goods/'.$file_name.'.'.$image->extension,
+                    'imageUrl'=>'/goods/circle/'.$file_name.'.'.$image->extension,
                     'error'=>'',
                 ]);
                 exit;
@@ -208,6 +221,7 @@ class GoodController extends BaseController
             return $this->redirect(['good/pic', 'id' => $key,]);
         }else{
             if ($model->load(Yii::$app->request->post())) {
+                $model->status = 1;
                 if($model->save()){
                     Yii::$app->session->setFlash('success','操作成功');
                     return $this->redirect(['good/pic', 'id' => $model->gid]);
@@ -229,6 +243,7 @@ class GoodController extends BaseController
         $model = new GoodPic();
         $model->gid = $key;
         if ($model->load(Yii::$app->request->post())) {
+            $model->status = 1;
             if($model->save()){
                 Yii::$app->session->setFlash('success','操作成功');
                 return $this->redirect(['good/pic', 'id' => $model->gid]);
