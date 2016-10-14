@@ -44,7 +44,7 @@ $wa_type = $admin->wa_type;
                                 'model' => $model,
                                 'form' => $form,
                                 'columns' => 1,
-                                'columnSize'=>'sm',
+                                'columnSize'=>'lg',
                                 'attributes' => [
 
                                     'name'=>['type'=> Form::INPUT_TEXT, 'options'=>['maxlength'=>50,]],
@@ -198,6 +198,8 @@ $wa_type = $admin->wa_type;
                                             ]
                                         ],
                                     ],
+
+                                    'cost'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'成本价:单位：元', 'maxlength'=>10,'onkeyup'=>'clearNoNum(this)']],
 
                                     'img'=>[
                                         'label'=>'图片（宽高比1:1）',

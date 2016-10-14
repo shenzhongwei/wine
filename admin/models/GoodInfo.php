@@ -25,6 +25,7 @@ use yii\helpers\ArrayHelper;
  * @property string $pro_price
  * @property string $unit
  * @property string $pic
+ * @property string $cost
  * @property string $number
  * @property string $detail
  * @property integer $order
@@ -70,12 +71,13 @@ class GoodInfo extends \yii\db\ActiveRecord
     {
         return [
             [['merchant', 'type', 'brand', 'smell', 'color', 'dry', 'boot', 'breed', 'country', 'style', 'order', 'regist_at', 'is_active', 'active_at'], 'integer'],
-            [['name', 'detail','type','price','detail','volum','unit','merchant','pro_price'], 'required'],
-            ['price','compare','compareAttribute'=>'pro_price','operator'=>'>='],
-            ['pro_price','compare','compareAttribute'=>'price','operator'=>'<='],
+            [['name', 'detail','type','price','detail','volum','unit','merchant','pro_price','cost'], 'required'],
+            ['price','compare','compareAttribute'=>'pro_price','operator'=>'>=','message'=>'原价价不得大于优惠'],
+            ['pro_price','compare','compareAttribute'=>'price','operator'=>'<=','message'=>'优惠价不得大于原价'],
+            ['cost','compare','compareAttribute'=>'price','operator'=>'<=','message'=>'成本价不得大于原价'],
             [['price','pro_price'],'compare','compareValue'=>0,'operator'=>'>'],
             [['pic'],'required','message'=>'请上传产品图片'],
-            [['price','pro_price'], 'number'],
+            [['price','pro_price','cost'], 'number'],
             [['detail'], 'string'],
             [['name'], 'string', 'max' => 50],
             [['volum'], 'string', 'max' => 128],
@@ -116,6 +118,7 @@ class GoodInfo extends \yii\db\ActiveRecord
             'volum' => '容量',
             'price' => '原价',
             'pro_price'=> '优惠价',
+            'cost'=>'成本价',
             'unit' => '单位',
             'pic' => '产品图片',
             'img'=>'产品图片',
