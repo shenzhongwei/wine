@@ -235,7 +235,7 @@ class ProductController extends ApiController{
             return $this->showResult(301,'获取数据异常');
         }
         if(!empty($key)&&!empty($value)){
-            $query->andWhere(['and',$key=='price' ? "$key >= $value[0] ".(empty($value[1]) ? '' :
+            $query->andWhere(['and',$key=='price' ? "$key >= $value[0] ".(empty($value[1])||$value[1]=='+∞' ? '' :
                     "and $key <$value[1]") : "$key=$value"]);
         }
         $count = $query->count();
