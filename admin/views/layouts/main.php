@@ -9,6 +9,7 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use kartik\alert\Alert;
+use yii\helpers\Url;
 
 // AppAsset::register($this);
 ?>
@@ -28,7 +29,7 @@ use kartik\alert\Alert;
     <!--[if lt IE 9]>
     <meta http-equiv="refresh" content="0;ie.html" />
     <![endif]-->
-    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="shortcut icon" href="<?=Url::to("@web/favicon.ico")?>">
     <?=Html::cssFile('@web/css/bootstrap.min14ed.css')?>
     <?=Html::cssFile('@web/css/bootstrap.min.css')?>
     <?=Html::cssFile('@web/css/bootstrap.css')?>
