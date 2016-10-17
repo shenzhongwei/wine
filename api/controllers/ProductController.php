@@ -71,7 +71,13 @@ class ProductController extends ApiController{
         //产品类型
         $type = GoodType::find()->select(['id','name',"CONCAT('".Yii::$app->params['img_path']."',logo) as logo"])->where(['is_active'=>1])->asArray()->all();
         //抢购产品  抢购商品和商品信息关联
-        $rushList = GoodRush::find()->joinWith('g')->where("good_rush.is_active=1 and start_at<='".date('H:i:s')."' and end_at>='".date('H:i:s')."'")->one();
+        $rushList = GoodRush::find()->joinWith('g')->leftJoin('merchant_info','good_info.merchant=merchant_info.id')
+            ->leftJoin('good_type','good_info.type=good_type.id')->where(
+            "good_rush.is_active=1 and start_at<='".date('H:i:s')."' 
+            and end_at>='".date('H:i:s')."' and merchant_info.id>0 
+            and merchant_info.is_active=1 and good_info.merchant>0 
+            and good_type.id>0 and good_type.is_active=1"
+        )->one();
         $rush = [];
         if(!empty($rushList)){
             $rush = [
@@ -89,7 +95,10 @@ class ProductController extends ApiController{
             ];
         }
         //会员产品
-        $vipList = GoodVip::find()->joinWith('g')->where('good_vip.is_active=1')->one();
+        $vipList = GoodVip::find()->joinWith('g')->leftJoin('merchant_info','good_info.merchant=merchant_info.id')
+            ->leftJoin('good_type','good_info.type=good_type.id')
+            ->where('good_vip.is_active=1 and merchant_info.id>0 and merchant_info.is_active=1 and 
+            good_info.merchant>0 and good_type.id>0 and good_type.is_active=1')->one();
         $vip = [];
         if(!empty($vipList)){
             $vip = [
@@ -124,8 +133,9 @@ class ProductController extends ApiController{
         $page = Yii::$app->request->post('page',1);
         $pageSize = Yii::$app->params['pageSize'];
         //查询抢购
-        $query = GoodInfo::find()->joinWith('goodRush');
-        $query->where('good_info.is_active=1');
+        $query = GoodInfo::find()->joinWith(['goodRush','merchant0','type0']);
+        $query->where('good_info.is_active=1 and merchant_info.id>0 and merchant_info.is_active=1 and 
+            good_info.merchant>0 and good_type.id>0 and good_type.is_active=1');
         $count = $query->count();
         $query->offset(($page-1)*$pageSize)->limit($pageSize);
         $goods = $query->all();
@@ -159,8 +169,9 @@ class ProductController extends ApiController{
         $page = Yii::$app->request->post('page',1);
         $pageSize = Yii::$app->params['pageSize'];
         //查询会员
-        $query = GoodInfo::find()->joinWith('goodVip');
-        $query->where('good_info.is_active=1');
+        $query = GoodInfo::find()->joinWith(['goodVip','merchant0','type0']);
+        $query->where('good_info.is_active=1 and merchant_info.id>0 and merchant_info.is_active=1 and 
+            good_info.merchant>0 and good_type.id>0 and good_type.is_active=1');
         $count = $query->count();
         $query->offset(($page-1)*$pageSize)->limit($pageSize);
         $goods = $query->all();
@@ -214,7 +225,9 @@ class ProductController extends ApiController{
         //排序 0默认 1升序 2降序
         $sortValue = Yii::$app->request->post('sort_val',0);
         $pageSize = Yii::$app->params['pageSize'];
-        $query = GoodInfo::find()->where(['is_active'=>1]);
+        $query = GoodInfo::find()->joinWith(['merchant0','type0']);
+        $query->where('good_info.is_active=1 and merchant_info.id>0 and merchant_info.is_active=1 and 
+            good_info.merchant>0 and good_type.id>0 and good_type.is_active=1');;
         if($key=='price'){
             $value = explode('~',$value);
         }
