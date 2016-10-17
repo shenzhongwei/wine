@@ -419,7 +419,7 @@ class OrderController extends ApiController{
             return $this->showResult(302,'用户信息异常，请重试');
         }
         //判断参数是否传递
-        if(empty($bill)){
+        if(!isset($bill)){
             return $this->showResult(301,'读取信息出错');
         }
         //在查找充值送优惠的数据
