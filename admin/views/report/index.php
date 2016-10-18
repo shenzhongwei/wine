@@ -5,6 +5,7 @@ use kartik\grid\GridView;
 use yii\jui\AutoComplete;
 use admin\models\ReportSearch;
 use kartik\select2\Select2;
+use dosamigos\datepicker\DateRangePicker;
 /**
  * @var yii\web\View $this
  * @var yii\data\ActiveDataProvider $dataProvider
@@ -45,12 +46,19 @@ $pay = ['1'=>'余额','2'=>'支付宝','3'=>'微信'];
             [
                 'attribute'=>'order_date',
                 'label' => '时间',
-                'width'=>'20%',
+                'width'=>'16%',
                 'hAlign'=>'center',
                 'pageSummary'=>'合计',
                 'vAlign'=>'middle',
                 'format'=>['date','php:Y-m-d H:i:s' ],
                 'group'=>true,  // enable grouping
+                'filterType'=>DateRangePicker::className(),
+                'filterWidgetOptions'=>[
+                    'name' => 'date_from',
+                    'value' => '02-16-2012',
+                    'nameTo' => '到',
+                    'valueTo' => '02-20-2012'
+                ]
             ],
             [
                 'attribute'=>'order_code',
@@ -71,7 +79,7 @@ $pay = ['1'=>'余额','2'=>'支付宝','3'=>'微信'];
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
                 'header'=>'类型',
-                'width'=>'5%',
+                'width'=>'8%',
                 'value' => function($model){
                     return (empty($model->g)||empty($model->g->type0)) ? '缺失':$model->g->type0->name;
                 },
@@ -191,7 +199,7 @@ $pay = ['1'=>'余额','2'=>'支付宝','3'=>'微信'];
             [
                 'label'=>'原价',
                 'attribute'=>'cost',
-                'width'=>'10%',
+                'width'=>'7%',
                 'format'=>['decimal', 2],
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
@@ -207,7 +215,7 @@ $pay = ['1'=>'余额','2'=>'支付宝','3'=>'微信'];
             [
                 'label'=>'成交价',
                 'attribute'=>'pay_bill',
-                'width'=>'10%',
+                'width'=>'7%',
                 'format'=>['decimal', 2],
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
@@ -223,7 +231,7 @@ $pay = ['1'=>'余额','2'=>'支付宝','3'=>'微信'];
             [
                 'label'=>'利润',
                 'attribute'=>'profit',
-                'width'=>'10%',
+                'width'=>'7%',
                 'format'=>['decimal', 2],
                 'hAlign'=>'center',
                 'vAlign'=>'middle',

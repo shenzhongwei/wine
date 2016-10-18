@@ -12,12 +12,15 @@ use yii\data\ActiveDataProvider;
 class ReportSearch extends OrderDetail
 {
 
+    public $start_at;
+    public $end_at;
+
     public function rules()
     {
         return  [
             [['oid', 'gid','pay_id'], 'integer'],
             [['single_price', 'total_price'], 'number'],
-            [['order_date','sid','good_type'],'safe'],
+            [['order_date','sid','good_type','start_at','end_at'],'safe'],
             [['order_code'],'string']
         ];
     }
