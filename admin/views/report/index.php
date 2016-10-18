@@ -52,13 +52,17 @@ $pay = ['1'=>'余额','2'=>'支付宝','3'=>'微信'];
                 'vAlign'=>'middle',
                 'format'=>['date','php:Y-m-d H:i:s' ],
                 'group'=>true,  // enable grouping
-//                'filterType'=>DateRangePicker::className(),
-//                'filterWidgetOptions'=>[
-//                    'name' => 'date_from',
-//                    'value' => '02-16-2012',
-//                    'nameTo' => '到',
-//                    'valueTo' => '02-20-2012'
-//                ]
+                'filterType'=>DateRangePicker::className(),
+                'filterWidgetOptions'=>[
+                    'model'=>$searchModel,
+                    'attributeTo'=>'end_at',
+                    'language' => 'zh_CN',
+                    'clientOptions' => [
+                        'inline' => true,
+                        'autoclose' => true,
+                        'format' => 'yyyy-M-dd'
+                    ]
+                ]
             ],
             [
                 'attribute'=>'order_code',
