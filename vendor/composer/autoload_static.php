@@ -15,6 +15,7 @@ class ComposerStaticInite4343f3ad7d2ea8db509f2e66bb8db83
         'y' => 
         array (
             'yii\\swiftmailer\\' => 16,
+            'yii\\redis\\' => 10,
             'yii\\redactor\\' => 13,
             'yii\\jui\\' => 8,
             'yii\\gii\\' => 8,
@@ -74,6 +75,7 @@ class ComposerStaticInite4343f3ad7d2ea8db509f2e66bb8db83
             'kartik\\detail\\' => 14,
             'kartik\\depdrop\\' => 15,
             'kartik\\datetime\\' => 16,
+            'kartik\\daterange\\' => 17,
             'kartik\\datecontrol\\' => 19,
             'kartik\\date\\' => 12,
             'kartik\\color\\' => 13,
@@ -108,6 +110,10 @@ class ComposerStaticInite4343f3ad7d2ea8db509f2e66bb8db83
         'yii\\swiftmailer\\' => 
         array (
             0 => __DIR__ . '/..' . '/yiisoft/yii2-swiftmailer',
+        ),
+        'yii\\redis\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/yiisoft/yii2-redis',
         ),
         'yii\\redactor\\' => 
         array (
@@ -296,6 +302,10 @@ class ComposerStaticInite4343f3ad7d2ea8db509f2e66bb8db83
         'kartik\\datetime\\' => 
         array (
             0 => __DIR__ . '/..' . '/kartik-v/yii2-widget-datetimepicker',
+        ),
+        'kartik\\daterange\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-date-range',
         ),
         'kartik\\datecontrol\\' => 
         array (
