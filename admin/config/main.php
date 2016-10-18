@@ -91,6 +91,7 @@ return [
             'good/info',
             'site/login',
             'site/error',
+            'share/*'
         ],
     ],
 

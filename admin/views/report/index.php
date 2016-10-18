@@ -5,7 +5,6 @@ use kartik\grid\GridView;
 use yii\jui\AutoComplete;
 use admin\models\ReportSearch;
 use kartik\select2\Select2;
-use dosamigos\datepicker\DateRangePicker;
 /**
  * @var yii\web\View $this
  * @var yii\data\ActiveDataProvider $dataProvider
@@ -52,16 +51,11 @@ $pay = ['1'=>'余额','2'=>'支付宝','3'=>'微信'];
                 'vAlign'=>'middle',
                 'format'=>['date','php:Y-m-d H:i:s' ],
                 'group'=>true,  // enable grouping
-                'filterType'=>DateRangePicker::className(),
+                'filterType'=>GridView::FILTER_DATE_RANGE,
                 'filterWidgetOptions'=>[
-                    'model'=>$searchModel,
-                    'attributeTo'=>'end_at',
-                    'language' => 'zh_CN',
-                    'clientOptions' => [
-                        'inline' => true,
-                        'autoclose' => true,
-                        'format' => 'yyyy-M-dd'
-                    ]
+                    'name'=>'range',
+                    'presetDropdown'=>true,
+                    'hideInput'=>true
                 ]
             ],
             [

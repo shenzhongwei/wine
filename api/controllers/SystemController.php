@@ -17,10 +17,12 @@ namespace api\controllers;
             $servicePhone = Yii::$app->params['servicePhone'];//客服电话
             $aboutUs = Yii::$app->params['aboutUs'];//关于我们
             $shareUrl = Yii::$app->params['shareUrl'];//关于我们
+            $recommendUrl = Yii::$app->params['recommendUrl'];
             $data = [
                 'service_phone'=>$servicePhone,
                 'about_us'=>$aboutUs,
                 'share_url'=>$shareUrl,
+                'invite_url'=>$recommendUrl,
             ];
             //返回
             return $this->showResult(200,'成功',$data);
