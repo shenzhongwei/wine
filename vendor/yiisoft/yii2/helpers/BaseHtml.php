@@ -534,7 +534,7 @@ class BaseHtml
             $options['type'] = $type;
         }
         $options['name'] = $name;
-        $options['value'] = $value === null ? null : (string) $value;
+        $options['value'] = $value === null ? null : (is_array($value) ? $value:(string)$value);
         return static::tag('input', '', $options);
     }
 

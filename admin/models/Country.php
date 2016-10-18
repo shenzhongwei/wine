@@ -54,6 +54,6 @@ class Country extends \yii\db\ActiveRecord
     }
 
     public static function GetAllCountry(){
-        return ArrayHelper::map(self::findAll(['is_show'=>1]),'zh_name','zh_name');
+        return ArrayHelper::map(self::find()->where("is_show=1")->all(),'zh_name','zh_name');
     }
 }

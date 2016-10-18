@@ -60,9 +60,9 @@ class TypeController extends BaseController
     {
         $searchModel = new TypeSearch;
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
-        $dataProvider->pagination = [
-            'pageSize'=>15,
-        ];
+//        $dataProvider->pagination = [
+//            'pageSize'=>15,
+//        ];
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
@@ -140,54 +140,24 @@ class TypeController extends BaseController
         $key = Yii::$app->request->get('key');
         $searchModel = new BrandSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams(),$id);
-        $dataProvider->pagination=[
-            'pageSize'=>15,
-        ];
         $smellSearch = new SmellSearch();
         $smellData = $smellSearch->search(Yii::$app->request->getQueryParams(),$id);
-        $smellData->pagination = [
-            'pageSize'=>15,
-        ];
         $bootSearch = new BootSearch();
         $bootData = $bootSearch->search(Yii::$app->request->getQueryParams(), $id);
-        $bootData->pagination = [
-            'pageSize' => 15,
-        ];
         $price = new GoodPriceField();
         $priceData = $price->search($id);
-        $priceData->pagination=[
-            'pageSize'=>15,
-        ];
         $colorSearch = new ColorSearch();
         $colorData = $colorSearch->search(Yii::$app->request->getQueryParams(), $id);
-        $colorData->pagination = [
-            'pageSize' => 15,
-        ];
         $breedSearch = new BreedSearch();
         $breedData = $breedSearch->search(Yii::$app->request->getQueryParams(), $id);
-        $breedData->pagination = [
-            'pageSize' => 15,
-        ];
         $drySearch = new DrySearch();
         $dryData = $drySearch->search(Yii::$app->request->getQueryParams(), $id);
-        $dryData->pagination = [
-            'pageSize' => 15,
-        ];
         $volumSearch = new ModelSearch();
         $volumData = $volumSearch->search(Yii::$app->request->getQueryParams(), $id);
-        $volumData->pagination = [
-            'pageSize' => 15,
-        ];
         $countrySearch = new CountrySearch();
         $countryData = $countrySearch->search(Yii::$app->request->getQueryParams(), $id);
-        $countryData->pagination = [
-            'pageSize' => 15,
-        ];
         $styleSearch = new StyleSearch();
         $styleData = $styleSearch->search(Yii::$app->request->getQueryParams(), $id);
-        $styleData->pagination = [
-            'pageSize' => 15,
-        ];
         return $this->render('view',[
             'key'=>$key,
             'model'=>$model,

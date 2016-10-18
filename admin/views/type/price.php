@@ -102,6 +102,8 @@ GridView::widget([
     ],
     'panel' => [
         'heading'=>false,
+        'after'=>false,
+        'footer'=>false,
     ],
     'export'=>[
         'fontAwesome'=>true

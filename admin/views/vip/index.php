@@ -18,6 +18,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php
     echo GridView::widget([
         'dataProvider' => $dataProvider,
+        'containerOptions'=>['style'=>'overflow: auto'], // only set when $responsive = false
+//        'headerRowOptions'=>['class'=>'kartik-sheet-style'],
+//        'filterRowOptions'=>['class'=>'kartik-sheet-style'],
         'pjax'=>true,  //pjax is set to always true for this demo
         'pjaxSettings'=>[
             'options'=>[
@@ -29,7 +32,9 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'header'=>'',
                 'width'=>'10%',
-                'class' => 'kartik\grid\SerialColumn'
+                'class' => 'kartik\grid\SerialColumn',
+//                'contentOptions'=>['class'=>'kartik-sheet-style'],
+//                'headerOptions'=>['class'=>'kartik-sheet-style']
             ],
 
             [
@@ -132,13 +137,17 @@ $this->params['breadcrumbs'][] = $this->title;
             '{toggleData}',
             '{export}',
         ],
-        'responsive'=>true,
+        'responsive'=>false,
         'hover'=>true,
         'condensed'=>true,
+        'bordered'=>true,
+        'striped'=>false,
         'floatHeader'=>false,
+        'persistResize'=>false,
         'panel' => [
             'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> '.Html::encode($this->title).' </h3>',
             'type'=>'info',
+            'after'=>false,
             'before'=>$this->render('_search', ['model' => $searchModel]),
             'showFooter'=>true
         ],

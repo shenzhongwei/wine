@@ -36,9 +36,9 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             [
                 'class'=>'kartik\grid\SerialColumn',
-                'contentOptions'=>['class'=>'kartik-sheet-style'],
                 'width'=>'2%',
                 'header'=>'',
+                'contentOptions'=>['class'=>'kartik-sheet-style'],
                 'headerOptions'=>['class'=>'kartik-sheet-style']
             ],
             [
@@ -245,7 +245,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'type'=>'info',
             'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> '.Html::encode($this->title).' </h3>',
             'showPanel'=>true,
-            'showFooter'=>true
+            'showFooter'=>true,
+            'after'=>false,
         ],
         'export'=>[
             'fontAwesome'=>true

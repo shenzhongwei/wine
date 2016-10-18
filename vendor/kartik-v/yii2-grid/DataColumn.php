@@ -145,7 +145,8 @@ class DataColumn extends YiiDataColumn
      * refer to the model, key and index of the row currently being rendered, and `$column` is a reference to the
      * [[DataColumn]] object.
      */
-    public $groupOddCssClass = 'kv-group-odd';
+//    public $groupOddCssClass = 'kv-group-odd';
+    public $groupOddCssClass = '';
 
     /**
      * @var string|Closure, the even group css class. Defaults to 'kv-group-even'. If setup as a Closure, the signature
@@ -153,8 +154,9 @@ class DataColumn extends YiiDataColumn
      * refer to the model, key and index of the row currently being rendered, and `$column` is a reference to the
      * [[DataColumn]] object.
      */
-    public $groupEvenCssClass = 'kv-group-even';
+//    public $groupEvenCssClass = 'kv-group-even';
 
+    public $groupEvenCssClass = '';
     /**
      * @var integer|Closure the column index of which this group is a sub group of. This is validated only if `group`
      * is set to `true`.  If setup as a Closure, the signature of the function should be: `function ($model, $key,

@@ -103,11 +103,12 @@ $this->registerJsFile("@web/js/good/_script.js");
             'type'=>'info',
             'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> '.Html::encode($this->title).' </h3>',
             'showPanel'=>true,
-            'before'=>$dataProvider->count >= 4 ? '':Html::a('<i class="fa fa-plus"> 添加轮播图</i>', ['#'],[
+            'before'=>$dataProvider->count >= 4 ? false:Html::a('<i class="fa fa-plus"> 添加轮播图</i>', ['#'],[
                 'type'=>'button', 'title'=>'添加轮播图', 'class'=>'create btn btn-primary',
                 'data-target'=>'#pic-modal','data-toggle' => 'modal',    //弹框
             ]),
-            'showFooter'=>true
+            'after'=>false,
+            'footer'=>false,
         ],
         'export'=>[
             'fontAwesome'=>true

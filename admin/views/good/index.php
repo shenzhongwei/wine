@@ -294,6 +294,7 @@ $this->registerJsFile("@web/js/good/_script.js");
             'panel' => [
                 'type'=>'info',
                 'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> '.Html::encode($this->title).' </h3>',
+                'after'=>false,
                 'showPanel'=>true,
                 'showFooter'=>true
             ],

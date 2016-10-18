@@ -241,6 +241,8 @@ echo GridView::widget([
     ],
     'panel' => [
         'heading'=>false,
+        'after'=>false,
+        'footer'=>false,
 //            'before'=>$this->render('_brandsearch', ['model' => $searchModel,'id'=>$model->id]),
     ],
     'export'=>[

@@ -238,7 +238,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'type'=>'info',
             'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> '.Html::encode($this->title).' </h3>',
             'showPanel'=>true,
-            'showFooter'=>true
+//            'showFooter'=>true,
+            'after'=>false,
+            'footer'=>false,
         ],
         'export'=>[
             'fontAwesome'=>true

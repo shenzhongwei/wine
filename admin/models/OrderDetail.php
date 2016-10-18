@@ -19,6 +19,16 @@ use Yii;
  */
 class OrderDetail extends \yii\db\ActiveRecord
 {
+    public $order_date;
+    public $order_code;
+    public $sid;
+    public $pay_id;
+    public $pay_bill;
+    public $good_type;
+    public $type_name;
+    public $good_name;
+    public $cost;
+    public $profit;
     /**
      * @inheritdoc
      */
@@ -63,6 +73,11 @@ class OrderDetail extends \yii\db\ActiveRecord
         return $this->hasOne(OrderInfo::className(), ['id' => 'oid']);
     }
 
+    public function getS()
+    {
+        return $this->hasOne(ShopInfo::className(), ['id' => 'sid']);
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -70,5 +85,6 @@ class OrderDetail extends \yii\db\ActiveRecord
     {
         return $this->hasOne(GoodInfo::className(), ['id' => 'gid']);
     }
+
 
 }

@@ -44,7 +44,7 @@ class CollectController extends  ApiController{
             'status'=>1,
         ];
         if($collection->save()){
-            return $this->showResult(200,'收藏成功');
+            return $this->showResult(200,'收藏成功',$collection->id);
         }else{
             return $this->showResult(400,'系统异常，请重试');
         }
