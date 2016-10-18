@@ -25,8 +25,6 @@ $pay = ['1'=>'余额','2'=>'支付宝','3'=>'微信'];
         'filterModel' => $searchModel,
         'filterPosition' => GridView::FILTER_POS_HEADER,
         'containerOptions'=>['style'=>'overflow: auto'], // only set when $responsive = false
-        'headerRowOptions'=>['class'=>'kartik-sheet-style'],
-        'filterRowOptions'=>['class'=>'kartik-sheet-style'],
         'pjax'=>true,  //pjax is set to always true for this demo
         'pjaxSettings'=>[
             'options'=>[
@@ -53,9 +51,17 @@ $pay = ['1'=>'余额','2'=>'支付宝','3'=>'微信'];
                 'group'=>true,  // enable grouping
                 'filterType'=>GridView::FILTER_DATE_RANGE,
                 'filterWidgetOptions'=>[
-                    'name'=>'range',
                     'presetDropdown'=>true,
-                    'hideInput'=>true
+                    'hideInput'=>true,
+                    'language'=>'zh-CN',
+                    'value'=>'',
+                    'convertFormat'=>true,
+                    'pluginOptions'=>[
+                        'locale'=>[
+                            'format'=>'Y-m-d',
+                            'separator'=>' to ',
+                        ],
+                    ],
                 ]
             ],
             [

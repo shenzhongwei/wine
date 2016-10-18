@@ -243,7 +243,7 @@ class ProductController extends ApiController{
             if(empty($from_val)){
                 return $this->showResult(301,'获取数据异常');
             }
-            $query->andFilterWhere(['like','name',$from_val]);
+            $query->andFilterWhere(['like','good_info.name',$from_val]);
         }else{//其他值不识别
             return $this->showResult(301,'获取数据异常');
         }
@@ -255,10 +255,10 @@ class ProductController extends ApiController{
         //排序
         if(empty($sortKey)||empty($sortValue)){
             //默认排序
-            $query->orderBy(['order'=>SORT_ASC]);
+            $query->orderBy(['good_info.order'=>SORT_ASC]);
         }elseif(!empty($sortKey)&&!empty($sortValue)){
             if($sortKey=='price'){//按价格
-                $query->orderBy(['price'=>$sortValue==1 ? SORT_ASC:SORT_DESC,'order'=>SORT_ASC]);
+                $query->orderBy(['good_info.price'=>$sortValue==1 ? SORT_ASC:SORT_DESC,'order'=>SORT_ASC]);
             }elseif($sortKey=='sale'){//按销量
                 $query->select(['good_info.*','sum(order_detail.amount) as sum'])->joinWith('orderDetails')->groupBy(['order_detail.gid']);
                 $query->orderBy(['sum'=>$sortValue==1 ? SORT_ASC:SORT_DESC,'order'=>SORT_ASC]);

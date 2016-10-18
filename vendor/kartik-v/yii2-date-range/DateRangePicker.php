@@ -313,11 +313,11 @@ HTML;
         if ($this->presetDropdown) {
             $this->initRangeExpr = true;
             $this->pluginOptions['ranges'] = [
-                Yii::t('kvdrp', "Today") => ["moment().startOf('day')", "moment()"],
-                Yii::t('kvdrp', "Yesterday") => [
-                    "moment().startOf('day').subtract(1,'days')",
-                    "moment().endOf('day').subtract(1,'days')"
-                ],
+//                Yii::t('kvdrp', "Today") => ["moment().startOf('day')", "moment()"],
+//                Yii::t('kvdrp', "Yesterday") => [
+//                    "moment().startOf('day').subtract(1,'days')",
+//                    "moment().endOf('day').subtract(1,'days')"
+//                ],
                 Yii::t('kvdrp', "Last {n} Days", ['n' => 7]) => [
                     "moment().startOf('day').subtract(6, 'days')",
                     "moment()"

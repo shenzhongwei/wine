@@ -12,15 +12,12 @@ use yii\data\ActiveDataProvider;
 class ReportSearch extends OrderDetail
 {
 
-    public $start_at;
-    public $end_at;
-
     public function rules()
     {
         return  [
             [['oid', 'gid','pay_id'], 'integer'],
             [['single_price', 'total_price'], 'number'],
-            [['order_date','sid','good_type','start_at','end_at'],'safe'],
+            [['order_date','sid','good_type'],'safe'],
             [['order_code'],'string']
         ];
     }
@@ -37,6 +34,10 @@ class ReportSearch extends OrderDetail
         $admin_type = $admin->wa_type;
         $admin_id = $admin->wa_id;
         $query = OrderInfo::find()->where("state between 2 and 6");
+        if($admin_type==3){
+            $merchant_info = MerchantInfo::findOne(['wa_id'=>$admin_id]);
+            $query->andWhere("good_info.merchant=$merchant_info->id");
+        }
         $orders = $query->all();
         $data = ArrayHelper::getColumn($orders,'order_code');
         return $data;
@@ -155,6 +156,10 @@ class ReportSearch extends OrderDetail
         }
         $query->andFilterWhere(['=', 'order_info.pay_id', $this->pay_id])
             ->andFilterWhere(['=', 'gid', $this->gid]);
+        if(!empty($this->order_date)){
+            $order_date = explode('to',str_replace(' ','',$this->order_date));
+            $query->andFilterWhere(['between', 'order_info.order_date', strtotime("$order_date[0] 00:00:00"),strtotime("$order_date[1] 23:59:59")]);
+        }
         return $dataProvider;
     }
 }
