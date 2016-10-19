@@ -93,13 +93,8 @@ $this->title = '双天酒';
         <!--右侧部分开始-->
         <div id="page-wrapper" class="gray-bg dashbard-1">
             <div class="row border-bottom">
-                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0;height: 0px">
                     <div class="navbar-header"><a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
-                        <form role="search" class="navbar-form-custom">
-                            <div class="form-group">
-                                <a class="form-control" href="<?=Url::toRoute('site/index') ?>" style="text-align: center;padding: 15px;font-size: 20px;color: #00a2d4;margin-left: 15px">欢迎使用双天酒</a>
-                            </div>
-                        </form>
                     </div>
                     <ul class="nav navbar-top-links navbar-right">
                         <li class="dropdown hidden-xs">
