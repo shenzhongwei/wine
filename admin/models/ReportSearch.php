@@ -143,7 +143,7 @@ class ReportSearch extends OrderDetail
             ],
         ];
         $sort->defaultOrder = ['order_date' => SORT_DESC];
-        $dataProvider->pagination->pageSize=50;
+        $dataProvider->pagination->pageSize=100;
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }

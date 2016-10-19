@@ -294,11 +294,11 @@ class UserController extends ApiController{
         //解析二进制数据到文件中
         $file = UploadedFile::getInstanceByName('head');
         //生成文件名和路径
-        $fileName = rand(1111111111,9999999999).$user_id.'.'.$file->extension;
+        $fileName = rand(111111,999999).$user_id.'.'.$file->extension;
         $filePath = '../../photo/logo/'.$fileName;
         //存放
         if($file->saveAs($filePath)){
-            return $this->showResult(200,'上传成功','/logo/'.$fileName);
+            return $this->showResult(200,'上传成功',Yii::$app->params['img_path'].'/logo/'.$fileName);
         }else{
             return $this->showResult(303,'系统异常，上传失败');
         }
@@ -318,6 +318,9 @@ class UserController extends ApiController{
         $user = $login->userInfo;
         if(empty($user)){
             return $this->showResult(302,'未找到您的用户信息，请联系客服解决');
+        }
+        if($key=='logo'){
+            $value = substr($value,strpos($value,'/photo')+6);
         }
         $user->attributes = [
             $key=>$value,
