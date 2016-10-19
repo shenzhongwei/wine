@@ -72,10 +72,8 @@ class GoodInfo extends \yii\db\ActiveRecord
         return [
             [['merchant', 'type', 'brand', 'smell', 'color', 'dry', 'boot', 'breed', 'country', 'style', 'order', 'regist_at', 'is_active', 'active_at'], 'integer'],
             [['name', 'detail','type','price','detail','volum','unit','merchant','pro_price','cost'], 'required'],
-            ['price','compare','compareAttribute'=>'pro_price','operator'=>'>=','message'=>'原价价不得大于优惠'],
-            ['pro_price','compare','compareAttribute'=>'price','operator'=>'<=','message'=>'优惠价不得大于原价'],
-            ['cost','compare','compareAttribute'=>'price','operator'=>'<=','message'=>'成本价不得大于原价'],
-            [['price','pro_price'],'compare','compareValue'=>0,'operator'=>'>'],
+            [['price','pro_price','cost'],'compare','compareValue'=>0,'operator'=>'>'],
+            [['price','pro_price','cost'],'validPrice'],
             [['pic'],'required','message'=>'请上传产品图片'],
             [['price','pro_price','cost'], 'number'],
             [['detail'], 'string'],
@@ -265,6 +263,16 @@ class GoodInfo extends \yii\db\ActiveRecord
     public function getShoppingCerts()
     {
         return $this->hasMany(ShoppingCert::className(), ['gid' => 'id']);
+    }
+
+    public function validPrice(){
+        if($this->price<$this->pro_price){
+            $this->addError('price','优惠价不得高于原价');
+        }elseif($this->price<$this->cost){
+            $this->addError('price','成本价不得高于原价');
+        }elseif($this->pro_price<$this->cost){
+            $this->addError('price','成本价不得高于优惠价');
+        }
     }
 
     public static function GetGoodNames(){

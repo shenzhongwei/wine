@@ -656,7 +656,7 @@ HTML;
     /**
      * @array the HTML attributes for the summary row.
      */
-    public $pageSummaryRowOptions = ['class' => 'kv-page-summary warning'];
+    public $pageSummaryRowOptions = ['class' => 'kv-page-summary info'];
 
     /**
      * @var string the default pagination that will be read by toggle data. Should be one of 'page' or 'all'. If not

@@ -5,6 +5,7 @@ use kartik\grid\GridView;
 use yii\jui\AutoComplete;
 use admin\models\ReportSearch;
 use kartik\select2\Select2;
+use common\helpers\ArrayHelper;
 /**
  * @var yii\web\View $this
  * @var yii\data\ActiveDataProvider $dataProvider
@@ -15,7 +16,9 @@ use kartik\select2\Select2;
 $this->title = '订单报表';
 $this->params['breadcrumbs'][] = $this->title;
 $pay = ['1'=>'余额','2'=>'支付宝','3'=>'微信'];
-
+$cost = array_sum(array_values(ArrayHelper::map($dataProvider->models,'order_code','cost')));
+$pay_bill = array_sum(array_values(ArrayHelper::map($dataProvider->models,'order_code','pay_bill')));
+$profit = array_sum(array_values(ArrayHelper::map($dataProvider->models,'order_code','profit')));
 ?>
 <div class="report-list-index">
 
@@ -212,8 +215,7 @@ $pay = ['1'=>'余额','2'=>'支付宝','3'=>'微信'];
 //                },
                 'group'=>true,  // enable grouping
                 'subGroupOf'=>1 ,// supplier column index is the parent group
-                'pageSummary'=>true,
-                'pageSummaryFunc'=>GridView::F_SUM,
+                'pageSummary'=>$cost,
                 'footer'=>true
             ],
             [
@@ -228,8 +230,7 @@ $pay = ['1'=>'余额','2'=>'支付宝','3'=>'微信'];
                 },
                 'group'=>true,  // enable grouping
                 'subGroupOf'=>1, // supplier column index is the parent group
-                'pageSummary'=>true,
-                'pageSummaryFunc'=>GridView::F_SUM,
+                'pageSummary'=>$pay_bill,
                 'footer'=>true
             ],
             [
@@ -242,8 +243,8 @@ $pay = ['1'=>'余额','2'=>'支付宝','3'=>'微信'];
 //                'value'=>function($model){
 //                    return ($model->profit).'元';
 //                },
-                'pageSummary'=>true,
-                'pageSummaryFunc'=>GridView::F_SUM,
+                'pageSummary'=>$profit,
+//                'pageSummaryFunc'=>GridView::F_SUM,
                 'footer'=>true,
                 'group'=>true,  // enable grouping
                 'subGroupOf'=>1 // supplier column index is the parent group

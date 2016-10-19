@@ -33,7 +33,7 @@ class ReportSearch extends OrderDetail
         $admin = Yii::$app->user->identity;
         $admin_type = $admin->wa_type;
         $admin_id = $admin->wa_id;
-        $query = OrderInfo::find()->where("state between 2 and 6");
+        $query = OrderInfo::find()->where("state between 2 and 7");
         if($admin_type==3){
             $merchant_info = MerchantInfo::findOne(['wa_id'=>$admin_id]);
             $query->andWhere("good_info.merchant=$merchant_info->id");
@@ -47,7 +47,7 @@ class ReportSearch extends OrderDetail
         $admin = Yii::$app->user->identity;
         $admin_type = $admin->wa_type;
         $admin_id = $admin->wa_id;
-        $query = ShopInfo::find()->joinWith('orderInfos')->where("order_info.id>0 and state between 2 and 6");
+        $query = ShopInfo::find()->joinWith('orderInfos')->where("order_info.id>0 and state between 2 and 7");
         if($admin_type==3){
             $merchant_info = MerchantInfo::findOne(['wa_id'=>$admin_id]);
             $query->andWhere("good_info.merchant=$merchant_info->id");
@@ -64,7 +64,7 @@ class ReportSearch extends OrderDetail
         $query = OrderDetail::find()->joinWith(['o','g'])->leftJoin('good_type','good_type.id=good_info.type')->addSelect([
             'good_type.id as good_type',
             'good_type.name as type_name',
-        ])->where("state between 2 and 6");
+        ])->where("state between 2 and 7");
         if($admin_type==3){
             $merchant_info = MerchantInfo::findOne(['wa_id'=>$admin_id]);
             $query->andWhere("good_info.merchant=$merchant_info->id");
@@ -81,7 +81,7 @@ class ReportSearch extends OrderDetail
         $query = OrderDetail::find()->joinWith(['o','g'])->addSelect([
             'gid',
             'concat(good_info.name,good_info.volum) as good_name',
-        ])->where("state between 2 and 6")->groupBy('gid');
+        ])->where("state between 2 and 7")->groupBy('gid');
         $goods = $query->all();
         if($admin_type==3){
             $merchant_info = MerchantInfo::findOne(['wa_id'=>$admin_id]);
@@ -109,9 +109,9 @@ class ReportSearch extends OrderDetail
             'order_info.pay_id as pay_id',
             'order_info.pay_bill as pay_bill',
             'good_type.id as good_type',
-            'cost.cost as cost',
+            '(cost.cost+order_info.send_bill) as cost',
             '(order_info.pay_bill-cost.cost-order_info.send_bill) as profit'
-        ])->where("state between 2 and 6");
+        ])->where("state between 2 and 7");
         if($admin_type==3){
             $merchant_info = MerchantInfo::findOne(['wa_id'=>$admin_id]);
             $query->andWhere("good_info.merchant=$merchant_info->id");
@@ -143,7 +143,7 @@ class ReportSearch extends OrderDetail
             ],
         ];
         $sort->defaultOrder = ['order_date' => SORT_DESC];
-        $dataProvider->pagination->pageSize=20;
+        $dataProvider->pagination->pageSize=50;
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }
