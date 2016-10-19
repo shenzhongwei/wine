@@ -11,9 +11,13 @@ use Yii;
  */
 class ShareController extends BaseController {
 
-    public function actionRecommend(){
+    public function actionShare(){
         $token = Yii::$app->request->get('token');
-        if(empty($token)||empty(UserLogin::findOne(['token'=>$token]))){
+        if(empty($token)){
+            $message = '';
+            $username = '';
+            $recommendCode = '';
+        } elseif(empty(UserLogin::findOne(['token'=>$token]))){
             $message = '网页已过期';
             $username = '';
             $recommendCode = '';
@@ -23,7 +27,7 @@ class ShareController extends BaseController {
             $username = $user->nickname;
             $recommendCode = $user->invite_code;
         }
-        return $this->renderAjax('recommend',[
+        return $this->renderAjax('share',[
             'message'=>$message,
             'name'=>$username,
             'code'=>$recommendCode,
