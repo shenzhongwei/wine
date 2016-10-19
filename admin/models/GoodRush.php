@@ -41,6 +41,7 @@ class GoodRush extends \yii\db\ActiveRecord
             [['start_at', 'end_at'], 'safe'],
             [['gid'], 'exist', 'skipOnError' => true, 'targetClass' => GoodInfo::className(), 'targetAttribute' => ['gid' => 'id']],
             ['gid','validGood','on'=>['add','update']],
+            ['price','validPrice','on'=>['add','update']],
             ['end_at', 'validTime','on'=>['add','update']],
         ];
     }
@@ -107,6 +108,13 @@ class GoodRush extends \yii\db\ActiveRecord
             if(!empty($good)){
                 return $this->addError('gid','该时间段内已存在该产品的抢购');
             }
+        }
+    }
+
+    public function validPrice(){
+        $good = GoodInfo::findOne($this->gid);
+        if($this->price>=$good->pro_price){
+            $this->addError('price','抢购价不得高于售价');
         }
     }
 

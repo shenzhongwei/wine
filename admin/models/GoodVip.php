@@ -36,7 +36,7 @@ class GoodVip extends \yii\db\ActiveRecord
             [['gid','price'],'required','on'=>['add','update']],
             [['gid'],'unique','on'=>'add','message'=>'该会员产品的已存在'],
             [['gid'],'validGid','on'=>'update','message'=>'该会员产品的已存在'],
-            [['price'],'validPrice','on'=>['update','create'],'message'=>'该会员产品的已存在'],
+            [['price'],'validPrice','on'=>['update','create']],
             [['price'], 'number'],
             [['gid'], 'exist', 'skipOnError' => true, 'targetClass' => GoodInfo::className(), 'targetAttribute' => ['gid' => 'id']],
         ];
@@ -80,7 +80,10 @@ class GoodVip extends \yii\db\ActiveRecord
     }
 
     public function validPrice(){
-//        $good =
+        $good = GoodInfo::findOne($this->gid);
+        if($this->price>=$good->pro_price){
+            $this->addError('price','会员价不得高于售价');
+        }
     }
 
     public static function GetGoods(){
@@ -99,7 +102,7 @@ class GoodVip extends \yii\db\ActiveRecord
         return ArrayHelper::map(ArrayHelper::getColumn($goods,function($element){
             return [
                 'id'=>$element['id'],
-                'name'=>$element['name'].$element['volum'].' （原价：¥'.$element['price'].'）',
+                'name'=>$element['name'].$element['volum'].' （销售价：¥'.$element['pro_price'].'）',
             ];
         }),'id','name');
     }
