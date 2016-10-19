@@ -319,7 +319,7 @@ class UserController extends ApiController{
         if(empty($user)){
             return $this->showResult(302,'未找到您的用户信息，请联系客服解决');
         }
-        if($key=='logo'){
+        if($key=='head_url'){
             $value = substr($value,strpos($value,'/photo')+6);
         }
         $user->attributes = [
