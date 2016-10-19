@@ -27,7 +27,7 @@ use yii\helpers\Url;
 	<body>
 	<?php
 	if(!empty($message)){
-		echo $message;
+		echo '<span style="font-size: 30px">'.$message.'</span>';
 	}else {
 		?>
 		<!--main-->
