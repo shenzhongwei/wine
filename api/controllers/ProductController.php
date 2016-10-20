@@ -346,6 +346,8 @@ class ProductController extends ApiController{
             $limit = 0;
             $salePrice = $goodInfo->pro_price;
         }
+        $details = $goodInfo->orderDetails;
+        $sale = array_sum(ArrayHelper::getColumn($details,'amount'));
         $data = [
             'good_id'=>$goodInfo->id,
             'pics'=>$pics,
@@ -360,6 +362,7 @@ class ProductController extends ApiController{
             'is_rush'=>$is_rush,
             'is_vip'=>$is_vip,
             'limit'=>$limit,
+            'sale'=>$sale,
             'comments'=>$comment,
             'is_collected'=>$is_collected,
             'collection_id'=>$collection_id,
