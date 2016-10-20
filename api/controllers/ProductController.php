@@ -30,6 +30,9 @@ class ProductController extends ApiController{
         $data = [];
         $types = GoodType::find()->where("is_active=1 and name<>''")->all();
         foreach($types as $type){
+            /**
+             * @var GoodType $type
+             */
             if(empty($type->goodSmells)&&empty($type->goodBoots)&&empty($type->goodBrands)&&empty($type->goodBreeds)&&empty($type->goodColors)&&empty($type->goodCountries)&&
                 empty($type->goodDries)&&empty($type->goodModels)&&empty($type->goodPriceFields)&&empty($type->goodStyles)){
                 continue;
@@ -80,6 +83,8 @@ class ProductController extends ApiController{
         )->one();
         $rush = [];
         if(!empty($rushList)){
+            $is_rush=1;
+            $is_vip = empty($rushList->g->goodVip) ? 0:1;
             $rush = [
                 'good_id'=>$rushList->gid,
                 'pic'=>Yii::$app->params['img_path'].$rushList->g->pic,
@@ -92,25 +97,33 @@ class ProductController extends ApiController{
                 'promotion_price'=>$rushList->g->pro_price,
                 'original_price'=>$rushList->g->price,
                 'unit'=>$rushList->g->unit,
+                'is_rush'=>$is_rush,
+                'is_vip'=>$is_vip,
             ];
         }
         //会员产品
         $vipList = GoodVip::find()->joinWith('g')->leftJoin('merchant_info','good_info.merchant=merchant_info.id')
             ->leftJoin('good_type','good_info.type=good_type.id')
             ->where('good_vip.is_active=1 and merchant_info.id>0 and merchant_info.is_active=1 and 
-            good_info.merchant>0 and good_type.id>0 and good_type.is_active=1')->one();
+            good_info.merchant>0 and good_type.id>0 and good_type.is_active=1 and good_info.id>0')->one();
         $vip = [];
         if(!empty($vipList)){
+            $is_rush = empty($vipList->g->goodRush) ? 0:1;
+            $is_vip = 1;
             $vip = [
                 'good_id'=>$vipList->gid,
                 'pic'=>Yii::$app->params['img_path'].$vipList->g->pic,
                 'name'=>$vipList->g->name,
                 'number'=>$vipList->g->number,
                 'volum'=>$vipList->g->volum,
-                'sale_price'=>$vipList->price,
+                'sale_price'=>$is_rush == 1 ? $vipList->g->goodRush->price:$vipList->price,
                 'promotion_price'=>$vipList->g->pro_price,
                 'original_price'=>$vipList->g->price,
                 'unit'=>$vipList->g->unit,
+                'end_at' => $is_rush==1 ? $vipList->g->goodRush->end_at : '',
+                'limit'=>$is_rush==1 ? $vipList->g->goodRush->limit : '',
+                'is_rush'=>$is_rush,
+                'is_vip'=>$is_vip,
             ];
         }
         //热销产品
@@ -142,21 +155,7 @@ class ProductController extends ApiController{
         $data = [];
         //处理获取到得数据
         if(!empty($goods)){
-            $data = ArrayHelper::getColumn($goods,function($element){
-                return [
-                    'good_id'=>$element->id,
-                    'pic'=>Yii::$app->params['img_path'].$element->pic,
-                    'name'=>$element->name,
-                    'volum'=>$element->volum,
-                    'number'=>$element->number,
-                    'sale_price'=>$element->goodRush->price,
-                    'end_at' => $element->goodRush->end_at,
-                    'promotion_price'=>$element->pro_price,
-                    'original_price'=>$element->price,
-                    'limit'=>$element->goodRush->limit,
-                    'unit'=>$element->unit,
-                ];
-            });
+            $data = GoodInfo::data($goods);
         }
         return $this->showList(200,'成功',$count,$data);
     }
@@ -178,19 +177,7 @@ class ProductController extends ApiController{
         $data = [];
         //处理获取到得数据
         if(!empty($goods)){
-            $data = ArrayHelper::getColumn($goods,function($element){
-                return [
-                    'good_id'=>$element->id,
-                    'pic'=>Yii::$app->params['img_path'].$element->pic,
-                    'name'=>$element->name,
-                    'volum'=>$element->volum,
-                    'number'=>$element->number,
-                    'sale_price'=>$element->goodVip->price,
-                    'promotion_price'=>$element->pro_price,
-                    'original_price'=>$element->price,
-                    'unit'=>$element->unit,
-                ];
-            });
+            $data = GoodInfo::data($goods);
         }
         return $this->showList(200,'成功',$count,$data);
     }

@@ -95,10 +95,6 @@ $this->registerJsFile("@web/js/good/_script.js");
         'responsive'=>false,
         'hover'=>true,
         'condensed'=>true,
-        'bordered'=>true,
-        'striped'=>false,
-        'floatHeader'=>false,
-        'persistResize'=>false,
         'panel' => [
             'type'=>'info',
             'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> '.Html::encode($this->title).' </h3>',

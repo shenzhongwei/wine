@@ -84,9 +84,6 @@ GridView::widget([
     'responsive'=>false,
     'hover'=>true,
     'condensed'=>true,
-    'bordered'=>true,
-    'striped'=>false,
-    'persistResize'=>false,
     'toolbar'=> [
         ['content'=>
             Html::a('<i class="glyphicon glyphicon-plus"></i>', '#',[

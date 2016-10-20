@@ -2,8 +2,9 @@
 
 use yii\helpers\Html;
 use kartik\grid\GridView;
-use admin\models\UserAccount;
+use admin\models\UserInfoSearch;
 use admin\models\UserInfo;
+use yii\jui\AutoComplete;
 /**
  * @var yii\web\View $this
  * @var yii\data\ActiveDataProvider $dataProvider
@@ -18,6 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php
     echo GridView::widget([
         'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
         'containerOptions'=>['style'=>'overflow: auto'], // only set when $responsive = false
         'headerRowOptions'=>['class'=>'kartik-sheet-style'],
         'filterRowOptions'=>['class'=>'kartik-sheet-style'],
@@ -31,38 +33,54 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             [
                 'header'=>'',
+                'width'=>'5%',
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+                'contentOptions'=>['class'=>'kartik-sheet-style'],
                 'class' => 'kartik\grid\SerialColumn'
             ],
             [
                 'attribute'=>'nickname',
+                'width'=>'10%',
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
                 'header'=>'昵称',
+                'filterType'=>AutoComplete::className(),
+                'filterWidgetOptions'=>[
+                    'clientOptions' => [
+                        'source' =>UserInfoSearch::geAllName(),
+                    ],
+                ]
             ],
             [
                 'attribute'=>'phone',
+                'width'=>'10%',
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
                 'header'=>'<i class="fa fa-phone"></i> 手机号',
+                'filterType'=>AutoComplete::className(),
+                'filterWidgetOptions'=>[
+                    'clientOptions' => [
+                        'source' =>UserInfoSearch::geAllPhone(),
+                    ],
+                ]
+
             ],
             [
                 'label'=>'账户余额',
+                'width'=>'9%',
+                'attribute'=>'end',
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
-                'format'=>'html',
+                'format'=>['decimal', 2],
                 'value'=>function($model){
-                    $useraccount=UserAccount::find()->where(['target'=>$model->id,'level'=>2,'type'=>1])->one();
-                    return '<strong style="color: #f1a417">'.(empty($useraccount)?'0.00':$useraccount->end).'</strong>';
-                }
-            ],
-            [
-                'attribute'=>'realname',
-                'hAlign'=>'center',
-                'vAlign'=>'middle',
-                'header'=>'姓名',
+                    return $model->end;
+                },
+                'filterInputOptions'=>['onkeyup'=>'clearNoNum(this)','class'=>'form-control'],
             ],
             [
                 'header'=>'邀请人',
+                'width'=>'10%',
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
                 'attribute'=>'invite_user',
@@ -74,48 +92,81 @@ $this->params['breadcrumbs'][] = $this->title;
                         if(empty($user)){
                             return '丢失';
                         }else{
-                            return $user->phone;
+                            return $user->nickname;
                         }
                     }
-                }
+                },
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=>UserInfoSearch::geInviter(),
+                'filterWidgetOptions'=>[
+                    'options'=>['placeholder'=>'邀请人'],
+                    'pluginOptions' => ['allowClear' => true],
+                ],
             ],
             [
                 'attribute'=>'invite_code',
+                'width'=>'10%',
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
                 'header'=>'邀请码',
+                'filterType'=>AutoComplete::className(),
+                'filterWidgetOptions'=>[
+                    'clientOptions' => [
+                        'source' =>UserInfoSearch::getAllCode(),
+                    ],
+                ]
             ],
-            [
-                'label'=>'会员状态',
-                'attribute'=>'is_vip',
-                'hAlign'=>'center',
-                'vAlign'=>'middle',
-                'class'=>'kartik\grid\BooleanColumn',
-                'trueIcon'=>'<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>',
-                'falseIcon'=>'<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>',
-            ],
-            [
-                'attribute'=>'status',
-                'class'=>'kartik\grid\BooleanColumn',
-                'trueIcon'=>'<label class="label label-info">激活中</label>',
-                'falseIcon'=>'<label class="label label-danger">已冻结</label>',
-                'hAlign'=>'center',
-                'vAlign'=>'middle',
-            ],
-
             [
                 'attribute'=>'created_time',
+                'width'=>'20%',
                 'label'=>'注册时间',
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
                 'value'=>function($model){
                     return $model->created_time;
-                }
+                },
+                'filterType'=>GridView::FILTER_DATE_RANGE,
+                'filterWidgetOptions'=>[
+                    'language'=>'zh-CN',
+                    'value'=>'',
+                    'convertFormat'=>true,
+                    'pluginOptions'=>[
+                        'locale'=>[
+                            'format'=>'Y-m-d',
+                            'separator'=>' to ',
+                        ],
+                        'opens'=>'left'
+                    ],
+                ]
+            ],
+            [
+                'label'=>'会员状态',
+                'width'=>'8%',
+                'attribute'=>'is_vip',
+                'trueLabel'=>'会员',
+                'falseLabel'=>'非会员',
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+                'class'=>'kartik\grid\BooleanColumn',
+                'trueIcon'=>'<span class="glyphicon glyphicon-ok" aria-hidden="true" style="color: #5c9ccc"></span>',
+                'falseIcon'=>'<span class="glyphicon glyphicon-remove" aria-hidden="true" style="color: #5c9ccc"></span>',
+            ],
+            [
+                'attribute'=>'status',
+                'class'=>'kartik\grid\BooleanColumn',
+                'width'=>'8%',
+                'trueLabel'=>'激活中',
+                'falseLabel'=>'非激活',
+                'trueIcon'=>'<label class="label label-info">激活中</label>',
+                'falseIcon'=>'<label class="label label-danger">已冻结</label>',
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
             ],
             [
                 'header'=>'操作',
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
+                'width'=>'10%',
                 'class' => 'kartik\grid\ActionColumn',
                 'template'=>'{view}&nbsp;&nbsp;{delete}',
                 'buttons' => [
@@ -160,10 +211,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'responsive'=>false,
         'hover'=>true,
         'condensed'=>true,
-        'bordered'=>true,
-        'striped'=>false,
-        'floatHeader'=>false,
-        'persistResize'=>false,
         'panel' => [
             'type'=>'info',
             'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> '.Html::encode($this->title).' </h3>',
@@ -181,5 +228,7 @@ $this->params['breadcrumbs'][] = $this->title;
     $(function (){
         $('.panel').find('.dropdown-toggle').unbind();
         $('.panel').find('.dropdown-toggle').attr('class','btn btn-default dropdown-toggle');
+        $('.ui-autocomplete').css('z-index','99999');
+        $('.datepicker-days').css('z-index','99999');
     });
 </script>

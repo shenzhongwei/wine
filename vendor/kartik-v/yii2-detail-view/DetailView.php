@@ -228,7 +228,7 @@ class DetailView extends \yii\widgets\DetailView
      * @var bool whether the grid table will have a `striped` style. Applicable only if `bootstrap` is `true`. Defaults
      *     to `true`.
      */
-    public $striped = true;
+    public $striped = false;
 
     /**
      * @var bool whether the grid table will have a `condensed` style. Applicable only if `bootstrap` is `true`.

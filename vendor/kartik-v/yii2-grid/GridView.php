@@ -585,7 +585,7 @@ HTML;
     /**
      * @var boolean whether the grid will have a `striped` style. Applicable only if `bootstrap` is `true`.
      */
-    public $striped = true;
+    public $striped = false;
 
     /**
      * @var boolean whether the grid will have a `condensed` style. Applicable only if `bootstrap` is `true`.

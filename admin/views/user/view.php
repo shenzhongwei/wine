@@ -5,13 +5,14 @@ use kartik\detail\DetailView;
 use admin\models\UserInfo;
 use admin\models\OrderInfoSearch;
 use admin\models\UserAccount;
+use kartik\grid\GridView;
 /**
  * @var yii\web\View $this
  * @var admin\models\UserInfo $model
  */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => '用户详情', 'url' => ['index']];
+$this->title = $model->nickname;
+$this->params['breadcrumbs'][] = ['label' => '用户列表', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
 //用户地址
@@ -62,35 +63,37 @@ $useraccount=UserAccount::find()->where(['target'=>$model->id,'level'=>2,'type'=
 ?>
 <!--引用css-->
 <?=Html::cssFile('@web/css/wine/table.css')?>
+<div class="wrapper wrapper-content">
+    <div class="ibox-content">
 <div class="user-info-view">
     <?= DetailView::widget([
-            'model' => $model,
-            'condensed'=>false,
-            'hover'=>true,
-            'mode'=>Yii::$app->request->get('edit')=='t' ? DetailView::MODE_EDIT : DetailView::MODE_VIEW,
-            'panel'=>[
-            'heading'=>$this->title,
+        'model' => $model,
+        'hover'=>true,
+        'mode'=>false,
+        'hAlign' =>DetailView::ALIGN_MIDDLE,
+        'panel'=>[
+            'heading'=>'详细信息：'.$this->title,
             'type'=>DetailView::TYPE_INFO,
-            ],
+            'headingOptions'=>[
+                'template'=>'{title}'
+            ]
+        ],
         'attributes' => [
-            'id',
             [
-                'attribute'=>'realname',
-                'format'=>'html',
-                'value'=>'<h4>'.$model->realname.'</h4>----(昵称：'.$model->nickname.')',
+                'attribute'=>'nickname',
             ],
-            'phone',
+            [
+                'attribute'=>'phone',
+                'label'=>'手机号码',
+            ],
             [
                 'label'=>'账户余额',
-                'format'=>'html',
-                'value'=>'<a><strong style="color: #f1a417">'.(empty($useraccount)?'0.00':$useraccount->end).'</strong></a>',
+                'value'=>empty($model->a) ? '未开户':$model->a->end.'元',
             ],
             [
-                'label'=>'用户登录app',
+                'label'=>'登录信息',
                 'format'=>'html',
-                'value'=>empty($model->userLogins)?'':
-                          '<label>账号：'.$model->userLogins[0]['username'].'</label><br>
-                          <label>密码：*************</label>',
+                'value'=>GridView::begin()
             ],
             'sex',
             [
@@ -136,4 +139,4 @@ $useraccount=UserAccount::find()->where(['target'=>$model->id,'level'=>2,'type'=
     <p style="margin: 0 auto;text-align: center;">
         <?= Html::a('返回', 'javascript:history.go(-1);', ['class' => 'btn btn-primary']) ?>
     </p>
-</div>
+</div></div></div>

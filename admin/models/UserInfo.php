@@ -2,6 +2,7 @@
 
 namespace admin\models;
 
+use common\fixtures\User;
 use Yii;
 
 /**
@@ -21,6 +22,7 @@ use Yii;
  * @property string $created_time
  * @property string $updated_time
  *
+ * @property UserAccount $a
  * @property GoodCollection[] $goodCollections
  * @property OrderComment[] $orderComments
  * @property OrderInfo[] $orderInfos
@@ -33,6 +35,7 @@ use Yii;
  */
 class UserInfo extends \yii\db\ActiveRecord
 {
+    public $end;
     public $name;
     public $invite_user;
     /**
@@ -51,7 +54,7 @@ class UserInfo extends \yii\db\ActiveRecord
         return [
             [['sex'], 'string'],
             [['invite_user_id', 'is_vip', 'status'], 'integer'],
-            [['created_time', 'updated_time'], 'safe'],
+            [['created_time', 'updated_time','end'], 'safe'],
             [['phone'], 'string', 'max' => 13],
             [['head_url'], 'string', 'max' => 128],
             [['birth'], 'string', 'max' => 255],
@@ -72,6 +75,7 @@ class UserInfo extends \yii\db\ActiveRecord
             'birth' => '出生日期',
             'nickname' => '昵称',
             'realname' => '真实名称',
+            'end'=>'账户余额',
             'invite_user_id' => '邀请人id',
             'is_vip' => '是否是会员',
             'invite_code' => '邀请码',
@@ -127,6 +131,12 @@ class UserInfo extends \yii\db\ActiveRecord
     public function getUserLogins()
     {
         return $this->hasMany(UserLogin::className(), ['uid' => 'id', 'status' => 'status']);
+    }
+
+
+
+    public function getA(){
+        return $this->hasOne(UserAccount::className(), ['target' => 'id'])->where("user_account.type=1 and user_account.level=2 and user_account.is_active=1");
     }
 
     /**

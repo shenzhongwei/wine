@@ -22,7 +22,6 @@ $this->params['breadcrumbs'][] = $this->title;
     echo GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'filterPosition' => GridView::FILTER_POS_HEADER,
         'containerOptions'=>['style'=>'overflow: auto'], // only set when $responsive = false
         'headerRowOptions'=>['class'=>'kartik-sheet-style'],
         'filterRowOptions'=>['class'=>'kartik-sheet-style'],
@@ -239,10 +238,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'responsive'=>false,
         'hover'=>true,
         'condensed'=>true,
-        'bordered'=>true,
-        'striped'=>false,
-        'floatHeader'=>false,
-        'persistResize'=>false,
         'panel' => [
             'type'=>'info',
             'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> '.Html::encode($this->title).' </h3>',

@@ -223,7 +223,7 @@ class GridView extends BaseListView
      * - [[FILTER_POS_BODY]]: the filters will be displayed right below each column's header cell.
      * - [[FILTER_POS_FOOTER]]: the filters will be displayed below each column's footer cell.
      */
-    public $filterPosition = self::FILTER_POS_BODY;
+    public $filterPosition = self::FILTER_POS_HEADER;
     /**
      * @var array the HTML attributes for the filter row element.
      * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.

@@ -139,13 +139,10 @@ $this->params['breadcrumbs'][] = $this->title;
             '{toggleData}',
             '{export}',
         ],
+
         'responsive'=>false,
         'hover'=>true,
         'condensed'=>true,
-        'bordered'=>true,
-        'striped'=>false,
-        'floatHeader'=>false,
-        'persistResize'=>false,
         'panel' => [
             'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> '.Html::encode($this->title).' </h3>',
             'type'=>'info',

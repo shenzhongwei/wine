@@ -24,7 +24,6 @@ GridView::widget([
     'dataProvider' => $dataProvider,
     'filterModel' => $searchModel,
     'filterUrl' => Url::toRoute(['view', 'id' => $model->id, 'key' => 'country']),
-    'filterPosition' => GridView::FILTER_POS_HEADER,
     'containerOptions'=>['style'=>'overflow: auto'], // only set when $responsive = false
     'headerRowOptions'=>['class'=>'kartik-sheet-style'],
     'filterRowOptions'=>['class'=>'kartik-sheet-style'],
@@ -155,12 +154,10 @@ GridView::widget([
             ],
         ],
     ],
+
     'responsive'=>false,
     'hover'=>true,
     'condensed'=>true,
-    'bordered'=>true,
-    'striped'=>false,
-    'persistResize'=>false,
     'toolbar'=> [
         ['content'=>
             Html::a('<i class="glyphicon glyphicon-plus"></i>', '',[

@@ -33,14 +33,6 @@ class UserController extends Controller
     {
         $searchModel = new UserInfoSearch;
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
-
-        $dataProvider->pagination = [
-            'pageSize'=>25,
-        ];
-        $dataProvider->sort = [
-            'defaultOrder'=>['is_vip'=>SORT_ASC,'updated_time'=>SORT_DESC,'status'=>SORT_DESC,]
-        ];
-
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,

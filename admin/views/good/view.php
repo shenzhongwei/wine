@@ -34,7 +34,11 @@ $this->registerJsFile("@web/js/good/_script.js");
             <div class="row">
                 <div class="col-sm-5">
                     <?= DetailView::widget([
-                        'model' => $model,
+                        'model'=>$model,
+                        'condensed'=>true,
+                        'striped'=>false,
+                        'hover'=>true,
+                        'mode'=>DetailView::MODE_VIEW,
                         'attributes' => [
 
                             [
@@ -139,6 +143,10 @@ $this->registerJsFile("@web/js/good/_script.js");
                 <div class="col-sm-6">
                     <?= DetailView::widget([
                         'model' => $model,
+                        'condensed'=>true,
+                        'striped'=>false,
+                        'hover'=>true,
+                        'mode'=>DetailView::MODE_VIEW,
                         'attributes' => [
                             [
                                 'attribute'=>'detail',

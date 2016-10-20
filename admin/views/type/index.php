@@ -25,7 +25,6 @@ $this->params['breadcrumbs'][] = $this->title;
     echo GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'filterPosition' => GridView::FILTER_POS_HEADER,
         'pjax'=>true,
         'pjaxSettings'=>[
             'options'=>[
@@ -227,13 +226,10 @@ $this->params['breadcrumbs'][] = $this->title;
             '{toggleData}',
             '{export}',
         ],
+
         'responsive'=>false,
         'hover'=>true,
         'condensed'=>true,
-        'bordered'=>true,
-        'striped'=>false,
-        'floatHeader'=>false,
-        'persistResize'=>false,
         'panel' => [
             'type'=>'info',
             'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> '.Html::encode($this->title).' </h3>',
