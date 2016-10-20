@@ -104,7 +104,7 @@ class UserController extends ApiController{
         }
         //判断邀请码是否存在
         if(!empty($inviteCode)){
-            $invitedUser = UserInfo::getInfoByInviteCode($inviteCode);
+            $invitedUser = UserInfo::getInfoByInviteCode(strtoupper($inviteCode));
             if(empty($invitedUser)){
                 return $this->showResult(303,'邀请码错误，请重新输入');
             }elseif($invitedUser->status==0){

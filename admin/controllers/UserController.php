@@ -35,7 +35,7 @@ class UserController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
 
         $dataProvider->pagination = [
-            'pageSize'=>10,
+            'pageSize'=>25,
         ];
         $dataProvider->sort = [
             'defaultOrder'=>['is_vip'=>SORT_ASC,'updated_time'=>SORT_DESC,'status'=>SORT_DESC,]
@@ -125,9 +125,11 @@ class UserController extends Controller
 
     public function actionDelete($id)
     {
-        $query=$this->findModel($id);
-        $query->status=0;
-        $query->save();
+        $user=$this->findModel($id);
+        $status = $user->status==0 ? 1:0;
+        $user->status = $status;
+        $user->updated_time = date('Y-m-d H:i:s');
+        $user->save();
         return $this->redirect(['index']);
     }
 

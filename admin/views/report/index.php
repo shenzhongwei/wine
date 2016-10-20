@@ -204,7 +204,7 @@ $profit = array_sum(array_values(ArrayHelper::map($dataProvider->models,'order_c
             ],
 
             [
-                'label'=>'原价',
+                'label'=>'成本价',
                 'attribute'=>'cost',
                 'width'=>'7%',
                 'format'=>['decimal', 2],

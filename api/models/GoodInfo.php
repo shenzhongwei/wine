@@ -245,7 +245,7 @@ class GoodInfo extends \yii\db\ActiveRecord
      */
     public function getOrderDetails()
     {
-        return $this->hasMany(OrderDetail::className(), ['gid' => 'id']);
+        return $this->hasMany(OrderDetail::className(), ['gid' => 'id'])->joinWith('o')->where("order_info.state between 2 and 7 and order_date>=".strtotime(date('Y-m-01 00:00:00')));
     }
     /**
      * * @return \yii\db\ActiveQuery
@@ -266,7 +266,7 @@ class GoodInfo extends \yii\db\ActiveRecord
             'good_info.is_active=1 and merchant>0 and merchant_info.id>0 and merchant_info.is_active=1 and good_info.type>0 and good_type.is_active=1 and good_type.id>0');
         $count = $query->count();
         $query->joinWith('orderDetails');
-        $query->select(['good_info.*','sum(order_detail.amount) as sum'])->groupBy(['order_detail.gid'])->orderBy(['sum'=>SORT_DESC,'order'=>SORT_ASC]);
+        $query->addSelect(['good_info.*','sum(order_detail.amount) as sum'])->groupBy(['order_detail.gid'])->orderBy(['sum'=>SORT_DESC,'order'=>SORT_ASC]);
         $query->offset(($page-1)*$pageSize)->limit($pageSize);
         $res = $query->all();
         $result = self::data($res);

@@ -33,6 +33,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'header'=>'',
                 'width'=>'10%',
                 'class' => 'kartik\grid\SerialColumn',
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
 //                'contentOptions'=>['class'=>'kartik-sheet-style'],
 //                'headerOptions'=>['class'=>'kartik-sheet-style']
             ],
