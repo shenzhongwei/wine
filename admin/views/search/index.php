@@ -13,7 +13,6 @@ $this->title = '热搜列表';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="hoot-search-index">
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?php
     echo GridView::widget([

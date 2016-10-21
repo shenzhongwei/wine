@@ -2,9 +2,11 @@
 
 namespace admin\controllers;
 
+use admin\models\OrderInfo;
 use Yii;
 use admin\models\UserInfo;
 use admin\models\UserInfoSearch;
+use yii\data\ActiveDataProvider;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -43,12 +45,14 @@ class UserController extends Controller
     public function actionView($id)
     {
         $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('view', ['model' => $model]);
-        }
+        $query = OrderInfo::find()->where(['uid'=>$model->id])->orderBy(['order_date'=>SORT_DESC]);
+        $userOrders = new ActiveDataProvider([
+            'query'=>$query,
+        ]);
+        $userOrders->pagination = [
+            'pageSize'=>5,
+        ];
+        return $this->render('view', ['model' => $model,'orders'=>$userOrders]);
     }
 
 

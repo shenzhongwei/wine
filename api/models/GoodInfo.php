@@ -262,11 +262,10 @@ class GoodInfo extends \yii\db\ActiveRecord
      */
     public static function GoodList($page){
         $pageSize = Yii::$app->params['pageSize'];
-        $query = self::find()->joinWith(['merchant0','type0'])->where(
+        $query = self::find()->joinWith(['merchant0','type0'])->leftJoin('order_detail','good_info.id=order_detail.gid')->where(
             'good_info.is_active=1 and merchant>0 and merchant_info.id>0 and merchant_info.is_active=1 and good_info.type>0 and good_type.is_active=1 and good_type.id>0');
+        $query->addSelect(['good_info.*','sum(order_detail.amount) as sum'])->groupBy(['good_info.id'])->orderBy(['sum'=>SORT_DESC,'order'=>SORT_ASC]);
         $count = $query->count();
-        $query->joinWith('orderDetails');
-        $query->addSelect(['good_info.*','sum(order_detail.amount) as sum'])->groupBy(['order_detail.gid'])->orderBy(['sum'=>SORT_DESC,'order'=>SORT_ASC]);
         $query->offset(($page-1)*$pageSize)->limit($pageSize);
         $res = $query->all();
         $result = self::data($res);
