@@ -247,7 +247,7 @@ class ProductController extends ApiController{
             if($sortKey=='price'){//按价格
                 $query->orderBy(['good_info.price'=>$sortValue==1 ? SORT_ASC:SORT_DESC,'order'=>SORT_ASC]);
             }elseif($sortKey=='sale'){//按销量
-                $query->select(['good_info.*','sum(order_detail.amount) as sum'])->leftJoin('order_detail','good_info.id=order_detail.gid')->groupBy(['order_detail.gid']);
+                $query->addSelect(['good_info.*','sum(order_detail.amount) as sum'])->leftJoin('order_detail','good_info.id=order_detail.gid')->groupBy(['good_info.id']);
                 $query->orderBy(['sum'=>$sortValue==1 ? SORT_ASC:SORT_DESC,'order'=>SORT_ASC]);
             }else{//其他排序不识别
                 return $this->showResult(301,'获取数据异常');
