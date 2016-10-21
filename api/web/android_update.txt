@@ -1,1 +1,1 @@
-﻿{"verName": "酒双天","lastVerCode": "10","apkUrl": "http://zhushou.360.cn/detail/index/soft_id/3213421?recrefer=SE_D_51%E5%96%9D%E6%B0%B4","updateContent": "1、功能优化；\n2、版本升为V2.0。","force": "0"}
+﻿{"verName": "酒双天","lastVerCode": "11","apkUrl": "http://zhushou.360.cn/detail/index/soft_id/3213421?recrefer=SE_D_51%E5%96%9D%E6%B0%B4","updateContent": "1、功能优化；\n2、版本升为V2.0。","force": "0"}
