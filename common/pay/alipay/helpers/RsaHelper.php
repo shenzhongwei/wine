@@ -45,6 +45,7 @@
 		    $res = openssl_get_publickey($pubKey);
             $log->log_result($res);
 		    $result = (bool)openssl_verify($data, base64_decode($sign), $res);
+            $log->log_result($result);
 		    openssl_free_key($res);    
 		    return $result;
 		}
