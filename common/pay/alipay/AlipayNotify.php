@@ -19,12 +19,12 @@
 
 	public  $alipay_config = [
 				'private_key_path'=>'@common/pay/alipay/key/rsa_private_key.pem', //商户私钥路径
-				'ali_public_key_path'=>'@common/pay/alipay/key/alipay_public_key.pem', //支付宝公钥路径
+				'ali_public_key_path'=>'@common/pay/alipay/key/rsa_public_key.pem', //支付宝公钥路径
 				'sign_type'=> 'RSA',  //加密方式
 				'input_charset'=> 'utf-8', //字符编码
 				'cacert'=> '@common/pay/alipay/cacert.pem',//验证文件
 				'transport'=>'http',  					//协议
-				'partner'=>''			//合作者id
+				'partner'=>'2088421849581905'			//合作者id
 			];
 
 	// function __construct($alipay_config){
@@ -36,13 +36,12 @@
     // }
     /**
      * 针对notify_url验证消息是否是支付宝发出的合法消息
-     * @return 验证结果
+     * @return boolean
      */
 	function verifyNotify(){
 		if(empty($_POST)) {//判断POST来的数组是否为空
 			return false;
-		}
-		else {
+		} else {
 			$log = new AlipayHelper();
 			//生成签名结果
 			$isSign = $this->getSignVeryfy($_POST, $_POST["sign"]);
@@ -60,10 +59,12 @@
 			else {
 				$isSignStr = 'false';
 			}
+            $log->log_result(11);
 			$log_text = "responseTxt=".$responseTxt."\n notify_url_log:isSign=".$isSignStr.",";
-			$log_text = $log_text.createLinkString($_POST);
+//            $str = AlipayHelper::createLinkString($_POST);
+//			$log_text = $log_text.$str;
 			$log->log_result($log_text);
-			
+            $log->log_result(22);
 			//验证
 			//$responsetTxt的结果不是true，与服务器设置问题、合作身份者ID、notify_id一分钟失效有关
 			//isSign的结果不是true，与安全校验码、请求时的参数格式（如：带自定义参数等）、编码格式有关
@@ -93,16 +94,16 @@
 					$responseTxt = $this->getResponse($_GET["notify_id"]);
 				}
 			
-			//写日志记录
-			//if ($isSign) {
-			//	$isSignStr = 'true';
-			//}
-			//else {
-			//	$isSignStr = 'false';
-			//}
-			//$log_text = "responseTxt=".$responseTxt."\n return_url_log:isSign=".$isSignStr.",";
-			//$log_text = $log_text.createLinkString($_GET);
-			//logResult($log_text);
+//			写日志记录
+			if ($isSign) {
+				$isSignStr = 'true';
+			}
+			else {
+				$isSignStr = 'false';
+			}
+			$log_text = "responseTxt=".$responseTxt."\n return_url_log:isSign=".$isSignStr.",";
+			$log_text = $log_text.createLinkString($_GET);
+			logResult($log_text);
 			
 			//验证
 			//$responsetTxt的结果不是true，与服务器设置问题、合作身份者ID、notify_id一分钟失效有关
