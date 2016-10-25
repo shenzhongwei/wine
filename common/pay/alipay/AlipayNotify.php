@@ -131,6 +131,7 @@
 		//把数组所有元素，按照“参数=参数值”的模式用“&”字符拼接成字符串
 		$prestr = AlipayHelper::createLinkstring($para_sort);
         $log->log_result($prestr);
+        $log->log_result($this->alipay_config['ali_public_key_path']);
 		$isSgin = false;
 		switch (strtoupper(trim($this->alipay_config['sign_type']))) {
 			case "RSA" :
