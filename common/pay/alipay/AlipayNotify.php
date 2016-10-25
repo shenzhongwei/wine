@@ -43,6 +43,7 @@
 			return false;
 		} else {
 			$log = new AlipayHelper();
+            $log->log_result($_POST["notify_id"]);
 			//生成签名结果
 			$isSign = $this->getSignVeryfy($_POST, $_POST["sign"]);
 			//获取支付宝远程服务器ATN结果（验证是否是支付宝发来的消息）
