@@ -64,7 +64,6 @@
             $str = AlipayHelper::createLinkString($_POST);
 			$log_text = $log_text.$str;
 			$log->log_result($log_text);
-            $log->log_result($responseTxt);
             $log->log_result($isSign);
 			//验证
 			//$responsetTxt的结果不是true，与服务器设置问题、合作身份者ID、notify_id一分钟失效有关
@@ -134,7 +133,6 @@
 		//把数组所有元素，按照“参数=参数值”的模式用“&”字符拼接成字符串
 		$prestr = AlipayHelper::createLinkstring($para_sort);
         $log->log_result($prestr);
-        $log->log_result($this->alipay_config['ali_public_key_path']);
 		$isSgin = false;
 		switch (strtoupper(trim($this->alipay_config['sign_type']))) {
 			case "RSA" :

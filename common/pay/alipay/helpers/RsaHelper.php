@@ -41,13 +41,11 @@
 			$ali_public_key_path = Yii::getAlias($ali_public_key_path);
 			$pubKey = file_get_contents($ali_public_key_path);
             $log = new AlipayHelper();
-            $log->log_result($pubKey);
 		    $res = openssl_get_publickey($pubKey);
-            $log->log_result($res);
 		    $result = (bool)openssl_verify($data, base64_decode($sign), $res);
+		    openssl_free_key($res);
             $log->log_result($result);
-		    openssl_free_key($res);    
-		    return $result;
+            return $result;
 		}
 
 		/**
