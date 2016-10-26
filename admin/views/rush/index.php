@@ -344,9 +344,9 @@ $this->params['breadcrumbs'][] = $this->title;
             var button = $(this).attr('id');
             var confirm = '';
             if(button == 'rush_up'){
-                confirm = '确认上架产品？一旦上架用户将看到上架中的产品';
+                confirm = '确认上架产品？一旦上架用户将看到上架中的抢购产品';
             }else if(button == 'rush_down') {
-                confirm = '确认下架产品？一旦下架用户将无法看到下架的产品';
+                confirm = '确认下架产品？一旦下架用户将无法看到下架的抢购产品';
             }else if(button == 'point_up') {
                 confirm = '确认积分支持？一旦支持用户将可以在下单时使用积分抵现';
             }else if(button == 'point_down') {

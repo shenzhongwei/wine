@@ -42,7 +42,7 @@ class GoodRush extends \yii\db\ActiveRecord
             [['price'], 'number'],
             [['rush_pay'], 'string', 'max' => 10],
             [['price','amount','limit'],'compare','compareValue'=>0,'operator'=>'>'],
-            ['limit','compare','compareAttribute'=>'amount','operator'=>'<=','message'=>'单号限购数量不能大于库存'],
+            ['limit','compare','compareAttribute'=>'amount','operator'=>'>','message'=>'单号限购数量不能大于库存'],
             [['start_at', 'end_at'], 'safe'],
             [['gid'], 'exist', 'skipOnError' => true, 'targetClass' => GoodInfo::className(), 'targetAttribute' => ['gid' => 'id']],
             ['gid','validGood','on'=>['add','update']],
