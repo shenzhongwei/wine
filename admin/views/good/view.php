@@ -156,13 +156,6 @@ if(!empty($model->original_pay)){
                             ],
 
                             [
-                                'label'=>'会员显示',
-                                'attribute' => 'vip_show',
-                                'format' => 'raw',
-                                'value' => $model->vip_show==0 ? '<label class="label label-danger">不显示</label>':'<label class="label label-info">显 示</label>'
-
-                            ],
-                            [
                                 'label'=>'会员支付',
                                 'attribute' => 'vip_pay',
                                 'format' => 'raw',
@@ -177,10 +170,24 @@ if(!empty($model->original_pay)){
 
                             ],
                             [
+                                'label'=>'会员显示',
+                                'attribute' => 'vip_show',
+                                'format' => 'raw',
+                                'value' => $model->vip_show==0 ? '<label class="label label-danger">不显示</label>':'<label class="label label-success">显 示</label>'
+
+                            ],
+                            [
+                                'label'=>'积分支持',
+                                'attribute' => 'point_sup',
+                                'format' => 'raw',
+                                'value' => $model->point_sup==0 ? '<label class="label label-danger">不支持</label>':'<label class="label label-success">支 持</label>'
+
+                            ],
+                            [
                                 'label'=>'状态',
                                 'attribute' => 'is_active',
                                 'format' => 'raw',
-                                'value' => $model->is_active==0 ? '<label class="label label-danger">已下架</label>':'<label class="label label-info">上架中</label>'
+                                'value' => $model->is_active==0 ? '<label class="label label-danger">已下架</label>':'<label class="label label-success">上架中</label>'
 
                             ],
                             [

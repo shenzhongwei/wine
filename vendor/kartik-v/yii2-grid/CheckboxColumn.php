@@ -71,7 +71,7 @@ class CheckboxColumn extends YiiCheckboxColumn
     /**
      * @var string highlight CSS class to be applied for highlighting the row. Defaults to [[GridView::TYPE_DANGER]].
      */
-    public $rowSelectedClass = GridView::TYPE_DANGER;
+    public $rowSelectedClass = GridView::TYPE_WARNING;
 
     /**
      * @var boolean whether to merge the header title row and the filter row This will not render the filter for the

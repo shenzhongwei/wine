@@ -11,10 +11,12 @@ use Yii;
  * @property integer $id
  * @property integer $gid
  * @property string $price
+ * @property string $rush_pay
  * @property integer $limit
  * @property integer $amount
  * @property string $start_at
  * @property string $end_at
+ * @property integer $point_sup
  * @property integer $is_active
  *
  * @property GoodInfo $g
@@ -35,9 +37,12 @@ class GoodRush extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['gid','price','limit','start_at','end_at'], 'required','on'=>['add','update']],
-            [['gid', 'limit', 'amount', 'is_active'], 'integer'],
+            [['gid','price','limit','start_at','end_at','amount','rush_pay','point_sup'], 'required','on'=>['add','update']],
+            [['gid', 'limit', 'amount', 'is_active','point_sup'], 'integer'],
             [['price'], 'number'],
+            [['rush_pay'], 'string', 'max' => 10],
+            [['price','amount','limit'],'compare','compareValue'=>0,'operator'=>'>'],
+            ['limit','compare','compareAttribute'=>'amount','operator'=>'<=','message'=>'单号限购数量不能大于库存'],
             [['start_at', 'end_at'], 'safe'],
             [['gid'], 'exist', 'skipOnError' => true, 'targetClass' => GoodInfo::className(), 'targetAttribute' => ['gid' => 'id']],
             ['gid','validGood','on'=>['add','update']],
@@ -49,8 +54,8 @@ class GoodRush extends \yii\db\ActiveRecord
     public function scenarios()
     {
         $behavior = parent::scenarios();
-        $behavior['add']=['id','gid','price','is_active','limit','start_at','end_at'];
-        $behavior['update']=['id','gid','price','is_active','limit','start_at','end_at'];
+        $behavior['add']=['id','gid','price','is_active','limit','start_at','end_at','amount','point_sup','rush_pay'];
+        $behavior['update']=['id','gid','price','is_active','limit','start_at','end_at','amount','point_sup','rush_pay'];
         return $behavior;
     }
 
@@ -63,8 +68,10 @@ class GoodRush extends \yii\db\ActiveRecord
             'id' => '主键id',
             'gid' => '商品',
             'price' => '抢购价',
-            'limit' => '单次限购数量',
-            'amount' => '抢购数量',
+            'limit' => '单号限购数量',
+            'point_sup'=>'积分支持',
+            'rush_pay'=>'抢购支付方式',
+            'amount' => '抢购库存',
             'start_at' => '开始时间',
             'end_at' => '结束时间',
             'is_active' => '是否上架',

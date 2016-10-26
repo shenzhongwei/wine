@@ -31,7 +31,7 @@ use yii\helpers\ArrayHelper;
  * @property string $cost
  * @property string $number
  * @property string $detail
- * @property string $point_sup
+ * @property integer $point_sup
  * @property integer $order
  * @property integer $regist_at
  * @property integer $is_active
@@ -84,7 +84,7 @@ class GoodInfo extends \yii\db\ActiveRecord
             [['detail'], 'string'],
             [['name'], 'string', 'max' => 50],
             [['volum'], 'string', 'max' => 128],
-            [['unit'], 'string', 'max' => 10],
+            [['unit','original_pay','vip_pay'], 'string', 'max' => 10],
             [['number'], 'string', 'max' => 10],
             ['img', 'file', 'extensions' => ['png', 'jpg', 'gif','jpeg','ico'], 'maxSize' => 1024*1024*6],
             [['boot'], 'exist', 'skipOnError' => true, 'targetClass' => GoodBoot::className(), 'targetAttribute' => ['boot' => 'id']],

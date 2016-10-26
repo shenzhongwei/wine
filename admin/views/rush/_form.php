@@ -13,8 +13,17 @@ use dosamigos\datetimepicker\DateTimePicker;
  * @var admin\models\GoodRush $model
  * @var yii\widgets\ActiveForm $form
  */
+$payArr = [
+    1=>'余额',
+    2=>'支付宝',
+    3=>'微信',
+]
 ?>
-
+<style>
+    .radio-inline input[type="radio"] {
+        margin-top: 1px;
+    }
+</style>
 <div class="good-rush-form">
     <div class="panel panel-info" style="width: 70%">
         <div class="panel-heading">
@@ -52,7 +61,7 @@ use dosamigos\datetimepicker\DateTimePicker;
 
                         'limit'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'请填写每单最大可购数量','onkeyup'=>'this.value=this.value.replace(/\D/gi,"")']],
 
-//            'amount'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'Enter 抢购数量...']],
+                        'amount'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'请填写用于抢购库存','onkeyup'=>'this.value=this.value.replace(/\D/gi,"")']],
 
 //            'is_active'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'Enter 是否上架...']],
 
@@ -104,6 +113,21 @@ use dosamigos\datetimepicker\DateTimePicker;
                             ]
                         ]
                         ],
+                        'rush_pay'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>Select2::className(),
+                            'options'=>[
+                                'value' => $model->rush_pay, // initial value
+                                'data'=>$payArr,
+                                'options'=>['placeholder'=>'抢购商品支持支付方式','multiple' => true],
+                                'pluginOptions' => [
+                                    'disabled'=>true,
+                                    'allowClear' => true,
+                                    'tags' => true,
+                                    'maximumInputLength' => 3
+                                ],
+                            ]
+                        ],
+
+                        'point_sup'=>['type'=> Form::INPUT_RADIO_LIST,'items'=>['0'=>'不支持','1'=>'支持'],'options'=>['inline'=>true]],
 
                     ]
 
@@ -118,3 +142,8 @@ use dosamigos\datetimepicker\DateTimePicker;
 
         </div>
 </div>
+<!--<script>-->
+<!--    $(function () {-->
+<!--        $('input[name="GoodRush[point_sup]"').attr('disabled',true);-->
+<!--    })-->
+<!--</script>-->

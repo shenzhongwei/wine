@@ -19,7 +19,7 @@ class GoodSearch extends GoodInfo
     public function rules()
     {
         return [
-            [[ 'merchant', 'type', 'vip_show','brand', 'smell', 'color', 'dry','boot', 'breed', 'country', 'style', 'order', 'is_active', 'active_at'], 'integer'],
+            [[ 'merchant', 'type', 'vip_show','brand', 'point_sup','smell', 'color', 'dry','boot', 'breed', 'country', 'style', 'order', 'is_active', 'active_at'], 'integer'],
             [['name', 'volum', 'unit', 'number', 'detail', 'regist_at'], 'safe'],
             [['price','start_price','end_price','pro_price','vip_price'], 'number'],
         ];
@@ -55,6 +55,7 @@ class GoodSearch extends GoodInfo
             'type' => $this->type,
             'is_active' => $this->is_active,
             'vip_show'=>$this->vip_show,
+            'point_sup'=>$this->point_sup,
         ]);
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'volum', $this->volum])

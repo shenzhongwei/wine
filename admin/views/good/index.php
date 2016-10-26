@@ -42,10 +42,9 @@ $this->registerJsFile("@web/js/good/_script.js");
             'columns' => [
                 [
                     'class'=>'kartik\grid\CheckboxColumn',
-                    'rowSelectedClass'=>GridView::TYPE_WARNING,
                     'hAlign'=>'center',
                     'vAlign'=>'middle',
-                    'width'=>'3%',
+                    'width'=>'2%',
                     'name'=>'id',
                 ],
                 [
@@ -54,7 +53,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                     'vAlign'=>'middle',
                     'attribute'=>'name',
                     'format' => 'html',
-                    'width'=>'11%',
+                    'width'=>'10%',
                     'value'=> function($model){
                         return Html::a($model->name.$model->volum,['good/view', 'id' => $model->id],
                             ['title' => '查看商品详细','class'=>'btn btn-link btn-sm']
@@ -72,7 +71,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                     'attribute'=>'merchant',
                     'hAlign'=>'center',
                     'vAlign'=>'middle',
-                    'width'=>'8%',
+                    'width'=>'7%',
                     'format' => 'html',
                     'value'=> function($model){
                         return Html::a($model->merchant0->name,['merchant/view', 'id' => $model->merchant0->id],
@@ -91,7 +90,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                     'hAlign'=>'center',
                     'vAlign'=>'middle',
                     'attribute'=>'type',
-                    'width'=>'8%',
+                    'width'=>'7%',
                     'value'=> function($model){
                         return empty($model->type0) ? '无':$model->type0->name;
                     },
@@ -123,7 +122,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                     'label' => '原价',
                     'hAlign'=>'center',
                     'vAlign'=>'middle',
-                    'width'=>'6%',
+                    'width'=>'5%',
                     'value'=> function($model){
                         return '¥'.$model->price;
                     },
@@ -134,7 +133,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                     'hAlign'=>'center',
                     'vAlign'=>'middle',
                     'label' => '优惠价',
-                    'width'=>'6%',
+                    'width'=>'5%',
                     'value'=> function($model){
                         return '¥'.$model->pro_price;
                     },
@@ -145,7 +144,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                     'hAlign'=>'center',
                     'vAlign'=>'middle',
                     'label' => '会员价',
-                    'width'=>'6%',
+                    'width'=>'5%',
                     'value'=> function($model){
                         return '¥'.$model->vip_price;
                     },
@@ -169,7 +168,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                     'hAlign'=>'center',
                     'vAlign'=>'middle',
                     'attribute'=>'regist_at',
-                    'width'=>'11%',
+                    'width'=>'10%',
                     'format'=>['date','php:Y年m月d日'],
                     'value'=>function($model){
                         return $model->regist_at;
@@ -187,13 +186,25 @@ $this->registerJsFile("@web/js/good/_script.js");
                     ]
                 ],
 
+                [
+                    'label'=>'积分支持',
+                    'hAlign'=>'center',
+                    'vAlign'=>'middle',
+                    'class'=>'kartik\grid\BooleanColumn',
+                    'trueIcon'=>'<label class="label label-success">支 持</label>',
+                    'falseIcon'=>'<label class="label label-danger">不支持</label>',
+                    'width'=>'7%',
+                    'attribute' => 'point_sup',
+                    'trueLabel'=>'支 持',
+                    'falseLabel'=>'不支持',
+                ],
 
                 [
                     'label'=>'会员显示',
                     'hAlign'=>'center',
                     'vAlign'=>'middle',
                     'class'=>'kartik\grid\BooleanColumn',
-                    'trueIcon'=>'<label class="label label-info">显 示</label>',
+                    'trueIcon'=>'<label class="label label-success">显 示</label>',
                     'falseIcon'=>'<label class="label label-danger">不显示</label>',
                     'width'=>'7%',
                     'attribute' => 'vip_show',
@@ -206,7 +217,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                     'hAlign'=>'center',
                     'vAlign'=>'middle',
                     'class'=>'kartik\grid\BooleanColumn',
-                    'trueIcon'=>'<label class="label label-info">上架中</label>',
+                    'trueIcon'=>'<label class="label label-success">上架中</label>',
                     'falseIcon'=>'<label class="label label-danger">已下架</label>',
                     'width'=>'7%',
                     'attribute' => 'is_active',
@@ -330,10 +341,12 @@ $this->registerJsFile("@web/js/good/_script.js");
             'panel' => [
                 'type'=>'info',
                 'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> '.Html::encode($this->title).' </h3>',
-                'before'=>Html::a("批量显示", "#", ["class" => "btn btn-primary",'id'=>'vip_show']).
-                    Html::a("批量不显示", "#", ["class" => "btn btn-primary",'style'=>'margin-left:10px','id'=>'vip_unshow']).
-                    Html::a("批量上架", "#", ["class" => "btn btn-primary",'style'=>'margin-left:10px','id'=>'good_up']).
-                    Html::a("批量下架", "#", ["class" => "btn btn-primary",'style'=>'margin-left:10px','id'=>'good_down']),
+                'before'=>Html::a("批量显示", "javascript:void(0);", ["class" => "btn btn-primary",'id'=>'vip_show']).
+                    Html::a("批量不显示", "javascript:void(0);", ["class" => "btn btn-primary",'style'=>'margin-left:0.1%','id'=>'vip_unshow']).
+                    Html::a("批量上架", "javascript:void(0);", ["class" => "btn btn-primary",'style'=>'margin-left:0.1%','id'=>'good_up']).
+                    Html::a("批量下架", "javascript:void(0);", ["class" => "btn btn-primary",'style'=>'margin-left:0.1%','id'=>'good_down']).
+                    Html::a("批量积分支持", "javascript:void(0);", ["class" => "btn btn-primary",'style'=>'margin-left:0.1%','id'=>'point_up']).
+                    Html::a("批量取消积分", "javascript:void(0);", ["class" => "btn btn-primary",'style'=>'margin-left:0.1%','id'=>'point_down']),
                 'after'=>false,
                 'showPanel'=>true,
                 'showFooter'=>true
@@ -374,7 +387,7 @@ $this->registerJsFile("@web/js/good/_script.js");
         $('.ui-autocomplete').css('z-index','99999');
         $('.datepicker-days').css('z-index','99999');
 
-        $("#vip_show,#vip_unshow,#good_up,#good_down").on("click", function () {
+        $("#vip_show,#vip_unshow,#good_up,#good_down,#point_up,#point_down").on("click", function () {
             var csrfToken = $('meta[name="csrf-token"]').attr("content");
             $.ajax({
                 statusCode: {
@@ -404,6 +417,10 @@ $this->registerJsFile("@web/js/good/_script.js");
                 confirm = '确认上架产品？一旦上架用户将看到上架中的产品';
             }else if(button == 'good_down') {
                 confirm = '确认下架产品？一旦下架用户将无法看到下架的产品';
+            }else if(button == 'point_up') {
+                confirm = '确认积分支持？一旦支持用户将可以在下单时使用积分抵现';
+            }else if(button == 'point_down') {
+                confirm = '确认取消积分支持？一旦取消用户再下单时将无法使用积分抵现';
             }else{
                 layer.msg('非法操作',{
                     icon: 0,

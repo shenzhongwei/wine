@@ -18,10 +18,10 @@ class RushSearch extends GoodRush
     public function rules()
     {
         return [
-            [['id', 'gid', 'limit', 'amount', 'is_active'], 'integer'],
+            [['id', 'gid', 'limit', 'amount', 'is_active','point_sup'], 'integer'],
             [['price','start_price','end_price'], 'number'],
             [['good_name'],'string'],
-            [['start_at', 'end_at'], 'safe'],
+            [['start_at', 'end_at','rush_pay'], 'safe'],
         ];
     }
 
@@ -67,7 +67,9 @@ class RushSearch extends GoodRush
             'good_info.name' => $this->good_name,
             'limit' => $this->limit,
             'good_rush.is_active' => $this->is_active,
+            'good_rush.point_sup'=>$this->point_sup,
         ]);
+        $query->andFilterWhere(['like','good_rush.rush_pay',$this->rush_pay]);
         $query->andFilterWhere(['>=','good_rush.price',$this->price])
             ->andFilterWhere(['>=','start_at',$this->start_at])
             ->andFilterWhere(['<=','end_at',$this->end_at]);

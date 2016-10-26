@@ -270,7 +270,7 @@ class GoodController extends BaseController
         $admin = Yii::$app->user->identity;
         $model = new GoodInfo();
         $post = Yii::$app->request->post();
-        if($post){
+        if(!empty($post)){
             $model->regist_at = time();
             $model->is_active = 1;
             $model->active_at = strtotime(date('Y-m-d 00:00:00'));
@@ -343,8 +343,6 @@ class GoodController extends BaseController
             $post['GoodInfo']['original_pay'] = '2|3';
         }
         if ($model->load($post)) {
-//            var_dump($model->attributes);
-//            exit;
             $pic = $model->pic;
             $extension = substr($pic,strrpos($pic,'.')+1);
             if($pic == '/goods/good_pic_'.$model->id.'.'.$extension){
@@ -360,7 +358,7 @@ class GoodController extends BaseController
                 }
                 return $this->render('view', ['model' => $model]);
             }else{
-                Yii::$app->session->setFlash('success','保存失败');
+                Yii::$app->session->setFlash('danger','保存失败');
                 return $this->render('update', [
                     'model' => $model,
                 ]);
@@ -417,6 +415,14 @@ class GoodController extends BaseController
             $valueTo = 1;
         }elseif($button == 'good_down'){
             $key = 'is_active';
+            $value = 1;
+            $valueTo = 0;
+        }elseif($button == 'point_up'){
+            $key = 'point_sup';
+            $value = 0;
+            $valueTo = 1;
+        }elseif($button == 'point_down'){
+            $key = 'point_sup';
             $value = 1;
             $valueTo = 0;
         }else{
