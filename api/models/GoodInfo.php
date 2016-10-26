@@ -23,13 +23,19 @@ use Yii;
  * @property string $volum
  * @property string $price
  * @property string $pro_price
+ * @property string $original_pay
+ * @property string $vip_price
+ * @property string $vip_pay
  * @property string $unit
- * @property string $number
  * @property string $pic
+ * @property string $cost
+ * @property string $number
  * @property string $detail
  * @property integer $order
  * @property integer $regist_at
  * @property integer $is_active
+ * @property integer $vip_show
+ * @property integer $point_sup
  * @property integer $active_at
  *
  * @property CommentDetail[] $commentDetails
@@ -67,14 +73,13 @@ class GoodInfo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['merchant', 'type', 'brand', 'smell', 'color', 'dry', 'boot', 'breed', 'country', 'style', 'regist_at', 'is_active', 'active_at','order'], 'integer'],
-            [['price','pro_price'], 'number'],
-            [['detail'], 'required'],
+            [['merchant', 'type', 'brand', 'smell', 'color', 'dry', 'boot', 'breed', 'country', 'style', 'regist_at', 'point_sup','is_active', 'active_at','order','vip_show'], 'integer'],
+            [['price','pro_price','vip_price','cost'], 'number'],
             [['detail'], 'string'],
             [['number'], 'string','max'=>8],
             [['name'], 'string', 'max' => 50],
             [['volum','pic'], 'string', 'max' => 128],
-            [['unit'], 'string', 'max' => 10],
+            [['unit','original_pay','vip_pay'], 'string', 'max' => 10],
             [['boot'], 'exist', 'skipOnError' => true, 'targetClass' => GoodBoot::className(), 'targetAttribute' => ['boot' => 'id']],
             [['brand'], 'exist', 'skipOnError' => true, 'targetClass' => GoodBrand::className(), 'targetAttribute' => ['brand' => 'id']],
             [['breed'], 'exist', 'skipOnError' => true, 'targetClass' => GoodBreed::className(), 'targetAttribute' => ['breed' => 'id']],
@@ -96,30 +101,36 @@ class GoodInfo extends \yii\db\ActiveRecord
         return [
             'id' => '主键id',
             'merchant' => '所属商户',
-            'type' => '类型',
+            'type' => '类别',
             'brand' => '品牌',
             'smell' => '香型',
             'color' => '颜色类型',
-            'dry' => '干型id',
+            'dry' => '干型',
             'boot' => '产地',
             'breed' => '品种',
             'country' => '国家',
-            'number'=>'编号',
             'style' => '类型',
             'name' => '商品名',
             'volum' => '容量',
             'price' => '原价',
-            'pro_price' => '优惠价',
+            'pro_price'=> '优惠价',
+            'vip_pay'=>'会员支付方式',
+            'original_pay'=>'一般支付方式',
+            'cost'=>'成本价',
             'unit' => '单位',
-            'pic'=>'图片',
+            'pic' => '产品图片',
+            'vip_show'=>'会员列表展示',
+            'img'=>'产品图片',
+            'vip_price'=>'会员价',
+            'number' => '编号',
             'detail' => '详情',
-            'order'=>'排序',
+            'order' => '排序',
+            'point_sup'=>'积分支持',
             'regist_at' => '添加时间',
             'is_active' => '是否上架',
             'active_at' => '上架状态更改时间',
         ];
     }
-
     /**
      * @return \yii\db\ActiveQuery
      */

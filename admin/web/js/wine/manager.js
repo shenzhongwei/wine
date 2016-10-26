@@ -61,7 +61,7 @@ $(function(){
                 ShowMessage(data.status,data.message);
                 if(data.status == '302'){
                     layer.alert('登录信息已过期，请重新登录',{icon: 0},function(){
-                        window.top.location.href=toRoute('site/login');;
+                        window.top.location.href=toRoute('site/login');
                     });
                     return false;
                 }else if(data.status == '200'){

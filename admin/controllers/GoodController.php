@@ -33,6 +33,7 @@ class GoodController extends BaseController
                 'class'=>VerbFilter::className(),
                 'actions'=>[
                     'delete'=>['post','get'],
+                    'patch'=>['post'],
                 ]
             ]
         ];
@@ -82,6 +83,7 @@ class GoodController extends BaseController
             'searchModel' => $searchModel,
         ]);
     }
+
 
     public function actionUpload(){
         $goodInfo = new GoodInfo();
@@ -267,18 +269,26 @@ class GoodController extends BaseController
     {
         $admin = Yii::$app->user->identity;
         $model = new GoodInfo();
-        $model->regist_at = time();
-        $model->is_active = 1;
-        $model->active_at = strtotime(date('Y-m-d 00:00:00'));
-        $model->number = GoodInfo::generateCode().rand(1000,9999).date('is',time());
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        $post = Yii::$app->request->post();
+        if($post){
+            $model->regist_at = time();
+            $model->is_active = 1;
+            $model->active_at = strtotime(date('Y-m-d 00:00:00'));
+            $model->number = GoodInfo::generateCode().rand(1000,9999).date('is',time());
+            $post['GoodInfo']['vip_pay'] = '1';
+            $post['GoodInfo']['original_pay'] = '2|3';
+        }else{
+            $model->vip_pay = [1];
+            $model->original_pay = [2,3];
+        }
+        if ($model->load($post) && $model->save()) {
             Yii::$app->session->setFlash('success','保存成功');
             return $this->render('view', ['model' => $model]);
         } else {
             if($admin->wa_type>=2){
                 $model->merchant = MerchantInfo::findOne(['wa_id'=>$admin->id])->id;
             }
-            if(Yii::$app->request->post()){
+            if(Yii::$app->request->isPost){
                 Yii::$app->session->setFlash('danger','保存失败');
             }
             return $this->render('create', [
@@ -329,8 +339,12 @@ class GoodController extends BaseController
             $post['GoodInfo']['country'] = empty($post['GoodInfo']['country']) ? null:$post['GoodInfo']['country'];
             $post['GoodInfo']['style'] = empty($post['GoodInfo']['style']) ? null:$post['GoodInfo']['style'];
             $post['GoodInfo']['breed'] = empty($post['GoodInfo']['breed']) ? null:$post['GoodInfo']['breed'];
+            $post['GoodInfo']['vip_pay'] = '1';
+            $post['GoodInfo']['original_pay'] = '2|3';
         }
         if ($model->load($post)) {
+//            var_dump($model->attributes);
+//            exit;
             $pic = $model->pic;
             $extension = substr($pic,strrpos($pic,'.')+1);
             if($pic == '/goods/good_pic_'.$model->id.'.'.$extension){
@@ -352,6 +366,8 @@ class GoodController extends BaseController
                 ]);
             }
         } else {
+            $model->vip_pay = explode('|',$model->vip_pay);
+            $model->original_pay = explode('|',$model->original_pay);
             return $this->render('update', [
                 'model' => $model,
             ]);
@@ -376,6 +392,52 @@ class GoodController extends BaseController
         $model->save();
         Yii::$app->session->setFlash('success','操作成功');
         return $this->redirect('index');
+    }
+
+
+    public function actionPatch()
+    {
+        $keys = Yii::$app->request->post('keys');
+        $button = Yii::$app->request->post('button');
+        if(empty($keys)){
+            return $this->showResult(304,'非法请求');
+        }
+        $ids = '('.implode(',',$keys).')';
+        if($button == 'vip_show'){
+            $key = 'vip_show';
+            $value = 0;
+            $valueTo = 1;
+        }elseif($button == 'vip_unshow'){
+            $key = 'vip_show';
+            $value = 1;
+            $valueTo = 0;
+        }elseif($button == 'good_up'){
+            $key = 'is_active';
+            $value = 0;
+            $valueTo = 1;
+        }elseif($button == 'good_down'){
+            $key = 'is_active';
+            $value = 1;
+            $valueTo = 0;
+        }else{
+            return $this->showResult(304,'非法请求');
+        }
+        $goods = GoodInfo::find()->where("$key=$value and id in $ids")->one();
+        if(!empty($goods)){
+            $sql = "UPDATE good_info SET $key = $valueTo";
+            if($key == 'is_active'){
+                $sql .= " ,active_at=".time();
+            }
+            $sql .= " WHERE id IN $ids AND $key=$value";
+            $res = Yii::$app->db->createCommand($sql)->execute();
+            if(!empty($res)){
+                return $this->showResult(200,'操作成功');
+            }else{
+                return $this->showResult(400,'操作失败，请稍后重试');
+            }
+        }else{
+            return $this->showResult(200,'操作成功');
+        }
     }
 
 

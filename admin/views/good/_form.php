@@ -20,7 +20,17 @@ use ijackua\lepture\Markdowneditor;
 $admin = Yii::$app->user->identity;
 $merchants = MerchantInfo::GetMerchants();
 $wa_type = $admin->wa_type;
+$payArr = [
+    1=>'余额',
+    2=>'支付宝',
+    3=>'微信'
+];
 ?>
+<style>
+    .radio-inline input[type="radio"] {
+        margin-top: 1px;
+    }
+</style>
 <div class="good-info-form">
     <?php $form = ActiveForm::begin([
         'type'=>ActiveForm::TYPE_VERTICAL,
@@ -50,6 +60,8 @@ $wa_type = $admin->wa_type;
                                     'name'=>['type'=> Form::INPUT_TEXT, 'options'=>['maxlength'=>50,]],
 
                                     'volum'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'容量：如：300ml', 'maxlength'=>128]],
+
+                                    'unit'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'单位：如：瓶', 'maxlength'=>10]],
 
                                     'merchant'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>Select2::className(),
                                         'options'=>[
@@ -150,6 +162,9 @@ $wa_type = $admin->wa_type;
                                             ]
                                         ],
                                     ],
+                                    'vip_show'=>['type'=> Form::INPUT_RADIO_LIST,'items'=>['0'=>'不显示','1'=>'显示'],'options'=>['inline'=>true]],
+
+                                    'point_sup'=>['type'=> Form::INPUT_RADIO_LIST,'items'=>['0'=>'不支持','1'=>'支持'],'options'=>['inline'=>true]],
                                 ]
 
                             ]);
@@ -165,11 +180,13 @@ $wa_type = $admin->wa_type;
                                 'columnSize'=>'sm',
                                 'attributes' => [
 
-                                    'price'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'单价:单位：元', 'maxlength'=>10,'onkeyup'=>'clearNoNum(this)']],
+                                    'price'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'售价:单位：元', 'maxlength'=>10,'onkeyup'=>'clearNoNum(this)']],
 
-                                    'pro_price'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'单价:单位：元', 'maxlength'=>10,'onkeyup'=>'clearNoNum(this)']],
+                                    'pro_price'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'优惠价:单位：元', 'maxlength'=>10,'onkeyup'=>'clearNoNum(this)']],
 
-                                    'unit'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'单位：如：瓶', 'maxlength'=>10]],
+                                    'cost'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'成本价:单位：元', 'maxlength'=>10,'onkeyup'=>'clearNoNum(this)']],
+
+                                    'vip_price'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'会员价:单位：元', 'maxlength'=>10,'onkeyup'=>'clearNoNum(this)']],
 
                                     'brand'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>DepDrop::className(),
                                         'options'=>[
@@ -199,8 +216,32 @@ $wa_type = $admin->wa_type;
                                         ],
                                     ],
 
-                                    'cost'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'成本价:单位：元', 'maxlength'=>10,'onkeyup'=>'clearNoNum(this)']],
+                                    'vip_pay'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>Select2::className(),
+                                        'options'=>[
+                                            'value' => $model->vip_pay, // initial value
+                                            'data'=>$payArr,
+                                            'options'=>['placeholder'=>'会员商品支持支付方式','multiple' => true],
+                                            'pluginOptions' => [
+                                                'disabled'=>true,
+                                                'allowClear' => true,
+                                                'tags' => true,
+                                                'maximumInputLength' => 3
+                                            ],
+                                        ]
+                                    ],
 
+                                    'original_pay'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>Select2::className(),
+                                        'options'=>[
+                                            'value' => $model->original_pay, // initial value
+                                            'data'=>$payArr,
+                                            'options'=>['placeholder'=>'普通商品支持支付方式','multiple' => true],
+                                            'pluginOptions' => [
+                                                'disabled'=>true,
+                                                'allowClear' => true,
+                                                'tags' => true,
+                                                'maximumInputLength' => 3],
+                                        ]
+                                    ],
                                     'img'=>[
                                         'label'=>'图片（宽高比1:1）',
                                         'type'=> Form::INPUT_WIDGET, 'widgetClass'=>FileInput::className(),
@@ -272,7 +313,7 @@ $wa_type = $admin->wa_type;
                                             'imageManagerJson' => ['/redactor/upload/image-json'],
                                             'imageUpload' => ['/redactor/upload/image'],
                                             'fileUpload' => ['/redactor/upload/file'],
-                                            'minHeight' => '500px',
+                                            'minHeight' => '800px',
                                             'lang' => 'zh_cn',
                                             'plugins' => ['clips', 'fontcolor','imagemanager'],
                                         ]
@@ -295,3 +336,8 @@ $wa_type = $admin->wa_type;
         ActiveForm::end();
         ?>
 </div>
+<script>
+    $(function () {
+        $('input[name="GoodInfo[point_sup]"').attr('disabled',true);
+    })
+</script>

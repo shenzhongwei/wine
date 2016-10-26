@@ -23,14 +23,19 @@ use yii\helpers\ArrayHelper;
  * @property string $volum
  * @property string $price
  * @property string $pro_price
+ * @property string $original_pay
+ * @property string $vip_price
+ * @property string $vip_pay
  * @property string $unit
  * @property string $pic
  * @property string $cost
  * @property string $number
  * @property string $detail
+ * @property string $point_sup
  * @property integer $order
  * @property integer $regist_at
  * @property integer $is_active
+ * @property integer $vip_show
  * @property integer $active_at
  *
  * @property CommentDetail[] $commentDetails
@@ -70,18 +75,18 @@ class GoodInfo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['merchant', 'type', 'brand', 'smell', 'color', 'dry', 'boot', 'breed', 'country', 'style', 'order', 'regist_at', 'is_active', 'active_at'], 'integer'],
-            [['name', 'detail','type','price','detail','volum','unit','merchant','pro_price','cost'], 'required'],
-            [['price','pro_price','cost'],'compare','compareValue'=>0,'operator'=>'>'],
+            [['merchant', 'type', 'brand', 'smell', 'point_sup','vip_show', 'color', 'dry', 'boot', 'breed', 'country', 'style', 'order', 'regist_at', 'is_active', 'active_at'], 'integer'],
+            [['name', 'detail','type','price','detail','volum','unit','merchant','pro_price','cost','original_pay','vip_pay','vip_show','point_sup','vip_price'], 'required'],
+            [['price','pro_price','cost','vip_price'],'compare','compareValue'=>0,'operator'=>'>'],
             [['price','pro_price','cost'],'validPrice'],
             [['pic'],'required','message'=>'请上传产品图片'],
-            [['price','pro_price','cost'], 'number'],
+            [['price','pro_price','cost','vip_price'], 'number'],
             [['detail'], 'string'],
             [['name'], 'string', 'max' => 50],
             [['volum'], 'string', 'max' => 128],
             [['unit'], 'string', 'max' => 10],
             [['number'], 'string', 'max' => 10],
-            ['img', 'file', 'extensions' => ['png', 'jpg', 'gif','jpeg'], 'maxSize' => 1024*1024*6],
+            ['img', 'file', 'extensions' => ['png', 'jpg', 'gif','jpeg','ico'], 'maxSize' => 1024*1024*6],
             [['boot'], 'exist', 'skipOnError' => true, 'targetClass' => GoodBoot::className(), 'targetAttribute' => ['boot' => 'id']],
             [['type'], 'exist', 'skipOnError' => true, 'targetClass' => GoodType::className(), 'targetAttribute' => ['type' => 'id']],
             [['brand'], 'exist', 'skipOnError' => true, 'targetClass' => GoodBrand::className(), 'targetAttribute' => ['brand' => 'id']],
@@ -116,13 +121,18 @@ class GoodInfo extends \yii\db\ActiveRecord
             'volum' => '容量',
             'price' => '原价',
             'pro_price'=> '优惠价',
+            'vip_pay'=>'会员支付方式',
+            'original_pay'=>'一般支付方式',
             'cost'=>'成本价',
             'unit' => '单位',
             'pic' => '产品图片',
+            'vip_show'=>'会员列表展示',
             'img'=>'产品图片',
+            'vip_price'=>'会员价',
             'number' => '编号',
             'detail' => '详情',
             'order' => '排序',
+            'point_sup'=>'积分支持',
             'regist_at' => '添加时间',
             'is_active' => '是否上架',
             'active_at' => '上架状态更改时间',
@@ -272,6 +282,8 @@ class GoodInfo extends \yii\db\ActiveRecord
             $this->addError('price','成本价不得高于原价');
         }elseif($this->pro_price<$this->cost){
             $this->addError('price','成本价不得高于优惠价');
+        }elseif ($this->vip_price>$this->pro_price){
+            $this->addError('vip_price','会员价不得高于优惠价');
         }
     }
 

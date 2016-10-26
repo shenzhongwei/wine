@@ -23,6 +23,10 @@ $this->registerJsFile("@web/js/good/_script.js");
 <div class="good-info-index">
     <?php
         echo GridView::widget([
+            "options" => [
+                // ...其他设置项
+                "id" => "good_info"
+            ],
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
             'containerOptions'=>['style'=>'overflow: auto'], // only set when $responsive = false
@@ -31,18 +35,18 @@ $this->registerJsFile("@web/js/good/_script.js");
             'pjax'=>true,  //pjax is set to always true for this demo
             'pjaxSettings'=>[
                 'options'=>[
-                    'id'=>'goodinfo',
+                    'id'=>'good_pjax',
                 ],
                 'neverTimeout'=>true,
             ],
             'columns' => [
                 [
-                    'class'=>'kartik\grid\SerialColumn',
+                    'class'=>'kartik\grid\CheckboxColumn',
+                    'rowSelectedClass'=>GridView::TYPE_WARNING,
                     'hAlign'=>'center',
                     'vAlign'=>'middle',
-                    'contentOptions'=>['class'=>'kartik-sheet-style'],
-                    'width'=>'1%',
-                    'header'=>'',
+                    'width'=>'3%',
+                    'name'=>'id',
                 ],
                 [
                     'header'=>'商品名称',
@@ -50,7 +54,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                     'vAlign'=>'middle',
                     'attribute'=>'name',
                     'format' => 'html',
-                    'width'=>'10%',
+                    'width'=>'11%',
                     'value'=> function($model){
                         return Html::a($model->name.$model->volum,['good/view', 'id' => $model->id],
                             ['title' => '查看商品详细','class'=>'btn btn-link btn-sm']
@@ -98,30 +102,30 @@ $this->registerJsFile("@web/js/good/_script.js");
                         'pluginOptions' => ['allowClear' => true],
                     ],
                 ],
-                [
-                    'header'=>'品牌',
-                    'hAlign'=>'center',
-                    'vAlign'=>'middle',
-                    'attribute'=>'brand',
-                    'width'=>'8%',
-                    'value'=> function($model){
-                        return $model->brand0->name;
-                    },
-                    'filterType'=>GridView::FILTER_SELECT2,
-                    'filterWidgetOptions'=>[
-                        'data'=>GoodBrand::GetBrands(),
-                        'options'=>['placeholder'=>'请选择品牌'],
-                        'pluginOptions' => ['allowClear' => true],
-                    ],
-                ],
+//                [
+//                    'header'=>'品牌',
+//                    'hAlign'=>'center',
+//                    'vAlign'=>'middle',
+//                    'attribute'=>'brand',
+//                    'width'=>'7%',
+//                    'value'=> function($model){
+//                        return $model->brand0->name;
+//                    },
+//                    'filterType'=>GridView::FILTER_SELECT2,
+//                    'filterWidgetOptions'=>[
+//                        'data'=>GoodBrand::GetBrands(),
+//                        'options'=>['placeholder'=>'请选择品牌'],
+//                        'pluginOptions' => ['allowClear' => true],
+//                    ],
+//                ],
                 [
                     'attribute'=>'price',
                     'label' => '原价',
                     'hAlign'=>'center',
                     'vAlign'=>'middle',
-                    'width'=>'7%',
+                    'width'=>'6%',
                     'value'=> function($model){
-                        return '¥'.$model->price.'/'.$model->unit;
+                        return '¥'.$model->price;
                     },
                     'filterInputOptions'=>['onkeyup'=>'clearNoNum(this)','class'=>'form-control'],
                 ],
@@ -130,9 +134,20 @@ $this->registerJsFile("@web/js/good/_script.js");
                     'hAlign'=>'center',
                     'vAlign'=>'middle',
                     'label' => '优惠价',
-                    'width'=>'7%',
+                    'width'=>'6%',
                     'value'=> function($model){
-                        return '¥'.$model->pro_price.'/'.$model->unit;
+                        return '¥'.$model->pro_price;
+                    },
+                    'filterInputOptions'=>['onkeyup'=>'clearNoNum(this)','class'=>'form-control'],
+                ],
+                [
+                    'attribute'=>'vip_price',
+                    'hAlign'=>'center',
+                    'vAlign'=>'middle',
+                    'label' => '会员价',
+                    'width'=>'6%',
+                    'value'=> function($model){
+                        return '¥'.$model->vip_price;
                     },
                     'filterInputOptions'=>['onkeyup'=>'clearNoNum(this)','class'=>'form-control'],
                 ],
@@ -163,7 +178,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                     'filterWidgetOptions'=>[
                         // inline too, not bad
                         'language' => 'zh-CN',
-                        'options' => ['placeholder' => '选择发布日期','readonly'=>true],
+                        'options' => ['placeholder' => '发布日期','readonly'=>true],
                         'pluginOptions' => [
                             'format' => 'yyyy年mm月dd日',
                             'autoclose' => true,
@@ -171,6 +186,21 @@ $this->registerJsFile("@web/js/good/_script.js");
                         ]
                     ]
                 ],
+
+
+                [
+                    'label'=>'会员显示',
+                    'hAlign'=>'center',
+                    'vAlign'=>'middle',
+                    'class'=>'kartik\grid\BooleanColumn',
+                    'trueIcon'=>'<label class="label label-info">显 示</label>',
+                    'falseIcon'=>'<label class="label label-danger">不显示</label>',
+                    'width'=>'7%',
+                    'attribute' => 'vip_show',
+                    'trueLabel'=>'显 示',
+                    'falseLabel'=>'不显示',
+                ],
+
                 [
                     'label'=>'状态',
                     'hAlign'=>'center',
@@ -184,28 +214,28 @@ $this->registerJsFile("@web/js/good/_script.js");
                     'falseLabel'=>'已下架',
                 ],
 
-                [
-
-                    'header'=>'图片',
-                    'hAlign'=>'center',
-                    'vAlign'=>'middle',
-                    'width'=>'5%',
-                    'mergeHeader'=>true,
-                    'attribute'=>'pic',
-                    "format" => "raw",
-                    'value'=>function($model){
-                        return empty($model->pic) ? '<label class="label label-primary">暂无</label>':Html::img('../../../photo'.$model->pic,[
-                            'width'=>"50px",'height'=>"50px","onclick"=>"ShowImg(this);",'style'=>'cursor:pointer','title'=>"点击放大"
-                        ]);
-                    }
-                ],
+//                [
+//
+//                    'header'=>'图片',
+//                    'hAlign'=>'center',
+//                    'vAlign'=>'middle',
+//                    'width'=>'5%',
+//                    'mergeHeader'=>true,
+//                    'attribute'=>'pic',
+//                    "format" => "raw",
+//                    'value'=>function($model){
+//                        return empty($model->pic) ? '<label class="label label-primary">暂无</label>':Html::img('../../../photo'.$model->pic,[
+//                            'width'=>"50px",'height'=>"50px","onclick"=>"ShowImg(this);",'style'=>'cursor:pointer','title'=>"点击放大"
+//                        ]);
+//                    }
+//                ],
 
                 [
                     'header'=>'轮播图',
                     'hAlign'=>'center',
                     'vAlign'=>'middle',
                     'class' =>  'kartik\grid\ActionColumn',
-                    'width'=>'6%',
+                    'width'=>'5%',
                     'buttons'=>[
                         'view' => function ($url, $model) {
                             return Html::a('点击查看', ['good/pic','id'=>$model->id], [
@@ -227,7 +257,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                     'hAlign'=>'center',
                     'vAlign'=>'middle',
                     'class' =>  'kartik\grid\ActionColumn',
-                    'width'=>'6%',
+                    'width'=>'5%',
                     'buttons'=>[
                         'view' => function ($url, $model) {
                             return Html::a('点击查看', '#', [
@@ -251,7 +281,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                     'header' => '操作',
                     'hAlign'=>'center',
                     'vAlign'=>'middle',
-                    'width'=>'10%',
+                    'width'=>'11%',
                     'class' =>  'kartik\grid\ActionColumn',
                     'buttons' => [
                         'view' => function ($url, $model) {
@@ -296,11 +326,14 @@ $this->registerJsFile("@web/js/good/_script.js");
                 '{export}',
             ],
             'responsive'=>false,
-            'hover'=>true,
             'condensed'=>true,
             'panel' => [
                 'type'=>'info',
                 'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> '.Html::encode($this->title).' </h3>',
+                'before'=>Html::a("批量显示", "#", ["class" => "btn btn-primary",'id'=>'vip_show']).
+                    Html::a("批量不显示", "#", ["class" => "btn btn-primary",'style'=>'margin-left:10px','id'=>'vip_unshow']).
+                    Html::a("批量上架", "#", ["class" => "btn btn-primary",'style'=>'margin-left:10px','id'=>'good_up']).
+                    Html::a("批量下架", "#", ["class" => "btn btn-primary",'style'=>'margin-left:10px','id'=>'good_down']),
                 'after'=>false,
                 'showPanel'=>true,
                 'showFooter'=>true
@@ -320,27 +353,87 @@ $this->registerJsFile("@web/js/good/_script.js");
     'header' => '<h4 class="modal-title">查看详情</h4>',
     'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">关闭</a>',
 ]);
-$requestUrl = \yii\helpers\Url::toRoute('detail');  //当前控制器下的view方法
-$Js = <<<JS
-         $('.detail').on('click', function () {  //查看详情的触发事件
-            $.get('{$requestUrl}', { id:$(this).closest('tr').data('key')  },
-                function (data) {
-                    $('#good-modal').find('.modal-body').html(data);  //给该弹框下的body赋值
-                }
-             );
-         });
-JS;
-$this->registerJs($Js);
 \yii\bootstrap\Modal::end();
 ?>
 <!--查看看详情弹出框  end-->
 <script language="JavaScript">
-    $(function (){
+    $(function(){
+        $(document).ready(init());
+        $(document).on('pjax:complete', function() {init();});
+    });
+    function init() {
+        $('.detail').on('click', function () {  //查看详情的触发事件
+            $.get(toRoute('good/detail'), { id:$(this).closest('tr').data('key')  },
+                function (data) {
+                    $('#good-modal').find('.modal-body').html(data);  //给该弹框下的body赋值
+                }
+            );
+        });
         $('.panel').find('.dropdown-toggle').unbind();
         $('.panel').find('.dropdown-toggle').attr('class','btn btn-default dropdown-toggle');
         $('.ui-autocomplete').css('z-index','99999');
         $('.datepicker-days').css('z-index','99999');
-    });
+
+        $("#vip_show,#vip_unshow,#good_up,#good_down").on("click", function () {
+            var csrfToken = $('meta[name="csrf-token"]').attr("content");
+            $.ajax({
+                statusCode: {
+                    302: function() {
+                        layer.alert('登录信息已过期，请重新登录',{icon: 0},function(){
+                            window.top.location.href=toRoute('site/login');
+                        });
+                        return false;
+                    }
+                }
+            });
+            var keys = $("#good_info").yiiGridView("getSelectedRows");
+            if(keys == ''){
+                layer.msg('请选择需要操作的产品',{
+                    icon: 0,
+                    time: 1500 //2秒关闭（如果不配置，默认是3秒）
+                });
+                return false;
+            }
+            var button = $(this).attr('id');
+            var confirm = '';
+            if(button == 'vip_show'){
+                confirm = '确认显示产品？一旦显示用户将在会员列表中看到显示产品';
+            }else if(button == 'vip_unshow'){
+                confirm = '确认不显示产品？一旦不显示用户将在会员列表中无法看到非显示产品';
+            }else if(button == 'good_up'){
+                confirm = '确认上架产品？一旦上架用户将看到上架中的产品';
+            }else if(button == 'good_down') {
+                confirm = '确认下架产品？一旦下架用户将无法看到下架的产品';
+            }else{
+                layer.msg('非法操作',{
+                    icon: 0,
+                    time: 1500 //2秒关闭（如果不配置，默认是3秒）
+                });
+                return false;
+            }
+            layer.confirm(confirm,{icon: 0, title:'提示'},function(index){
+                layer.close(index);
+                ShowLoad();
+                $.post(toRoute('good/patch'),{
+                    'keys':keys,
+                    '_wine-admin':csrfToken,
+                    'button':button
+                },function(data){
+                    ShowMessage(data.status,data.message);
+                    if(data.status == '302'){
+                        layer.alert('登录信息已过期，请重新登录',{icon: 0},function(){
+                            window.top.location.href=toRoute('site/login');
+                        });
+                        return false;
+                    }else if(data.status == '200'){
+                        $.pjax.reload({container:"#good_pjax"});
+                    }else{
+                        return false;
+                    }
+                },'json');
+            });
+        });
+    }
 </script>
 
 
