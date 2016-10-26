@@ -42,7 +42,7 @@ class GoodRush extends \yii\db\ActiveRecord
             [['price'], 'number'],
             [['rush_pay'], 'string', 'max' => 10],
             [['price','amount','limit'],'compare','compareValue'=>0,'operator'=>'>'],
-            ['limit','compare','compareAttribute'=>'amount','operator'=>'>','message'=>'单号限购数量不能大于库存'],
+            ['limit','validPrice','on'=>['add','update']],
             [['start_at', 'end_at'], 'safe'],
             [['gid'], 'exist', 'skipOnError' => true, 'targetClass' => GoodInfo::className(), 'targetAttribute' => ['gid' => 'id']],
             ['gid','validGood','on'=>['add','update']],
@@ -122,6 +122,8 @@ class GoodRush extends \yii\db\ActiveRecord
         $good = GoodInfo::findOne($this->gid);
         if($this->price>=$good->pro_price){
             $this->addError('price','抢购价不得高于售价');
+        }elseif ($this->limit>$this->amount){
+            $this->addError('limit','单号限购数不能大于库存');
         }
     }
 
