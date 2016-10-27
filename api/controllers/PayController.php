@@ -66,7 +66,6 @@ class PayController extends ApiController{
         $wxUnified->setParameter('goods_tag','SANTE');
 
         $res = $wxUnified->getResult();
-
         if($res['return_code']=='FAIL'){
             $data = $res['return_msg'];
             return $this->showResult(400,'下单失败',$data);
@@ -75,6 +74,7 @@ class PayController extends ApiController{
                 $data = $res['err_code_des'];
                 return $this->showResult(400,'下单失败',$data);
             }else{
+                $res['sign'] = $wxUnified->getSign($res);
                 return $this->showResult(200,'下单成功',$res);
             }
         }

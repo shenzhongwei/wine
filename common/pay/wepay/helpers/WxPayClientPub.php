@@ -48,7 +48,6 @@ class WxPayClientPub extends WxPayCommonPub
     {
         $xml = $this->createXml();
         $this->response = $this->postXmlCurl($xml,$this->url,false,$this->curl_timeout);
-        var_dump($this->response);
         return $this->response;
     }
 
@@ -69,7 +68,6 @@ class WxPayClientPub extends WxPayCommonPub
     {
         $this->postXml();
         $this->result = $this->xmlToArray($this->response);
-        var_dump($this->result);
         return $this->result;
     }
 }
