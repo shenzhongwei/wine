@@ -113,7 +113,7 @@ if(!empty($model->original_pay)){
                                 'attribute'=>'pic',
                                 "format" => "raw",
                                 'value'=>Html::img('../../../photo'.$model->pic,[
-                                    'height'=>"180px","onclick"=>"ShowImg(this);",'style'=>'cursor:pointer','title'=>"点击放大"
+                                    'width'=>"50%","onclick"=>"ShowImg(this);",'style'=>'cursor:pointer','title'=>"点击放大"
                                 ]),
                             ],
                         ],

@@ -9,6 +9,7 @@ use Yii;
  *
  * @property integer $id
  * @property integer $uid
+ * @property integer $type
  * @property integer $gid
  * @property integer $amount
  *
@@ -17,6 +18,9 @@ use Yii;
  */
 class ShoppingCert extends \yii\db\ActiveRecord
 {
+    public $price;
+    public $pay;
+    public $type;
     /**
      * @inheritdoc
      */
@@ -31,7 +35,7 @@ class ShoppingCert extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['uid', 'gid', 'amount'], 'integer'],
+            [['uid', 'gid', 'amount','type'], 'integer'],
             [['gid'], 'exist', 'skipOnError' => true, 'targetClass' => GoodInfo::className(), 'targetAttribute' => ['gid' => 'id']],
             [['uid'], 'exist', 'skipOnError' => true, 'targetClass' => UserInfo::className(), 'targetAttribute' => ['uid' => 'id']],
         ];
@@ -44,6 +48,7 @@ class ShoppingCert extends \yii\db\ActiveRecord
     {
         return [
             'id' => '主键',
+            'type'=>'类型 1普通 2会员',
             'uid' => '用户id',
             'gid' => '产品id',
             'amount' => '数量',

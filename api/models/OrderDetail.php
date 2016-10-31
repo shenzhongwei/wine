@@ -11,14 +11,17 @@ use Yii;
  * @property integer $oid
  * @property integer $gid
  * @property integer $amount
+ * @property integer $rush_id
  * @property string $single_price
  * @property string $total_price
  *
  * @property OrderInfo $o
  * @property GoodInfo $g
+ * @property GoodRush $r
  */
 class OrderDetail extends \yii\db\ActiveRecord
 {
+    public $sum;
     /**
      * @inheritdoc
      */
@@ -33,10 +36,11 @@ class OrderDetail extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['oid', 'gid', 'amount'], 'integer'],
+            [['oid', 'gid', 'amount','rush_id'], 'integer'],
             [['single_price', 'total_price'], 'number'],
             [['oid'], 'exist', 'skipOnError' => true, 'targetClass' => OrderInfo::className(), 'targetAttribute' => ['oid' => 'id']],
             [['gid'], 'exist', 'skipOnError' => true, 'targetClass' => GoodInfo::className(), 'targetAttribute' => ['gid' => 'id']],
+            [['rush_id'], 'exist', 'skipOnError' => true, 'targetClass' => GoodRush::className(), 'targetAttribute' => ['rush_id' => 'id']],
         ];
     }
 
@@ -52,6 +56,7 @@ class OrderDetail extends \yii\db\ActiveRecord
             'amount' => '数量',
             'single_price' => '单价',
             'total_price' => '总价',
+            'rush_id' => '抢购id'
         ];
     }
 
@@ -69,5 +74,13 @@ class OrderDetail extends \yii\db\ActiveRecord
     public function getG()
     {
         return $this->hasOne(GoodInfo::className(), ['id' => 'gid'])->where('good_info.id>0');
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getR()
+    {
+        return $this->hasOne(GoodRush::className(), ['id' => 'rush_id'])->where('good_rush.id>0');
     }
 }

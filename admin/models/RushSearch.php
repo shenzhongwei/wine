@@ -64,15 +64,21 @@ class RushSearch extends GoodRush
             return $dataProvider;
         }
         $query->andFilterWhere([
-            'good_info.name' => $this->good_name,
             'limit' => $this->limit,
             'good_rush.is_active' => $this->is_active,
             'good_rush.point_sup'=>$this->point_sup,
         ]);
-        $query->andFilterWhere(['like','good_rush.rush_pay',$this->rush_pay]);
-        $query->andFilterWhere(['>=','good_rush.price',$this->price])
-            ->andFilterWhere(['>=','start_at',$this->start_at])
-            ->andFilterWhere(['<=','end_at',$this->end_at]);
+//        var_dump($this->good_name);
+//        exit;
+        $query->andFilterWhere(['like','good_rush.rush_pay',$this->rush_pay])
+            ->andFilterWhere(['like','good_info.name',$this->good_name]);
+        $query->andFilterWhere(['>=','good_rush.price',$this->price]);
+        if(!empty($this->start_at)){
+            $query->andFilterWhere(['>=','start_at',strtotime($this->start_at.' 00:00:00')]);
+        }
+        if(!empty($this->end_at)){
+            $query->andFilterWhere(['<=','end_at',strtotime($this->end_at.' 23:59:59')]);
+        }
         return $dataProvider;
     }
 }

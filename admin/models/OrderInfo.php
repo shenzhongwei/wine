@@ -13,6 +13,8 @@ use Yii;
  * @property integer $aid
  * @property integer $order_date
  * @property string $order_code
+ * @property integer $type
+ * @property integer $point
  * @property integer $pay_id
  * @property integer $pay_date
  * @property string $total
@@ -57,7 +59,7 @@ class OrderInfo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['sid', 'uid', 'aid', 'order_date', 'pay_id', 'pay_date', 'ticket_id', 'state', 'send_date', 'is_del', 'status'], 'integer'],
+            [['sid', 'uid', 'aid', 'order_date', 'pay_id','point', 'pay_date', 'ticket_id', 'type','state', 'send_date', 'is_del', 'status'], 'integer'],
             [['total', 'discount', 'send_bill', 'pay_bill'], 'number'],
             [['ticket_id'], 'required'],
             [['order_code'], 'string', 'max' => 16],
@@ -94,9 +96,10 @@ class OrderInfo extends \yii\db\ActiveRecord
             'pay_bill' => '付款金额',
             'state' => '订单进度',
             'send_date' => '送达时间',
+            'point'=>'使用积分',
             'is_del' => '是否删除',
             'status' => '订单状态',
-
+            'type'=>'购买类型 1普通商品 2会员 3抢购',
             'name' => '门店名',
             'nickname' => '用户名',
             'is_ticket' => '是否使用优惠券'

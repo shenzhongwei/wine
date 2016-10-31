@@ -14,12 +14,13 @@ use Yii;
  * @property string $rush_pay
  * @property integer $limit
  * @property integer $amount
- * @property string $start_at
- * @property string $end_at
+ * @property integer $start_at
+ * @property integer $end_at
  * @property integer $point_sup
  * @property integer $is_active
  *
  * @property GoodInfo $g
+ * @property OrderDetail[] $orderDetails
  */
 class GoodRush extends \yii\db\ActiveRecord
 {
@@ -86,6 +87,14 @@ class GoodRush extends \yii\db\ActiveRecord
         return $this->hasOne(GoodInfo::className(), ['id' => 'gid'])->where('good_info.id>0');
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOrderDetails()
+    {
+        return $this->hasMany(OrderDetail::className(), ['rush_id' => 'id']);
+    }
+
     public static function GetGoodNames(){
         $query = GoodInfo::find()->joinWith('goodRushes')->where('good_rush.id>0');
         $admin = Yii::$app->user->identity;
@@ -107,7 +116,7 @@ class GoodRush extends \yii\db\ActiveRecord
      */
     public function validGood(){
         if(!empty($this->start_at)&&!empty($this->end_at)){
-            $query = self::find()->where("gid=$this->gid and (start_at<'$this->end_at' or end_at>'$this->start_at')");
+            $query = self::find()->where("gid=$this->gid and (start_at<UNIX_TIMESTAMP('$this->end_at 23:59:59') or end_at>UNIX_TIMESTAMP('$this->start_at 00:00:00'))");
             if(!empty($this->id)){
                 $query->andWhere("id <> $this->id");
             }
@@ -128,7 +137,7 @@ class GoodRush extends \yii\db\ActiveRecord
     }
 
     public function validTime(){
-        if(!empty($this->end_at)&&!empty($this->start_at)&&$this->end_at<=$this->start_at){
+        if(!empty($this->end_at)&&!empty($this->start_at)&&strtotime($this->end_at.' 23:59:59')<=strtotime($this->start_at.' 00:00:00')){
             return $this->addError('end_at','结束时间必须大于开始时间');
         }
     }

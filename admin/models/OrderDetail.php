@@ -11,11 +11,13 @@ use Yii;
  * @property integer $oid
  * @property integer $gid
  * @property integer $amount
+ * @property integer $rush_id
  * @property string $single_price
  * @property string $total_price
  *
  * @property OrderInfo $o
  * @property GoodInfo $g
+ * @property GoodRush $r
  */
 class OrderDetail extends \yii\db\ActiveRecord
 {
@@ -47,6 +49,7 @@ class OrderDetail extends \yii\db\ActiveRecord
             [['single_price', 'total_price'], 'number'],
             [['oid'], 'exist', 'skipOnError' => true, 'targetClass' => OrderInfo::className(), 'targetAttribute' => ['oid' => 'id']],
             [['gid'], 'exist', 'skipOnError' => true, 'targetClass' => GoodInfo::className(), 'targetAttribute' => ['gid' => 'id']],
+            [['rush_id'], 'exist', 'skipOnError' => true, 'targetClass' => GoodRush::className(), 'targetAttribute' => ['rush_id' => 'id']],
         ];
     }
 
@@ -84,6 +87,14 @@ class OrderDetail extends \yii\db\ActiveRecord
     public function getG()
     {
         return $this->hasOne(GoodInfo::className(), ['id' => 'gid']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getR()
+    {
+        return $this->hasOne(GoodRush::className(), ['id' => 'rush_id'])->where('good_rush.id>0');
     }
 
 

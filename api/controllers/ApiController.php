@@ -15,7 +15,7 @@ class ApiController extends Controller
             'class' => QueryParamAuth::className(),
             'except'=>['register','is-exist','send-message','login','reset-pwd','search-list','home','boot-pic','ad-list','rush-list',
 					'vip-list','hot-list','good-list','good-detail','comment-list','shop-spread','wx-pay-order','ali-pay-order',
-				'wx-pay-account','ali-pay-account','setting','activity','cities','hot-search']
+				'wx-pay-account','ali-pay-account','setting','activity','cities','hot-search','vip-type']
         ];
     	$behaviors['verbs'] = [
     			'class'=> \yii\filters\VerbFilter::className(),

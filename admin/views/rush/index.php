@@ -2,8 +2,6 @@
 
 use yii\helpers\Html;
 use kartik\grid\GridView;
-use kartik\select2\Select2;
-use dosamigos\datetimepicker\DateTimePicker;
 use yii\jui\AutoComplete;
 use admin\models\GoodRush;
 /**
@@ -81,7 +79,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute'=>'amount',
                 'width'=>'5%',
                 'value'=>function($model) {
-                    return $model->limit.$model->g->unit;
+                    return $model->amount.$model->g->unit;
                 },
                 'filterInputOptions'=>['onkeyup'=>'this.value=this.value.replace(/\D/gi,"")','class'=>'form-control'],
             ],
@@ -100,79 +98,43 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute'=>'start_at',
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
-                'width'=>'13%',
+                'width'=>'11%',
                 'headerOptions'=>['class'=>'kv-sticky-column'],
                 'contentOptions'=>['class'=>'kv-sticky-column'],
-                'format'=>[
-                    'time',
-                    (isset(Yii::$app->modules['datecontrol']['displaySettings']['time'])) ? Yii::$app->modules['datecontrol']['displaySettings']['time'] : 'h:i:s A'
-                ],
-                'value'=>function($model){
-                    return strtotime($model->start_at);
-                },
-                'filterType'=>DateTimePicker::className(),
+                'format'=>["date", "php:Y-m-d"],
+                'filterType'=>GridView::FILTER_DATE,
                 'filterWidgetOptions'=>[
-                    'value' => '',
-                    // inline too, not bad
-                    'inline' => false,
-                    'language'=>'zh-CN',
-                    'options'=>[
-                        'readonly'=>true,
-                    ],
-                    'template'=>"{button}{reset}{input}",
-                    // modify template for custom rendering
-                    'clientOptions' => [
+                    'options' => ['placeholder' => '开始日期'],
+                    'language' => 'zh-CN',
+                    'readonly' => true,
+                    'pluginOptions' => [
+                        'todayHighlight' => true,
+                        'todayBtn' => true,
+                        'format' => 'yyyy-mm-dd',
                         'autoclose' => true,
-                        'format'=>'hh:ii:00',
-                        'startView'=>1,
-                        'maxView'=>1,
-                        'keyboardNavigation'=>false,
-                        'showMeridian'=>true,
-                        'minuteStep'=>10,
-                        'forceParse'=>false,
-                        'readonly'=>true,
                     ]
                 ],
-                'filterInputOptions'=>['readonly'=>true],
             ],
             [
                 'attribute'=>'end_at',
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
-                'width'=>'13%',
+                'width'=>'11%',
                 'headerOptions'=>['class'=>'kv-sticky-column'],
                 'contentOptions'=>['class'=>'kv-sticky-column'],
-                'format'=>[
-                    'time',
-                    (isset(Yii::$app->modules['datecontrol']['displaySettings']['time'])) ? Yii::$app->modules['datecontrol']['displaySettings']['time'] : 'h:i:s A'
-                ],
-                'value'=>function($model){
-                    return strtotime($model->end_at);
-                },
-                'filterType'=>DateTimePicker::className(),
+                'format'=>["date", "php:Y-m-d"],
+                'filterType'=>GridView::FILTER_DATE,
                 'filterWidgetOptions'=>[
-                    'value' => '',
-                    // inline too, not bad
-                    'inline' => false,
-                    'language'=>'zh-CN',
-                    'options'=>[
-                        'readonly'=>true,
-                    ],
-                    'template'=>"{button}{reset}{input}",
-                    // modify template for custom rendering
-                    'clientOptions' => [
+                    'options' => ['placeholder' => '结束日期'],
+                    'language' => 'zh-CN',
+                    'readonly' => true,
+                    'pluginOptions' => [
+                        'todayHighlight' => true,
+                        'todayBtn' => true,
+                        'format' => 'yyyy-mm-dd',
                         'autoclose' => true,
-                        'format'=>'hh:ii:00',
-                        'startView'=>1,
-                        'maxView'=>1,
-                        'keyboardNavigation'=>false,
-                        'showMeridian'=>true,
-                        'minuteStep'=>10,
-                        'forceParse'=>false,
-                        'readonly'=>true,
                     ]
                 ],
-                'filterInputOptions'=>['readonly'=>true],
             ],
 
             [
@@ -180,7 +142,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
                 'attribute'=>'rush_pay',
-                'width'=>'10%',
+                'width'=>'7%',
                 'format'=>'raw',
                 'value'=>function($model){
                     $payArr = ['1'=>'余额','2'=>'支付宝','3'=>'微信'];
@@ -217,7 +179,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
 
             [
-                'label'=>'抢购状态',
+                'label'=>'上架状态',
                 'class'=>'kartik\grid\BooleanColumn',
                 'attribute'=>'is_active',
                 'vAlign'=>GridView::ALIGN_LEFT,
@@ -227,7 +189,20 @@ $this->params['breadcrumbs'][] = $this->title;
                 'trueIcon'=>'<label class="label label-success">上架中</label>',
                 'falseIcon'=>'<label class="label label-danger">已下架</label>',
             ],
-
+            [
+                'header'=>'抢购状态',
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+                'width'=>'7%',
+                'format'=>'raw',
+                'value'=>function($model){
+                    if($model->start_at<=time() && $model->end_at>=time()){
+                        return '<label class="label label-primary">有效期内</label>';
+                    }else{
+                        return '<label class="label label-warning">有效期外</label>';
+                    }
+                }
+            ],
             [
                 'label'=>'原价',
                 'hAlign'=>'center',
@@ -267,6 +242,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'delete' => function ($url, $model) {
                         if($model->is_active == 0){
                             return Html::a(Yii::t('app','Up'), $url, [
+                                'data-pjax'=>0,
                                 'title' => Yii::t('app', '上架该抢购'),
                                 'class' => 'btn btn-success btn-xs',
                                 'data-confirm'=>'确定上架该抢购商品？',

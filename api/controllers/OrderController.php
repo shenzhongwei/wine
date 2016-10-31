@@ -2,6 +2,8 @@
 namespace api\controllers;
 
 use api\models\AccountInout;
+use api\models\GoodInfo;
+use api\models\GoodRush;
 use api\models\OrderDetail;
 use api\models\OrderInfo;
 use api\models\PromotionInfo;
@@ -35,18 +37,35 @@ class OrderController extends ApiController{
             return $this->showResult(302,'未找到该用户');
         }
         $from = Yii::$app->request->post('from');//订单入口 1直接购买 2购物车购买
+        /*
+         * 类型 必传
+         * 当from=1 表示直接购买时 有三种 1普通商品 2会员 3抢购
+         * 当from=2 表示购物车时 有2种 1普通购物车 2会员购物车
+         */
+        $type = Yii::$app->request->post('type',1);
         //订单产品参数[{"good_id":2,"amount":2,"unit_price":245.00},{"good_id":3,"amount":3,"unit_price":100.00}]
         $from_val = json_decode(stripcslashes( Yii::$app->request->post('from_val','')),true);
         $shop_id = Yii::$app->request->post('shop_id');//商店id
         $send_bill = Yii::$app->request->post('send_bill');//运费
         $total_price = Yii::$app->request->post('total_price');//总价
         $ticket_id = Yii::$app->request->post('ticket_id',0);//优惠券id
+        $point = Yii::$app->request->post('point',0);//使用的积分
         $pay_mode = Yii::$app->request->post('pay_mode');//付款方式1余额 2支付宝 3微信
         $pay_price = Yii::$app->request->post('pay_price');//付款价格
         $address_id = Yii::$app->request->post('address_id');//收货地址id
         //验证参数
-        if(empty($from_val)||empty($shop_id)||empty($total_price)||empty($pay_mode)||empty($pay_price)||empty($from)||empty($address_id)){
+        if(empty($from_val)|| empty($shop_id)||empty($total_price)||
+            empty($pay_mode)||empty($pay_price)||empty($from)||
+            empty($address_id)||empty($type)){
             return $this->showResult(301,'读取订单信息失败');
+        }
+        //验证用户购买会员商品时的身份信息
+        if($type == 2 && $userInfo->is_vip==0){
+            return $this->showResult(309,'非会员无法用结算会员商品');
+        }
+        //验证抢购
+        if($type==3&&$from==2){
+            return $this->showResult(303,'抢购商品无法通过购物车结算');
         }
         //验证地址
         $userAddress = UserAddress::find()->where("lat>0 and lng>0 and uid=$user_id and id=$address_id and status=1")->one();
@@ -55,17 +74,73 @@ class OrderController extends ApiController{
         }
         //验证商品总价格和付款价格以及购物车信息是否有效
         $total=0;
+        $payStr = $pay_mode==1 ? '余额付款':($pay_mode==2 ? '支付宝支付':'微信支付');
         foreach($from_val as $value){
             if(empty($value['unit_price']||empty($value['good_id'])||empty($value['amount']))){
                 return $this->showResult(304,'未读取到商品信息');
             }
-            $total += ($value['unit_price']*$value['amount']);
+            $goodInfo = GoodInfo::findOne($value['good_id']);
+            if(empty($goodInfo)){
+                return $this->showResult(304,'商品信息异常');
+            }
+            if($goodInfo->is_active != 1){
+                return $this->showResult(304,$goodInfo->name.'商品已下架，无法下单');
+            }
             if($from ==2 ){
-                $userCert = ShoppingCert::findOne(['gid'=>$value['good_id'],'amount'=>$value['amount'],'uid'=>$user_id]);
+                $userCert = ShoppingCert::findOne(['gid'=>$value['good_id'],'amount'=>$value['amount'],'uid'=>$user_id,'type'=>$type]);
                 if(empty($userCert)){
                     return $this->showResult(304,'购物车信息错误');
                 }
             }
+            //验证各类型下的商品信息
+            if($type == 1){
+                if($goodInfo->pro_price!=$value['unit_price']){
+                    return $this->showResult(304,$goodInfo->name.'价格异常');
+                }
+                $payArr = explode('|',$goodInfo->original_pay);
+                $point_sup = $goodInfo->point_sup;
+            }elseif ($type==2){
+                if($goodInfo->vip_price!=$value['unit_price']){
+                    return $this->showResult(304,$goodInfo->name.'价格异常');
+                }
+                $payArr = explode('|',$goodInfo->original_pay);
+                $point_sup = $goodInfo->point_sup;
+            }elseif ($type==3){
+                $goodRush = GoodRush::find()->where("gid=".$value['good_id']."and is_active=1 and start_at<=".time()." and end_at>=".time())->one();
+                if(empty($goodRush)){
+                    return $this->showResult(304,$goodInfo->name.'不是抢购商品，无法下单');
+                }
+                if($goodRush->amount <= 0){
+                    return $this->showResult(304,'该抢购商品已经没有库存');
+                }
+                if($goodRush->amount<$value['amount']){
+                    return $this->showResult(304,'该抢购商品剩余库存不足');
+                }
+                $order = OrderDetail::find()->joinWith('o')->addSelect(["SUM(amount) as sum"])
+                    ->where("type=3 and state between 2 and 7 and uid=$user_id and gid=".$value['good_id']." and rush_id=$goodRush->id and
+                    order_date>=$goodRush->start_at and order_date<=$goodRush->end_at")->one();
+                $buyNum =$order->sum;
+                if($buyNum>=$goodRush->limit){
+                    return $this->showResult(304,'您没有可购买的数量');
+                }
+                if(($buyNum+$value['amount'])>=$goodRush->limit){
+                    return $this->showResult(304,'您购买的数量超出可购买的数量');
+                }
+                if($goodRush->price!=$value['unit_price']){
+                    return $this->showResult(304,$goodInfo->name.'价格异常');
+                }
+                $payArr = explode('|',$goodRush->rush_pay);
+                $point_sup = $goodRush->point_sup;
+            }else{
+                return $this->showResult(301,'数据异常');
+            }
+            if(!in_array($pay_mode,$payArr)){
+                return $this->showResult(301,$goodInfo->name.'不支持'.$payStr);
+            }
+            if($point>0 && $point_sup==1){
+                return $this->showResult(301,$goodInfo->name.'不支持使用积分');
+            }
+            $total += ($value['unit_price']*$value['amount']);
         }
         if($total_price!=$total||($pay_price-$send_bill)>$total_price){
             return $this->showResult(303,'系统异常');
@@ -95,9 +170,11 @@ class OrderController extends ApiController{
                 'order_code'=>OrderInfo::generateCode().date('YmdHis').$user_id,
                 'pay_id'=>$pay_mode,
                 'total'=>$total_price,
+                'type'=>$type,
                 'discount'=>$total_price-$pay_price+$send_bill,
                 'send_bill'=>$userInfo->is_vip ? 0:$send_bill,
                 'ticket_id'=>empty($ticket_id) ? 0:$ticket_id,
+                'point'=>empty($point) ? 0:$point,
                 'pay_bill'=>$pay_price,
                 'state'=>1,
             ];
@@ -113,13 +190,22 @@ class OrderController extends ApiController{
                     'single_price'=>$value['unit_price'],
                     'total_price'=>$value['unit_price']*$value['amount'],
                 ];
+                if($type==3){
+                    //保存抢购信息
+                    $detail->rush_id = $goodRush->id;
+                    //更新库存
+                    $goodRush->amount  = $goodRush->amount-$value['amount'];
+                    if(!$goodRush->save()){
+                        throw new Exception('保存抢购信息出错');
+                    }
+                }
                 if(!$detail->save()){
                     throw new Exception('保存订单商品信息出错');
                 }
             }
             if($from == 2){
                 $goodIds = '('.implode(',',array_column($from_val,'good_id')).')'; //array_column() 返回输入数组中某个单一列的值。
-                $sql = "DELETE FROM shopping_cert WHERE gid IN $goodIds AND uid=$user_id";
+                $sql = "DELETE FROM shopping_cert WHERE gid IN $goodIds AND uid=$user_id AND type=$type";
                 $row = Yii::$app->db->createCommand($sql)->execute();
                 if(empty($row)){
                     throw new Exception('购物车信息异常');

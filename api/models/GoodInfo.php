@@ -67,6 +67,7 @@ class GoodInfo extends \yii\db\ActiveRecord
     }
 
 
+    public $sum;
     /**
      * @inheritdoc
      */
@@ -240,7 +241,7 @@ class GoodInfo extends \yii\db\ActiveRecord
      */
     public function getGoodRush()
     {
-        return $this->hasOne(GoodRush::className(), ['gid' => 'id'])->where(['and','good_rush.is_active=1',"good_rush.start_at<='".date('H:i:s')."'","good_rush.end_at>='".date('H:i:s')."'"]);
+        return $this->hasOne(GoodRush::className(), ['gid' => 'id'])->where(['and','good_rush.is_active=1',"good_rush.start_at<=".time(),"good_rush.end_at>=".time()]);
     }
 
     /**
@@ -273,16 +274,121 @@ class GoodInfo extends \yii\db\ActiveRecord
      */
     public static function GoodList($page){
         $pageSize = Yii::$app->params['pageSize'];
-        $query = self::find()->joinWith(['merchant0','type0'])->leftJoin('order_detail','good_info.id=order_detail.gid')->where(
-            'good_info.is_active=1 and merchant>0 and merchant_info.id>0 and merchant_info.is_active=1 and good_info.type>0 and good_type.is_active=1 and good_type.id>0');
-        $query->addSelect(['good_info.*','sum(order_detail.amount) as sum'])->groupBy(['good_info.id'])->orderBy(['sum'=>SORT_DESC,'order'=>SORT_ASC]);
+        $query = self::find()->joinWith(['merchant0','type0'])
+            ->leftJoin("(SELECT a.* FROM order_detail a LEFT JOIN order_info b ON a.oid=b.id 
+            WHERE state between 2 and 7 and order_date>=".strtotime(date('Y-m-01 00:00:00',time())).") c",'good_info.id=c.gid')
+            ->where('good_info.is_active=1 and merchant>0 
+            and merchant_info.id>0 and merchant_info.is_active=1 
+            and good_info.type>0 and good_type.is_active=1 and good_type.id>0');
+        $query->addSelect(['good_info.*','IFNULL(sum(c.amount),0) as sum'])->groupBy(['good_info.id'])
+            ->orderBy(['sum'=>SORT_DESC,'order'=>SORT_ASC]);
         $count = $query->count();
         $query->offset(($page-1)*$pageSize)->limit($pageSize);
         $res = $query->all();
-        $result = self::data($res);
+        $result = self::HotData($res);
         return [$result,$count];
     }
 
+    public static function HotData($arr=[]){
+        $res = ArrayHelper::getColumn($arr,function($element){
+            $payArr = explode('|',$element->original_pay);
+            return [
+                'good_id'=>$element->id,
+                'pic'=>Yii::$app->params['img_path'].$element->pic,
+                'name'=>$element->name,
+                'volum'=>$element->volum,
+                'number'=>$element->number,
+                'sale_price'=>$element->pro_price,
+                'original_price'=>$element->price,
+                'unit'=>$element->unit,
+                'cash_pay'=>in_array('1',$payArr) ? 1:0,
+                'ali_pay'=>in_array('2',$payArr) ? 1:0,
+                'we_pay'=>in_array('3',$payArr) ? 1:0,
+                'point_sup'=>$element->point_sup,
+                'sale'=>$element->sum,
+                'type'=>1,
+                'operate'=>1,
+            ];
+        });
+        return $res;
+    }
+
+    public static function RushData($arr=[]){
+        $res = ArrayHelper::getColumn($arr,function($element){
+            if(!empty($element->uid)){
+                $order = OrderDetail::find()->joinWith('o')->addSelect(["SUM(amount) as sum"])
+                    ->where("type=3 and state between 2 and 7 and uid=$element->uid and gid=".$element->gid." 
+                and rush_id=$element->id and order_date>=$element->start_at and order_date<=$element->end_at")->one();
+                $buyNum =$order->sum;
+                $rest = $element->limit-$buyNum;
+            }else{
+                $rest = $element->limit;
+            }
+            $payArr = explode('|',$element->rush_pay);
+            return [
+                'good_id'=>$element->gid,
+                'pic'=>Yii::$app->params['img_path'].$element->g->pic,
+                'name'=>$element->g->name,
+                'volum'=>$element->g->volum,
+                'number'=>$element->g->number,
+                'amount'=>$element->amount,
+                'limit'=>$element->limit,
+                'rest'=>$rest<0 ? 0:$rest,
+                'end_at'=>date('Y-m-d H:i:s',$element->end_at),
+                'sale_price'=>$element->price,
+                'original_price'=>$element->g->price,
+                'unit'=>$element->g->unit,
+                'cash_pay'=>in_array('1',$payArr) ? 1:0,
+                'ali_pay'=>in_array('2',$payArr) ? 1:0,
+                'we_pay'=>in_array('3',$payArr) ? 1:0,
+                'point_sup'=>$element->point_sup,
+                'type'=>3,
+                'operate'=>1,
+            ];
+        });
+        return $res;
+    }
+
+    public static function VipData($arr=[],$from){
+        if(empty($from)){
+            $res = ArrayHelper::getColumn($arr,function($element){
+                return [
+                    'good_id'=>$element->id,
+                    'pic'=>Yii::$app->params['img_path'].$element->pic,
+                    'name'=>$element->name,
+                    'volum'=>$element->volum,
+                    'number'=>$element->number,
+                    'sale_price'=>$element->vip_price,
+                    'original_price'=>$element->price,
+                    'unit'=>$element->unit,
+                    'type'=>2,
+                    'operate'=>0,
+                ];
+            });
+        }else{
+            $res = ArrayHelper::getColumn($arr,function($element){
+                $payArr = explode('|',$element->vip_pay);
+                return [
+                    'good_id'=>$element->id,
+                    'pic'=>Yii::$app->params['img_path'].$element->pic,
+                    'name'=>$element->name,
+                    'volum'=>$element->volum,
+                    'number'=>$element->number,
+                    'sale_price'=>$element->vip_price,
+                    'original_price'=>$element->price,
+                    'unit'=>$element->unit,
+                    'cash_pay'=>in_array('1',$payArr) ? 1:0,
+                    'ali_pay'=>in_array('2',$payArr) ? 1:0,
+                    'we_pay'=>in_array('3',$payArr) ? 1:0,
+                    'point_sup'=>$element->point_sup,
+                    'type'=>2,
+//                    'sale'=>$element->sum,
+                    'operate'=>1,
+                ];
+            });
+        }
+        return $res;
+    }
     /**
      * @param array $arr
      * @return array
@@ -290,29 +396,22 @@ class GoodInfo extends \yii\db\ActiveRecord
      */
     public static function data($arr=[]){
         $res = ArrayHelper::getColumn($arr,function($element){
-            $is_rush = empty($element->goodRush) ? 0:1;
-            $is_vip = empty($element->goodVip) ? 0:1;
-            if($is_rush == 1){
-                $salePrice = $element->goodRush->price;
-            }elseif($is_vip == 1){
-                $salePrice = $element->goodVip->price;
-            }else{
-                $salePrice = $element->pro_price;
-            }
+            $payArr = explode('|',$element->vip_pay);
             return [
                 'good_id'=>$element->id,
                 'pic'=>Yii::$app->params['img_path'].$element->pic,
                 'name'=>$element->name,
                 'volum'=>$element->volum,
                 'number'=>$element->number,
-                'sale_price'=>$salePrice,
-                'end_at' => $is_rush==1 ? $element->goodRush->end_at : '',
-                'promotion_price'=>$element->pro_price,
+                'sale_price'=>$element->pro_price,
                 'original_price'=>$element->price,
-                'limit'=>$is_rush==1 ? $element->goodRush->limit : '',
                 'unit'=>$element->unit,
-                'is_rush'=>$is_rush,
-                'is_vip'=>$is_vip,
+                'cash_pay'=>in_array('1',$payArr) ? 1:0,
+                'ali_pay'=>in_array('2',$payArr) ? 1:0,
+                'we_pay'=>in_array('3',$payArr) ? 1:0,
+                'point_sup'=>$element->point_sup,
+                'type'=>1,
+                'operate'=>1,
             ];
         });
         return $res;

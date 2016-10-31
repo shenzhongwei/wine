@@ -18,7 +18,7 @@ use yii\web\IdentityInterface;
  * @property integer $reg_type
  * @property integer $status
  *
- * @property UserInfo $u
+ * @property UserInfo $userInfo
  */
 class UserLogin extends \yii\db\ActiveRecord implements IdentityInterface
 {

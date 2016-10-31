@@ -37,7 +37,7 @@ class RushController extends BaseController
         $searchModel = new RushSearch;
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
         $dataProvider->pagination = [
-            'pageSize'=>15,
+            'pageSize'=>25,
         ];
         return $this->render('index', [
             'dataProvider' => $dataProvider,
@@ -72,6 +72,8 @@ class RushController extends BaseController
         $post = Yii::$app->request->post();
         if($post){
             $post['GoodRush']['rush_pay'] = '2|3';
+            $post['GoodRush']['start_at'] = strtotime($post['GoodRush']['start_at'].' 00:00:00');
+            $post['GoodRush']['end_at'] = strtotime($post['GoodRush']['end_at'].' 23:59:59');
         }else{
             $model->rush_pay = [2,3];
         }
@@ -96,6 +98,8 @@ class RushController extends BaseController
         $post= Yii::$app->request->post();
         if(!empty($post)){
             $post['GoodRush']['rush_pay'] = '2|3';
+            $post['GoodRush']['start_at'] = strtotime($post['GoodRush']['start_at'].' 00:00:00');
+            $post['GoodRush']['end_at'] = strtotime($post['GoodRush']['end_at'].' 23:59:59');
         }
         if ($model->load($post) && $model->save()) {
             Yii::$app->session->setFlash('success','操作成功');

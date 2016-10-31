@@ -6,7 +6,7 @@ use kartik\builder\Form;
 use yii\helpers\Url;
 use kartik\select2\Select2;
 use admin\models\GoodVip;
-use dosamigos\datetimepicker\DateTimePicker;
+use kartik\widgets\DatePicker;
 
 /**
  * @var yii\web\View $this
@@ -67,49 +67,34 @@ $payArr = [
 
                         'price'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'请填写抢购价格', 'maxlength'=>10,'onkeyup'=>'clearNoNum(this)']],
 
-                        'start_at'=>['type'=> Form::INPUT_WIDGET, 'widgetClass'=>DateTimePicker::className(),'options'=>[
-                            'value' => empty($model->id) ? '':strtotime($model->start_at),
-                            // inline too, not bad
-                            'inline' => false,
+                        'start_at'=>['type'=> Form::INPUT_WIDGET, 'widgetClass'=>DatePicker::className(),'options'=>[
                             'language'=>'zh-CN',
-                            'options'=>[
-                                'readonly'=>true,
+                            'readonly'=>true,
+                            'options' => [
+                                'placeholder' => '请选择抢购开始时间',
+                                'value' => empty($model->id) ? '':date('Y-m-d',$model->end_at),
                             ],
-                            'template'=>"{button}{reset}{input}",
-                            // modify template for custom rendering
-                            'clientOptions' => [
+                            'pluginOptions' => [
+                                'todayHighlight' => true,
+                                'todayBtn' => true,
+                                'format' => 'yyyy-mm-dd',
                                 'autoclose' => true,
-                                'format'=>'hh:ii:00',
-                                'startView'=>1,
-                                'maxView'=>1,
-                                'keyboardNavigation'=>false,
-                                'showMeridian'=>true,
-                                'minuteStep'=>10,
-                                'forceParse'=>false,
-                                'readonly'=>true,
                             ]
                         ]],
 
-                        'end_at'=>['type'=> Form::INPUT_WIDGET, 'widgetClass'=>DateTimePicker::className(),'options'=>[
-                            'value' => empty($model->id) ? '':strtotime($model->end_at),
-                            // inline too, not bad
-                            'inline' => false,
+                        'end_at'=>['type'=> Form::INPUT_WIDGET, 'widgetClass'=>DatePicker::className(),'options'=>[
                             'language'=>'zh-CN',
-                            'options'=>[
-                                'readonly'=>true,
+                            'readonly'=>true,
+                            'options' => [
+                                'placeholder' => '请选择抢购结束时间',
+                                'value' => empty($model->id) ? '':date('Y-m-d',$model->end_at),
                             ],
-                            'template'=>"{button}{reset}{input}",
-                            // modify template for custom rendering
-                            'clientOptions' => [
+                            'pluginOptions' => [
+                                'value' => empty($model->id) ? '':date('Y-m-d',$model->end_at),
+                                'todayHighlight' => true,
+                                'todayBtn' => true,
+                                'format' => 'yyyy-mm-dd',
                                 'autoclose' => true,
-                                'format'=>'hh:ii:00',
-                                'startView'=>1,
-                                'maxView'=>1,
-                                'keyboardNavigation'=>false,
-                                'showMeridian'=>true,
-                                'minuteStep'=>10,
-                                'forceParse'=>false,
-                                'readonly'=>true,
                             ]
                         ]
                         ],

@@ -179,7 +179,7 @@ $profit = array_sum(array_values(ArrayHelper::map($dataProvider->models,'order_c
                             return '支付宝';
                             break;
                         case 3:
-                            return '财付通';
+                            return '微信';
                             break;
                         default:
                             return '余额';

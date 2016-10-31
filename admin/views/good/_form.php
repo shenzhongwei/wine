@@ -336,8 +336,8 @@ $payArr = [
         ActiveForm::end();
         ?>
 </div>
-<script>
-    $(function () {
-        $('input[name="GoodInfo[point_sup]"').attr('disabled',true);
-    })
-</script>
+<!--<script>-->
+<!--    $(function () {-->
+<!--        $('input[name="GoodInfo[point_sup]"').attr('disabled',true);-->
+<!--    })-->
+<!--</script>-->

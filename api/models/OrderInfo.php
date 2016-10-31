@@ -17,6 +17,8 @@ use yii\base\Exception;
  * @property string $order_code
  * @property integer $pay_id
  * @property integer $pay_date
+ * @property integer $type
+ * @property integer $point
  * @property string $total
  * @property string $discount
  * @property string $send_bill
@@ -54,7 +56,7 @@ class OrderInfo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['sid', 'uid', 'order_date', 'pay_id', 'pay_date', 'send_id', 'state', 'send_date', 'is_del', 'status','ticket_id','aid'], 'integer'],
+            [['sid', 'uid', 'order_date', 'pay_id', 'pay_date', 'point','send_id', 'type','state', 'send_date', 'is_del', 'status','ticket_id','aid'], 'integer'],
             [['total', 'discount', 'send_bill', 'pay_bill'], 'number'],
             [['order_code'], 'string', 'max' => 32],
             [['send_code'],'string','max'=>12],
@@ -85,6 +87,8 @@ class OrderInfo extends \yii\db\ActiveRecord
             'send_code'=>'物流编号',
             'ticket_id'=>'优惠券',
             'send_id' => '配送人id',
+            'point'=>'使用积分',
+            'type'=>'购买类型 1普通商品 2会员 3抢购',
             'pay_bill' => '付款金额',
             'state' => '订单进度',
             'send_date' => '送达时间',
@@ -180,7 +184,21 @@ class OrderInfo extends \yii\db\ActiveRecord
                         if(!empty($user_ticket)){
                             $user_ticket->status = 1;
                             if(!$user_ticket->save()){
-                                throw new Exception('修改订单状态失败');
+                                throw new Exception('修改优惠券状态失败');
+                            }
+                        }
+                    }
+                    if($userOrder->type==3){
+                        $details = $userOrder->orderDetails;
+                        foreach ($details as $detail){
+                            if(!empty($detail->rush_id)){
+                                $goodRush = $detail->r;
+                                if(!empty($goodRush)){
+                                    $goodRush->amount = $goodRush->amount+$detail->amount;
+                                    if(!$goodRush->save()){
+                                        throw new Exception('修改抢购库存失败');
+                                    }
+                                }
                             }
                         }
                     }

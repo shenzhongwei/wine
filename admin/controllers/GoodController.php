@@ -73,7 +73,7 @@ class GoodController extends BaseController
         $searchModel = new GoodSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
         $dataProvider->pagination = [
-            'pageSize' => 15,
+            'pageSize' => 25,
         ];
         $dataProvider->sort = [
             'defaultOrder' => ['is_active'=>SORT_DESC,'id'=>SORT_ASC]
