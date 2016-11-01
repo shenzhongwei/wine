@@ -18,7 +18,7 @@ class PicController extends ApiController{
      * 启动页图片
      */
     public function actionBootPic(){
-        $colum = ['pic','url'];
+        $colum = ['pic','pic_url'];
         $bootPic = AdList::Search($colum)->andWhere(['type'=>7])->one()->toArray();
         $bootPic['pic'] = Yii::$app->params['img_path'].$bootPic['pic'];
         return $this->showResult(200,'成功',$bootPic);
@@ -28,16 +28,32 @@ class PicController extends ApiController{
      * 首页广告图片
      */
     public function actionAdList(){
-        $ads = AdList::find()->where('type<>7 and is_show=1')->limit(5)->asArray()->all();
-        $data = ArrayHelper::getColumn($ads,function($element){
+        $ads = AdList::find()->where('type<>7 and is_show=1 and postion=1')->limit(5)->asArray()->all();
+        $head = ArrayHelper::getColumn($ads,function($element){
             return [
                 'pic'=>Yii::$app->params['img_path'].$element['pic'],
                 'type'=>$element['type'],
-                'url'=>$element['url'],
+                'url'=>$element['pic_url'],
                 'target'=>$element['target_id'],
             ];
         });
+        $midAds = AdList::find()->where('type<>7 and is_show=1 and postion=2')->limit(5)->asArray()->all();
+        $middle = ArrayHelper::getColumn($midAds,function($element){
+            return [
+                'pic'=>Yii::$app->params['img_path'].$element['pic'],
+                'type'=>$element['type'],
+                'url'=>$element['pic_url'],
+                'target'=>$element['target_id'],
+            ];
+        });
+        $data = [
+            'head'=>$head,
+            'middle'=>$middle,
+        ];
         return $this->showResult(200,'成功',$data);
     }
+
+
+
 
 }

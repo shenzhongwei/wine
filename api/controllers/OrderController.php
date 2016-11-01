@@ -392,27 +392,29 @@ class OrderController extends ApiController{
         }
         //数据处理
         $data =  [
-                'order_id'=>$userOrder->id,
-                'state'=>$userOrder->state,
-                'service_phone'=>Yii::$app->params['servicePhone'],
-                'send_code'=>$userOrder->send_code,
-                'order_code'=>$userOrder->order_code,
-                'send_person'=>empty($userOrder->send_id) ? '未配送':(empty($userOrder->send) ? '数据丢失':$userOrder->send->name),
-                'send_phone'=>empty($userOrder->send_id) ? '未配送':(empty($userOrder->send) ? '数据丢失':$userOrder->send->phone),
-                'detail'=>ArrayHelper::getColumn($userOrder->orderDetails,function($detail){
-                    return [
-                        'good_id'=>$detail->gid,
-                        'name'=>$detail->g->name,
-                        'volum'=>$detail->g->volum,
-                        'number'=>$detail->g->number,
-                        'unit_price'=>$detail->single_price,
-                        'original_price'=>$detail->g->price,
-                        'unit'=>$detail->g->unit,
-                        'amount'=>$detail->amount,
-                        'total_price'=>$detail->total_price,
-                    ];
-                }),
-            ];
+            'order_id'=>$userOrder->id,
+            'state'=>$userOrder->state,
+            'service_phone'=>Yii::$app->params['servicePhone'],
+            'send_code'=>$userOrder->send_code,
+            'order_code'=>$userOrder->order_code,
+            'send_person'=>empty($userOrder->send_id) ? '未配送':(empty($userOrder->send) ? '数据丢失':$userOrder->send->name),
+            'send_phone'=>empty($userOrder->send_id) ? '未配送':(empty($userOrder->send) ? '数据丢失':$userOrder->send->phone),
+            'address'=>empty($userOrder->a) ? '丢失':
+                $userOrder->a->province.$userOrder->a->city.$userOrder->a->district.$userOrder->a->region.$userOrder->a->address,
+            'detail'=>ArrayHelper::getColumn($userOrder->orderDetails,function($detail){
+                return [
+                    'good_id'=>$detail->gid,
+                    'name'=>$detail->g->name,
+                    'volum'=>$detail->g->volum,
+                    'number'=>$detail->g->number,
+                    'unit_price'=>$detail->single_price,
+                    'original_price'=>$detail->g->price,
+                    'unit'=>$detail->g->unit,
+                    'amount'=>$detail->amount,
+                    'total_price'=>$detail->total_price,
+                ];
+            }),
+        ];
         return $this->showResult(200,'订单物流状态如下',$data);
     }
 

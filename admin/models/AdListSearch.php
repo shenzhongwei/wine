@@ -16,7 +16,7 @@ class AdListSearch extends AdList
     {
         return [
             [['id', 'type', 'target_id', 'is_show'], 'integer'],
-            [['pic', 'url'], 'safe'],
+            [['pic', 'pic_url'], 'safe'],
 
             [['target_name'],'string']
         ];
@@ -28,10 +28,10 @@ class AdListSearch extends AdList
         return Model::scenarios();
     }
 
-    public function search($params)
+    public function search($params,$type,$postion)
     {
-        $query = AdList::find();
-
+        $str = $type==7 ? 'type=7':'type<>7';
+        $query = AdList::find()->where("$str and postion=$postion and is_show=1");
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);

@@ -10,8 +10,9 @@ use Yii;
  * @property integer $id
  * @property integer $type
  * @property integer $target_id
+ * @property integer $postion
  * @property string $pic
- * @property string $url
+ * @property string $pic_url
  * @property integer $is_show
  */
 class AdList extends \yii\db\ActiveRecord
@@ -30,8 +31,8 @@ class AdList extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['type', 'target_id', 'is_show'], 'integer'],
-            [['pic', 'url'], 'string', 'max' => 128],
+            [['type', 'target_id', 'is_show','postion'], 'integer'],
+            [['pic', 'pic_url'], 'string', 'max' => 128],
         ];
     }
 
@@ -45,7 +46,8 @@ class AdList extends \yii\db\ActiveRecord
             'type' => '类型',
             'target_id' => '对应id',
             'pic' => '广告图片',
-            'url' => '图片链接网站',
+            'postion'=>'广告位置',
+            'pic_url' => '图片链接网站',
             'is_show' => '是否显示,1是，0否',
         ];
     }

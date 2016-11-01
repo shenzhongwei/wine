@@ -40,19 +40,52 @@ class AdController extends BaseController
      * Lists all AdList models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionBoot()
     {
         $searchModel = new AdListSearch;
-        $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
+        $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams(),7,0);
+
+        $dataProvider->sort = [
+            'defaultOrder' => ['is_show'=>SORT_DESC]
+        ];
+
+        return $this->render('boot', [
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+        ]);
+    }
+
+    public function actionHead()
+    {
+        $searchModel = new AdListSearch;
+        $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams(),0,1);
 
         $dataProvider->pagination = [
-            'pageSize' => 10,
+            'pageSize' => 100,
         ];
         $dataProvider->sort = [
-            'defaultOrder' => ['id'=>SORT_ASC,'is_show'=>SORT_DESC]
+            'defaultOrder' => ['is_show'=>SORT_DESC]
         ];
 
-        return $this->render('index', [
+        return $this->render('head', [
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+        ]);
+    }
+
+    public function actionMiddle()
+    {
+        $searchModel = new AdListSearch;
+        $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams(),0,2);
+
+        $dataProvider->pagination = [
+            'pageSize' => 100,
+        ];
+        $dataProvider->sort = [
+            'defaultOrder' => ['is_show'=>SORT_DESC]
+        ];
+
+        return $this->render('middle', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
         ]);
@@ -186,14 +219,12 @@ class AdController extends BaseController
 
     public function actionDelete($id)
     {
+        $name = Yii::$app->request->get('name');
         $model=$this->findModel($id);
-        if($model->is_show==1){
-            $model->is_show=0;
-        }else{
-            $model->is_show=1;
-        }
+        $model->is_show = 0;
         $model->save();
-        return $this->redirect(['index']);
+        Yii::$app->session->setFlash('success','删除成功');
+        return $this->redirect([$name]);
     }
 
     /**

@@ -43,6 +43,7 @@ class ShopController extends ApiController{
                     'address'=>$element->province.$element->city.$element->district.$element->region.$element->address,
                     'lat'=>$element->lat/1000000,
                     'lng'=>$element->lng/1000000,
+                    'distance'=>$element->distance<500 ? $element->distance.'m':number_format($element->distance/1000,1).'km',
                 ];
             });
         }

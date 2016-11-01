@@ -11,8 +11,9 @@ use yii\helpers\ArrayHelper;
  * @property integer $id
  * @property integer $type
  * @property integer $target_id
+ * @property integer $postion
  * @property string $pic
- * @property string $url
+ * @property string $pic_url
  * @property integer $is_show
  */
 class AdList extends \yii\db\ActiveRecord
@@ -32,9 +33,10 @@ class AdList extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['type', 'target_id', 'is_show'], 'integer'],
-            [['pic', 'url'], 'string', 'max' => 128],
-
+            [['type', 'target_id', 'is_show','postion'], 'integer'],
+            [['type','pic',],'required'],
+            [['pic', 'pic_url'], 'string', 'max' => 128],
+            [['target_id','pic_url'],'validType',],
             [['target_name'],'string'],
         ];
     }
@@ -48,13 +50,50 @@ class AdList extends \yii\db\ActiveRecord
             'id' => 'ID',
             'type' => '广告类型',
             'target_id' => '对应的id',
+            'postion'=>'广告位置',
             'pic' => '图片',
-            'url' => '图片链接',
+            'pic_url' => '图片链接',
             'is_show' => '是否显示',
-
             'target_name' => '对应类型的名称'
         ];
     }
+
+    public function validType(){
+        if(in_array($this->type,[1,7])&&empty($this->pic_url)){
+            $this->addError('pic_url','请填写图片的外部链接地址');
+        }
+        if(in_array($this->type,[2,3,4,5,6])&&empty($this->target_id)){
+            $this->addError('target_id','请选择对应的广告目标');
+        }
+        $query = self::find()->where("type=$this->type and target_id=$this->target_id and pic_url='$this->pic_url' and is_show=1 and postion=$this->postion");
+        if(!empty($this->id)){
+            $query->andWhere("id<>$this->id");
+        }
+        $ad = $query->one();
+        if(!empty($ad)){
+            $this->addError('type','已存在该类型的显示中广告，请勿重复操作');
+        }
+        if($this->type == 7){
+            $bootQuery = self::find()->where("type=$this->type and is_show=1");
+            if(!empty($this->id)){
+                $bootQuery->andWhere("id<>$this->id");
+            }
+            $boot = $bootQuery->one();
+            if(!empty($boot)){
+                $this->addError('pic','已存在一张显示中的启动图，请勿重复操作');
+            }
+        }else{
+            $adQuery = self::find()->where("is_show=1 and postion=$this->postion");
+            if(!empty($this->id)){
+                $adQuery->andWhere("id<>$this->id");
+            }
+            $count = $adQuery->count();
+            if($count>=5){
+                $this->addError('pic','该位置已存在5张显示中的广告图，请勿重复操作');
+            }
+        }
+    }
+
 
     /*
      * 查询条件时，根据类型显示对应类型下的所有名称
@@ -141,7 +180,7 @@ class AdList extends \yii\db\ActiveRecord
 
                 break;
             case 6: //类型广告
-                $query=\admin\models\GoodBreed::find()->where(['id'=>$data->target_id])->one();
+                $query=\admin\models\GoodBreed::find()->where(['id'=>$model->target_id])->one();
                 $name=empty($query)?'':$query->name;
 
                 break;

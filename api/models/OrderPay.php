@@ -4,6 +4,7 @@ namespace api\models;
 
 use common\pay\alipay\helpers\AlipayHelper;
 use common\pay\wepay\helpers\Log;
+use daixianceng\smser\Wxtsms;
 use Yii;
 use yii\base\Exception;
 
@@ -74,7 +75,9 @@ class OrderPay extends \yii\db\ActiveRecord
         return $this->hasOne(OrderInfo::className(), ['id' => 'oid']);
     }
 
-
+    public function validateMobilePhone($mobilephone){
+        return preg_match("/^13[0-9]{1}[0-9]{8}$|15[0-9]{1}[0-9]{8}$|18[0-9][0-9]{8}|17[0-9]{9}$|14[0-9]{9}$/",$mobilephone) && strlen($mobilephone)==11;
+    }
 
     public static function Pay($params){
         //根据付款id调用log
@@ -201,6 +204,22 @@ class OrderPay extends \yii\db\ActiveRecord
             if(!$orderInfo->save()){
                 throw new Exception('更新订单状态出错',400);
             }
+            $shop=$orderInfo->s;
+            if(self::validateMobilePhone($shop->phone)){
+                //给店铺发短信
+                $smser = new Wxtsms();
+                $smser->username = Yii::$app->params['smsParams']['username'];
+                $smser->setPassword(Yii::$app->params['smsParams']['password']);
+                $content = "【酒双天】您有新的订单待处理，订单编号：$orderInfo->order_code，请尽快处理！";
+                $res = $smser->sendSms($shop->phone,$content);
+                if($res){
+                    $log->log_result('短信发送成功');
+                }else{
+                    $log->log_result('短信发送失败');
+                }
+            }else{
+                $log->log_result('非法的商家号码，无法发送短信');
+            }
             $payInfo = new OrderPay();
             $payInfo->attributes=[
                 'oid' => $orderInfo->id,
@@ -259,4 +278,5 @@ class OrderPay extends \yii\db\ActiveRecord
             }
         }
     }
+
 }

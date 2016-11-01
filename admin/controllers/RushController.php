@@ -37,7 +37,7 @@ class RushController extends BaseController
         $searchModel = new RushSearch;
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
         $dataProvider->pagination = [
-            'pageSize'=>25,
+            'pageSize'=>100,
         ];
         return $this->render('index', [
             'dataProvider' => $dataProvider,

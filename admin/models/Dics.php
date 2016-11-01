@@ -38,9 +38,9 @@ class Dics extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'type' => 'Type',
-            'id' => 'ID',
-            'name' => 'Name',
+            'type' => '类型',
+            'id' => 'id',
+            'name' => '名称',
         ];
     }
 

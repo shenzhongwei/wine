@@ -35,6 +35,7 @@ use Yii;
  */
 class ShopInfo extends \yii\db\ActiveRecord
 {
+    public $distance;
     /**
      * @inheritdoc
      */

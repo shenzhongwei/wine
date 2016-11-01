@@ -43,7 +43,7 @@ class MenuController extends Controller
         $searchModel = new MenuSearch;
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
         $dataProvider->pagination = [
-            'pageSize'=>15,
+            'pageSize'=>100,
         ];
         return $this->render('index', [
                 'dataProvider' => $dataProvider,
