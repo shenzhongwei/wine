@@ -8,8 +8,10 @@ use Yii;
  * This is the model class for table "promotion_type".
  *
  * @property integer $id
+ * @property integer $env
  * @property integer $class
  * @property integer $group
+ * @property integer $limit
  * @property string $name
  * @property integer $regist_at
  * @property integer $is_active
@@ -33,7 +35,7 @@ class PromotionType extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['class', 'group', 'regist_at', 'is_active', 'active_at'], 'integer'],
+            [['env', 'class', 'group', 'limit', 'regist_at', 'is_active', 'active_at'], 'integer'],
             [['name'], 'string', 'max' => 128],
         ];
     }
@@ -45,8 +47,10 @@ class PromotionType extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'class' => '类别 1有券  2无券',
-            'group' => '组 1满减 2折扣',
+            'env' => '促销环境',
+            'class' => '类别',
+            'group' => '形式',
+            'limit' => '促销限制',
             'name' => '优惠名称',
             'regist_at' => '添加时间',
             'is_active' => '是否上架',

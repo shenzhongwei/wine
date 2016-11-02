@@ -37,7 +37,7 @@ class PromotionController extends BaseController
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
 
         $dataProvider->pagination = [
-            'pageSize'=>10,
+            'pageSize'=>15,
         ];
         $dataProvider->sort = [
             'defaultOrder'=>['valid_circle'=>SORT_ASC,'is_active'=>SORT_DESC,]

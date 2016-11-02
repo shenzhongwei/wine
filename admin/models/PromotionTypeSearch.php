@@ -5,7 +5,6 @@ namespace admin\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use admin\models\PromotionType;
 
 /**
  * PromotionTypeSearch represents the model behind the search form about `admin\models\PromotionType`.
@@ -15,8 +14,8 @@ class PromotionTypeSearch extends PromotionType
     public function rules()
     {
         return [
-            [['id', 'class', 'group', 'regist_at', 'is_active', 'active_at'], 'integer'],
-            [['name'], 'safe'],
+            [[ 'limit','class', 'group', 'is_active','env'], 'integer'],
+            [['name','regist_at'], 'safe'],
         ];
     }
 
@@ -39,16 +38,15 @@ class PromotionTypeSearch extends PromotionType
         }
 
         $query->andFilterWhere([
-            'id' => $this->id,
             'class' => $this->class,
             'group' => $this->group,
-            'regist_at' => $this->regist_at,
+            'env' => $this->env,
             'is_active' => $this->is_active,
-            'active_at' => $this->active_at,
+            'limit'=>$this->limit,
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name]);
-
+        $query->andFilterWhere(['>=',"FROM_UNIXTIME(regist_at,'%Y年%m月%d日')",$this->regist_at]);
         return $dataProvider;
     }
 }

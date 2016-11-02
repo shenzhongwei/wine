@@ -9,6 +9,7 @@ use Yii;
  *
  * @property integer $id
  * @property integer $pt_id
+ * @property integer $style
  * @property integer $limit
  * @property integer $target_id
  * @property string $name
@@ -41,7 +42,7 @@ class PromotionInfo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['pt_id', 'limit', 'target_id', 'valid_circle', 'start_at', 'end_at', 'time', 'regist_at', 'is_active', 'active_at'], 'integer'],
+            [['pt_id', 'style', 'limit', 'target_id', 'valid_circle', 'start_at', 'end_at', 'time', 'regist_at', 'is_active', 'active_at'], 'integer'],
             [['condition', 'discount'], 'number'],
             [['name'], 'string', 'max' => 128],
             [['pt_id'], 'exist', 'skipOnError' => true, 'targetClass' => PromotionType::className(), 'targetAttribute' => ['pt_id' => 'id']],
@@ -56,12 +57,13 @@ class PromotionInfo extends \yii\db\ActiveRecord
         return [
             'id' => '主键',
             'pt_id' => '优惠类型',
+            'style' => '优惠形式',
             'limit' => '适用范围',
-            'target_id' => '类型对应的id',
+            'target_id' => '范围对应的id',
             'name' => '活动名称',
             'condition' => '条件',
             'discount' => '优惠',
-            'valid_circle' => '有效期限 0表示永久有效',
+            'valid_circle' => '有效期限 0表示永久有效 大于0表示天数',
             'start_at' => '开始时间',
             'end_at' => '结束时间',
             'time' => '使用次数 0表示无限制',

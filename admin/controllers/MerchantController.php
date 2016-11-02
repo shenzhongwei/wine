@@ -34,7 +34,7 @@ class MerchantController extends BaseController
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
 
         $dataProvider->pagination=[
-        'pageSize' => 10,
+        'pageSize' => 15,
         ];
         $dataProvider->sort = [
             'defaultOrder' => ['id' => SORT_DESC]

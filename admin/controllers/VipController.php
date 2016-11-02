@@ -37,7 +37,7 @@ class VipController extends BaseController
         $searchModel = new GoodVipSearch;
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
         $dataProvider->pagination = [
-            'pageSize'=>100,
+            'pageSize'=>15,
         ];
         return $this->render('index', [
             'dataProvider' => $dataProvider,

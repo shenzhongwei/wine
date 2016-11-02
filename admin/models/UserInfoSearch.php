@@ -65,7 +65,7 @@ class UserInfoSearch extends UserInfo
         ]);
         $sort = $dataProvider->getSort();
         $dataProvider->pagination = [
-            'pageSize'=>25,
+            'pageSize'=>15,
         ];
         $sort->attributes = [
             'end'=>[

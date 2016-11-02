@@ -341,13 +341,13 @@ $this->registerJsFile("@web/js/good/_script.js");
             'panel' => [
                 'type'=>'info',
                 'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> '.Html::encode($this->title).' </h3>',
-                'before'=>
+                'before'=>$dataProvider->totalCount>0 ?
                     Html::a("批量上架", "javascript:void(0);", ["class" => "btn btn-primary",'id'=>'good_up']).
                     Html::a("批量下架", "javascript:void(0);", ["class" => "btn btn-primary",'style'=>'margin-left:0.1%','id'=>'good_down']).
                     Html::a("批量显示", "javascript:void(0);", ["class" => "btn btn-primary",'style'=>'margin-left:0.1%','id'=>'vip_show']).
                     Html::a("批量不显示", "javascript:void(0);", ["class" => "btn btn-primary",'style'=>'margin-left:0.1%','id'=>'vip_unshow']).
                     Html::a("批量积分支持", "javascript:void(0);", ["class" => "btn btn-primary",'style'=>'margin-left:0.1%','id'=>'point_up']).
-                    Html::a("批量取消积分", "javascript:void(0);", ["class" => "btn btn-primary",'style'=>'margin-left:0.1%','id'=>'point_down']),
+                    Html::a("批量取消积分", "javascript:void(0);", ["class" => "btn btn-primary",'style'=>'margin-left:0.1%','id'=>'point_down']):'',
                 'after'=>false,
                 'showPanel'=>true,
                 'showFooter'=>true

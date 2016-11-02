@@ -40,7 +40,7 @@ class ShoppingController extends ApiController{
             ->leftJoin('good_type','good_info.type=good_type.id')->
             addSelect(['shopping_cert.*',$from == 1 ? 'good_info.pro_price as price':'good_info.vip_price as price',
             $from == 1 ? 'good_info.original_pay as pay':'good_info.vip_pay as pay',"CONCAT($from) as type"])
-            ->where("uid=$user_id and type=$from and good_info.id>0".' and merchant_info.id>0 and merchant_info.is_active=1 and 
+            ->where("uid=$user_id and shopping_cert.type=$from and good_info.id>0".' and merchant_info.id>0 and merchant_info.is_active=1 and 
             good_info.merchant>0 and good_type.id>0 and good_type.is_active=1');
         $count = $query->count();
         $query->offset(($page-1)*$pageSize)->limit($pageSize);

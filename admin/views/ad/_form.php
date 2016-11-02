@@ -114,7 +114,7 @@ use admin\models\AdList;
                     ]
                 ],
                 'url'=>[
-                    'label'=>'广告图片（建议100*180）',
+                    'label'=>'广告图片（建议180*100）',
                     'type'=> Form::INPUT_WIDGET,
                     'widgetClass'=>FileInput::className(),
                     'options'=>[
@@ -126,10 +126,6 @@ use admin\models\AdList;
                         'pluginOptions'=>[
                             'initialPreview'=>empty($model->pic) ? false:[
                                 '../../../photo'.$model->pic,
-                            ],
-                            'initialPreviewConfig'=>[
-                                'width'=>'100%',
-                                'height'=>'100%',
                             ],
                             'uploadUrl' => Url::to(['/ad/upload']),
                             'uploadExtraData' => [
@@ -154,17 +150,17 @@ use admin\models\AdList;
                         ],
                         'pluginEvents'=>[
                             'fileloaded'=>"function(){
-                            $('.file-preview-image').css('width','100%');
-                            $('.file-preview-image').css('height','100%');
+                                $('.file-preview-image').removeAttr('style');;
+                                $('.file-preview-image').css('height','200px');
                             }",
                             'fileuploaderror'=>"function(){
-                                                 $('.fileinput-upload-button').attr('disabled',true);
-                                                }",
+                                $('.fileinput-upload-button').attr('disabled',true);
+                            }",
                             'fileclear'=>"function(){
-                                     $('#adlist-pic').val('');
-                                    }",
+                                $('#adlist-pic').val('');
+                            }",
                             'fileuploaded'  => "function (object,data){
-			                     $('#adlist-pic').val(data.response.imageUrl);
+                                $('#adlist-pic').val(data.response.imageUrl);
 		                    }",
                             //错误的冗余机制
                             'error' => "function (){
@@ -193,7 +189,7 @@ use admin\models\AdList;
     </div>
 <script language="JavaScript">
     $(function () {
-       $('.file-preview-image').css('width','100%');
-        $('.file-preview-image').css('height','100%');
+        $('.file-preview-image').removeAttr("style");
+        $('.file-preview-image').css('height','200px');
     });
 </script>

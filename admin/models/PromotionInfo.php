@@ -10,6 +10,7 @@ use yii\helpers\ArrayHelper;
  *
  * @property integer $id
  * @property integer $pt_id
+ * @property integer $style
  * @property integer $limit
  * @property integer $target_id
  * @property string $name
@@ -28,8 +29,6 @@ use yii\helpers\ArrayHelper;
  */
 class PromotionInfo extends \yii\db\ActiveRecord
 {
-    public $start_from;
-    public $end_to;
     /**
      * @inheritdoc
      */
@@ -44,12 +43,10 @@ class PromotionInfo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['pt_id', 'limit', 'target_id', 'valid_circle', 'start_at', 'end_at', 'time', 'regist_at', 'is_active', 'active_at'], 'integer'],
+            [['pt_id', 'style', 'limit', 'target_id', 'valid_circle', 'start_at', 'end_at', 'time', 'regist_at', 'is_active', 'active_at'], 'integer'],
             [['condition', 'discount'], 'number'],
             [['name'], 'string', 'max' => 128],
             [['pt_id'], 'exist', 'skipOnError' => true, 'targetClass' => PromotionType::className(), 'targetAttribute' => ['pt_id' => 'id']],
-
-            [['start_from','end_to'],'date','format'=>'yyyy-mm-dd'],
         ];
     }
 
@@ -59,23 +56,21 @@ class PromotionInfo extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'pt_id' => '活动类型',
-            'limit' => '活动范围',
-            'target_id' => '平台/商家/门店名称',
+            'id' => '主键',
+            'pt_id' => '优惠类型',
+            'style' => '优惠形式',
+            'limit' => '适用范围',
+            'target_id' => '范围对应的id',
             'name' => '活动名称',
-            'condition' => '条件(满XX元使用)',
-            'discount' => '优惠金额',
-            'valid_circle' => '有效期',
+            'condition' => '条件',
+            'discount' => '优惠',
+            'valid_circle' => '有效期限 0表示永久有效 大于0表示天数',
             'start_at' => '开始时间',
             'end_at' => '结束时间',
-            'time' => '使用次数',
-            'regist_at' => '发布时间',
+            'time' => '使用次数 0表示无限制',
+            'regist_at' => '添加时间',
             'is_active' => '是否上架',
-            'active_at' => '上架更改时间',
-
-            'start_from' => '开始时间',
-            'end_to' => '结束时间',
+            'active_at' => '上架状态更改时间',
         ];
     }
 

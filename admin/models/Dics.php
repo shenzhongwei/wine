@@ -90,6 +90,7 @@ class Dics extends \yii\db\ActiveRecord
         if($type<>7){
             $query->andWhere("name<>'启动页'");
         }
+        $query->orderBy(['id'=>SORT_ASC]);
         $model = $query->all();
         $res = ArrayHelper::map($model,'id','name');
         return $res;
@@ -99,7 +100,7 @@ class Dics extends \yii\db\ActiveRecord
      * 获取图片位置
      */
     public static function getPicPos(){
-        $model=Dics::find()->select(['id','name'])->andWhere(['type'=>'广告图位置'])->all();
+        $model=Dics::find()->select(['id','name'])->andWhere(['type'=>'广告图位置'])->orderBy(['id'=>SORT_ASC])->all();
         $res = ArrayHelper::map($model,'id','name');
         return $res;
     }
@@ -126,5 +127,31 @@ class Dics extends \yii\db\ActiveRecord
             $query[$v['id']]=$v['name'];
         }
         return $query;
+    }
+
+
+    public static function getPromotionClass(){
+        $data = self::find()->where(['type'=>'促销类别'])->all();
+        return ArrayHelper::map($data,'id','name');
+    }
+
+    public static function getPromotion(){
+        $data = self::find()->where(['type'=>'促销类别'])->all();
+        return ArrayHelper::map($data,'id','name');
+    }
+
+    public static function getPromotionEnv(){
+        $data = self::find()->where(['type'=>'促销环境'])->all();
+        return ArrayHelper::map($data,'id','name');
+    }
+
+    public static function getPromotionGroup(){
+        $data = self::find()->where(['type'=>'促销形式'])->all();
+        return ArrayHelper::map($data,'id','name');
+    }
+
+    public static function getPromotionLimit(){
+        $data = self::find()->where(['type'=>'促销限制'])->all();
+        return ArrayHelper::map($data,'id','name');
     }
 }

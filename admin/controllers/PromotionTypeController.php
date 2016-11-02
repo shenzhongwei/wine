@@ -38,7 +38,7 @@ class PromotionTypeController extends BaseController
             'pageSize' => 15,
         ];
         $dataProvider->sort = [
-            'defaultOrder' => ['is_active'=>SORT_DESC,'id'=>SORT_DESC]
+            'defaultOrder' => ['is_active'=>SORT_DESC]
         ];
         return $this->render('index', [
             'dataProvider' => $dataProvider,
@@ -46,21 +46,7 @@ class PromotionTypeController extends BaseController
         ]);
     }
 
-    /**
-     * Displays a single PromotionType model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('view', ['model' => $model]);
-        }
-    }
 
     /**
      * Creates a new PromotionType model.
@@ -72,7 +58,7 @@ class PromotionTypeController extends BaseController
         $model = new PromotionType;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -91,7 +77,7 @@ class PromotionTypeController extends BaseController
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-             return $this->redirect(['view', 'id' => $model->id]);
+             return $this->redirect(['index']);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -105,28 +91,18 @@ class PromotionTypeController extends BaseController
      * @param integer $id
      * @return mixed
      */
-    public function actionDelete()
+    public function actionDelete($id)
     {
-        $user_id = Yii::$app->user->identity->getId();
-        if(empty($user_id)){
-            return $this->showResult(302,'用户登录信息失效');
-        }
-        $id=Yii::$app->request->get('id');
-        if(empty($id)){
-            return $this->showResult(301,'读取数据发生错误');
-        }
-        $query =PromotionType::findOne([$id]);
-        if(empty($query)){
-            return $this->showResult(301,'未获取到该优惠券的信息');
-        }
+        $model = $this->findModel($id);
 
-        if($query->is_active==1){
-            $query->is_active=0;
+        if($model->is_active==1){
+            $model->is_active=0;
         }else{
-            $query->is_active=1;
+            $model->is_active=1;
         }
-        $query->active_at=time();
-        $query->save();
+        $model->active_at=time();
+        $model->save();
+        Yii::$app->session->setFlash('success','操作成功');
         return $this->redirect(['index']);
     }
 
@@ -143,6 +119,44 @@ class PromotionTypeController extends BaseController
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+
+    public function actionPatch()
+    {
+        $keys = Yii::$app->request->post('keys');
+        $button = Yii::$app->request->post('button');
+        if(empty($keys)){
+            return $this->showResult(304,'非法请求');
+        }
+        $ids = '('.implode(',',$keys).')';
+        if($button == 'type_up'){
+            $key = 'is_active';
+            $value = 0;
+            $valueTo = 1;
+        }elseif($button == 'type_down'){
+            $key = 'is_active';
+            $value = 1;
+            $valueTo = 0;
+        }else{
+            return $this->showResult(304,'非法请求');
+        }
+        $type = PromotionType::find()->where("$key=$value and id in $ids")->one();
+        if(!empty($type)){
+            $sql = "UPDATE promotion_type SET $key = $valueTo";
+            if($key == 'is_active'){
+                $sql .= " ,active_at=".time();
+            }
+            $sql .= " WHERE id IN $ids AND $key=$value";
+            $res = Yii::$app->db->createCommand($sql)->execute();
+            if(!empty($res)){
+                return $this->showResult(200,'操作成功');
+            }else{
+                return $this->showResult(400,'操作失败，请稍后重试');
+            }
+        }else{
+            return $this->showResult(200,'操作成功');
         }
     }
 }

@@ -3,7 +3,8 @@
 use yii\helpers\Html;
 use kartik\widgets\ActiveForm;
 use kartik\builder\Form;
-use kartik\datecontrol\DateControl;
+use kartik\select2\Select2;
+use admin\models\Dics;
 
 /**
  * @var yii\web\View $this
@@ -12,9 +13,21 @@ use kartik\datecontrol\DateControl;
  */
 ?>
 
-<div class="promotion-type-form">
+<div class="promotion-type-form col-sm-8">
 
-    <?php $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_HORIZONTAL]);
+    <?php $form = ActiveForm::begin([ 'type'=>ActiveForm::TYPE_VERTICAL,
+        'fullSpan'=>12,
+        'formConfig' => [
+            'deviceSize' => ActiveForm::SIZE_LARGE,
+        ],
+    ]);
+    ?>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <?= $model->isNewRecord ? '发布促销类型' : '编辑促销类型'.$model->name ?>
+        </div>
+        <div class="panel-body">
+    <?php
         echo Form::widget([
 
         'model' => $model,
@@ -22,42 +35,50 @@ use kartik\datecontrol\DateControl;
         'columns' => 1,
         'attributes' => [
 
-            'class'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>kartik\select2\Select2::className(),
-                'options'=>[
-                    'data'=>['1'=>'有券','2'=>'无券'],
-                    'options'=>['placeholder'=>'请选择类别'],
-                    'pluginOptions'=>['allowClear'=>true]
-                ]
-            ],
+            'name'=>['type'=> Form::INPUT_TEXT,'label'=>'类型名', 'options'=>['placeholder'=>'填写类型名', 'maxlength'=>128]],
 
-            'group'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>kartik\select2\Select2::className(),
+            'class'=>['type'=> Form::INPUT_WIDGET,'label'=>'促销组别','widgetClass'=>Select2::className(),
                 'options'=>[
-                    'data'=>['1'=>'优惠','2'=>'特权','3'=>'赠送'],
+                    'data'=>Dics::getPromotionClass(),
                     'options'=>['placeholder'=>'请选择组别'],
                     'pluginOptions'=>['allowClear'=>true]
                 ]
             ],
 
-            'name'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'填写优惠券名称', 'maxlength'=>128]],
-
-            'is_active'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>kartik\select2\Select2::className(),
+            'env'=>['type'=> Form::INPUT_WIDGET,'label'=>'促销环境','widgetClass'=>Select2::className(),
                 'options'=>[
-                    'data'=>['0'=>'下架','1'=>'上架'],
-                    'options'=>['placeholder'=>'请选择是否上架'],
+                    'data'=>Dics::getPromotionEnv(),
+                    'options'=>['placeholder'=>'请选择促销环境'],
                     'pluginOptions'=>['allowClear'=>true]
                 ]
             ],
 
+            'group'=>['type'=> Form::INPUT_WIDGET,'label'=>'促销形式','widgetClass'=>Select2::className(),
+                'options'=>[
+                    'data'=>Dics::getPromotionGroup(),
+                    'options'=>['placeholder'=>'请选择促销形式'],
+                    'pluginOptions'=>['allowClear'=>true]
+                ]
+            ],
+
+            'limit'=>['type'=> Form::INPUT_WIDGET,'label'=>'促销限制','widgetClass'=>Select2::className(),
+                'options'=>[
+                    'data'=>Dics::getPromotionLimit(),
+                    'options'=>['placeholder'=>'请选择促销限制'],
+                    'pluginOptions'=>['allowClear'=>true]
+                ]
+            ],
+
+
         ]
 
     ]);
+
+
+    echo Html::submitButton(Yii::t('app', 'Save') , ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']);
     ?>
-
-    <p style="margin: 0 auto;text-align: center;margin-bottom: 2px;">
-        <?=Html::submitButton($model->isNewRecord ? Yii::t('app', '创建') : Yii::t('app', '更新'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']);?>
-        <?=Html::a('返回', 'javascript:history.go(-1);location.reload()', ['class' => 'btn btn-primary','style'=>'margin-left:10px']);?>
-    </p>
-
+        </div>
+    </div>
     <?php ActiveForm::end(); ?>
 
 </div>
