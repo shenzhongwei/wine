@@ -1,10 +1,9 @@
 <?php
 
-use kartik\helpers\Html;
+use yii\helpers\Html;
 use kartik\grid\GridView;
-use kartik\grid\EditableColumn;
-use yii\helpers\Url;
 use admin\models\AdList;
+use admin\models\Dics;
 
 /**
  * @var yii\web\View $this
@@ -12,7 +11,7 @@ use admin\models\AdList;
  * @var admin\models\AdListSearch $searchModel
  */
 
-$this->title = '启动页';
+$this->title = '首页中间广告';
 $this->params['breadcrumbs'][] = $this->title;
 
 $this->registerJsFile("@web/js/good/_script.js");
@@ -24,13 +23,13 @@ $count = $dataProvider->totalCount;
     echo GridView::widget([
         "options" => [
             // ...其他设置项
-            "id" => "boot_pic"
+            "id" => "head_pic"
         ],
         'dataProvider' => $dataProvider,
         'pjax'=>true,
         'pjaxSettings'=>[
             'options'=>[
-                'id'=>'boot-pic'
+                'id'=>'head-pic'
             ],
             'neverTimeout'=>true,
         ],
@@ -38,37 +37,57 @@ $count = $dataProvider->totalCount;
         'headerRowOptions'=>['class'=>'kartik-sheet-style'],
         'columns' => [
             [
-                'attribute'=>'pic',
+                'header'=>'广告类型',
+                'attribute'=>'type',
+                'width'=>'15%',
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+                'value'=>function($data){
+                    $query=Dics::find()->where(['type'=>'图片类型','id'=>$data->type])->one();
+                    return empty($query)?'':$query->name;
+                },
+            ],
+            [
+                'header'=>'类型对象',
+                'width'=>'15%',
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+                'attribute'=> 'target_id',
+                'value'=>function($data){
+                    return AdList::getOneName($data);
+                },
+            ],
+            [
                 'header'=>'图片',
+                'attribute'=>'pic',
                 'width'=>'30%',
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
                 "format" => "raw",
-                'value'=>function($model){
-                    return Html::img('../../../photo'.$model->pic,[
-                        'width'=>"100px",'height'=>"180px","onclick"=>"ShowBoot(this);",'style'=>'cursor:pointer','title'=>"点击放大"
+                'value'=>function($data){
+                    return Html::img('../../../photo'.$data->pic,[
+                        'width'=>"180px",'height'=>"100px","onclick"=>"ShowAd(this);",'style'=>'cursor:pointer','title'=>"点击放大"
                     ]);
                 }
             ],
             [
                 'attribute'=>'pic_url',
                 'header'=>'图片链接',
-                'width'=>'40%',
+                'width'=>'20%',
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
                 'format' => 'raw',
                 'value'=> function($model){
-//                    return '<a class="btn btn-link btn-sm" href="'.$model->pic_url.'" target="_blank" >'.$model->pic_url.'</a>';
-                    return Html::a($model->pic_url,$model->pic_url,
+                    return $model->type==1 ? Html::a($model->pic_url,$model->pic_url,
                         ['target' => '_blank','class'=>'btn btn-link btn-sm']
-                    );
+                    ):'<span class="not-set">(非外链广告无需设置)</span>';
                 },
             ],
             [
                 'header' => '操作',
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
-                'width'=>'30%',
+                'width'=>'20%',
                 'class' =>  'kartik\grid\ActionColumn',
                 'buttons' => [
                     'view'=>function(){
@@ -78,16 +97,16 @@ $count = $dataProvider->totalCount;
                         return Html::a(Yii::t('app','Update'), $url, [
                             'data-pjax'=>0,
                             'data-toggle' => 'modal',    //弹框
-                            'data-target'=>'#boot-modal',
+                            'data-target'=>'#middle-modal',
                             'title' => Yii::t('app', '编辑'),
                             'class' => 'btn btn-primary btn-xs update',
                         ]);
                     },
                     'delete' => function ($url, $model) {
-                        return Html::a(Yii::t('app','Delete'), ['delete','name'=>'boot','id'=>$model->id], [
-                            'title' => Yii::t('app', '删除此启动页'),
+                        return Html::a(Yii::t('app','Delete'), ['delete','name'=>'middle','id'=>$model->id], [
+                            'title' => Yii::t('app', '删除此广告'),
                             'class' => 'btn btn-danger btn-xs',
-                            'data-confirm' => "确认删除该启动图？一旦删除若不上传新启动图打开APP将无法显示启动图",
+                            'data-confirm' => "确认删除该广告？一旦删除将无法显示该广告",
                         ]);
                     }
                 ],
@@ -95,14 +114,14 @@ $count = $dataProvider->totalCount;
         ],
         'toolbar'=> [
             ['content'=>
-                $count>=1 ? '':Html::a('<i class="glyphicon glyphicon-plus">添加启动页</i>', ['#'],[
-                    'id'=>'boot-add',
+                $count>=5 ? '':Html::a('<i class="glyphicon glyphicon-plus">添加首页中间广告</i>', ['#'],[
+                    'id'=>'middle-add',
                     'data-pjax'=>0,
                     'type'=>'button',
-                    'title'=>'添加启动页',
+                    'title'=>'添加头部广告',
                     'class'=>'btn btn-primary add',
                     'data-toggle' => 'modal',    //弹框
-                    'data-target' => '#boot-modal',    //指定弹框的id
+                    'data-target' => '#middle-modal',    //指定弹框的id
                 ])
             ],
         ],
@@ -121,11 +140,10 @@ $count = $dataProvider->totalCount;
 </div>
 <?php
 \yii\bootstrap\Modal::begin([
-    'id' => 'boot-modal',
+    'id' => 'middle-modal',
     'options' => [
         'tabindex' => false
     ],
-    'header' => '<h4 class="modal-title">新增启动页</h4>',
 ]);
 \yii\bootstrap\Modal::end();
 ?>
@@ -137,26 +155,26 @@ $count = $dataProvider->totalCount;
     function init() {
         $('.add').on('click', function () {  //查看详情的触发事件
             $('.ad-list-form').remove();
-            $('#boot-modal').find('.modal-title').html('新增启动图');
-            $.get(toRoute('ad/create'), { key:'boot'  },
+            $('#middle-modal').find('.modal-title').html('新增首页中间广告');
+            $.get(toRoute('ad/create'), { key:'middle'  },
                 function (data) {
-                    $('#boot-modal').find('.modal-body').html(data);  //给该弹框下的body赋值
+                    $('#middle-modal').find('.modal-body').html(data);  //给该弹框下的body赋值
                 }
             );
         });
         $('.update').on('click', function () {  //查看详情的触发事件
             $('.ad-list-form').remove();
-            $('#boot-modal').find('.modal-title').html('编辑启动图');
-            $.get(toRoute('ad/update'), { id:$(this).closest('tr').data('key'),key:'boot'  },
+            $('#middle-modal').find('.modal-title').html('编辑首页中间广告');
+            $.get(toRoute('ad/update'), { id:$(this).closest('tr').data('key'),key:'head'  },
                 function (data) {
-                    $('#boot-modal').find('.modal-body').html(data);  //给该弹框下的body赋值
+                    $('#middle-modal').find('.modal-body').html(data);  //给该弹框下的body赋值
                 }
             );
         });
         $('.ui-autocomplete').css('z-index','99999');
         $('.datepicker-days').css('z-index','99999');
     }
-    $("#boot-modal").on("hidden.bs.modal", function () {
+    $("#middle-modal").on("hidden.bs.modal", function () {
         $("#ad-form")[0].reset();//重置表单
     });
 </script>

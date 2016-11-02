@@ -193,7 +193,7 @@ if(!empty($model->original_pay)){
                             [
                                 'label'=>$model->is_active == 0 ? '下架时间':'上架时间',
                                 'attribute'=>'active_at',
-                                'format'=>["date", "php:Y年m月d日 H时i分s秒"],
+                                'format'=>["date", "php:Y年m月d日"],
                                 'value'=>$model->active_at,
                             ],
                             [

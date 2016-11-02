@@ -36,7 +36,7 @@ class AdList extends \yii\db\ActiveRecord
             [['type', 'target_id', 'is_show','postion'], 'integer'],
             [['type','pic',],'required'],
             [['pic', 'pic_url'], 'string', 'max' => 128],
-            [['target_id','pic_url'],'validType',],
+            [['pic_url','type'],'validType',],
             [['target_name'],'string'],
         ];
     }
@@ -65,14 +65,17 @@ class AdList extends \yii\db\ActiveRecord
         if(in_array($this->type,[2,3,4,5,6])&&empty($this->target_id)){
             $this->addError('target_id','请选择对应的广告目标');
         }
-        $query = self::find()->where("type=$this->type and target_id=$this->target_id and pic_url='$this->pic_url' and is_show=1 and postion=$this->postion");
-        if(!empty($this->id)){
-            $query->andWhere("id<>$this->id");
+        if($this->target_id!==null){
+            $query = self::find()->where("type=$this->type and target_id=$this->target_id and pic_url='$this->pic_url' and is_show=1 and postion=$this->postion");
+            if(!empty($this->id)){
+                $query->andWhere("id<>$this->id");
+            }
+            $ad = $query->one();
+            if(!empty($ad)){
+                $this->addError('type','已存在该类型的显示中广告，请勿重复操作');
+            }
         }
-        $ad = $query->one();
-        if(!empty($ad)){
-            $this->addError('type','已存在该类型的显示中广告，请勿重复操作');
-        }
+
         if($this->type == 7){
             $bootQuery = self::find()->where("type=$this->type and is_show=1");
             if(!empty($this->id)){
@@ -160,32 +163,28 @@ class AdList extends \yii\db\ActiveRecord
 
                 break;
             case 2:  //商品广告
-                $query=\admin\models\GoodInfo::find()->where(['id'=>$model->target_id])->one();
-                $name=empty($query)?'':$query->name;
+                $query=GoodInfo::find()->where(['id'=>$model->target_id])->one();
+                $name=empty($query)?'丢失':$query->name;
 
                 break;
             case 3:  //品牌广告
-                $query=\admin\models\GoodBrand::find()->where(['id'=>$model->target_id])->one();
-                $name=empty($query)?'':$query->name;
+                $query=GoodBrand::find()->where(['id'=>$model->target_id])->one();
+                $name=empty($query)?'丢失':$query->name;
 
                 break;
             case 4: //商家广告
-                $query=\admin\models\MerchantInfo::find()->where(['id'=>$model->target_id])->one();
-                $name=empty($query)?'':$query->name;
+                $query=MerchantInfo::find()->where(['id'=>$model->target_id])->one();
+                $name=empty($query)?'丢失':$query->name;
 
                 break;
             case 5: //香型广告
-                $query=\admin\models\GoodSmell::find()->where(['id'=>$model->target_id])->one();
-                $name=empty($query)?'':$query->name;
+                $query=GoodSmell::find()->where(['id'=>$model->target_id])->one();
+                $name=empty($query)?'丢失':$query->name;
 
                 break;
             case 6: //类型广告
-                $query=\admin\models\GoodBreed::find()->where(['id'=>$model->target_id])->one();
-                $name=empty($query)?'':$query->name;
-
-                break;
-            case 7:
-                $name='启动页';
+                $query=GoodType::find()->where(['id'=>$model->target_id])->one();
+                $name=empty($query)?'丢失':$query->name;
 
                 break;
             case 8:
@@ -194,6 +193,53 @@ class AdList extends \yii\db\ActiveRecord
                 break;
             default:
                 $name='无';
+                break;
+        }
+        return $name;
+    }
+
+    /**
+     * @return string
+     * 获取target_id对应值
+     */
+    public static function GetChilds($type){
+        switch($type){
+            case 1:
+                $name=[0=>'外部网页'];
+
+                break;
+            case 2:  //商品广告
+                $query=GoodInfo::find()->all();
+                $name=ArrayHelper::map($query,'id','name');
+
+                break;
+            case 3:  //品牌广告
+                $query=GoodBrand::find()->all();
+                $name=ArrayHelper::map($query,'id','name');
+
+                break;
+            case 4: //商家广告
+                $query=MerchantInfo::find()->all();
+                $name=ArrayHelper::map($query,'id','name');
+
+                break;
+            case 5: //香型广告
+
+                $query=GoodSmell::find()->all();
+                $name=ArrayHelper::map($query,'id','name');
+
+                break;
+            case 6: //类型广告
+                $query=GoodType::find()->all();
+                $name=ArrayHelper::map($query,'id','name');
+
+                break;
+            case 8:
+                $name=[0=>'充值'];
+
+                break;
+            default:
+                $name=[0=>'无'];
                 break;
         }
         return $name;

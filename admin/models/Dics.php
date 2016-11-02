@@ -2,6 +2,7 @@
 
 namespace admin\models;
 
+use common\helpers\ArrayHelper;
 use Yii;
 
 /**
@@ -84,13 +85,23 @@ class Dics extends \yii\db\ActiveRecord
     /*
      * 获取图片类型
      */
-    public static function getPicType(){
-        $model=Dics::find()->select(['id','name'])->andWhere(['type'=>'图片类型'])->asArray()->all();
-        $query=array();
-        foreach($model as $k=>$v){
-            $query[$v['id']]=$v['name'];
+    public static function getPicType($type){
+        $query=Dics::find()->select(['id','name'])->andWhere("type='图片类型'");
+        if($type<>7){
+            $query->andWhere("name<>'启动页'");
         }
-        return $query;
+        $model = $query->all();
+        $res = ArrayHelper::map($model,'id','name');
+        return $res;
+    }
+
+    /*
+     * 获取图片位置
+     */
+    public static function getPicPos(){
+        $model=Dics::find()->select(['id','name'])->andWhere(['type'=>'广告图位置'])->all();
+        $res = ArrayHelper::map($model,'id','name');
+        return $res;
     }
 
     /*

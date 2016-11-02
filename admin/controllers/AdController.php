@@ -5,18 +5,22 @@ namespace admin\controllers;
 use admin\models\GoodBrand;
 use admin\models\GoodBreed;
 use admin\models\GoodInfo;
+use admin\models\GoodType;
 use admin\models\MerchantInfo;
 use admin\models\GoodSmell;
+use kartik\form\ActiveForm;
 use Yii;
 use admin\models\AdList;
 use admin\models\AdListSearch;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
+use yii\helpers\FileHelper;
 use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 use yii\web\UploadedFile;
 
 /**
@@ -51,7 +55,7 @@ class AdController extends BaseController
 
         return $this->render('boot', [
             'dataProvider' => $dataProvider,
-            'searchModel' => $searchModel,
+//            'searchModel' => $searchModel,
         ]);
     }
 
@@ -59,17 +63,12 @@ class AdController extends BaseController
     {
         $searchModel = new AdListSearch;
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams(),0,1);
-
-        $dataProvider->pagination = [
-            'pageSize' => 100,
-        ];
         $dataProvider->sort = [
             'defaultOrder' => ['is_show'=>SORT_DESC]
         ];
 
         return $this->render('head', [
             'dataProvider' => $dataProvider,
-            'searchModel' => $searchModel,
         ]);
     }
 
@@ -77,18 +76,73 @@ class AdController extends BaseController
     {
         $searchModel = new AdListSearch;
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams(),0,2);
-
-        $dataProvider->pagination = [
-            'pageSize' => 100,
-        ];
         $dataProvider->sort = [
             'defaultOrder' => ['is_show'=>SORT_DESC]
         ];
 
         return $this->render('middle', [
             'dataProvider' => $dataProvider,
-            'searchModel' => $searchModel,
         ]);
+    }
+
+    public function actionValidForm(){
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $key = Yii::$app->request->get('key');
+        $data = Yii::$app->request->post();
+        $model = new AdList();
+        if(!empty($data['AdList']['id'])){
+            $model->id = $data['AdList']['id'];
+        }
+        if($key=='boot'){
+            $model->type=7;
+            $model->postion=0;
+            $model->target_id=0;
+        }elseif ($key=='head'){
+            $model->postion = 1;
+        }elseif ($key == 'middle'){
+            $model->postion = 2;
+        }
+        if($data['AdList']['type']==1){
+            $model->target_id=0;
+        }elseif ($data['AdList']['type']==8){
+            $model->target_id=0;
+            $model->pic_url='';
+        }
+        $model->load($data);
+        return ActiveForm::validate($model);
+    }
+
+    public function actionUpload(){
+        $goodType = new AdList();
+        $file_name = 'wine_ad_'.time();
+        $key = Yii::$app->request->post('key');
+        if(Yii::$app->request->isPost) {
+            $image = UploadedFile::getInstance($goodType, 'url');
+            $path = '../../photo/ad/'.$key;
+            if(!is_dir($path) || !is_writable($path)){
+                FileHelper::createDirectory($path,0777,true);
+            }
+            $filePath = $path.'/'.$file_name.'.'.$image->extension;
+            if( $image->saveAs($filePath)){
+                echo json_encode([
+                    'imageUrl'=>'/ad/'.$key.'/'.$file_name.'.'.$image->extension,
+                    'error'=>'',
+                ]);
+                exit;
+            }else{
+                echo json_encode([
+                    'imageUrl'=>'',
+                    'error'=>'保存图片失败，请重试',
+                ]);
+                exit;
+            }
+        }else{
+            echo json_encode([
+                'imageUrl'=>'',
+                'error'=>'未获取到图片信息',
+            ]);
+            exit;
+        }
     }
 
     /**
@@ -96,16 +150,6 @@ class AdController extends BaseController
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('view', ['model' => $model]);
-        }
-    }
 
     /**
      * Creates a new AdList model.
@@ -114,49 +158,38 @@ class AdController extends BaseController
      */
     public function actionCreate()
     {
+        $key = Yii::$app->request->get('key');
         $model = new AdList;
-
-        if (Yii::$app->request->post()) {
-            $adposted=Yii::$app->request->post('AdList');
-
-            //上传图片
-            $picurl='';
-            $img =UploadedFile::getInstance($model,'pic');
-            $pic_path = '../../photo/ad/boot/';
-            $img_temp='/ad/boot/';
-            $temp_id=AdList::generateCode().'_'.date('md');
-            if(!empty($img)){
-                $ext = $img->getExtension();
-                if(!is_dir($pic_path)){
-                    @mkdir($pic_path,0777,true);
-                }
-                $logo_name =$temp_id.'.'.$ext;
-                $res=$img->saveAs($pic_path.$logo_name);//设置图片的存储位置
-                $picurl=$img_temp.$logo_name;
+        if($key=='boot'){
+            $model->type=7;
+            $model->target_id=0;
+            $model->postion = 0;
+        }elseif ($key=='head'){
+            $model->postion=1;
+        }elseif ($key == 'middle'){
+            $model->postion = 2;
+        }
+        $post = Yii::$app->request->post();
+        if($post){
+            if(in_array($post['AdList']['type'],[1,7])){
+                $model->target_id=0;
+            }elseif ($post['AdList']['type']==8){
+                $model->target_id=0;
+                $model->pic_url='';
+            }elseif (in_array($post['AdList']['type'],[2,3,4,5,6])){
+                $model->pic_url='';
             }
-
-            $transaction = Yii::$app->db->beginTransaction();
-            try{
-                if($adposted['type']==7){ //启动页
-                    $query=AdList::find()->where(['type'=>$adposted['type'],'is_show'=>1])->one();
-                    if(!empty($query)){
-                        return $this->showResult(301,'启动页只能一张');
-                    }
-                }
-                $model->attributes=$adposted;
-                $model->pic=$picurl;
-
-                $model->save();
-            }catch(Exception $e){
-                $transaction->rollBack();
-
-            }
-            return $this->redirect(['view', 'id' => $model->id]);
+        }
+        if ($model->load($post) && $model->save()) {
+            Yii::$app->session->setFlash('success','保存成功');
+            return $this->redirect([$key]);
         } else {
+            if(Yii::$app->request->isPost){
+                Yii::$app->session->setFlash('danger',$model->getFirstErrors()[0]);
+                return $this->redirect([$key]);
+            }
             return $this->render('create', [
                 'model' => $model,
-                'p1'=>'',
-                'P'=>[]
             ]);
         }
     }
@@ -164,54 +197,47 @@ class AdController extends BaseController
 
     public function actionUpdate($id)
     {
+        $key = Yii::$app->request->get('key');
         $model = $this->findModel($id);
-
-        // 对广告图进行处理
-        $p1 ='';$P= [];
-        if ($model) {
-            $p1 = Yii::$app->params['img_path'].$model->pic;
-            $P = [
-                'url' =>Url::toRoute('/ad/delete-img'),
-                'key' => $model->id,
-                'width'=>'200px'
-            ];
+        if($key=='boot'){
+            $model->type=7;
+            $model->target_id=0;
+            $model->postion = 0;
+        }elseif ($key=='head'){
+            $model->postion=1;
+        }elseif ($key == 'middle'){
+            $model->postion = 2;
         }
-
-        if (Yii::$app->request->post()) {
-            $adposted=Yii::$app->request->post('AdList');
-
-            //上传图片
-            $picurl='';
-            $img =UploadedFile::getInstance($model,'pic');
-            $pic_path = '../../photo/ad/boot/';
-            $img_temp='/ad/boot/';
-            $temp_id=AdList::generateCode().'_'.date('md');
-            if(!empty($img)){
-                $ext = $img->getExtension();
-                if(!is_dir($pic_path)){
-                    @mkdir($pic_path,0777,true);
-                }
-                $logo_name =$temp_id.'.'.$ext;
-                $res=$img->saveAs($pic_path.$logo_name);//设置图片的存储位置
-                $picurl=$img_temp.$logo_name;
+        $post = Yii::$app->request->post();
+        if($post){
+            if(in_array($post['AdList']['type'],[1,7])){
+                $model->target_id=0;
+            }elseif ($post['AdList']['type']==8){
+                $model->target_id=0;
+                $model->pic_url='';
+            }elseif (in_array($post['AdList']['type'],[2,3,4,5,6])){
+                $model->pic_url='';
             }
-
-            $transaction = Yii::$app->db->beginTransaction();
-            try{
-                $model->attributes=$adposted;
-                $model->pic=empty($picurl)?$adposted['pic_url']:$picurl;
-
-                $model->save();
-            }catch(Exception $e){
-                $transaction->rollBack();
-
-            }
-            return $this->redirect(['view', 'id' => $model->id]);
+        }
+        if ($model->load($post) && $model->save()) {
+            Yii::$app->session->setFlash('success','保存成功');
+            return $this->redirect([$key]);
         } else {
+            if(Yii::$app->request->isPost){
+                Yii::$app->session->setFlash('danger',$model->getFirstErrors()[0]);
+                return $this->redirect([$key]);
+            }else{
+                    if(in_array($model->type,[1,7])){
+                        $model->target_id=0;
+                    }elseif ($model->type==8){
+                        $model->target_id=0;
+                        $model->pic_url='';
+                    }elseif (in_array($model->type,[2,3,4,5,6])){
+                        $model->pic_url='';
+                    }
+            }
             return $this->render('update', [
                 'model' => $model,
-                'p1'=>$p1,
-                'P'=>$P
             ]);
         }
     }
@@ -273,7 +299,7 @@ class AdController extends BaseController
                    $type =GoodSmell::find()->select(['id','name'])->asArray()->all();
                    break;
                 case 6: //类型广告
-                   $type =GoodBreed::find()->select(['id','name'])->asArray()->all();
+                   $type =GoodType::find()->select(['id','name'])->asArray()->all();
                    break;
                 case 7:
                     $type=array(
@@ -292,10 +318,9 @@ class AdController extends BaseController
                     );
                     break;
                 default:
-                    $type=[[]];
+                    $type=[];
                     break;
             }
-
             if(!empty($type)){
                 $results = ArrayHelper::getColumn($type,function($element){
                    return [
@@ -305,7 +330,7 @@ class AdController extends BaseController
                 });
             }
         }
-        echo Json::encode(['output' => empty($results) ? '':$results, 'selected'=>'']);
+        echo Json::encode(['output' =>  empty($results) ? '':$results, 'selected'=>'']);
         exit;
     }
 }

@@ -36,19 +36,6 @@ class AdListSearch extends AdList
             'query' => $query,
         ]);
 
-        if (!($this->load($params) && $this->validate())) {
-            return $dataProvider;
-        }
-
-        $admodel=$params['AdListSearch'];
-        if(!empty($admodel['target_name'])){
-            $query->andFilterWhere(['target_id'=>$admodel['target_name']]);
-        }
-        $query->andFilterWhere([
-            'type' => $this->type,
-            'is_show' => $this->is_show,
-        ]);
-
         return $dataProvider;
     }
 }

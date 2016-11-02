@@ -7,17 +7,11 @@ use yii\helpers\Html;
  * @var admin\models\AdList $model
  */
 
-$this->title = '更新广告: ' . ' ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Ad Lists', 'url' => ['index']];
+$this->title = '更新广告';
+$this->params['breadcrumbs'][] = ['label' => '广告管理', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
-<div class="ad-list-update">
-
-    <?= $this->render('_form', [
-        'model' => $model,
-        'p1'=>$p1,
-        'P'=>$P
-    ]) ?>
-
-</div>
+<?= $this->render('_form', [
+    'model' => $model,
+]) ?>
