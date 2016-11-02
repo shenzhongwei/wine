@@ -125,7 +125,11 @@ use admin\models\AdList;
                         ],
                         'pluginOptions'=>[
                             'initialPreview'=>empty($model->pic) ? false:[
-                                "../../../photo".$model->pic,
+                                '../../../photo'.$model->pic,
+                            ],
+                            'initialPreviewConfig'=>[
+                                'width'=>'100%',
+                                'height'=>'100%',
                             ],
                             'uploadUrl' => Url::to(['/ad/upload']),
                             'uploadExtraData' => [
@@ -151,6 +155,7 @@ use admin\models\AdList;
                         'pluginEvents'=>[
                             'fileloaded'=>"function(){
                             $('.file-preview-image').css('width','100%');
+                            $('.file-preview-image').css('height','100%');
                             }",
                             'fileuploaderror'=>"function(){
                                                  $('.fileinput-upload-button').attr('disabled',true);
@@ -187,5 +192,8 @@ use admin\models\AdList;
         ActiveForm::end(); ?>
     </div>
 <script language="JavaScript">
-
+    $(function () {
+       $('.file-preview-image').css('width','100%');
+        $('.file-preview-image').css('height','100%');
+    });
 </script>
