@@ -25,7 +25,7 @@ $payArr = [
     }
 </style>
 <div class="good-rush-form">
-    <div class="panel panel-info" style="width: 70%">
+    <div class="panel panel-info" style="width: 80%">
         <div class="panel-heading">
             <?= $model->isNewRecord ? '发布抢购' : '编辑抢购' ?>
         </div>

@@ -2,12 +2,15 @@
 
 namespace admin\controllers;
 
+use kartik\form\ActiveForm;
 use Yii;
 use admin\models\PromotionType;
 use admin\models\PromotionTypeSearch;
+use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * PromotionTypeController implements the CRUD actions for PromotionType model.
@@ -46,6 +49,18 @@ class PromotionTypeController extends BaseController
         ]);
     }
 
+    public function actionValidForm(){
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $data = Yii::$app->request->post();
+        $id=Yii::$app->request->get('id');
+        $model = new PromotionType();
+        if(empty($id)){
+            $model->id=$id;
+        }
+        $model->load($data);
+        return ActiveForm::validate($model);
+    }
+
 
 
     /**
@@ -64,6 +79,151 @@ class PromotionTypeController extends BaseController
                 'model' => $model,
             ]);
         }
+    }
+
+
+    public function actionEnv(){
+        $depDrop = Yii::$app->request->post('depdrop_parents');
+        $results = [];
+        if (isset($depDrop)) {
+            $id = end($depDrop);
+            if(!empty($id)){
+                switch ($id){
+                    case 1:
+                        $results = [
+                            [
+                                'id'=>1,
+                                'name'=>'用户注册',
+                            ],
+                            [
+                                'id'=>2,
+                                'name'=>'推荐成功',
+                            ],
+                        ];
+                        break;
+                    case 2:
+                        $results = [
+                            [
+                                'id'=>3,
+                                'name'=>'下单时',
+                            ],
+                        ];
+                        break;
+                    case 3:
+                        $results = [
+                            [
+                                'id'=>4,
+                                'name'=>'下单成功',
+                            ],
+                            [
+                                'id'=>5,
+                                'name'=>'被推荐人下单成功',
+                            ],
+                        ];
+                        break;
+                    case 4:
+                        $results = [
+                            [
+                                'id'=>6,
+                                'name'=>'充值成功',
+                            ],
+                        ];
+                        break;
+                    default:
+                        $results = [];
+                        break;
+
+                }
+            }
+        }
+        echo Json::encode(['output' => empty($results) ? '':$results, 'selected'=>'']);
+        exit;
+    }
+
+    public function actionGroup(){
+        $depDrop = Yii::$app->request->post('depdrop_parents');
+        $results = [];
+        if (isset($depDrop)) {
+            $id = end($depDrop);
+            if(!empty($id)){
+                switch ($id){
+                    case 1:
+                        $results = [
+                            [
+                                'id'=>1,
+                                'name'=>'赠送优惠券',
+                            ],
+                        ];
+                        break;
+                    case 2:
+                        $results = [
+                            [
+                                'id'=>1,
+                                'name'=>'赠送优惠券',
+                            ],
+                            [
+                                'id'=>2,
+                                'name'=>'赠送积分',
+                            ],
+                        ];
+                        break;
+                    case 3:
+                        $results = [
+                            [
+                                'id'=>4,
+                                'name'=>'下单优惠',
+                            ],
+                        ];
+                        break;
+                    case 4:
+                        $results = [
+                            [
+                                'id'=>1,
+                                'name'=>'赠送优惠券',
+                            ],
+                            [
+                                'id'=>2,
+                                'name'=>'赠送积分',
+                            ],
+                        ];
+                        break;
+                    case 5:
+                        $results = [
+                            [
+                                'id'=>1,
+                                'name'=>'赠送优惠券',
+                            ],
+                            [
+                                'id'=>2,
+                                'name'=>'赠送积分',
+                            ],
+                        ];
+                        break;
+                    case 6:
+                        $results = [
+                            [
+                                'id'=>1,
+                                'name'=>'赠送优惠券',
+                            ],
+                            [
+                                'id'=>2,
+                                'name'=>'赠送积分',
+                            ],
+                            [
+                                'id'=>3,
+                                'name'=>'会员特权',
+                            ],
+                        ];
+                        break;
+                    default:
+                        $results = [];
+                        break;
+
+                }
+            }
+        }
+        echo Json::encode(['output' => empty($results) ? '':$results, 'selected'=>'']);
+        exit;
     }
 
     /**

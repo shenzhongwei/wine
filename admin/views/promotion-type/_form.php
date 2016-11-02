@@ -5,6 +5,7 @@ use kartik\widgets\ActiveForm;
 use kartik\builder\Form;
 use kartik\select2\Select2;
 use admin\models\Dics;
+use yii\helpers\Url;
 
 /**
  * @var yii\web\View $this
@@ -13,16 +14,19 @@ use admin\models\Dics;
  */
 ?>
 
-<div class="promotion-type-form col-sm-8">
+<div class="promotion-type-form">
 
-    <?php $form = ActiveForm::begin([ 'type'=>ActiveForm::TYPE_VERTICAL,
+    <?php $form = ActiveForm::begin([
+        'type'=>ActiveForm::TYPE_VERTICAL,
         'fullSpan'=>12,
         'formConfig' => [
             'deviceSize' => ActiveForm::SIZE_LARGE,
         ],
+        'enableAjaxValidation'=>true, //开启ajax验证
+        'validationUrl'=>Url::toRoute(['valid-form','id'=>empty($model->id)?0:$model->id]), //验证url
     ]);
     ?>
-    <div class="panel panel-info">
+    <div class="panel panel-info" style="width: 80%">
         <div class="panel-heading">
             <?= $model->isNewRecord ? '发布促销类型' : '编辑促销类型'.$model->name ?>
         </div>

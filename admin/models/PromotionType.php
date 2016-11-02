@@ -39,6 +39,7 @@ class PromotionType extends \yii\db\ActiveRecord
             [['env', 'class', 'group', 'limit', 'regist_at', 'is_active', 'active_at'], 'integer'],
             [['env', 'class', 'group', 'limit','name'],'required'],
             [['name'], 'string', 'max' => 128],
+            [['env', 'class', 'group', 'limit'],'validType'],
         ];
     }
 
@@ -66,6 +67,17 @@ class PromotionType extends \yii\db\ActiveRecord
     public function getPromotionInfos()
     {
         return $this->hasMany(PromotionInfo::className(), ['pt_id' => 'id']);
+    }
+
+    public function validType(){
+        $query = self::find()->where(['env'=>$this->env,'class'=>$this->class,'group'=>$this->group,'limit'=>$this->limit]);
+        if(!empty($this->id)){
+            $query->andWhere("id<>$this->id");
+        }
+        $model = $query->one();
+        if(!empty($model)){
+            $this->addError('limit','已存在组别、环境、形式和限制完全相同的促销类型，请勿重复操作');
+        }
     }
 
 
