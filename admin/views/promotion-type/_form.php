@@ -6,6 +6,7 @@ use kartik\builder\Form;
 use kartik\select2\Select2;
 use admin\models\Dics;
 use yii\helpers\Url;
+use kartik\depdrop\DepDrop;
 
 /**
  * @var yii\web\View $this
@@ -49,28 +50,54 @@ use yii\helpers\Url;
                 ]
             ],
 
-            'env'=>['type'=> Form::INPUT_WIDGET,'label'=>'促销环境','widgetClass'=>Select2::className(),
+            'env'=>['type'=> Form::INPUT_WIDGET,'label'=>'促销环境','widgetClass'=>DepDrop::className(),
                 'options'=>[
-                    'data'=>Dics::getPromotionEnv(),
-                    'options'=>['placeholder'=>'请选择促销环境'],
-                    'pluginOptions'=>['allowClear'=>true]
-                ]
+                    'type' => DepDrop::TYPE_SELECT2,
+                    'data'=> empty($model->id) ? []:Dics::getPromotionEnv(),
+                    'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+                    'options'=>['placeholder'=>'请选择促销环境',empty($model->id) ? '':'disabled'=>true],
+                    'pluginOptions'=>[
+                        'placeholder'=>'请选择促销环境',
+                        'depends'=>['promotiontype-class'],
+                        'url' => Url::toRoute(['promotion-type/env']),
+                        'loadingText' => '',
+                    ],
+                ],
+//                'options'=>[
+//                    'data'=>Dics::getPromotionEnv(),
+//                    'options'=>['placeholder'=>'请选择促销环境'],
+//                    'pluginOptions'=>['allowClear'=>true]
+//                ]
             ],
 
-            'group'=>['type'=> Form::INPUT_WIDGET,'label'=>'促销形式','widgetClass'=>Select2::className(),
+            'group'=>['type'=> Form::INPUT_WIDGET,'label'=>'促销形式','widgetClass'=>DepDrop::className(),
                 'options'=>[
-                    'data'=>Dics::getPromotionGroup(),
-                    'options'=>['placeholder'=>'请选择促销形式'],
-                    'pluginOptions'=>['allowClear'=>true]
-                ]
+                    'type' => DepDrop::TYPE_SELECT2,
+                    'data'=> empty($model->id) ? []:Dics::getPromotionGroup(),
+                    'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+                    'options'=>['placeholder'=>'请选择促销形式',empty($model->id) ? '':'disabled'=>true],
+                    'pluginOptions'=>[
+                        'placeholder'=>'请选择促销形式',
+                        'depends'=>['promotiontype-class','promotiontype-env'],
+                        'url' => Url::toRoute(['promotion-type/group']),
+                        'loadingText' => '',
+                    ],
+                ],
             ],
 
-            'limit'=>['type'=> Form::INPUT_WIDGET,'label'=>'促销限制','widgetClass'=>Select2::className(),
+            'limit'=>['type'=> Form::INPUT_WIDGET,'label'=>'促销限制','widgetClass'=>DepDrop::className(),
                 'options'=>[
-                    'data'=>Dics::getPromotionLimit(),
-                    'options'=>['placeholder'=>'请选择促销限制'],
-                    'pluginOptions'=>['allowClear'=>true]
-                ]
+                    'type' => DepDrop::TYPE_SELECT2,
+                    'data'=> empty($model->id) ? []:Dics::getPromotionGroup(),
+                    'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+                    'options'=>['placeholder'=>'请选择促销形式',empty($model->id) ? '':'disabled'=>true],
+                    'pluginOptions'=>[
+                        'placeholder'=>'请选择促销形式',
+                        'depends'=>['promotiontype-class','promotiontype-env','promotiontype-group'],
+                        'url' => Url::toRoute(['promotion-type/limit']),
+                        'loadingText' => '',
+                    ],
+                ],
             ],
 
 

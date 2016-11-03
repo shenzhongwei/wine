@@ -62,26 +62,6 @@ class PromotionTypeController extends BaseController
     }
 
 
-
-    /**
-     * Creates a new PromotionType model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new PromotionType;
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-
     public function actionEnv(){
         $depDrop = Yii::$app->request->post('depdrop_parents');
         $results = [];
@@ -144,38 +124,18 @@ class PromotionTypeController extends BaseController
         $depDrop = Yii::$app->request->post('depdrop_parents');
         $results = [];
         if (isset($depDrop)) {
-            $id = end($depDrop);
-            if(!empty($id)){
-                switch ($id){
-                    case 1:
+            $class = $depDrop[0];
+            $env = $depDrop[1];
+            if(!empty($class)&&!empty($env)){
+                if($class==1){
+                    if($env==1){
                         $results = [
                             [
                                 'id'=>1,
                                 'name'=>'赠送优惠券',
                             ],
                         ];
-                        break;
-                    case 2:
-                        $results = [
-                            [
-                                'id'=>1,
-                                'name'=>'赠送优惠券',
-                            ],
-                            [
-                                'id'=>2,
-                                'name'=>'赠送积分',
-                            ],
-                        ];
-                        break;
-                    case 3:
-                        $results = [
-                            [
-                                'id'=>4,
-                                'name'=>'下单优惠',
-                            ],
-                        ];
-                        break;
-                    case 4:
+                    }elseif ($env==2){
                         $results = [
                             [
                                 'id'=>1,
@@ -186,8 +146,31 @@ class PromotionTypeController extends BaseController
                                 'name'=>'赠送积分',
                             ],
                         ];
-                        break;
-                    case 5:
+                    }
+                }elseif ($class==2){
+                    $results = [
+                        [
+                        'id'=>4,
+                        'name'=>'下单优惠',
+                        ],
+                    ];
+                }elseif ($class==3){
+                    if($env==4){
+                        $results = [
+//                            [
+//                                'id'=>1,
+//                                'name'=>'赠送优惠券',
+//                            ],
+//                            [
+//                                'id'=>2,
+//                                'name'=>'赠送积分',
+//                            ],
+                            [
+                                'id'=>5,
+                                'name'=>'分享网页',
+                            ],
+                        ];
+                    }elseif ($env==5){
                         $results = [
                             [
                                 'id'=>1,
@@ -198,27 +181,67 @@ class PromotionTypeController extends BaseController
                                 'name'=>'赠送积分',
                             ],
                         ];
-                        break;
-                    case 6:
-                        $results = [
-                            [
-                                'id'=>1,
-                                'name'=>'赠送优惠券',
-                            ],
-                            [
-                                'id'=>2,
-                                'name'=>'赠送积分',
-                            ],
-                            [
-                                'id'=>3,
-                                'name'=>'会员特权',
-                            ],
-                        ];
-                        break;
-                    default:
-                        $results = [];
-                        break;
+                    }
+                }else{
+                    $results = [
+//                        [
+//                            'id'=>1,
+//                            'name'=>'赠送优惠券',
+//                        ],
+                        [
+                            'id'=>2,
+                            'name'=>'赠送积分',
+                        ],
+                        [
+                            'id'=>3,
+                            'name'=>'开通会员特权',
+                        ],
+                    ];
+                }
+            }
+        }
+        echo Json::encode(['output' => empty($results) ? '':$results, 'selected'=>'']);
+        exit;
+    }
 
+    public function actionLimit(){
+        $depDrop = Yii::$app->request->post('depdrop_parents');
+        $results = [];
+        if (isset($depDrop)) {
+            $class = $depDrop[0];
+            $env = $depDrop[1];
+            $group = $depDrop[2];
+            if(!empty($class)&&!empty($env)&&!empty($group)){
+                if($class==1||$class==3){
+                    $results = [
+                        [
+                            'id'=>1,
+                            'name'=>'唯一',
+                        ],
+                    ];
+                }elseif ($class==2){
+                    $results = [
+                        [
+                            'id'=>2,
+                            'name'=>'多个共存',
+                        ],
+                    ];
+                }else{
+                    if($group==2){
+                        $results = [
+                            [
+                                'id'=>2,
+                                'name'=>'多个共存',
+                            ],
+                        ];
+                    }else{
+                        $results = [
+                            [
+                                'id'=>1,
+                                'name'=>'唯一',
+                            ],
+                        ];
+                    }
                 }
             }
         }
@@ -237,9 +260,35 @@ class PromotionTypeController extends BaseController
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success','操作成功');
              return $this->redirect(['index']);
         } else {
+            if(Yii::$app->request->isPost){
+                Yii::$app->session->setFlash('danger',array_values($model->getFirstErrors())[0]);
+            }
             return $this->render('update', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+    /**
+     * Creates a new PromotionType model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionCreate()
+    {
+        $model = new PromotionType;
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success','操作成功');
+            return $this->redirect(['index']);
+        } else {
+//            if(Yii::$app->request->isPost){
+//                Yii::$app->session->setFlash('danger',array_values($model->getFirstErrors())[0]);
+//            }
+            return $this->render('create', [
                 'model' => $model,
             ]);
         }

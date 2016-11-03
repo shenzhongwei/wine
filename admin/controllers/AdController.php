@@ -185,7 +185,7 @@ class AdController extends BaseController
             return $this->redirect([$key]);
         } else {
             if(Yii::$app->request->isPost){
-                Yii::$app->session->setFlash('danger',$model->getFirstErrors()[0]);
+                Yii::$app->session->setFlash('danger',array_values($model->getFirstErrors())[0]);
                 return $this->redirect([$key]);
             }
             return $this->render('create', [
@@ -224,7 +224,7 @@ class AdController extends BaseController
             return $this->redirect([$key]);
         } else {
             if(Yii::$app->request->isPost){
-                Yii::$app->session->setFlash('danger',$model->getFirstErrors()[0]);
+                Yii::$app->session->setFlash('danger',array_values($model->getFirstErrors())[0]);
                 return $this->redirect([$key]);
             }else{
                     if(in_array($model->type,[1,7])){
