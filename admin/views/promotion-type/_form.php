@@ -15,7 +15,7 @@ use kartik\depdrop\DepDrop;
  */
 ?>
 
-<div class="promotion-type-form">
+<div class="promotion-type-form" style="width: 80%" >
 
     <?php $form = ActiveForm::begin([
         'type'=>ActiveForm::TYPE_VERTICAL,
@@ -27,11 +27,6 @@ use kartik\depdrop\DepDrop;
         'validationUrl'=>Url::toRoute(['valid-form','id'=>empty($model->id)?0:$model->id]), //验证url
     ]);
     ?>
-    <div class="panel panel-info" style="width: 80%">
-        <div class="panel-heading">
-            <?= $model->isNewRecord ? '发布促销类型' : '编辑促销类型'.$model->name ?>
-        </div>
-        <div class="panel-body">
     <?php
         echo Form::widget([
 
@@ -106,10 +101,8 @@ use kartik\depdrop\DepDrop;
     ]);
 
 
-    echo Html::submitButton(Yii::t('app', 'Save') , ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']);
+    echo Html::submitButton(Yii::t('app', 'Save') , ['class' => 'btn btn-success']);
     ?>
-        </div>
-    </div>
     <?php ActiveForm::end(); ?>
 
 </div>

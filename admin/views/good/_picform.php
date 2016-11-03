@@ -91,7 +91,7 @@ use kartik\file\FileInput;
                 'pic'=>['type'=>Form::INPUT_HIDDEN,'label'=>false]
             ]
         ]);
-        echo Html::submitButton('保存', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']);
+        echo Html::submitButton('保存', [ 'class'=>'btn btn-success']);
         ActiveForm::end(); ?>
 
     </div>

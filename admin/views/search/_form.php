@@ -15,12 +15,7 @@ use admin\models\GoodVip;
  */
 ?>
 
-<div class="good-vip-form">
-    <div class="panel panel-info" style="width: 70%">
-        <div class="panel-heading">
-            <?= '发布热搜'  ?>
-        </div>
-        <div class="panel-body">
+<div class="good-vip-form" style="width: 80%">
         <?php $form = ActiveForm::begin([
                 'type'=>ActiveForm::TYPE_VERTICAL,
                 'formConfig' => [
@@ -47,6 +42,4 @@ use admin\models\GoodVip;
             <?php
             echo Html::submitButton( Yii::t('app', 'Save'), ['class' =>'btn btn-success']);
             ActiveForm::end(); ?>
-            </div>
-        </div>
 </div>

@@ -31,7 +31,7 @@ use kartik\tabs\TabsX;
  * @var admin\models\GoodType $model
  * @var string $key
  */
-$this->title = $model->name;
+$this->title = ' 检索：'.$model->name;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', '子检索'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 $brand = $this->render('brand',['model'=>$model,'searchModel'=>$searchModel,'dataProvider'=>$dataProvider]);
@@ -98,9 +98,9 @@ $items = [
 ];
 ?>
 <div class="good-type-view">
-    <div class="panel panel-info">
+    <div class="panel panel-success">
         <div class="panel-heading">
-            <?= '检索：'.$model->name ?>
+            <span class="glyphicon glyphicon-th-list"></span><?= $this->title ?>
         </div>
         <div class="panel-body">
         <?php

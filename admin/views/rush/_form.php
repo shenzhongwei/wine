@@ -24,12 +24,7 @@ $payArr = [
         margin-top: 1px;
     }
 </style>
-<div class="good-rush-form">
-    <div class="panel panel-info" style="width: 80%">
-        <div class="panel-heading">
-            <?= $model->isNewRecord ? '发布抢购' : '编辑抢购' ?>
-        </div>
-        <div class="panel-body">
+<div class="good-rush-form" style="width: 80%">
     <?php $form = ActiveForm::begin([
         'type'=>ActiveForm::TYPE_VERTICAL,
         'formConfig' => [
@@ -118,14 +113,11 @@ $payArr = [
 
                 ]);
 
-                echo Html::submitButton(Yii::t('app', 'Save') , ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']);
+                echo Html::submitButton(Yii::t('app', 'Save') , ['class' =>'btn btn-success']);
                 ?>
 
     <?php
     ActiveForm::end(); ?>
-            </div>
-
-        </div>
 </div>
 <!--<script>-->
 <!--    $(function () {-->

@@ -40,11 +40,11 @@ $payArr = [
         ],
     ]);
     ?>
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <?= $model->isNewRecord ? '发布商品' : '编辑商品' ?>
-            </div>
-            <div class="panel-body">
+<!--        <div class="panel panel-info">-->
+<!--            <div class="panel-heading">-->
+<!--                --><?//= $model->isNewRecord ? '发布商品' : '编辑商品' ?>
+<!--            </div>-->
+<!--            <div class="panel-body">-->
 
                 <div class="row">
                     <div class="col-sm-6">
@@ -327,11 +327,11 @@ $payArr = [
                 </div>
                 <div class="row col-sm-4">
                     <?php
-                    echo Html::submitButton($model->isNewRecord ? Yii::t('app', '保存') : Yii::t('app', '保存'), ['class' => 'btn btn-primary btn-rounded btn-block']);
+                    echo Html::submitButton('保存', ['class' => 'btn btn-success btn-block']);
                     ?>
                 </div>
-            </div>
-        </div>
+<!--            </div>-->
+<!--        </div>-->
         <?php
         ActiveForm::end();
         ?>

@@ -281,13 +281,18 @@ class PromotionTypeController extends BaseController
     {
         $model = new PromotionType;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success','操作成功');
-            return $this->redirect(['index']);
+        if ($model->load(Yii::$app->request->post())) {
+            $model->is_active=1;
+            $model->active_at = time();
+            $model->regist_at = time();
+            if($model->save()){
+                Yii::$app->session->setFlash('success','操作成功');
+                return $this->redirect(['index']);
+            }
         } else {
-//            if(Yii::$app->request->isPost){
-//                Yii::$app->session->setFlash('danger',array_values($model->getFirstErrors())[0]);
-//            }
+            if(Yii::$app->request->isPost){
+                Yii::$app->session->setFlash('danger',array_values($model->getFirstErrors())[0]);
+            }
             return $this->render('create', [
                 'model' => $model,
             ]);
