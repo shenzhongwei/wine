@@ -91,12 +91,10 @@ $this->registerJsFile("@web/js/good/_script.js");
             ],
         ],
         // set your toolbar
-        'toolbar'=> false,
         'responsive'=>false,
-        'hover'=>true,
         'condensed'=>true,
         'panel' => [
-            'type'=>'info',
+            'type'=>GridView::TYPE_SUCCESS,
             'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> '.Html::encode($this->title).' </h3>',
             'showPanel'=>true,
             'before'=>$dataProvider->count >= 4 ? false:Html::a('<i class="fa fa-plus"> 添加轮播图</i>', ['#'],[

@@ -11,7 +11,7 @@ $this->title = ' 新增分类';
 $this->params['breadcrumbs'][] = ['label' => '优惠券分类', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="promotion-type-create" style="margin-top: 5px;">
+<div class="promotion-type-create">
     <div class="panel panel-success">
         <div class="panel-heading">
             <span class="glyphicon glyphicon-plus"></span><?= $this->title ?>
