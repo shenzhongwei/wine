@@ -30,7 +30,6 @@ class PromotionController extends BaseController
         ];
     }
 
-
     public function actionIndex()
     {
         $searchModel = new PromotionInfoSearch;

@@ -90,6 +90,52 @@ class PromotionInfo extends \yii\db\ActiveRecord
         return $this->hasMany(UserTicket::className(), ['pid' => 'id']);
     }
 
+    public static function GetNames(){
+        $res = self::find()->all();
+        return array_values(ArrayHelper::getColumn($res,'name'));
+    }
+
+    public static function GetTypes(){
+        $res = PromotionType::find()->joinWith('promotionInfos')->where('promotion_info.id>0')->all();
+        return ArrayHelper::map($res,'id','name');
+    }
+
+    public static function GetLimits(){
+        $res = Dics::findAll(['type'=>'优惠适用对象']);
+        return ArrayHelper::map($res,'id','name');
+    }
+
+    public static function GetStyles(){
+        $res = Dics::findAll(['type'=>'优惠形式']);
+        return ArrayHelper::map($res,'id','name');
+    }
+
+    public static function GetTargets($limit){
+        switch ($limit){
+            case 1;
+                $result = [
+                    '1'=>'平台通用',
+                ];
+                break;
+            case 2;
+                $res = MerchantInfo::find()->all();
+                $result = ArrayHelper::map($res,'id','name');
+                break;
+            case 3;
+                $res = ShopInfo::find()->all();
+                $result = ArrayHelper::map($res,'id','name');
+                break;
+            case 4;
+                $res = GoodInfo::find()->where('is_active=1')->all();
+                $result = ArrayHelper::map($res,'id','name');
+                break;
+            default:
+                $result=[];
+                break;
+        }
+        return $result;
+    }
+
     /*
      * 根据活动范围来获取对应的商家/门店/平台名称
      */

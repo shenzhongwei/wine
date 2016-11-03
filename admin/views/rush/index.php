@@ -14,7 +14,6 @@ $this->title = '抢购管理';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="good-rush-index">
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?php
     echo GridView::widget([

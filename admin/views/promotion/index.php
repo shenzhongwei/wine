@@ -4,6 +4,10 @@ use yii\helpers\Html;
 use kartik\grid\GridView;
 use admin\models\PromotionType;
 use admin\models\PromotionInfo;
+use yii\jui\AutoComplete;
+use kartik\depdrop\DepDrop;
+use kartik\select2\Select2;
+use yii\helpers\Url;
 /**
  * @var yii\web\View $this
  * @var yii\data\ActiveDataProvider $dataProvider
@@ -14,7 +18,6 @@ $this->title = '活动列表';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="promotion-info-index">
-
     <?php
     echo GridView::widget([
         "options" => [
@@ -35,17 +38,24 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
         'columns' => [
             [
-                'width'=>'1%',
+                'width'=>'2%',
                 'vAlign'=>'middle',
                 'hAlign'=>'center',
-                'class' => 'kartik\grid\CheckboxColumn'
+                'class' => 'kartik\grid\CheckboxColumn',
+                'name'=>'id',
             ],
             [
                 'header'=>'优惠名称',
-                'width'=>'7%',
+                'width'=>'8%',
                 'vAlign'=>'middle',
                 'hAlign'=>'center',
                 'attribute'=>'name',
+                'filterType'=>AutoComplete::className(),
+                'filterWidgetOptions'=>[
+                    'clientOptions' => [
+                        'source' =>PromotionInfo::GetNames(),
+                    ],
+                ]
             ],
             [
                 'attribute'=>'pt_id',
@@ -55,18 +65,30 @@ $this->params['breadcrumbs'][] = $this->title;
                 'hAlign'=>'center',
                 'value'=>function($data){
                     return $data->pt->name;
-                }
+                },
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=>PromotionInfo::GetTypes(),
+                'filterWidgetOptions'=>[
+                    'options'=>['placeholder'=>'促销分类'],
+                    'pluginOptions' => ['allowClear' => true],
+                ]
             ],
             [
                 'attribute'=>'limit',
                 'header'=>'适用范围',
-                'width'=>'7%',
+                'width'=>'8%',
                 'vAlign'=>'middle',
                 'hAlign'=>'center',
                 'format'=>'html',
                 'value'=>function($data){
                     return PromotionType::getPromotionRangeById($data->limit);
-                }
+                },
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=>PromotionInfo::GetLimits(),
+                'filterWidgetOptions'=>[
+                    'options'=>['placeholder'=>'适用范围'],
+                    'pluginOptions' => ['allowClear' => true],
+                ]
             ],
             [
                 'header'=>'适用对象',
@@ -77,52 +99,89 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format'=>'html',
                 'value'=>function($data){
                     return PromotionInfo::getNameByRange($data);
-                }
+                },
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=>PromotionInfo::GetTargets($searchModel->limit),
+                'filterWidgetOptions'=>[
+                    'options'=>['placeholder'=>'适用对象','disabled'=>empty($searchModel->limit) ? true:false],
+                    'pluginOptions' => ['allowClear' => true],
+                ]
+
             ],
             [
                 'attribute'=>'style',
-                'width'=>'6%',
+                'width'=>'7%',
                 'header'=>'优惠类型',
                 'vAlign'=>'middle',
                 'hAlign'=>'center',
                 'format'=>'html',
                 'value'=>function($data){
                     return PromotionType::getPromotionStyleById($data->style);
-                }
+                },
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=>PromotionInfo::GetStyles(),
+                'filterWidgetOptions'=>[
+                    'options'=>['placeholder'=>'优惠类型'],
+                    'pluginOptions' => ['allowClear' => true],
+                ]
             ],
             [
-                'label'=>'满足条件',
-                'width'=>'6%',
+                'label'=>'条件',
+                'width'=>'5%',
                 'vAlign'=>'middle',
                 'hAlign'=>'center',
                 'attribute'=>'condition',
+                'filterInputOptions'=>['onkeyup'=>'clearNoNum(this)','class'=>'form-control'],
             ],
             [
-                'label'=>'优惠额度',
-                'width'=>'6%',
+                'label'=>'优惠额',
+                'width'=>'5%',
                 'vAlign'=>'middle',
                 'hAlign'=>'center',
                 'attribute'=>'discount',
+                'filterInputOptions'=>['onkeyup'=>'clearNoNum(this)','class'=>'form-control'],
             ],
             [
-                'label'=>'开始时间',
+                'label'=>'开始日期',
                 'width'=>'11%',
                 'attribute'=>'start_at',
                 'vAlign'=>'middle',
                 'hAlign'=>'center',
                 'value'=>function($data){
                     return empty($data->start_at)?'<span class="not-set">永久有效</span>':date('Y年m月d日',$data->start_at);
-                }
+                },
+                'filterType'=>GridView::FILTER_DATE,
+                'filterWidgetOptions'=>[
+                    // inline too, not bad
+                    'language' => 'zh-CN',
+                    'options' => ['placeholder' => '开始日期','readonly'=>true],
+                    'pluginOptions' => [
+                        'format' => 'yyyy年mm月dd日',
+                        'autoclose' => true,
+
+                    ]
+                ]
             ],
             [
-                'label'=>'结束时间',
+                'label'=>'结束日期',
                 'width'=>'11%',
                 'attribute'=>'end_at',
                 'vAlign'=>'middle',
                 'hAlign'=>'center',
                 'value'=>function($data){
                     return empty($data->end_at)?'<span class="not-set">永久有效</span>':date('Y年m月d日',$data->end_at);
-                }
+                },
+                'filterType'=>GridView::FILTER_DATE,
+                'filterWidgetOptions'=>[
+                    // inline too, not bad
+                    'language' => 'zh-CN',
+                    'options' => ['placeholder' => '结束日期','readonly'=>true],
+                    'pluginOptions' => [
+                        'format' => 'yyyy年mm月dd日',
+                        'autoclose' => true,
+
+                    ]
+                ]
             ],
 
             [
@@ -152,7 +211,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute'=> 'time',
                 'width'=>'5%',
-                'header'=>'可参与次数',
+                'header'=>'可用次数',
                 'vAlign'=>'middle',
                 'hAlign'=>'center',
                 'value'=>function($data){
@@ -161,7 +220,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'header'=>'操作',
-                'width'=>'12%',
+                'width'=>'10%',
                 'class' =>'kartik\grid\ActionColumn',
                 'vAlign'=>'middle',
                 'hAlign'=>'center',
@@ -199,6 +258,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
             ],
         ],
+        // set your toolbar
+
         'toolbar'=> [
             ['content'=>
                 Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create'],['data-pjax'=>0,'type'=>'button', 'title'=>'发布活动', 'class'=>'btn btn-primary']).

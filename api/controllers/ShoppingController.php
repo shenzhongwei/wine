@@ -73,6 +73,20 @@ class ShoppingController extends ApiController{
         return $this->showList(200,'列表如下',$count,$data);
     }
 
+
+    /**
+     * 购物车总数接口
+     */
+    public function actionTotal(){
+        $user_id = Yii::$app->user->identity->getId();
+        $model = ShoppingCert::find()->addSelect(["SUM(amount) as sum"])->where(['uid'=>$user_id])->one();
+        $data = [
+            'count'=>empty($model->sum) ? 0:$model->sum,
+        ];
+        return $this->showResult(200,'成功',$data);
+    }
+
+
     /**
      * 删除购物车API
      */

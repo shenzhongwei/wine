@@ -42,13 +42,18 @@ class PromotionInfoSearch extends PromotionInfo
 
         $query->andFilterWhere([
             'limit' => $this->limit, //活动范围
+            'type' => $this->pt_id,
+            'target_id'=>$this->target_id,
+            'style'=>$this->style,
             'is_active' => $this->is_active, //是否上架
         ]);
 
 
         //活动优惠时间
 
-        $query->andFilterWhere(['>=','start_at',strtotime($this->start_at.' 00:00:00')]);
+        $query->andFilterWhere(['>=','start_at',strtotime($this->start_at.' 00:00:00')])
+            ->andFilterWhere(['>=','condition',$this->condition])
+            ->andFilterWhere(['>=','discount',$this->discount]);
         $query->andFilterWhere(['<=','end_at',strtotime($this->end_at.' 23:59:59')]);
 
         //活动名称
