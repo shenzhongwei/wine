@@ -27,7 +27,7 @@ foreach($typemodel as $k=>$v){
 <style>
     .showtime{display: none;}
 </style>
-<div class="promotion-info-form" style="margin-top: 5px;">
+<div class="promotion-info-form">
     <?php
     $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_HORIZONTAL]);
     echo Form::widget([
@@ -43,7 +43,7 @@ foreach($typemodel as $k=>$v){
 
             'condition'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'输入条件', 'maxlength'=>11]],
 
-            'pt_id'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>select2::className(),
+            'pt_id'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>Select2::className(),
                 'options'=>[
                     'data'=>$res,
                     'options'=>['placeholder'=>'请选择优惠类型'],
@@ -52,7 +52,7 @@ foreach($typemodel as $k=>$v){
             ],
 
 
-            'limit'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>select2::className(),
+            'limit'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>Select2::className(),
                 'options'=>[
                     'data'=>['1'=>'平台通用'],
                     //'data'=>Dics::getPromotionRange(),
@@ -77,7 +77,7 @@ foreach($typemodel as $k=>$v){
 
             'time'=>['type'=> Form::INPUT_TEXT, 'options'=>['输入次数']],
 
-            'valid_circle'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>select2::className(),
+            'valid_circle'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>Select2::className(),
                 'options'=>[
                     'data'=>['0'=>'永久有效','-1'=>'非永久有效'],
                     'options'=>['placeholder'=>$model->valid_circle==0?'请输入有效期':($model->valid_circle.'天')],

@@ -4,7 +4,7 @@ namespace api\models;
 
 use common\pay\alipay\helpers\AlipayHelper;
 use common\pay\wepay\helpers\Log;
-use daixianceng\smser\Wxtsms;
+use daixianceng\smser\LuosimaoSmser;
 use Yii;
 use yii\base\Exception;
 
@@ -207,11 +207,12 @@ class OrderPay extends \yii\db\ActiveRecord
             $shop=$orderInfo->s;
             if(self::validateMobilePhone($shop->phone)){
                 //给店铺发短信
-                $smser = new Wxtsms();
-                $smser->username = Yii::$app->params['smsParams']['username'];
-                $smser->setPassword(Yii::$app->params['smsParams']['password']);
-                $content = "【酒双天】您有新的订单待处理，订单编号：$orderInfo->order_code，请尽快处理！";
-                $res = $smser->sendSms($shop->phone,$content);
+                $smser = new LuosimaoSmser();
+//                $smser->username = Yii::$app->params['smsParams']['username'];
+//                $smser->setPassword(Yii::$app->params['smsParams']['password']);
+                $smser->setPassword(Yii::$app->params['smsParams']['api_key']);
+                $content = "您有新的订单待处理，订单编号：$orderInfo->order_code，请尽快处理！【双天酒易购】";
+                $res = $smser->send($shop->phone,$content);
                 if($res){
                     $log->log_result('短信发送成功');
                 }else{

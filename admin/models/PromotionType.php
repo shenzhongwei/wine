@@ -135,7 +135,15 @@ class PromotionType extends \yii\db\ActiveRecord
      * 根据id去dics查找优惠对象
      */
     public static function getPromotionRangeById($id){
-        $model=Dics::find()->select(['name'])->andWhere(['type'=>'优惠适用对象','id'=>$id])->asArray()->one();
-        return empty($model)?'':$model['name'];
+        $res=Dics::findOne(['type'=>'优惠适用对象','id'=>$id]);
+        return empty($res) ? '<span class="not-set">未设置</span>':$res->name;
+    }
+
+    /*
+     * 根据style去dics查找优惠对象
+     */
+    public static function getPromotionStyleById($id){
+        $res=Dics::findOne(['type'=>'优惠形式','id'=>$id]);
+        return empty($res) ? '<span class="not-set">未设置</span>':$res->name;
     }
 }

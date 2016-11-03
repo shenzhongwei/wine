@@ -45,9 +45,9 @@ class LuosimaoSmser extends Smser
      */
     public function send($mobile, $content)
     {
-        if (parent::send($mobile, $content)) {
-            return true;
-        }
+//        if (parent::send($mobile, $content)) {
+//            return true;
+//        }
         
         $data = [
             'mobile' => $mobile,
@@ -69,7 +69,6 @@ class LuosimaoSmser extends Smser
         
         $result = curl_exec($ch);
         curl_close($ch);
-        
         if (empty($result)) {
             $this->message = '网络错误';
         } else {

@@ -106,9 +106,9 @@ class PromotionInfo extends \yii\db\ActiveRecord
                     break;
                 case 4: //某商品
                     $query=GoodInfo::findOne($model->target_id);
-                    $str=empty($query)?'':$query->name;
+                    $str=empty($query)?'<span class="not-set">未设置</span>':$query->name;
                     break;
-                default: $str='活动适用对象有误'; break;
+                default: $str='<span class="not-set">未设置</span>'; break;
             }
             return $str;
     }

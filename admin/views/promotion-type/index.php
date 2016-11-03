@@ -55,7 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
                ],
                [
                    'header'=>'促销组别',
-                   'width'=>'12%',
+                   'width'=>'10%',
                    'attribute'=>'class',
                    'format'=>'html',
                    'hAlign'=>'center',
@@ -72,7 +72,7 @@ $this->params['breadcrumbs'][] = $this->title;
                ],
                [
                    'header'=>'促销环境',
-                   'width'=>'10%',
+                   'width'=>'12%',
                    'format'=>'html',
                    'attribute'=>'env',
                    'hAlign'=>'center',

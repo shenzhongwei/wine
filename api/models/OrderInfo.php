@@ -2,7 +2,7 @@
 
 namespace api\models;
 
-use daixianceng\smser\Wxtsms;
+use daixianceng\smser\LuosimaoSmser;
 use Yii;
 use yii\base\Exception;
 
@@ -209,12 +209,13 @@ class OrderInfo extends \yii\db\ActiveRecord
                     }
                 }
                 $transaction->commit();
-                $smser = new Wxtsms();
-                $smser->username = Yii::$app->params['smsParams']['username'];
-                $smser->setPassword(Yii::$app->params['smsParams']['password']);
+                $smser = new LuosimaoSmser();
+//                $smser->username = Yii::$app->params['smsParams']['username'];
+//                $smser->setPassword(Yii::$app->params['smsParams']['password']);
+                $smser->setPassword(Yii::$app->params['smsParams']['api_key']);
                 $phone = UserLogin::findOne(['uid'=>$user_id])->username;
-                $content = "【酒双天】您有订单由于长时间未付款，系统已为您自动取消";
-                $smser->sendSms($phone,$content);
+                $content = "您有订单由于长时间未付款，系统已为您自动取消!【双天酒易购】";
+                $smser->send($phone,$content);
                 return true;
             }catch (Exception $e){
                 $transaction->rollBack();
