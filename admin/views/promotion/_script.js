@@ -3,6 +3,11 @@
  */
 
 $(function () {
+
+    var id = $("#promotioninfo-id").val();
+    if(id!=''){
+        Promotion(id)
+    }
     $("input[name='PromotionInfo[date_valid]']").on("change",function () {
         var date_valid = $(this).val();
         if(date_valid == '1'){
@@ -111,6 +116,7 @@ $(function () {
 
 function TypeChange(obj) {
     var type = $(obj).val();
+
     var csrfToken = $('meta[name="csrf-token"]').attr("content");
     $.ajax({
         statusCode: {
@@ -177,6 +183,56 @@ function TypeChange(obj) {
                 $('#promotioninfo-valid_circle').attr('placeholder','请先选择参与优惠券期限形式');
                 $('#promotioninfo-valid_circle').attr('disabled',true);
             }
+            return false;
+        }else{
+            layer.alert('数据出错，请重试',{icon: 0});
+            return false;
+        }
+    },'json');
+}
+
+function Promotion(id) {
+
+    var csrfToken = $('meta[name="csrf-token"]').attr("content");
+    $.ajax({
+        statusCode: {
+            302: function() {
+                layer.alert('登录信息已过期，请重新登录',{icon: 0},function(){
+                    window.top.location.href=toRoute('site/login');
+                });
+                return false;
+            }
+        }
+    });
+    $.post(toRoute('promotion/promotion'),{
+        'id':id,
+        '_wine-admin':csrfToken
+    },function(data){
+        if(data.status == '302'){
+            layer.alert('登录信息已过期，请重新登录',{icon: 0},function(){
+                window.top.location.href=toRoute('site/login');
+            });
+            return false;
+        }else if(data.status == '200'){
+            var result = data.data;
+            var ticket = result.ticket;
+            var time = result.time;
+            //处理次数
+            $('input[name="PromotionInfo[time_valid]"]').attr('disabled',time.is_time=='1' ? false:true);
+            $('input[name="PromotionInfo[time_valid]"][value="0"]').removeAttr('checked');
+            $('input[name="PromotionInfo[time_valid]"][value="1"]').removeAttr('checked');
+            $('input[name="PromotionInfo[time_valid]"][value="'+time.time_check+'"]').prop('checked',true);
+            $('#promotioninfo-time').prop('value',time.time_value);
+            $('#promotioninfo-time').attr('disabled',time.time_disable=='1' ? true:false);
+            $('#promotioninfo-time').attr('placeholder',time.time_placeholder);
+            //处理优惠券
+            $('input[name="PromotionInfo[circle_valid]"]').attr('disabled',ticket.is_ticket=='1' ? false:true);
+            $('input[name="PromotionInfo[circle_valid]"][value="0"]').removeAttr('checked');
+            $('input[name="PromotionInfo[circle_valid]"][value="1"]').removeAttr('checked');
+            $('input[name="PromotionInfo[circle_valid]"][value="'+ticket.ticket_check+'"]').prop('checked',true);
+            $('#promotioninfo-valid_circle').val(ticket.ticket_value);
+            $('#promotioninfo-valid_circle').attr('disabled',ticket.ticket_disable=='1' ? true:false);
+            $('#promotioninfo-valid_circle').attr('placeholder',ticket.ticket_placeholder);
             return false;
         }else{
             layer.alert('数据出错，请重试',{icon: 0});

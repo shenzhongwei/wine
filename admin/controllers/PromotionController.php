@@ -63,6 +63,18 @@ class PromotionController extends BaseController
         if(!empty($data['PromotionInfo']['end_at'])){
             $data['PromotionInfo']['end_at'] = strtotime($data['PromotionInfo']['start_at'].' 23:59:59');
         }
+        if(!empty($data['PromotionInfo']['pt_id'])){
+            $promotionType = PromotionType::findOne($data['PromotionInfo']['pt_id']);
+            if($promotionType->group==3||$promotionType->env==1){
+                //会员特权和用户注册的活动次数限制一次
+                $data['PromotionInfo']['time_valid']=1;
+                $data['PromotionInfo']['time']=1;
+            }elseif ($promotionType->group==5||$promotionType->env == 3){
+                //分享网页与下单时无限制
+                $data['PromotionInfo']['time_valid']=0;
+                $data['PromotionInfo']['time']=0;
+            }
+        }
         $model = new PromotionInfo();
         if(!empty($id)){
             $model->id=$id;
@@ -81,6 +93,18 @@ class PromotionController extends BaseController
         }
         if(!empty($data['PromotionInfo']['end_at'])){
             $data['PromotionInfo']['end_at'] = strtotime($data['PromotionInfo']['start_at'].' 23:59:59');
+        }
+        if($data){
+            $promotionType = PromotionType::findOne($data['PromotionInfo']['pt_id']);
+            if($promotionType->group==3||$promotionType->env==1){
+                //会员特权和用户注册的活动次数限制一次
+                $data['PromotionInfo']['time_valid']=1;
+                $data['PromotionInfo']['time']=1;
+            }elseif ($promotionType->group==5||$promotionType->env == 3){
+                //分享网页与下单时无限制
+                $data['PromotionInfo']['time_valid']=0;
+                $data['PromotionInfo']['time']=0;
+            }
         }
         if ($model->load($data)) {
             if($model->date_valid==0){
@@ -127,6 +151,18 @@ class PromotionController extends BaseController
         if(!empty($data['PromotionInfo']['end_at'])){
             $data['PromotionInfo']['end_at'] = strtotime($data['PromotionInfo']['start_at'].' 23:59:59');
         }
+        if($data){
+            $promotionType = PromotionType::findOne($data['PromotionInfo']['pt_id']);
+            if($promotionType->group==3||$promotionType->env==1){
+                //会员特权和用户注册的活动次数限制一次
+                $data['PromotionInfo']['time_valid']=1;
+                $data['PromotionInfo']['time']=1;
+            }elseif ($promotionType->group==5||$promotionType->env == 3){
+                //分享网页与下单时无限制
+                $data['PromotionInfo']['time_valid']=0;
+                $data['PromotionInfo']['time']=0;
+            }
+        }
         if ($model->load($data)) {
             if($model->date_valid==0){
                 $model->start_at=0;
@@ -146,12 +182,29 @@ class PromotionController extends BaseController
                 return $this->redirect(['index']);
             }else{
                 Yii::$app->session->setFlash('danger','操作失败');
-                return $this->render('uodate', [
+                return $this->render('update', [
                     'model' => $model,
                 ]);
             }
         } else {
-            return $this->render('uodate', [
+            if($model->end_at>0){
+                $model->date_valid=1;
+            }else{
+                $model->date_valid=0;
+            }
+            if($model->time>0){
+                $model->time_valid=1;
+            }else{
+                $model->time_valid=0;
+            }
+            if($model->valid_circle>0){
+                $model->circle_valid=1;
+            }else{
+                $model->circle_valid=0;
+            }
+//            var_dump($is_time);
+//            exit;
+            return $this->render('update', [
                 'model' => $model,
             ]);
         }
@@ -312,6 +365,76 @@ class PromotionController extends BaseController
         $data = [
             'is_ticket'=>$is_ticket,
             'is_time'=>$is_time,
+        ];
+        return $this->showResult(200,'成功',$data);
+    }
+
+    public function actionPromotion(){
+        $user_id = Yii::$app->user->identity;
+        if(empty($user_id)){
+            return $this->showResult(302,'读取用户信息出错');
+        }
+        $id = Yii::$app->request->post('id');
+        $promotion = PromotionInfo::findOne($id);
+        if(empty($promotion)){
+            return $this->showResult(301,'服务器异常');
+        }
+        $promotionType = $promotion->pt;
+        if(empty($promotion)){
+            return $this->showResult(301,'促销种类不存在');
+        }
+        if($promotionType->group == 1){
+            //是优惠券的形式则可操作
+            $is_ticket = 1;
+            $ticket_check = $promotion->valid_circle>0 ? 1:0;
+            $ticket_value = $promotion->valid_circle>0 ? $promotion->valid_circle:'';
+            $ticket_disable = $promotion->valid_circle>0 ? 0:1;
+            $ticket_placeholder = $promotion->valid_circle>0 ? '输入优惠券有效期(单位：天)':'该形式无需输入优惠券的有效期';
+        }else{
+            //费优惠券不可操作
+            $is_ticket = 0;
+            $ticket_check = 0;
+            $ticket_value = '';
+            $ticket_disable = 1;
+            $ticket_placeholder = '该形式无需输入优惠券的有效期';
+        }
+        if($promotionType->group==3||$promotionType->env==1){
+            //会员特权和用户注册的活动次数限制一次
+            $is_time = 0;
+            $time_check =  1;
+            $time_value = 1;
+            $time_disable = 1;
+            $time_placeholder = '请输入可参与次数';
+        }elseif ($promotionType->group==5||$promotionType->env == 3){
+            //分享网页与下单时无限制
+            $is_time = 0;
+            $time_check =  0;
+            $time_value = '';
+            $time_disable = 1;
+            $time_placeholder = '该形式无需输入优惠券的有效期';
+        }else{
+            //其他可操作
+            $is_time = 1;
+            $time_check =  $promotion->time>0 ? 1:0;
+            $time_value = $promotion->time>0 ? $promotion->time:'';
+            $time_disable = $promotion->time>0 ? 0:1;
+            $time_placeholder = $promotion->time>0 ? '请输入优惠券的有效期（单位：天）':'该形式无需输入优惠券的有效期';;
+        }
+        $data = [
+            'ticket'=>[
+                'is_ticket'=>$is_ticket,
+                'ticket_check'=>$ticket_check,
+                'ticket_value'=>$ticket_value,
+                'ticket_disable'=>$ticket_disable,
+                'ticket_placeholder'=>$ticket_placeholder,
+            ],
+            'time'=>[
+                'is_time'=>$is_time,
+                'time_check'=>$time_check,
+                'time_value'=>$time_value,
+                'time_disable'=>$time_disable,
+                'time_placeholder'=>$time_placeholder,
+            ]
         ];
         return $this->showResult(200,'成功',$data);
     }

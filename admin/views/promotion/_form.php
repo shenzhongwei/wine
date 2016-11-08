@@ -33,14 +33,13 @@ $this->registerJs($this->render('_script.js'));
         'enableAjaxValidation'=>true, //开启ajax验证
         'validationUrl'=>Url::toRoute(['valid-form','id'=>empty($model->id)?0:$model->id]), //验证url
     ]);
+    echo $form->field($model,'id')->hiddenInput()->label(false);
     echo Form::widget([
 
         'model' => $model,
         'form' => $form,
         'columns' => 2,
         'attributes' => [
-
-//            'id'=>['type'=>Form::INPUT_HIDDEN,'label'=>false],
 
             'name'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'输入活动名称', 'maxlength'=>30]],
 
@@ -68,8 +67,8 @@ $this->registerJs($this->render('_script.js'));
                 'language'=>'zh-CN',
                 'readonly'=>true,
                 'options' => [
-                    'placeholder' => $model->isNewRecord ?'请先选择活动期限形式':($model->date_valid==1 ? '该形式无需选择开始日期':'请选择活动开始日期'),
-                    'value' => empty($model->id) ? '':date('Y-m-d',$model->start_at),
+                    'placeholder' => $model->isNewRecord ?'请先选择活动期限形式':($model->date_valid==0 ? '该形式无需选择开始日期':'请选择活动开始日期'),
+                    'value' => empty($model->id) ? '':($model->date_valid==0 ? '':date('Y-m-d',$model->start_at)),
                     'disabled'=>$model->isNewRecord ? true:($model->date_valid==1 ? false:true),
                 ],
                 'pluginOptions' => [
@@ -99,8 +98,8 @@ $this->registerJs($this->render('_script.js'));
                 'language'=>'zh-CN',
                 'readonly'=>true,
                 'options' => [
-                    'placeholder' => $model->isNewRecord ?'请先选择活动期限形式':($model->date_valid==1 ? '该形式无需选择结束日期':'请选择活动结束日期'),
-                    'value' => empty($model->id) ? '':date('Y-m-d',$model->end_at),
+                    'placeholder' => $model->isNewRecord ?'请先选择活动期限形式':($model->date_valid==0 ? '该形式无需选择结束日期':'请选择活动结束日期'),
+                    'value' => empty($model->id) ? '':($model->date_valid==0 ? '':date('Y-m-d',$model->end_at)),
                     'disabled'=>$model->isNewRecord ? true:($model->date_valid==1 ? false:true),
                 ],
                 'pluginOptions' => [
@@ -125,8 +124,7 @@ $this->registerJs($this->render('_script.js'));
                 ]
             ],
 
-            'time_valid'=>['type'=> Form::INPUT_RADIO_LIST,'items'=>['0'=>'不限制次数','1'=>'限制次数'],'options'=>['inline'=>true,]
-            ],
+            'time_valid'=>['type'=> Form::INPUT_RADIO_LIST,'items'=>['0'=>'不限制次数','1'=>'限制次数'],'options'=>['inline'=>true,],],
 
             'style'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>DepDrop::className(),
                 'options'=>[

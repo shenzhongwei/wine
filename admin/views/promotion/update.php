@@ -5,6 +5,8 @@ use yii\helpers\Html;
 /**
  * @var yii\web\View $this
  * @var admin\models\PromotionInfo $model
+ * @var string $is_time
+ * @var string $is_ticket
  */
 
 $this->title = ' 更新活动: ' . $model->name;
@@ -19,7 +21,7 @@ $this->params['breadcrumbs'][] = 'Update';
         </div>
         <div class="panel-body">
     <?= $this->render('_form', [
-        'model' => $model,
+        'model' => $model
     ]) ?>
         </div>
     </div>

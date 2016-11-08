@@ -147,6 +147,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute'=>'start_at',
                 'vAlign'=>'middle',
                 'hAlign'=>'center',
+                'format'=>'html',
                 'value'=>function($data){
                     return empty($data->start_at)?'<span class="not-set">永久有效</span>':date('Y年m月d日',$data->start_at);
                 },
@@ -168,6 +169,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute'=>'end_at',
                 'vAlign'=>'middle',
                 'hAlign'=>'center',
+                'format'=>'html',
                 'value'=>function($data){
                     return empty($data->end_at)?'<span class="not-set">永久有效</span>':date('Y年m月d日',$data->end_at);
                 },
