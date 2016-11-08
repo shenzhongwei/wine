@@ -211,30 +211,19 @@ class PromotionController extends BaseController
     }
 
 
-    public function actionDelete()
+    public function actionDelete($id)
     {
-        $user_id = Yii::$app->user->identity->getId();
-        if(empty($user_id)){
-            return $this->showResult(302,'用户登录信息失效');
-        }
-        $id=Yii::$app->request->get('id');
-        if(empty($id)){
-            return $this->showResult(301,'读取数据发生错误');
-        }
-        $query =PromotionInfo::findOne([$id]);
-        if(empty($query)){
-            return $this->showResult(301,'未获取到该活动的信息');
-        }
+        $model = $this->findModel($id);
 
-        if($query->is_active==1){
-            $query->is_active=0;
+        if($model->is_active==1){
+            $model->is_active=0;
         }else{
-            $query->is_active=1;
+            $model->is_active=1;
         }
-        $query->active_at=time();
-        $query->save();
+        $model->active_at=time();
+        $model->save();
+        Yii::$app->session->setFlash('success','操作成功');
         return $this->redirect(['index']);
-
     }
 
 
