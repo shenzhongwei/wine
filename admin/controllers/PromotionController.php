@@ -405,8 +405,8 @@ class PromotionController extends BaseController
             $condition_value = '';
             $is_discount = 1;
             $discount_value = $promotion->discount;
-            $condition_placeholder = '输入优惠条件';
-            $discount_placeholder = '该类型下无需输入条件';
+            $condition_placeholder = '该种类下无需输入条件';
+            $discount_placeholder = '输入优惠额度';
         }else{
             if($promotion->style==1){
                 $is_condition = 1;
