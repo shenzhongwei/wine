@@ -214,12 +214,13 @@ class PromotionController extends BaseController
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
-
         if($model->is_active==1){
             $model->is_active=0;
         }else{
             $model->is_active=1;
         }
+        $model->date_valid = $model->end_at>0 ? 1:0;
+        $model->time_valid = $model->time>0 ? 1:0;
         $model->active_at=time();
         $model->save();
         Yii::$app->session->setFlash('success','操作成功');
