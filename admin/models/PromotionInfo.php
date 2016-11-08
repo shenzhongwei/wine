@@ -121,9 +121,9 @@ class PromotionInfo extends \yii\db\ActiveRecord
                     $this->addError('discount', '额度百分比不可超出100');
                 }
             }
-            if ((!empty($this->condition) && $this->condition !== '') && !empty($this->discount)) {
+            if (!empty($this->condition) && $this->style==1) {
                 $query = self::find()->where("
-            is_active=1 and `condition`=$this->condition and discount=$this->discount and pt_id=$this->pt_id and 
+            is_active=1 and `condition`=$this->condition and pt_id=$this->pt_id and 
             `limit`=$this->limit and target_id=$this->target_id");
                 if (!empty($this->id)) {
                     $query->andWhere("id<>$this->id");
@@ -139,7 +139,28 @@ class PromotionInfo extends \yii\db\ActiveRecord
                 }
                 $model = $query->one();
                 if (!empty($model)) {
-                    $this->addError('pt_id', '已存在一个相同类型条件优惠相同的优惠，请勿重复添加');
+                    $this->addError('condition', '已存在一个相同类型条件相同的优惠，请勿重复添加');
+                }
+            }
+            if (!empty($this->discount) && $this->style==2) {
+                $query = self::find()->where("
+            is_active=1 and discount=$this->discount and pt_id=$this->pt_id and 
+            `limit`=$this->limit and target_id=$this->target_id");
+                if (!empty($this->id)) {
+                    $query->andWhere("id<>$this->id");
+                }
+                if (!empty($this->start_at)) {
+                    $query->andWhere("(start_at<=$this->start_at and end_at>=$this->start_at) or (start_at=0 and end_at=0)");
+                }
+                if (!empty($this->end_at)) {
+                    $query->andWhere("(start_at<=$this->end_at and end_at>=$this->end_at) or (start_at=0 and end_at=0)");
+                }
+                if ($this->date_valid == 0) {
+                    $query->andWhere("(start_at<=" . time() . " and end_at>=" . time() . ") or (start_at=0 and end_at=0)");
+                }
+                $model = $query->one();
+                if (!empty($model)) {
+                    $this->addError('condition', '已存在一个相同类型百分比相同的优惠，请勿重复添加');
                 }
             }
         }

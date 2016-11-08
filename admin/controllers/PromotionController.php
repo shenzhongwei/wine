@@ -61,7 +61,7 @@ class PromotionController extends BaseController
             $data['PromotionInfo']['start_at'] = strtotime($data['PromotionInfo']['start_at'].' 00:00:00');
         }
         if(!empty($data['PromotionInfo']['end_at'])){
-            $data['PromotionInfo']['end_at'] = strtotime($data['PromotionInfo']['start_at'].' 23:59:59');
+            $data['PromotionInfo']['end_at'] = strtotime($data['PromotionInfo']['end_at'].' 23:59:59');
         }
         if(!empty($data['PromotionInfo']['pt_id'])){
             $promotionType = PromotionType::findOne($data['PromotionInfo']['pt_id']);
@@ -92,7 +92,7 @@ class PromotionController extends BaseController
             $data['PromotionInfo']['start_at'] = strtotime($data['PromotionInfo']['start_at'].' 00:00:00');
         }
         if(!empty($data['PromotionInfo']['end_at'])){
-            $data['PromotionInfo']['end_at'] = strtotime($data['PromotionInfo']['start_at'].' 23:59:59');
+            $data['PromotionInfo']['end_at'] = strtotime($data['PromotionInfo']['end_at'].' 23:59:59');
         }
         if($data){
             $promotionType = PromotionType::findOne($data['PromotionInfo']['pt_id']);
@@ -149,7 +149,7 @@ class PromotionController extends BaseController
             $data['PromotionInfo']['start_at'] = strtotime($data['PromotionInfo']['start_at'].' 00:00:00');
         }
         if(!empty($data['PromotionInfo']['end_at'])){
-            $data['PromotionInfo']['end_at'] = strtotime($data['PromotionInfo']['start_at'].' 23:59:59');
+            $data['PromotionInfo']['end_at'] = strtotime($data['PromotionInfo']['end_at'].' 23:59:59');
         }
         if($data){
             $promotionType = PromotionType::findOne($data['PromotionInfo']['pt_id']);
