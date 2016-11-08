@@ -66,29 +66,31 @@ class PromotionInfo extends \yii\db\ActiveRecord
             if(empty($type)){
                 $this->addError('pt_id','异常类型');
             }else{
-                $query = self::find()->joinWith('pt')->where("
+                if(in_array($type->env,[1,2,4,5])||$type->group == 3){
+                    $query = self::find()->joinWith('pt')->where("
             promotion_type.id>0 and promotion_info.id>0 and promotion_info.is_active=1");
-                if(in_array($type->env,[1,2,4,5])){
-                    $query->andWhere("promotion_type.env=$type->env ");
-                }
-                if ($type->group == 3){
-                    $query->andWhere("promotion_type.group=$type->group");
-                }
-                if(!empty($this->id)){
-                    $query->andWhere("promotion_info.id<>$this->id");
-                }
-                if(!empty($this->start_at)){
-                    $query->andWhere("(start_at<=$this->start_at and end_at>=$this->start_at) or (start_at=0 and end_at=0)");
-                }
-                if(!empty($this->end_at)){
-                    $query->andWhere("(start_at<=$this->end_at and end_at>=$this->end_at) or (start_at=0 and end_at=0)");
-                }
-                if($this->date_valid==0){
-                    $query->andWhere("(start_at<=".time()." and end_at>=".time().") or (start_at=0 and end_at=0)");
-                }
-                $model = $query->one();
-                if(!empty($model)){
-                    $this->addError('pt_id','该类别的促销环境有效期内只能存在唯一一个有效活动，请勿重复添加');
+                    if(in_array($type->env,[1,2,4,5])){
+                        $query->andWhere("promotion_type.env=$type->env ");
+                    }
+                    if ($type->group == 3){
+                        $query->andWhere("promotion_type.group=$type->group");
+                    }
+                    if(!empty($this->id)){
+                        $query->andWhere("promotion_info.id<>$this->id");
+                    }
+                    if(!empty($this->start_at)){
+                        $query->andWhere("(start_at<=$this->start_at and end_at>=$this->start_at) or (start_at=0 and end_at=0)");
+                    }
+                    if(!empty($this->end_at)){
+                        $query->andWhere("(start_at<=$this->end_at and end_at>=$this->end_at) or (start_at=0 and end_at=0)");
+                    }
+                    if($this->date_valid==0){
+                        $query->andWhere("(start_at<=".time()." and end_at>=".time().") or (start_at=0 and end_at=0)");
+                    }
+                    $model = $query->one();
+                    if(!empty($model)){
+                        $this->addError('pt_id','该类别的促销环境有效期内只能存在唯一一个有效活动，请勿重复添加');
+                    }
                 }
             }
         }
@@ -106,8 +108,10 @@ class PromotionInfo extends \yii\db\ActiveRecord
                         $this->addError('discount', '请填写优惠额度');
                     }
                 }
-                if ($this->condition==='') {
-                    $this->addError('condition', '请填写优惠条件');
+                if($type->env!=2||$type->group!=2){
+                    if ($this->condition===''||$this->condition===null) {
+                        $this->addError('condition', '请填写优惠条件');
+                    }
                 }
             } else {
                 if (empty($this->discount)) {
@@ -117,7 +121,7 @@ class PromotionInfo extends \yii\db\ActiveRecord
                     $this->addError('discount', '额度百分比不可超出100');
                 }
             }
-            if ((!empty($this->condition) || $this->condition !== '') && !empty($this->discount)) {
+            if ((!empty($this->condition) && $this->condition !== '') && !empty($this->discount)) {
                 $query = self::find()->where("
             is_active=1 and `condition`=$this->condition and discount=$this->discount and pt_id=$this->pt_id and 
             `limit`=$this->limit and target_id=$this->target_id");
@@ -172,7 +176,7 @@ class PromotionInfo extends \yii\db\ActiveRecord
                 $this->addError('pt_id', '异常类型');
             } else {
                 if ($type->group == 1) {
-                    if ($this->circle_valid==='') {
+                    if ($this->circle_valid===''||$this->circle_valid===null) {
                         $this->addError('circle_valid', '优惠券有效期形式不能为空');
                     }
                     if ($this->circle_valid == 1) {
@@ -252,7 +256,7 @@ class PromotionInfo extends \yii\db\ActiveRecord
         }else{
             $type = PromotionType::findOne($limit);
             if(!empty($type)){
-                if(in_array($type->group,[1,3])){
+                if(in_array($type->group,[1,3])||$type->env==2){
                     $res = [
                         [
                             'id'=>1,
@@ -301,7 +305,7 @@ class PromotionInfo extends \yii\db\ActiveRecord
     public static function getNameByRange($model){
             switch($model->limit){
                 case 1: //平台
-                    $str='平台';
+                    $str='平台通用';
                     break;
                 case 2: //商家
                     $str=MerchantInfoSearch::getOneMerchant($model->target_id);

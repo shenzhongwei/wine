@@ -216,6 +216,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'header'=>'可用次数',
                 'vAlign'=>'middle',
                 'hAlign'=>'center',
+                'format'=>'html',
                 'value'=>function($data){
                     return empty($data->time)?'<span class="not-set">无限制</span>':$data->time.'次';
                 }

@@ -87,7 +87,11 @@ $(function () {
                     if(result=='1'){
                         $('#promotioninfo-discount').attr('disabled',true);
                         $('#promotioninfo-discount').attr('placeholder','该优惠形式无需输入优惠额度');
+                    }else if (result== '2'){
+                        $('#promotioninfo-condition').attr('disabled',true);
+                        $('#promotioninfo-condition').attr('placeholder','该优惠形式无需输入条件');
                     }
+                    return false;
                 }else{
                     layer.alert('数据出错，请重试',{icon: 0});
                     return false;
@@ -216,7 +220,9 @@ function Promotion(id) {
         }else if(data.status == '200'){
             var result = data.data;
             var ticket = result.ticket;
-            var time = result.time;
+            var time = result.time
+            var discount = result.discount;
+            var condition = result.condition;
             //处理次数
             $('input[name="PromotionInfo[time_valid]"]').attr('disabled',time.is_time=='1' ? false:true);
             $('input[name="PromotionInfo[time_valid]"][value="0"]').removeAttr('checked');
@@ -233,6 +239,14 @@ function Promotion(id) {
             $('#promotioninfo-valid_circle').val(ticket.ticket_value);
             $('#promotioninfo-valid_circle').attr('disabled',ticket.ticket_disable=='1' ? true:false);
             $('#promotioninfo-valid_circle').attr('placeholder',ticket.ticket_placeholder);
+            //处理条件
+            $('#promotioninfo-condition').attr('disabled',condition.is_condition=='1' ? false:true);
+            $('#promotioninfo-condition').val(condition.condition_value);
+            $('#promotioninfo-condition').attr('placeholder',condition.condition_placeholder);
+            //处理优惠
+            $('#promotioninfo-discount').attr('disabled',discount.is_discount=='1' ? false:true);
+            $('#promotioninfo-discount').val(discount.discount_value);
+            $('#promotioninfo-discount').attr('placeholder',discount.discount_placeholder);
             return false;
         }else{
             layer.alert('数据出错，请重试',{icon: 0});

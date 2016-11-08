@@ -329,6 +329,8 @@ class PromotionController extends BaseController
         }
         if($promotionType->group == 3){
             $res = 1;
+        }elseif ($promotionType->env==2 && $promotionType->group==2){
+            $res = 2;
         }else{
             $res = 0;
         }
@@ -383,6 +385,45 @@ class PromotionController extends BaseController
         if(empty($promotion)){
             return $this->showResult(301,'促销种类不存在');
         }
+        //优惠与条件
+        if($promotionType->group==1&&$promotion->style=1){
+            $is_condition = 1;
+            $condition_value = $promotion->condition;
+            $is_discount = 1;
+            $discount_value = $promotion->discount;
+            $condition_placeholder = '输入优惠条件';
+            $discount_placeholder = '输入优惠额度';
+        }elseif($promotionType->group==3&&$promotion->style=1){
+            $is_condition = 1;
+            $condition_value = $promotion->condition;
+            $is_discount = 0;
+            $discount_value = '';
+            $condition_placeholder = '输入优惠条件';
+            $discount_placeholder = '该种类无需输入优惠额度';
+        }elseif ($promotionType->env==2&&$promotionType->group==2&&$promotion->style=1){
+            $is_condition = 0;
+            $condition_value = '';
+            $is_discount = 1;
+            $discount_value = $promotion->discount;
+            $condition_placeholder = '输入优惠条件';
+            $discount_placeholder = '该类型下无需输入条件';
+        }else{
+            if($promotion->style==1){
+                $is_condition = 1;
+                $condition_value = $promotion->condition;
+                $is_discount = 1;
+                $discount_value = $promotion->discount;
+                $condition_placeholder = '输入优惠条件';
+                $discount_placeholder = '输入优惠额度';
+            }else{
+                $is_condition = 0;
+                $condition_value = '';
+                $is_discount = 1;
+                $discount_value = $promotion->discount;
+                $condition_placeholder = '该优惠形式无需输入条件';
+                $discount_placeholder = '输入优惠百分比';
+            }
+        }
         if($promotionType->group == 1){
             //是优惠券的形式则可操作
             $is_ticket = 1;
@@ -434,7 +475,17 @@ class PromotionController extends BaseController
                 'time_value'=>$time_value,
                 'time_disable'=>$time_disable,
                 'time_placeholder'=>$time_placeholder,
-            ]
+            ],
+            'condition'=>[
+                'is_condition'=>$is_condition,
+                'condition_value'=>$condition_value,
+                'condition_placeholder'=>$condition_placeholder,
+            ],
+            'discount'=>[
+                'is_discount'=>$is_discount,
+                'discount_value'=>$discount_value,
+                'discount_placeholder'=>$discount_placeholder,
+            ],
         ];
         return $this->showResult(200,'成功',$data);
     }
