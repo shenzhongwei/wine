@@ -2,9 +2,7 @@
 
 use kartik\helpers\Html;
 use kartik\grid\GridView;
-use kartik\grid\EditableColumn;
 use yii\helpers\Url;
-use admin\models\AdList;
 
 /**
  * @var yii\web\View $this
@@ -58,9 +56,8 @@ $count = $dataProvider->totalCount;
                 'vAlign'=>'middle',
                 'format' => 'raw',
                 'value'=> function($model){
-//                    return '<a class="btn btn-link btn-sm" href="'.$model->pic_url.'" target="_blank" >'.$model->pic_url.'</a>';
-                    return Html::a($model->pic_url,$model->pic_url,
-                        ['target' => '_blank','class'=>'btn btn-link btn-sm']
+                    return Html::a(str_replace('http://','',$model->pic_url),'#',
+                        ['class'=>'btn btn-link btn-sm']
                     );
                 },
             ],
@@ -135,6 +132,10 @@ $count = $dataProvider->totalCount;
         $(document).on('pjax:complete', function() {init();});
     });
     function init() {
+        $('.btn-link').on('click',function () {
+            url = $(this).text();
+            window.open('http://'+url);
+        });
         $('.add').on('click', function () {  //查看详情的触发事件
             $('.ad-list-form').remove();
             $('#boot-modal').find('.modal-title').html('新增启动图');

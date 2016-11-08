@@ -151,7 +151,8 @@ use admin\models\AdList;
                         'pluginEvents'=>[
                             'fileloaded'=>"function(){
                                 $('.file-preview-image').removeAttr('style');;
-                                $('.file-preview-image').css('height','200px');
+                                $('.file-preview-image').css('max-width','400px');
+                                $('.file-preview-image').css('max-height','200px');
                             }",
                             'fileuploaderror'=>"function(){
                                 $('.fileinput-upload-button').attr('disabled',true);
@@ -190,6 +191,7 @@ use admin\models\AdList;
 <script language="JavaScript">
     $(function () {
         $('.file-preview-image').removeAttr("style");
-        $('.file-preview-image').css('height','200px');
+        $('.file-preview-image').css('max-width','400px');
+        $('.file-preview-image').css('max-height','200px');
     });
 </script>

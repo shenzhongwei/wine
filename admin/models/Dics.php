@@ -61,13 +61,25 @@ class Dics extends \yii\db\ActiveRecord
     /*
      * 获取优惠适用对象
      */
-    public static function getPromotionRange(){
-        $model=Dics::find()->select(['id','name'])->andWhere(['type'=>'优惠适用对象'])->asArray()->all();
-        $query=array();
-        foreach($model as $k=>$v){
-            $query[$v['id']]=$v['name'];
+    public static function getPromotionRange($id){
+        if(empty($id)){
+            $model=Dics::find()->andWhere(['type'=>'优惠适用对象'])->all();
+        }else {
+            $type = PromotionType::findOne($id);
+            if (!empty($type)) {
+                if (in_array($type->group, [1, 4])) {
+                    $model = Dics::find()->andWhere(['type' => '优惠适用对象'])->all();
+                } else {
+                    $model = [[
+                        'id' => 1,
+                        'name' => '平台通用',]
+                    ];
+                }
+            }else{
+                $model=[];
+            }
         }
-        return $query;
+        return ArrayHelper::map($model,'id','name');
     }
 
     /*
@@ -75,11 +87,7 @@ class Dics extends \yii\db\ActiveRecord
      */
     public static function getAccountType(){
         $model=Dics::find()->select(['id','name'])->andWhere(['type'=>'钱包类型'])->asArray()->all();
-        $query=array();
-        foreach($model as $k=>$v){
-            $query[$v['id']]=$v['name'];
-        }
-        return $query;
+        return ArrayHelper::map($model,'id','name');
     }
 
     /*
@@ -135,23 +143,185 @@ class Dics extends \yii\db\ActiveRecord
         return ArrayHelper::map($data,'id','name');
     }
 
-    public static function getPromotion(){
-        $data = self::find()->where(['type'=>'促销类别'])->orderBy(['id'=>SORT_ASC])->all();
+//    public static function getPromotion(){
+//        $data = self::find()->where(['type'=>'促销类别'])->orderBy(['id'=>SORT_ASC])->all();
+//        return ArrayHelper::map($data,'id','name');
+//    }
+
+    public static function getPromotionEnv($class=null){
+        if(empty($class)){
+            $data = self::find()->where(['type'=>'促销环境'])->orderBy(['id'=>SORT_ASC])->all();
+        }else{
+            switch ($class){
+                case 1:
+                    $data = [
+                        [
+                            'id'=>1,
+                            'name'=>'用户注册',
+                        ],
+                        [
+                            'id'=>2,
+                            'name'=>'推荐成功',
+                        ],
+                    ];
+                    break;
+                case 2:
+                    $data = [
+                        [
+                            'id'=>3,
+                            'name'=>'下单时',
+                        ],
+                    ];
+                    break;
+                case 3:
+                    $data = [
+                        [
+                            'id'=>4,
+                            'name'=>'下单成功',
+                        ],
+                        [
+                            'id'=>5,
+                            'name'=>'被推荐人下单成功',
+                        ],
+                    ];
+                    break;
+                case 4:
+                    $data = [
+                        [
+                            'id'=>6,
+                            'name'=>'充值成功',
+                        ],
+                    ];
+                    break;
+                default:
+                    $data = [];
+                    break;
+
+            }
+        }
         return ArrayHelper::map($data,'id','name');
     }
 
-    public static function getPromotionEnv(){
-        $data = self::find()->where(['type'=>'促销环境'])->orderBy(['id'=>SORT_ASC])->all();
+    public static function getPromotionGroup($class=null,$env=null){
+
+        if(!empty($class)&&!empty($env)){
+            if($class==1){
+                if($env==1){
+                    $data = [
+                        [
+                            'id'=>1,
+                            'name'=>'赠送优惠券',
+                        ],
+                    ];
+                }elseif ($env==2){
+                    $data = [
+                        [
+                            'id'=>1,
+                            'name'=>'赠送优惠券',
+                        ],
+                        [
+                            'id'=>2,
+                            'name'=>'赠送积分',
+                        ],
+                    ];
+                }else{
+                    $data = [];
+                }
+            }elseif ($class==2){
+                $data = [
+                    [
+                        'id'=>4,
+                        'name'=>'下单优惠',
+                    ],
+                ];
+            }elseif ($class==3){
+                if($env==4){
+                    $data = [
+//                            [
+//                                'id'=>1,
+//                                'name'=>'赠送优惠券',
+//                            ],
+//                            [
+//                                'id'=>2,
+//                                'name'=>'赠送积分',
+//                            ],
+                        [
+                            'id'=>5,
+                            'name'=>'分享网页',
+                        ],
+                    ];
+                }elseif ($env==5){
+                    $data = [
+                        [
+                            'id'=>1,
+                            'name'=>'赠送优惠券',
+                        ],
+                        [
+                            'id'=>2,
+                            'name'=>'赠送积分',
+                        ],
+                    ];
+                }else{
+                    $data = [];
+                }
+            }else{
+                $data = [
+//                        [
+//                            'id'=>1,
+//                            'name'=>'赠送优惠券',
+//                        ],
+                    [
+                        'id'=>2,
+                        'name'=>'赠送积分',
+                    ],
+                    [
+                        'id'=>3,
+                        'name'=>'开通会员特权',
+                    ],
+                ];
+            }
+        }else{
+            $data = self::find()->where(['type'=>'促销形式'])->orderBy(['id'=>SORT_ASC])->all();
+        }
         return ArrayHelper::map($data,'id','name');
     }
 
-    public static function getPromotionGroup(){
-        $data = self::find()->where(['type'=>'促销形式'])->orderBy(['id'=>SORT_ASC])->all();
-        return ArrayHelper::map($data,'id','name');
-    }
-
-    public static function getPromotionLimit(){
-        $data = self::find()->where(['type'=>'促销限制'])->orderBy(['id'=>SORT_ASC])->all();
+    public static function getPromotionLimit($class=null,$env=null,$group=null){
+        if(!empty($class)&&!empty($env)&&!empty($group)){
+            if($class==1||$class==3){
+                $data = [
+                    [
+                        'id'=>1,
+                        'name'=>'唯一',
+                    ],
+                ];
+            }elseif ($class==2){
+                $data = [
+                    [
+                        'id'=>2,
+                        'name'=>'多个共存',
+                    ],
+                ];
+            }else{
+                if($group==2){
+                    $data = [
+                        [
+                            'id'=>2,
+                            'name'=>'多个共存',
+                        ],
+                    ];
+                }else{
+                    $data = [
+                        [
+                            'id'=>1,
+                            'name'=>'唯一',
+                        ],
+                    ];
+                }
+            }
+        }else{
+            $data = self::find()->where(['type'=>'促销限制'])->orderBy(['id'=>SORT_ASC])->all();
+        }
         return ArrayHelper::map($data,'id','name');
     }
 }

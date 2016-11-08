@@ -29,6 +29,9 @@ use yii\helpers\ArrayHelper;
  */
 class PromotionInfo extends \yii\db\ActiveRecord
 {
+    public $date_valid;
+    public $time_valid;
+    public $circle_valid;
     /**
      * @inheritdoc
      */
@@ -43,7 +46,8 @@ class PromotionInfo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['pt_id', 'style', 'limit', 'target_id', 'valid_circle', 'start_at', 'end_at', 'time', 'regist_at', 'is_active', 'active_at'], 'integer'],
+            [['pt_id', 'style', 'limit','date_valid','time_valid','circle_valid','target_id', 'valid_circle', 'start_at', 'end_at', 'time', 'regist_at', 'is_active', 'active_at'], 'integer'],
+            [['name','pt_id','style','limit','target_id','condition','discount','date_valid','time_valid','circle_valid'],'required'],
             [['condition', 'discount'], 'number'],
             [['name'], 'string', 'max' => 128],
             [['pt_id'], 'exist', 'skipOnError' => true, 'targetClass' => PromotionType::className(), 'targetAttribute' => ['pt_id' => 'id']],
@@ -57,20 +61,23 @@ class PromotionInfo extends \yii\db\ActiveRecord
     {
         return [
             'id' => '主键',
-            'pt_id' => '优惠类型',
+            'pt_id' => '促销种类',
             'style' => '优惠形式',
             'limit' => '适用范围',
-            'target_id' => '范围对应的id',
+            'target_id' => '适用对象',
             'name' => '活动名称',
-            'condition' => '条件',
-            'discount' => '优惠',
-            'valid_circle' => '有效期限 0表示永久有效 大于0表示天数',
-            'start_at' => '开始时间',
-            'end_at' => '结束时间',
-            'time' => '使用次数 0表示无限制',
+            'condition' => '活动条件',
+            'discount' => '活动优惠',
+            'valid_circle' => '优惠券的有效期',
+            'start_at' => '活动开始日期',
+            'end_at' => '活动结束日期',
+            'time' => '可参与次数',
             'regist_at' => '添加时间',
             'is_active' => '是否上架',
             'active_at' => '上架状态更改时间',
+            'date_valid'=>'活动期限形式',
+            'time_valid'=>'参与次数形式',
+            'circle_valid'=>'优惠券期限形式',
         ];
     }
 
@@ -105,8 +112,26 @@ class PromotionInfo extends \yii\db\ActiveRecord
         return ArrayHelper::map($res,'id','name');
     }
 
-    public static function GetStyles(){
-        $res = Dics::findAll(['type'=>'优惠形式']);
+    public static function GetStyles($limit){
+        if(empty($limit)){
+            $res = Dics::findAll(['type'=>'优惠形式']);
+        }else{
+            $type = PromotionType::findOne($limit);
+            if(!empty($type)){
+                if(in_array($type->group,[1,3])){
+                    $res = [
+                        [
+                            'id'=>1,
+                            'name'=>'固定'
+                        ],
+                    ];
+                }else{
+                    $res = Dics::findAll(['type'=>'优惠形式']);
+                }
+            }else{
+                $res = [];
+            }
+        }
         return ArrayHelper::map($res,'id','name');
     }
 
@@ -197,5 +222,16 @@ class PromotionInfo extends \yii\db\ActiveRecord
     }
 
 
+    /**
+     * 获取所有的类型
+     */
+    public static function getAllTypes($key){
+        $query = PromotionType::find();
+        if($key=='create'){
+            $query->andWhere("is_active=1");
+        }
+        $res = $query->all();
+        return ArrayHelper::map($res,'id','name');
+    }
 
 }

@@ -33,6 +33,11 @@ class RushSearch extends GoodRush
 
     public function search($params)
     {
+        $validRush = GoodRush::find()->where("is_active=1 and end_at>0 and end_at<".time())->one();
+        if(!empty($validRush)){
+            $sql = "UPDATE good_rush SET is_active=0  WHERE is_active=1 AND end_at>0 AND end_at<".time();
+            $result = Yii::$app->db->createCommand($sql)->execute();
+        }
         $admin = Yii::$app->user->identity;
         $adminType = $admin->wa_type;
         $adminId = $admin->wa_id;

@@ -10,6 +10,7 @@ use yii\bootstrap\ActiveForm;
 $this->title = '双天酒后台管理';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+<title><?= Html::encode($this->title) ?></title>
 <div class="middle-box text-center loginscreen  animated fadeInDown">
     <div>
         <div>

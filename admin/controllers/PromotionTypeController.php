@@ -146,6 +146,8 @@ class PromotionTypeController extends BaseController
                                 'name'=>'赠送积分',
                             ],
                         ];
+                    }else{
+                        $results = [];
                     }
                 }elseif ($class==2){
                     $results = [
@@ -181,6 +183,8 @@ class PromotionTypeController extends BaseController
                                 'name'=>'赠送积分',
                             ],
                         ];
+                    }else{
+                        $results = [];
                     }
                 }else{
                     $results = [

@@ -119,7 +119,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return PromotionType::getPromotionStyleById($data->style);
                 },
                 'filterType'=>GridView::FILTER_SELECT2,
-                'filter'=>PromotionInfo::GetStyles(),
+                'filter'=>PromotionInfo::GetStyles(0),
                 'filterWidgetOptions'=>[
                     'options'=>['placeholder'=>'优惠类型'],
                     'pluginOptions' => ['allowClear' => true],

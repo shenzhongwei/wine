@@ -234,6 +234,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     },
                     'update' => function ($url, $model) {
                         return Html::a(Yii::t('app','Update'), $url, [
+                            'data-pjax'=>0,
                             'title' => Yii::t('app', '编辑'),
                             'class' => 'btn btn-primary btn-xs',
                         ]);
@@ -241,7 +242,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     'delete' => function ($url, $model) {
                         if($model->is_active == 0){
                             return Html::a(Yii::t('app','Up'), $url, [
-                                'data-pjax'=>0,
                                 'title' => Yii::t('app', '上架该抢购'),
                                 'class' => 'btn btn-success btn-xs',
                                 'data-confirm'=>'确定上架该抢购商品？',

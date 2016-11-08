@@ -18,6 +18,7 @@ use common\pay\wepay\AppUnifiedOrder;
 use common\pay\wepay\helpers\Log;
 use common\pay\wepay\helpers\WxPayServerPub;
 use common\pay\wepay\WxPayConfig;
+use daixianceng\smser\LuosimaoSmser;
 use Yii;
 use yii\base\Exception;
 
@@ -339,6 +340,17 @@ class PayController extends ApiController{
                 throw new Exception('生成用户余额变更消息出错');
             }
             $transaction->commit();
+            $shop=$orderInfo->s;
+            $phone = $shop->phone;
+            if(self::validateMobilePhone($phone)) {
+                //给店铺发短信
+                $smser = new LuosimaoSmser();
+//                $smser->username = Yii::$app->params['smsParams']['username'];
+//                $smser->setPassword(Yii::$app->params['smsParams']['password']);
+                $smser->setPassword(Yii::$app->params['smsParams']['api_key']);
+                $content = "您有新的订单待处理，订单编号：$orderInfo->order_code，请尽快处理！【双天酒易购】";
+                $res = $smser->send($phone, $content);
+            }
             return $this->showResult(200,'余额付款成功');
         }catch (Exception $e){
             $transaction->rollBack();

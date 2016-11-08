@@ -48,9 +48,9 @@ use kartik\depdrop\DepDrop;
             'env'=>['type'=> Form::INPUT_WIDGET,'label'=>'促销环境','widgetClass'=>DepDrop::className(),
                 'options'=>[
                     'type' => DepDrop::TYPE_SELECT2,
-                    'data'=> empty($model->id) ? []:Dics::getPromotionEnv(),
+                    'data'=> empty($model->id) ? []:Dics::getPromotionEnv($model->class),
                     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
-                    'options'=>['placeholder'=>'请选择促销环境',empty($model->id) ? '':'disabled'=>true],
+                    'options'=>['placeholder'=>'请选择促销环境'],
                     'pluginOptions'=>[
                         'placeholder'=>'请选择促销环境',
                         'depends'=>['promotiontype-class'],
@@ -68,9 +68,9 @@ use kartik\depdrop\DepDrop;
             'group'=>['type'=> Form::INPUT_WIDGET,'label'=>'促销形式','widgetClass'=>DepDrop::className(),
                 'options'=>[
                     'type' => DepDrop::TYPE_SELECT2,
-                    'data'=> empty($model->id) ? []:Dics::getPromotionGroup(),
+                    'data'=> empty($model->id) ? []:Dics::getPromotionGroup($model->class,$model->env),
                     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
-                    'options'=>['placeholder'=>'请选择促销形式',empty($model->id) ? '':'disabled'=>true],
+                    'options'=>['placeholder'=>'请选择促销形式'],
                     'pluginOptions'=>[
                         'placeholder'=>'请选择促销形式',
                         'depends'=>['promotiontype-class','promotiontype-env'],
@@ -83,9 +83,9 @@ use kartik\depdrop\DepDrop;
             'limit'=>['type'=> Form::INPUT_WIDGET,'label'=>'促销限制','widgetClass'=>DepDrop::className(),
                 'options'=>[
                     'type' => DepDrop::TYPE_SELECT2,
-                    'data'=> empty($model->id) ? []:Dics::getPromotionGroup(),
+                    'data'=> empty($model->id) ? []:Dics::getPromotionLimit($model->class,$model->env,$model->group),
                     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
-                    'options'=>['placeholder'=>'请选择促销形式',empty($model->id) ? '':'disabled'=>true],
+                    'options'=>['placeholder'=>'请选择促销形式'],
                     'pluginOptions'=>[
                         'placeholder'=>'请选择促销形式',
                         'depends'=>['promotiontype-class','promotiontype-env','promotiontype-group'],

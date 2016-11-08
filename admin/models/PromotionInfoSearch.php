@@ -29,6 +29,11 @@ class PromotionInfoSearch extends PromotionInfo
 
     public function search($params)
     {
+        $validPro = PromotionInfo::find()->where("is_active=1 and end_at>0 and end_at<".time())->one();
+        if(!empty($validPro)){
+            $sql = "UPDATE promotion_info SET is_active=0 AND active_at=".time()." WHERE is_active=1 AND end_at>0 AND end_at<".time();
+            $result = Yii::$app->db->createCommand($sql)->execute();
+        }
         $query = PromotionInfo::find();
 
         $dataProvider = new ActiveDataProvider([

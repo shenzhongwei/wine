@@ -4,7 +4,6 @@ use yii\helpers\Html;
 use kartik\widgets\ActiveForm;
 use kartik\builder\Form;
 use kartik\select2\Select2;
-use admin\models\PromotionType;
 use admin\models\PromotionInfo;
 use admin\models\Dics;
 use kartik\widgets\DepDrop;
@@ -15,21 +14,22 @@ use kartik\widgets\DatePicker;
  * @var admin\models\PromotionInfo $model
  * @var yii\widgets\ActiveForm $form
  */
-
 //优惠分类
-$typemodel=PromotionType::find()->select(['id','name'])->asArray()->all();
-$res=[];
-foreach($typemodel as $k=>$v){
-    $res[$v['id']]=$v['name'];
-}
-
+$this->registerJs($this->render('_script.js'));
 ?>
 <style>
-    .showtime{display: none;}
+    .radio-inline input[type="radio"] {
+        margin-top: 1px;
+    }
 </style>
-<div class="promotion-info-form">
+<div class="promotion-info-form" style="width: 80%">
     <?php
-    $form = ActiveForm::begin(['type'=>ActiveForm::TYPE_HORIZONTAL]);
+    $form = ActiveForm::begin([
+        'type'=>ActiveForm::TYPE_VERTICAL,
+        'formConfig' => [
+            'deviceSize' => ActiveForm::SIZE_SMALL,
+        ],
+    ]);
     echo Form::widget([
 
         'model' => $model,
@@ -37,91 +37,138 @@ foreach($typemodel as $k=>$v){
         'columns' => 1,
         'attributes' => [
 
-            'name'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'输入活动名称', 'maxlength'=>128]],
+            'id'=>['type'=>Form::INPUT_HIDDEN,'label'=>false],
 
-            'discount'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'输入折扣', 'maxlength'=>11]],
-
-            'condition'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'输入条件', 'maxlength'=>11]],
+            'name'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'输入活动名称', 'maxlength'=>30]],
 
             'pt_id'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>Select2::className(),
                 'options'=>[
-                    'data'=>$res,
-                    'options'=>['placeholder'=>'请选择优惠类型'],
-                    'pluginOptions'=>['allowClear'=>true]
-                ]
-            ],
-
-
-            'limit'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>Select2::className(),
-                'options'=>[
-                    'data'=>['1'=>'平台通用'],
-                    //'data'=>Dics::getPromotionRange(),
-                    'options'=>['placeholder'=>'请选择适用范围'],
-                    'pluginOptions'=>['allowClear'=>true]
-                ]
-            ],
-
-            'target_id'=>['type'=>Form::INPUT_WIDGET,'widgetClass'=>DepDrop::className(),
-                'options'=>[
-                    'type' => DepDrop::TYPE_SELECT2,
-                    'data'=>$model->limit===''?[]:PromotionInfo::getTargetsRange($model->limit),
-                    'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
-                    'pluginOptions'=>[
-                        'placeholder'=>'选择对象',
-                        'depends'=>['promotioninfo-limit'],
-                        'url' =>Url::toRoute(['promotion/targets']),
-                        'loadingText' => '查找...',
+                    'data'=>PromotionInfo::getAllTypes($model->isNewRecord ? 'create':'update'),
+                    'options'=>['placeholder'=>'请选择促销种类'],
+                    'pluginOptions'=>['allowClear'=>true],
+                    'pluginEvents'=>[
+                        'change'=>"function() { TypeChange(this); }",
                     ]
                 ]
             ],
 
-            'time'=>['type'=> Form::INPUT_TEXT, 'options'=>['输入次数']],
-
-            'valid_circle'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>Select2::className(),
+            'limit'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>DepDrop::className(),
                 'options'=>[
-                    'data'=>['0'=>'永久有效','-1'=>'非永久有效'],
-                    'options'=>['placeholder'=>$model->valid_circle==0?'请输入有效期':($model->valid_circle.'天')],
-                    'pluginOptions'=>['allowClear'=>true]
+                    'type'=>DepDrop::TYPE_SELECT2,
+                    'select2Options'=>['pluginOptions'=>['allowClear'=>true],'hideSearch'=>true],
+                    'data'=>$model->isNewRecord ? []:Dics::getPromotionRange($model->pt_id),
+                    'pluginOptions'=>[
+                        'placeholder'=>'请选择适用范围',
+                        'disabled'=>true,
+                        'depends'=>['promotioninfo-pt_id'],
+                        'url' => Url::toRoute(['promotion/limit']),
+                        'loadingText' => '',
+                    ],
                 ]
             ],
+
+            'target_id'=>['type'=>Form::INPUT_WIDGET,'label'=>'适用对象','widgetClass'=>DepDrop::className(),
+                'options'=>[
+                    'type' => DepDrop::TYPE_SELECT2,
+                    'data'=>empty($model->limit)? [] : PromotionInfo::getTargetsRange($model->limit),
+                    'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+                    'pluginOptions'=>[
+                        'placeholder'=>'选择适用对象',
+                        'depends'=>['promotioninfo-limit'],
+                        'url' =>Url::toRoute(['promotion/targets']),
+                        'loadingText' => '',
+                    ]
+                ]
+            ],
+
+            'style'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>DepDrop::className(),
+                'options'=>[
+                    'type' => DepDrop::TYPE_SELECT2,
+                    'data'=>empty($model->pt_id)? [] : PromotionInfo::GetStyles($model->pt_id),
+                    'select2Options'=>['pluginOptions'=>['allowClear'=>true],'hideSearch'=>true],
+                    'pluginOptions'=>[
+                        'placeholder'=>'请选择优惠形式',
+                        'depends'=>['promotioninfo-pt_id'],
+                        'url' =>Url::toRoute(['promotion/styles']),
+                        'loadingText' => '',
+                    ],
+                ]
+            ],
+
+            'condition'=>['type'=> Form::INPUT_TEXT, 'label'=>'活动条件','options'=>[
+                'placeholder'=>$model->isNewRecord ? '请先选择优惠形式':($model->style==2 ? '该类型无需输入优惠条件':'输入优惠条件'),
+                'maxlength'=>10,'onkeyup'=>'clearNoNum(this)',
+                'disabled'=>$model->isNewRecord ? true:($model->style==2 ? true:false),
+            ]],
+
+            'discount'=>['type'=> Form::INPUT_TEXT, 'label'=>'活动优惠', 'options'=>[
+                'placeholder'=>$model->isNewRecord ? '请先选择优惠形式':($model->style==2 ? '输入所占百分比':'输入优惠额度'),
+                'maxlength'=>10,'onkeyup'=>'clearNoNum(this)',
+                'disabled'=>$model->isNewRecord ? true:false,
+            ]],
+
+            'date_valid'=>['type'=> Form::INPUT_RADIO_LIST,'items'=>['0'=>'无期限','1'=>'有期限'],
+                'options'=>[
+                    'inline'=>true,
+                ],
+            ],
+
+            'start_at'=>['type'=>Form::INPUT_WIDGET,'widgetClass'=>DatePicker::className(),'options'=>[
+                'language'=>'zh-CN',
+                'readonly'=>true,
+                'options' => [
+                    'placeholder' => $model->isNewRecord ?'请先选择活动期限形式':($model->date_valid==1 ? '该形式无需选择开始日期':'请选择活动开始日期'),
+                    'value' => empty($model->id) ? '':date('Y-m-d',$model->start_at),
+                    'disabled'=>$model->isNewRecord ? true:($model->date_valid==1 ? false:true),
+                ],
+                'pluginOptions' => [
+                    'todayHighlight' => true,
+                    'todayBtn' => true,
+                    'format' => 'yyyy-mm-dd',
+                    'autoclose' => true,
+                ]
+            ]],
+
+            'end_at'=>['type'=>Form::INPUT_WIDGET,'widgetClass'=>DatePicker::className(),'options'=>[
+                'language'=>'zh-CN',
+                'readonly'=>true,
+                'options' => [
+                    'placeholder' => $model->isNewRecord ?'请先选择活动期限形式':($model->date_valid==1 ? '该形式无需选择结束日期':'请选择活动结束日期'),
+                    'value' => empty($model->id) ? '':date('Y-m-d',$model->end_at),
+                    'disabled'=>$model->isNewRecord ? true:($model->date_valid==1 ? false:true),
+                ],
+                'pluginOptions' => [
+                    'todayHighlight' => true,
+                    'todayBtn' => true,
+                    'format' => 'yyyy-mm-dd',
+                    'autoclose' => true,
+                ]
+            ]],
+
+            'time_valid'=>['type'=> Form::INPUT_RADIO_LIST,'items'=>['0'=>'不限制次数','1'=>'限制次数'],'options'=>['inline'=>true,]
+            ],
+
+            'time'=>['type'=> Form::INPUT_TEXT ,'label'=>'可参与次数', 'options'=>[
+                'placeholder'=>$model->isNewRecord ? '请先选择参与次数形式':($model->time_valid==1 ? '输入可参与次数':'该形式无需输入参与次数'),
+                'disabled'=>$model->isNewRecord ? true:($model->time_valid==1 ? false:true),
+                'onkeyup'=>'this.value=this.value.replace(/\D/gi,"")'
+            ]],
+
+            'circle_valid'=>['type'=> Form::INPUT_RADIO_LIST,'items'=>['0'=>'永久有效','1'=>'非永久有效'],'options'=>['inline'=>true]],
+
+            'valid_circle'=>['type'=> Form::INPUT_TEXT, 'label'=>'优惠券有效期限（单位：天）','options'=>[
+                'placeholder'=>$model->isNewRecord ? '请先选择参与优惠券期限形式':($model->circle_valid==1 ? '输入优惠券有效期(单位：天)':'该形式无需输入优惠券的有效期'),
+                'disabled'=>$model->isNewRecord ? true:($model->circle_valid==1 ? false:true),
+                'maxlength'=>10,
+                'onkeyup'=>'this.value=this.value.replace(/\D/gi,"")'
+            ]],
+
         ]
     ]);
 
     ?>
-    <div class="showtime">
-        <?= $form->field($model, 'start_from')->widget(DatePicker::classname(),[
-            'options' => ['placeholder' =>''],
-            'pluginOptions' => [
-                'todayHighlight' => true,
-                'format' => 'yyyy-mm-dd',
-            ]
-        ]) ?>
 
-        <?= $form->field($model, 'end_to')->widget(DatePicker::classname(),[
-            'options' => ['placeholder' =>''],
-            'pluginOptions' => [
-                'todayHighlight' => true,
-                'format' => 'yyyy-mm-dd',
-            ]
-        ]) ?>
-    </div>
-
-    <p style="margin: 0 auto;text-align: center;margin-bottom: 2px;">
-        <?=Html::submitButton($model->isNewRecord ? Yii::t('app', '创建') : Yii::t('app', '更新'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']);?>
-        <?=Html::a('返回', ['index'], ['class' => 'btn btn-primary','style'=>'margin-left:10px']);?>
-    </p>
+    <?=Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']);?>
     <?php  ActiveForm::end(); ?>
 
 </div>
-<script>
-    $(function(){
-        $('select#promotioninfo-valid_circle').change(function(){
-            var checkValue=$(this).val(); //获取value值
-            if(checkValue==-1){
-                $('.showtime').show();
-            }else{
-                $('.showtime').hide();
-            }
-        });
-    })
-</script>

@@ -78,8 +78,8 @@ $count = $dataProvider->totalCount;
                 'vAlign'=>'middle',
                 'format' => 'raw',
                 'value'=> function($model){
-                    return $model->type==1 ? Html::a($model->pic_url,$model->pic_url,
-                        ['target' => '_blank','class'=>'btn btn-link btn-sm']
+                    return $model->type==1 ? Html::a(str_replace('http://','',$model->pic_url),'#',
+                        ['class'=>'btn btn-link btn-sm']
                     ):'<span class="not-set">(非外链广告无需设置)</span>';
                 },
             ],
@@ -153,6 +153,10 @@ $count = $dataProvider->totalCount;
         $(document).on('pjax:complete', function() {init();});
     });
     function init() {
+        $('.btn-link').on('click',function () {
+            url = $(this).text();
+            window.open('http://'+url);
+        });
         $('.add').on('click', function () {  //查看详情的触发事件
             $('.ad-list-form').remove();
             $('#head-modal').find('.modal-title').html('新增首页头部广告');
