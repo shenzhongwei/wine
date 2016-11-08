@@ -278,7 +278,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> '.Html::encode($this->title).' </h3>',
             'before'=>$dataProvider->totalCount>0 ?
                 Html::a("批量上架", "javascript:void(0);", ["class" => "btn btn-primary",'id'=>'promotion_up']).
-                Html::a("批量下架", "javascript:void(0);", ["class" => "btn btn-primary",'style'=>'margin-left:0.1%','id'=>'promotion_up_down']):'',
+                Html::a("批量下架", "javascript:void(0);", ["class" => "btn btn-primary",'style'=>'margin-left:0.1%','id'=>'promotion_down']):'',
             'after'=>false,
             'showPanel'=>true,
             'showFooter'=>true
@@ -322,7 +322,7 @@ $this->params['breadcrumbs'][] = $this->title;
             }
             var button = $(this).attr('id');
             var confirm = '';
-            if(button == 'promotion'){
+            if(button == 'promotion_up'){
                 confirm = '确认上架类别？一旦上架用户可参与有效的促销活动';
             }else if(button == 'promotion_down') {
                 confirm = '确认下架类别？一旦下架用户将无法参与有效的促销活动';
