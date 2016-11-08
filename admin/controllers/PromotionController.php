@@ -479,4 +479,37 @@ class PromotionController extends BaseController
         ];
         return $this->showResult(200,'成功',$data);
     }
+
+    public function actionPatch(){
+        $button = Yii::$app->request->post('button');
+        $keys = Yii::$app->request->post('keys');
+        if(empty($keys)){
+            return $this->showResult(304,'非法请求');
+        }
+        $ids = '('.implode(',',$keys).')';
+        if($button == 'promotion_up'){
+            $key = 'is_active';
+            $value = 0;
+            $valueTo = 1;
+        }elseif($button == 'promotion_down') {
+            $key = 'is_active';
+            $value = 1;
+            $valueTo = 0;
+        }else{
+            return $this->showResult(304,'非法请求');
+        }
+        $rushes = PromotionInfo::find()->where("$key=$value and id in $ids")->one();
+        if(!empty($rushes)){
+            $sql = "UPDATE promotion_info SET $key = $valueTo,active_at=".time();
+            $sql .= " WHERE id IN $ids AND $key=$value";
+            $res = Yii::$app->db->createCommand($sql)->execute();
+            if(!empty($res)){
+                return $this->showResult(200,'操作成功');
+            }else{
+                return $this->showResult(400,'操作失败，请稍后重试');
+            }
+        }else{
+            return $this->showResult(200,'操作成功');
+        }
+    }
 }
