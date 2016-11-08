@@ -21,7 +21,7 @@ use yii\helpers\Url;
 		<meta content="webkit" name="renderer">		
 		<script type="application/javascript" src="<?=Url::to('@web/js/share/flexible_css.debug.js') ?>"></script>
 		<script type="application/javascript" src="<?=Url::to('@web/js/share/flexible.debug.js') ?>"></script>
-		<title>51酒易购</title>
+		<title>双天酒易购</title>
 		<link rel="stylesheet" href="<?=Url::to('@web/css/share/style.css') ?>">
 	</head>
 	<body>
