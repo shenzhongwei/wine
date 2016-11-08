@@ -140,6 +140,7 @@ function TypeChange(obj) {
                 $('#promotioninfo-time').val('1');
                 $('#promotioninfo-time').attr('disabled',true);
                 $('input[name="PromotionInfo[time_valid]"]').attr('disabled',true);
+                $('input[name="PromotionInfo[time_valid]"]').val(1);
             }else if (result.is_time == '1'){
                 //限制次数，可操作
                 $('input[name="PromotionInfo[time_valid]"][value="0"]').removeAttr('checked');
@@ -156,12 +157,14 @@ function TypeChange(obj) {
                 $('#promotioninfo-time').attr('placeholder','该形式无需输入参与次数');
                 $('#promotioninfo-time').attr('disabled',true);
                 $('input[name="PromotionInfo[time_valid]"]').attr('disabled',true);
+                $('input[name="PromotionInfo[time_valid]"]').val(0);
             }
             if(result.is_ticket == '0'){
                 //非券形式，无需操作
                 $('input[name="PromotionInfo[circle_valid]"][value="0"]').removeAttr('checked');
                 $('input[name="PromotionInfo[circle_valid]"][value="1"]').removeAttr('checked');
                 $('input[name="PromotionInfo[circle_valid]"]').attr('disabled',true);
+                $('input[name="PromotionInfo[circle_valid]"]').val(0);
                 $('#promotioninfo-valid_circle').val('');
                 $('#promotioninfo-valid_circle').attr('placeholder','该形式无需输入优惠券的有效期');
                 $('#promotioninfo-valid_circle').attr('disabled',true);

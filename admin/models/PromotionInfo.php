@@ -49,7 +49,7 @@ class PromotionInfo extends \yii\db\ActiveRecord
             [['pt_id', 'style', 'limit','date_valid','time_valid','circle_valid','target_id', 'valid_circle', 'start_at', 'end_at', 'time', 'regist_at', 'is_active', 'active_at'], 'integer'],
             [['name','pt_id','style','limit','target_id','date_valid','time_valid'],'required'],
             [['pt_id','date_valid','start_at','end_at'],'validType'],
-            [['condition', 'discount','pt_id','start_at','end_at','date_valid'],'validNum'],
+            [['condition', 'discount','pt_id','start_at','end_at','date_valid','limit','target_id','style'],'validNum'],
             [['start_at','end_at','date_valid'],'validDate'],
             [['time_valid','time'],'validTime'],
             [['pt_id','circle_valid','valid_circle'], 'validCircle'],
@@ -117,7 +117,9 @@ class PromotionInfo extends \yii\db\ActiveRecord
                     $this->addError('discount','额度百分比不可超出100');
                 }
             }
-            $query = self::find()->where("is_active=1 and condition=$this->condition and discount=$this->discount and pt_id=$this->pt_id");
+            $query = self::find()->where("
+            is_active=1 and condition=$this->condition and discount=$this->discount and pt_id=$this->pt_id and 
+            limit=$this->limit and target_id=$this->target_id");
             if(!empty($this->id)){
                 $query->andWhere("id<>$this->id");
             }
