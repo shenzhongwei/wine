@@ -4,6 +4,7 @@ namespace admin\controllers;
 
 use admin\models\Dics;
 use admin\models\PromotionType;
+use kartik\form\ActiveForm;
 use Yii;
 use admin\models\PromotionInfo;
 use admin\models\PromotionInfoSearch;
@@ -15,6 +16,8 @@ use yii\filters\VerbFilter;
 use admin\models\MerchantInfo;
 use admin\models\ShopInfo;
 use admin\models\GoodInfo;
+use yii\web\Response;
+
 /**
  * PromotionController implements the CRUD actions for PromotionInfo model.
  */
@@ -50,39 +53,61 @@ class PromotionController extends BaseController
         ]);
     }
 
-
-    public function actionView($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('view', ['model' => $model]);
+    public function actionValidForm(){
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $data = Yii::$app->request->post();
+        $id=Yii::$app->request->get('id');
+        if(!empty($data['PromotionInfo']['start_at'])){
+            $data['PromotionInfo']['start_at'] = strtotime($data['PromotionInfo']['start_at'].' 00:00:00');
         }
+        if(!empty($data['PromotionInfo']['end_at'])){
+            $data['PromotionInfo']['end_at'] = strtotime($data['PromotionInfo']['start_at'].' 23:59:59');
+        }
+        $model = new PromotionInfo();
+        if(!empty($id)){
+            $model->id=$id;
+        }
+        $model->load($data);
+        return ActiveForm::validate($model);
     }
 
 
     public function actionCreate()
     {
         $model = new PromotionInfo;
-
-        if (Yii::$app->request->post()) {
-            $promotion=Yii::$app->request->post('PromotionInfo');
-            $model->attributes=$promotion;
+        $data = Yii::$app->request->post();
+        if(!empty($data['PromotionInfo']['start_at'])){
+            $data['PromotionInfo']['start_at'] = strtotime($data['PromotionInfo']['start_at'].' 00:00:00');
+        }
+        if(!empty($data['PromotionInfo']['end_at'])){
+            $data['PromotionInfo']['end_at'] = strtotime($data['PromotionInfo']['start_at'].' 23:59:59');
+        }
+        if ($model->load($data)) {
+            if($model->date_valid==0){
+                $model->start_at=0;
+                $model->end_at = 0;
+            }
+            if($model->time_valid==0){
+                $model->time=0;
+            }
+            if($model->circle_valid==0){
+                $model->valid_circle = 0;
+            }
+            if(empty($model->condition)){
+                $model->condition = 0;
+            }
             $model->regist_at=time();
             $model->active_at=time();
-
-            if($promotion['valid_circle']==-1){
-                $start_at=strtotime($promotion['start_from']);
-                $end_at=strtotime($promotion['end_to']);
-                $model->valid_circle=($end_at-$start_at)/24/3600;
-                $model->start_at=$start_at;
-                $model->end_at=$end_at;
+            $model->is_active=1;
+            if( $model->save()){
+                Yii::$app->session->setFlash('success','操作成功');
+                return $this->redirect(['index']);
+            }else{
+                Yii::$app->session->setFlash('danger','操作失败');
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
             }
-
-            $model->save();
-            return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -95,25 +120,38 @@ class PromotionController extends BaseController
     {
         $model = $this->findModel($id);
 
-        if (Yii::$app->request->post()) {
-            $promotion=Yii::$app->request->post('PromotionInfo');
-            $model->attributes=$promotion;
-
-            if($promotion['valid_circle']==-1){
-                $start_at=strtotime($promotion['start_from']);
-                $end_at=strtotime($promotion['end_to']);
-                $model->valid_circle=($end_at-$start_at)/24/3600;
-                $model->start_at=$start_at;
-                $model->end_at=$end_at;
+        $data = Yii::$app->request->post();
+        if(!empty($data['PromotionInfo']['start_at'])){
+            $data['PromotionInfo']['start_at'] = strtotime($data['PromotionInfo']['start_at'].' 00:00:00');
+        }
+        if(!empty($data['PromotionInfo']['end_at'])){
+            $data['PromotionInfo']['end_at'] = strtotime($data['PromotionInfo']['start_at'].' 23:59:59');
+        }
+        if ($model->load($data)) {
+            if($model->date_valid==0){
+                $model->start_at=0;
+                $model->end_at = 0;
             }
-
-            $model->save();
-            return $this->redirect(['view', 'id' => $model->id]);
+            if($model->time_valid==0){
+                $model->time=0;
+            }
+            if($model->circle_valid==0){
+                $model->valid_circle = 0;
+            }
+            if(empty($model->condition)){
+                $model->condition = 0;
+            }
+            if( $model->save()){
+                Yii::$app->session->setFlash('success','操作成功');
+                return $this->redirect(['index']);
+            }else{
+                Yii::$app->session->setFlash('danger','操作失败');
+                return $this->render('uodate', [
+                    'model' => $model,
+                ]);
+            }
         } else {
-            $model->start_from=date('Y-m-d',$model->start_at);
-            $model->end_to=date('Y-m-d',$model->end_at);
-
-            return $this->render('update', [
+            return $this->render('uodate', [
                 'model' => $model,
             ]);
         }
@@ -232,10 +270,10 @@ class PromotionController extends BaseController
             return $this->showResult(302,'读取用户信息出错');
         }
         $type = Yii::$app->request->post('type');
+        $promotionType = PromotionType::findOne(['name'=>$type]);
         if(empty($promotionType)){
             return $this->showResult(301,'服务器异常');
         }
-        $promotionType = PromotionType::findOne(['name'=>$type]);
         if($promotionType->group == 3){
             $res = 1;
         }else{

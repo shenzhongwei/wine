@@ -47,11 +47,144 @@ class PromotionInfo extends \yii\db\ActiveRecord
     {
         return [
             [['pt_id', 'style', 'limit','date_valid','time_valid','circle_valid','target_id', 'valid_circle', 'start_at', 'end_at', 'time', 'regist_at', 'is_active', 'active_at'], 'integer'],
-            [['name','pt_id','style','limit','target_id','condition','discount','date_valid','time_valid','circle_valid'],'required'],
-            [['condition', 'discount'], 'number'],
+            [['name','pt_id','style','limit','target_id','date_valid','time_valid'],'required'],
+            [['pt_id','date_valid','start_at','end_at'],'validType'],
+            [['condition', 'discount','pt_id','start_at','end_at','date_valid'],'validNum'],
+            [['start_at','end_at','date_valid'],'validDate'],
+            [['time_valid','time'],'validTime'],
+            [['pt_id','circle_valid','valid_circle'], 'validCircle'],
             [['name'], 'string', 'max' => 128],
+            [['condition','discount',],'number'],
             [['pt_id'], 'exist', 'skipOnError' => true, 'targetClass' => PromotionType::className(), 'targetAttribute' => ['pt_id' => 'id']],
         ];
+    }
+
+    //验证类型
+    public function validType(){
+        if(!$this->hasErrors()){
+            $type = PromotionType::findOne($this->pt_id);
+            if(empty($type)){
+                $this->addError('pt_id','异常类型');
+            }else{
+                $query = self::find()->joinWith('pt')->where("
+            promotion_type.id>0 and promotion_info.id>0 and promotion_info.is_active=1");
+                if(in_array($type->env,[1,2,4,5])){
+                    $query->andWhere("promotion_type.env=$type->env ");
+                }
+                if ($type->group == 3){
+                    $query->andWhere("promotion_type.group=$type->group");
+                }
+                if(!empty($this->id)){
+                    $query->andWhere("promotion_info.id<>$this->id");
+                }
+                if(!empty($this->start_at)){
+                    $query->andWhere("(start_at<=$this->start_at and end_at>=$this->start_at) or (start_at=0 and end_at=0)");
+                }
+                if(!empty($this->end_at)){
+                    $query->andWhere("(start_at<=$this->end_at and end_at>=$this->end_at) or (start_at=0 and end_at=0)");
+                }
+                if($this->date_valid==0){
+                    $query->andWhere("(start_at<=".time()." and end_at>=".time().") or (start_at=0 and end_at=0)");
+                }
+                $model = $query->one();
+                if(!empty($model)){
+                    $this->addError('pt_id','该类别的促销环境有效期内只能存在唯一一个有效活动，请勿重复添加');
+                }
+            }
+        }
+    }
+    //验证优惠和条件
+    public function validNum(){
+        if(!$this->hasErrors()){
+            $type = PromotionType::findOne($this->pt_id);
+            if(empty($type)){
+                $this->addError('pt_id','异常类型');
+            }
+            if($this->style==1){
+                if($type->group!=3){
+                    if(empty($this->discount)){
+                        $this->addError('discount','请填写优惠额度');
+                    }
+                }
+                if(empty($this->condition)&&$this->condition<>0){
+                    $this->addError('condition','请填写优惠条件');
+                }
+            }else{
+                if(empty($this->discount)){
+                    $this->addError('discount','请填写优惠额度百分比');
+                }
+                if(empty($this->discount)>100){
+                    $this->addError('discount','额度百分比不可超出100');
+                }
+            }
+            $query = self::find()->where("is_active=1 and condition=$this->condition and discount=$this->discount and pt_id=$this->pt_id");
+            if(!empty($this->id)){
+                $query->andWhere("id<>$this->id");
+            }
+            if(!empty($this->start_at)){
+                $query->andWhere("(start_at<=$this->start_at and end_at>=$this->start_at) or (start_at=0 and end_at=0)");
+            }
+            if(!empty($this->end_at)){
+                $query->andWhere("(start_at<=$this->end_at and end_at>=$this->end_at) or (start_at=0 and end_at=0)");
+            }
+            if($this->date_valid==0){
+                $query->andWhere("(start_at<=".time()." and end_at>=".time().") or (start_at=0 and end_at=0)");
+            }
+            $model = $query->one();
+            if(!empty($model)){
+                $this->addError('pt_id','已存在一个相同类型条件优惠相同的优惠，请勿重复添加');
+            }
+        }
+    }
+    //验证日期
+    public function validDate(){
+        if(!$this->hasErrors()){
+            if($this->date_valid==1){
+                if(empty($this->start_at)){
+                    $this->addError('start_at','请选择开始日期');
+                }
+                if(empty($this->end_at)){
+                    $this->addError('start_at','请选择结束日期');
+                }
+            }
+        }
+    }
+    //验证次数
+    public function validTime(){
+        if(!$this->hasErrors()){
+            if($this->time_valid==1){
+                if($this->time<=0){
+                    $this->addError('time','可参与次数比需大于0');
+                }
+                if(empty($this->time)){
+                    $this->addError('time','请填写可参与次数');
+                }
+            }
+        }
+    }
+
+    //验证有效期
+    public function validCircle(){
+        if(!$this->hasErrors()){
+            $type = PromotionType::findOne($this->pt_id);
+            if(empty($type)){
+                $this->addError('pt_id','异常类型');
+            }else{
+                if($type->group==1){
+                    if(empty($this->circle_valid)&&$this->circle_valid<>0){
+                        $this->addError('circle_valid','优惠券有效期形式不能为空');
+                    }
+                    if($this->circle_valid==1){
+                        if($this->valid_circle<=0){
+                            $this->addError('valid_circle','有消息天数比需大于0');
+                        }
+                        if(empty($this->valid_circle)){
+                            $this->addError('valid_circle','请填写优惠券有效期天数');
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**
