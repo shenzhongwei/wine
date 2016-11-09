@@ -56,13 +56,17 @@ class PromotionInfoSearch extends PromotionInfo
 
         //活动优惠时间
 
-        $query->andFilterWhere(['>=','start_at',strtotime($this->start_at.' 00:00:00')])
-            ->andFilterWhere(['>=','condition',$this->condition])
+        $query->andFilterWhere(['>=','condition',$this->condition])
             ->andFilterWhere(['>=','discount',$this->discount]);
-        $query->andFilterWhere(['<=','end_at',strtotime($this->end_at.' 23:59:59')]);
 
         //活动名称
         $query->andFilterWhere(['like', 'name', $this->name]);
+        if(!empty($this->start_at)){
+            $query->andFilterWhere(['>=','start_at',strtotime($this->start_at.' 00:00:00')]);
+        }
+        if(!empty($this->end_at)){
+            $query->andFilterWhere(['<=','end_at',strtotime($this->end_at.' 23:59:59')]);
+        }
 
         return $dataProvider;
     }

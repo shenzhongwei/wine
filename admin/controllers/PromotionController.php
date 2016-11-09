@@ -333,27 +333,32 @@ class PromotionController extends BaseController
             return $this->showResult(302,'读取用户信息出错');
         }
         $type = Yii::$app->request->post('type');
-        $promotionType = PromotionType::findOne($type);
-        if(empty($promotionType)){
-            return $this->showResult(301,'服务器异常');
+        $is_ticket = 1;
+        $is_time = 1;
+        if(!empty($type)){
+            $promotionType = PromotionType::findOne($type);
+            if(empty($promotionType)){
+                return $this->showResult(301,'服务器异常');
+            }
+            if($promotionType->group == 1){
+                //是优惠券的形式则可操作
+                $is_ticket = 1;
+            }else{
+                //费优惠券不可操作
+                $is_ticket = 0;
+            }
+            if($promotionType->group==3||$promotionType->env==1){
+                //会员特权和用户注册的活动次数限制一次
+                $is_time = 0;
+            }elseif ($promotionType->group==5||$promotionType->env == 3){
+                //分享网页与下单时无限制
+                $is_time = 2;
+            }else{
+                //其他可操作
+                $is_time = 1;
+            }
         }
-        if($promotionType->group == 1){
-            //是优惠券的形式则可操作
-            $is_ticket = 1;
-        }else{
-            //费优惠券不可操作
-            $is_ticket = 0;
-        }
-        if($promotionType->group==3||$promotionType->env==1){
-            //会员特权和用户注册的活动次数限制一次
-            $is_time = 0;
-        }elseif ($promotionType->group==5||$promotionType->env == 3){
-            //分享网页与下单时无限制
-            $is_time = 2;
-        }else{
-            //其他可操作
-            $is_time = 1;
-        }
+
         $data = [
             'is_ticket'=>$is_ticket,
             'is_time'=>$is_time,
