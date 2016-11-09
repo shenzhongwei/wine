@@ -8,6 +8,7 @@ use api\models\UserInfo;
 use api\models\UserLogin;
 use api\models\UserTicket;
 use common\helpers\ArrayHelper;
+use common\jpush\JPush;
 use daixianceng\smser\LuosimaoSmser;
 use Yii;
 use \Exception;
@@ -68,12 +69,17 @@ class UserController extends ApiController{
      * 注册接口
      */
     public function actionRegister(){
+//        $jpush = new JPush();
+//        var_dump($jpush->push('13065ffa4e0104e6f50','111',1));
+//        exit;
         //获取表单数据
         $phone = Yii::$app->request->post('phone','');
         $code = Yii::$app->request->post('code','');
         $password = Yii::$app->request->post('password','');
         $confirmPwd = Yii::$app->request->post('confirmPwd','');
         $inviteCode = Yii::$app->request->post('inviteCode','');
+        $reg_id = Yii::$app->request->post('reg_id','');//推送的手机设备号
+        $reg_type = Yii::$app->request->post('reg_type',1);//类型
         //判断数据是否完整获取
         if(empty($phone)){
             return $this->showResult(301,'未获取到您的手机号');
@@ -146,6 +152,33 @@ class UserController extends ApiController{
                 if(!$Invitemessage->save()){
                     throw new Exception('生成邀请消息出错');
                 }
+                //判断是否有新用户活动以及型用户活动的形式,券则存券，积分则存入积分
+                $result = PromotionInfo::GetPromotion(2,$invitedUser->id);
+                if($result['result']==1){
+                    $inviteLogin = $invitedUser->userLogin;
+                    $type = $result['type'];
+                    $amount = $result['amount'];
+                    //存入消息
+                    $message = new MessageList();
+                    $message->attributes = [
+                        'type_id'=>2,
+                        'title'=>$type == 1 ? '推荐成功送优惠':'推荐成功送积分',
+                        'content'=>"手机号为$phone 的用户成功使用您的邀请码注册成功，送您".($type == 1 ? "一张$amount 元优惠券":"$amount 积分").'，购物省钱两不误',
+                        'own_id'=>$invitedUser->id,
+                        'target'=>$type == 1 ? 11:15,
+                        'status'=>0,
+                        'publish_at'=>date('Y-m-d')
+                    ];
+                    if(!$message->save()){
+                        throw new Exception('生成用户消息出错');
+                    }
+                    if(!empty($inviteLogin->reg_id)&&!empty($inviteLogin->reg_type)){
+                        $message = '用户成功使用您的邀请码注册成功啦！奖励您'.($type==1 ? "$amount 元优惠券":"$amount 积分")."，赶快来使用吧";
+                        $target = $type == 1 ? 11:15;
+                        $jpush = new JPush();
+                        $jpush->push($reg_id,$message,$reg_type,$target);
+                    }
+                }
             }
 
             //存登录信息
@@ -156,6 +189,8 @@ class UserController extends ApiController{
                 'username'=>$phone,
                 'password'=>md5(Yii::$app->params['pwd_pre'].$password),
                 'status'=>$userInfo->status,
+                'reg_id'=>empty($reg_id) ? '':$reg_id,
+                'reg_type'=>empty($reg_type) ? 0:$reg_type,
             ];
             if(!$userLogin->save()){
                 throw new Exception('生成登陆信息出错');
@@ -174,22 +209,30 @@ class UserController extends ApiController{
             if(!$userInfo->save()){
                 throw new Exception('生成用户邀请码出错');
             }
-            //判断是否有新用户活动
-            $promotions = PromotionInfo::find()->where(['and','pt_id=1','is_active=1','start_at<='.time(),'end_at>='.time(),'time>0'])->all();
-            if(!empty($promotions)){
-                $data = [];
-                foreach($promotions as $promotion){
-                    $start = empty($promotion->valid_circle) ? 0:time();
-                    $end = empty($promotion->valid_circle) ? 0:time()+($promotion->valid_circle*86400);
-                    for($i=0;$i<$promotion->time;$i++){
-                        $data [] = [
-                            $userInfo->id,$promotion->id,$start,$end,1
-                        ];
-                    }
+            //判断是否有新用户活动以及型用户活动的形式,券则存券，积分则存入积分
+            $result = PromotionInfo::GetPromotion(1,$userInfo->id);
+            if($result['result']==1){
+                $type = $result['type'];
+                $amount = $result['amount'];
+                //存入消息
+                $message = new MessageList();
+                $message->attributes = [
+                    'type_id'=>2,
+                    'title'=>$type == 1 ? '注册送优惠':'注册送积分',
+                    'content'=>'感谢您注册成为双天酒客户，送您'.$type == 1 ? "一张$amount 元优惠券":"$amount 积分".'，购物省钱两不误',
+                    'own_id'=>$userInfo->id,
+                    'target'=>$type == 1 ? 11:15,
+                    'status'=>0,
+                    'publish_at'=>date('Y-m-d')
+                ];
+                if(!$message->save()){
+                    throw new Exception('生成用户消息出错');
                 }
-                $row = Yii::$app->db->createCommand()->batchInsert(UserTicket::tableName(),['uid','pid','start_at','end_at','status'],$data)->execute();
-                if(empty($row)){
-                    throw new Exception('保存新用户优惠券出错');
+                if(!empty($reg_id)&&!empty($reg_type)){
+                    $message = '注册成功啦！送您'.($type==1 ? "$amount 元优惠券":"$amount 积分")."，赶快来使用吧";
+                    $target = $type == 1 ? 11:15;
+                    $jpush = new JPush();
+                    $jpush->push($reg_id,$message,$reg_type,$target);
                 }
             }
             //存入消息

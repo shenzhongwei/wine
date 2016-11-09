@@ -9,7 +9,7 @@ use Yii;
  *
  * @property integer $id
  * @property integer $uid
- * @property integer $point
+ * @property string $point
  * @property integer $is_active
  * @property integer $create_at
  * @property integer $update_at
@@ -33,7 +33,8 @@ class UserPoint extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['uid', 'point', 'is_active', 'create_at', 'update_at'], 'integer'],
+            [['uid', 'is_active', 'create_at', 'update_at'], 'integer'],
+            [['point'],'string'],
             [['point'], 'required'],
             [['uid'], 'exist', 'skipOnError' => true, 'targetClass' => UserInfo::className(), 'targetAttribute' => ['uid' => 'id']],
         ];

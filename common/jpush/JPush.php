@@ -31,7 +31,7 @@ class JPush extends Object{
     //$m_type 推送附加字段的类型(可不填) http,tips,chat....
     //$m_txt 推送附加字段的类型对应的内容(可不填) 可能是url,可能是一段文字。
     //$m_time 保存离线时间的秒数默认为一天(可不传)单位为秒
-    public function push($reg_id,$content='',$type=1,$m_type='双天酒',$m_txt='',$m_time='60'){
+    public function push($reg_id,$content='',$type=1,$target=0,$m_txt='',$m_time='60'){
         $base64= $type == 1 ? base64_encode(JPushConfig::APPKEY.':'.JPushConfig::MASTERSECRET):base64_encode(JPushConfig::APPKEY_COM.':'.JPushConfig::MASTERSECRET_COM);
         $header=array('Authorization:Basic '.$base64,"Content-Type:application/json");
         $data = array();
@@ -46,7 +46,7 @@ class JPush extends Object{
                 "alert"=>$content,
                 "title"=>"双天酒",
                 "builder_id"=>1,
-                "extras"=>array("type"=>$m_type, "txt"=>$m_txt)
+                "extras"=>array("target"=>$target, "txt"=>$m_txt)
             ),
             //ios的自定义
             "ios"=>array(
@@ -54,7 +54,7 @@ class JPush extends Object{
                 "badge"=>"1",
                 "sound"=>"default",
                 "extras"=>[
-                    "type"=>$m_type,
+                    "target"=>$target,
                     "txt"=>$m_txt
                 ]
             ),
@@ -63,14 +63,14 @@ class JPush extends Object{
         //苹果自定义---为了弹出值方便调测
         $data['message'] = array(
             "msg_content"=>$content,
-            "extras"=>array("type"=>$m_type, "txt"=>$m_txt)
+            "extras"=>array("target"=>$target, "txt"=>$m_txt)
         );
 
         //附加选项
         $data['options'] = array(
             "sendno"=>time(),
             "time_to_live"=>$m_time, //保存离线时间的秒数默认为一天
-            "apns_production"=> 1        //指定 APNS 通知发送环境：0开发环境，1生产环境。
+            "apns_production"=> 0        //指定 APNS 通知发送环境：0开发环境，1生产环境。
         );
         $param = json_encode($data);
         $res = $this->push_curl($param,$header);
@@ -85,7 +85,7 @@ class JPush extends Object{
      * 通过数组发送
      * 2015-12-07
      */
-    public function pushByTag($tagArr,$content='',$type=1,$m_type='',$m_txt='',$m_time='60'){
+    public function pushByTag($tagArr,$content='',$type=1,$target=0,$m_txt='',$m_time='60'){
         $base64= $type == 1 ? base64_encode(JPushConfig::APPKEY.':'.JPushConfig::MASTERSECRET):base64_encode(JPushConfig::APPKEY_COM.':'.JPushConfig::MASTERSECRET_COM);
         $header=array('Authorization:Basic '.$base64,"Content-Type:application/json");
         $data = array();
@@ -99,21 +99,21 @@ class JPush extends Object{
                 "alert"=>$content,
                 "title"=>"",
                 "builder_id"=>1,
-                "extras"=>array("type"=>$m_type, "txt"=>$m_txt)
+                "extras"=>array("target"=>$target, "txt"=>$m_txt)
             ),
             //ios的自定义
             "ios"=>array(
                 "alert"=>$content,
                 "badge"=>"1",
                 "sound"=>"default",
-                "extras"=>array("type"=>$m_type, "txt"=>$m_txt)
+                "extras"=>array("target"=>$target, "txt"=>$m_txt)
             ),
         );
 
         //苹果自定义---为了弹出值方便调测
         $data['message'] = array(
             "msg_content"=>$content,
-            "extras"=>array("type"=>$m_type, "txt"=>$m_txt)
+            "extras"=>array("target"=>$target, "txt"=>$m_txt)
         );
 
         //附加选项
@@ -133,7 +133,7 @@ class JPush extends Object{
         }
     }
 
-    public function pushByIdarr($tagArr,$content='',$type=1,$m_type,$m_txt='',$m_time='60',$title){
+    public function pushByIdarr($tagArr,$content='',$type=1,$target=0,$m_txt='',$m_time='60',$title){
         $base64= $type == 1 ? base64_encode(JPushConfig::APPKEY.':'.JPushConfig::MASTERSECRET):base64_encode(JPushConfig::APPKEY_COM.':'.JPushConfig::MASTERSECRET_COM);
         $header=array('Authorization:Basic '.$base64,"Content-Type:application/json");
         $data = array();
@@ -147,21 +147,21 @@ class JPush extends Object{
                 "alert"=>$content,
                 "title"=>$title,
                 "builder_id"=>1,
-                "extras"=>array("type"=>$m_type, "txt"=>$m_txt)
+                "extras"=>array("target"=>$target, "txt"=>$m_txt)
             ),
             //ios的自定义
             "ios"=>array(
                 "alert"=>$content,
                 "badge"=>"1",
                 "sound"=>"default",
-                "extras"=>array("type"=>$m_type, "txt"=>$m_txt)
+                "extras"=>array("target"=>$target, "txt"=>$m_txt)
             ),
         );
 
         //苹果自定义---为了弹出值方便调测
         $data['message'] = array(
             "msg_content"=>$content,
-            "extras"=>array("type"=>$m_type, "txt"=>$m_txt)
+            "extras"=>array("target"=>$target, "txt"=>$m_txt)
         );
 
         //附加选项

@@ -16,6 +16,7 @@ use Yii;
  *
  * @property PromotionInfo $p
  * @property UserInfo $u
+ * @property TicketInout $inout
  */
 class UserTicket extends \yii\db\ActiveRecord
 {
@@ -68,6 +69,14 @@ class UserTicket extends \yii\db\ActiveRecord
     public function getU()
     {
         return $this->hasOne(UserInfo::className(), ['id' => 'uid']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getInout()
+    {
+        return $this->hasOne(TicketInout::className(), ['tid' => 'id']);
     }
 
 

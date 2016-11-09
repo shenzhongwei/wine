@@ -14,8 +14,10 @@ use Yii;
  * @property integer $pid
  * @property integer $add_at
  * @property integer $status
+ * @property string $note
  *
  * @property UserInfo $u
+ * @property PromotionInfo $p
  */
 class UserPromotion extends \yii\db\ActiveRecord
 {
@@ -34,6 +36,7 @@ class UserPromotion extends \yii\db\ActiveRecord
     {
         return [
             [['uid', 'type', 'target_id', 'add_at', 'status','pid'], 'integer'],
+            [['note'],'string'],
             [['uid'], 'exist', 'skipOnError' => true, 'targetClass' => UserInfo::className(), 'targetAttribute' => ['uid' => 'id']],
         ];
     }
@@ -46,10 +49,12 @@ class UserPromotion extends \yii\db\ActiveRecord
         return [
             'id' => '主键',
             'uid' => '用户id',
-            'type' => '类型 1订单 2充值 3邀请',
+            'type' => '类型 与promotion_type中的env相同',
             'target_id' => '对象id',
             'add_at' => '使用时间',
             'status' => '状态 1正常 0删除',
+            'pid'=>'促销id',
+            'note'=>'备注'
         ];
     }
 
@@ -59,5 +64,10 @@ class UserPromotion extends \yii\db\ActiveRecord
     public function getU()
     {
         return $this->hasOne(UserInfo::className(), ['id' => 'uid']);
+    }
+
+    public function getP()
+    {
+        return $this->hasOne(PromotionInfo::className(), ['id' => 'pid']);
     }
 }

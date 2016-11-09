@@ -3,6 +3,7 @@
 namespace api\models;
 
 use Yii;
+use yii\base\Exception;
 
 /**
  * This is the model class for table "promotion_info".
@@ -25,9 +26,13 @@ use Yii;
  *
  * @property PromotionType $pt
  * @property UserTicket[] $userTickets
+ * @property UserPromotion[] $userPromotions
  */
 class PromotionInfo extends \yii\db\ActiveRecord
 {
+
+    public $group;
+    public $num;
     /**
      * @inheritdoc
      */
@@ -88,4 +93,199 @@ class PromotionInfo extends \yii\db\ActiveRecord
     {
         return $this->hasMany(UserTicket::className(), ['pid' => 'id']);
     }
+
+    public function getUserPromotions()
+    {
+        return $this->hasMany(UserPromotion::className(), ['pid' => 'id']);
+    }
+
+    public static function GetPromotion($env,$user_id,$order_id=null){
+        $query = self::find()->joinWith('pt')->leftJoin(
+            "(SELECT count(*) as num,pid FROM user_promotion WHERE uid=$user_id AND status=1 GROUP BY pid) c","c.pid=promotion_info.id")
+            ->where("promotion_type.is_active=1 and promotion_info.is_active=1 and ((start_at<=".time(). " 
+            and end_at>=".time().") or (end_at=0 and start_at=0)) and env=$env");
+        $query->select(["promotion_info.*",'promotion_type.group as group','IFNULL(c.num,0) as num']);
+        if(!empty($order_id)){
+            $order = OrderInfo::findOne($order_id);
+            $pay_bill = $order->pay_bill;
+//            $query->andWhere("((`condition=0` or `condition`>$condition) and style=1) or style=2");
+        }
+        $query->having("time=0 or time>num");
+        $promotion = $query->one();
+        $result = 0;
+        $type = 0;
+        $amount = 0;
+        if(!empty($promotion)){
+            if($promotion->group==1 && $promotion->discount>0){
+                $start = empty($promotion->valid_circle) ? 0:time();
+                $end = empty($promotion->valid_circle) ? 0:(time()+(24*$promotion->valid_circle*60*60));
+                $res = self::SaveTicket($promotion->id,$start,$end,$user_id,$env,$order_id);
+                if($res['result']==1){
+                    $result = 1;
+                    $type = $promotion->group;
+                    $amount = $promotion->discount;
+                }
+            }else{
+                $discount=0;
+                if($promotion->style==1){
+                    $discount = $promotion->discount;
+                }else{
+                    if(!empty($pay_bill)){
+                        $discount = $pay_bill*$promotion->discount;
+                    }
+                }
+                if($discount>0){
+                    $res = self::SavePoint($promotion->id,$user_id,$discount,$env,$order_id);
+                    if($res['result']==1){
+                        $result = 1;
+                        $type = $promotion->group;
+                        $amount = $discount;
+                    }
+                }
+            }
+        }
+        $data = [
+            'result'=>$result,
+            'type'=>$type,
+            'amount'=>$amount
+        ];
+        return $data;
+    }
+
+    /**
+     * @param $promotion_id
+     * @param $start
+     * @param $end
+     * @param $user_id
+     * @param $env
+     * @param $order_id
+     * @return array
+     * 记录票的存入记录
+     */
+    public static function SaveTicket($promotion_id,$start,$end,$user_id,$env,$order_id){
+        //事务开启
+        $transaction = Yii::$app->db->beginTransaction();
+        try{
+            //存入优惠券
+            $userTicket = new UserTicket();
+            $userTicket->attributes = [
+                'uid'=>$user_id,
+                'pid'=>$promotion_id,
+                'start_at'=>$start,
+                'end_at'=>$end,
+                'status'=>1,
+            ];
+            if(!$userTicket->save()){
+                throw new Exception('保存用户优惠券出错');
+            }
+            //存入优惠券领取记录
+            $ticketInout = new TicketInout();
+            $ticketInout->attributes = [
+                'uid'=>$user_id,
+                'tid'=>$userTicket->id,
+                'regist_at'=>time(),
+                'note'=>"编号为$user_id 的用户于".date('Y年m月d日 H时i分s秒')."领取了绑定编号为$promotion_id 活动的优惠券一张",
+                'status'=>1,
+            ];
+            if(!$ticketInout->save()){
+                throw new Exception('券的领取记录保存出错');
+            }
+            //存入用户使用促销记录
+            $userPromotion = new UserPromotion();
+            $userPromotion->attributes = [
+                'uid'=>$user_id,
+                'type'=>$env,
+                'target_id'=>empty($order_id) ? 0 :$order_id,
+                'pid'=>$promotion_id,
+                'add_at'=>time(),
+                'note'=>"编号为$user_id 的用户于".date('Y年m月d日 H时i分s秒')."参与编号为$promotion_id 的活动，并领取了编号为$userTicket->id 的优惠券",
+                'status'=>1,
+            ];
+            if(!$userPromotion->save()){
+                throw new Exception('用户参与活动的记录保存出错');
+            }
+            $transaction->commit();
+            $res = 1;
+            $message = '操作成功';
+        }catch (Exception $e){
+            $transaction->rollBack();
+            $res = 0;
+            $message = $e->getMessage();
+        }
+        $data = [
+            'result'=>$res,
+            'message'=>$message,
+        ];
+        return $data;
+    }
+
+    public static function SavePoint($promotion_id,$user_id,$amount,$env,$order_id){
+        $transaction = Yii::$app->db->beginTransaction();
+        try{
+            //存入积分点，用户未开通则重新开户
+            $point = UserPoint::findOne(['uid'=>$user_id,'is_active'=>1]);
+            if(empty($point)){
+                $point = new UserPoint();
+                $total_amount = $amount;
+                $create_at = time();
+            }else{
+                $total_amount = $amount+(double)($point->point);
+                $create_at = $point->create_at;
+            }
+            $point->attributes = [
+                'uid'=>$user_id,
+                'point'=>$total_amount,
+                'is_active'=>1,
+                'create_at'=>$create_at,
+                'update_at'=>time(),
+            ];
+            if(!$point->save()){
+                throw new Exception('用户积分账户保存出错');
+            }
+            //记录明细
+            $pointInout = new PointInout();
+            $pointInout->attributes = [
+                'uid'=>$user_id,
+                'pid'=>$point->id,
+                'pio_date'=>time(),
+                'pio_type'=>1,
+                'amount'=>$amount,
+                'oid'=>empty($order_id) ? 0:$order_id,
+                'note'=>"编号为$user_id 的用户于".date('Y年m月d日 H时i分s秒')."获得了绑定编号为$promotion_id 活动的积分$amount ,已入账",
+                'status'=>1,
+            ];
+            if(!$pointInout->save()){
+                throw new Exception('用户积分收入记录保存出错');
+            }
+            //存入用户使用促销记录
+            $userPromotion = new UserPromotion();
+            $userPromotion->attributes = [
+                'uid'=>$user_id,
+                'type'=>$env,
+                'target_id'=>empty($order_id) ? 0 :$order_id,
+                'pid'=>$promotion_id,
+                'add_at'=>time(),
+                'note'=>"编号为$user_id 的用户于".date('Y年m月d日 H时i分s秒')."参与编号为$promotion_id 的活动，并领取了$amount 积分",
+                'status'=>1,
+            ];
+            if(!$userPromotion->save()){
+                throw new Exception('用户参与活动的记录保存出错');
+            }
+            $transaction->commit();
+            $res=1;
+            $message= '操作成功';
+        }catch (Exception $e){
+            $transaction->rollBack();
+            $res = 0;
+            $message = $e->getMessage();
+        }
+        $data = [
+            'result'=>$res,
+            'message'=>$message,
+        ];
+        return $data;
+    }
+
+
+
 }
