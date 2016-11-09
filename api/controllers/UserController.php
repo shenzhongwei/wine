@@ -152,7 +152,7 @@ class UserController extends ApiController{
                 if(!$Invitemessage->save()){
                     throw new Exception('生成邀请消息出错');
                 }
-                //判断是否有新用户活动以及型用户活动的形式,券则存券，积分则存入积分
+                //判断是否有推荐注册和活动的形式,券则存券，积分则存入积分
                 $result = PromotionInfo::GetPromotion(2,$invitedUser->id);
                 if($result['result']==1){
                     $inviteLogin = $invitedUser->userLogin;
@@ -219,7 +219,7 @@ class UserController extends ApiController{
                 $message->attributes = [
                     'type_id'=>2,
                     'title'=>$type == 1 ? '注册送优惠':'注册送积分',
-                    'content'=>'感谢您注册成为双天酒客户，送您'.$type == 1 ? "一张$amount 元优惠券":"$amount 积分".'，购物省钱两不误',
+                    'content'=>'感谢您注册成为双天酒客户，送您'.($type == 1 ? "一张$amount 元优惠券":"$amount 积分").'，购物省钱两不误',
                     'own_id'=>$userInfo->id,
                     'target'=>$type == 1 ? 11:15,
                     'status'=>0,
