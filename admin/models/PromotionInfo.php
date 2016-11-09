@@ -284,7 +284,7 @@ class PromotionInfo extends \yii\db\ActiveRecord
         }else{
             $type = PromotionType::findOne($limit);
             if(!empty($type)){
-                if(in_array($type->group,[1,3])||in_array($type->env,[2,5])){
+                if(in_array($type->group,[1,3])||in_array($type->env,[2])){
                     $res = [
                         [
                             'id'=>1,
