@@ -318,8 +318,10 @@ class PromotionController extends BaseController
             return $this->showResult(301,'服务器异常');
         }
         if($promotionType->group == 3){
+            //开通会员不需要discount
             $res = 1;
-        }elseif ($promotionType->env==2 && $promotionType->group==2){
+        }elseif (in_array($promotionType->env,[2,5]) && $promotionType->group==2){
+            //推荐成功且为赠送积分时不需condition
             $res = 2;
         }else{
             $res = 0;
@@ -382,6 +384,7 @@ class PromotionController extends BaseController
         }
         //优惠与条件
         if($promotionType->group==1&&$promotion->style=1){
+            //固定送券时
             $is_condition = 1;
             $condition_value = $promotion->condition;
             $is_discount = 1;
@@ -395,7 +398,7 @@ class PromotionController extends BaseController
             $discount_value = '';
             $condition_placeholder = '输入优惠条件';
             $discount_placeholder = '该种类无需输入优惠额度';
-        }elseif ($promotionType->env==2&&$promotionType->group==2&&$promotion->style=1){
+        }elseif (in_array($promotionType->env,[2,5])&&$promotionType->group==2&&$promotion->style=1){
             $is_condition = 0;
             $condition_value = '';
             $is_discount = 1;

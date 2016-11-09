@@ -139,6 +139,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'vAlign'=>'middle',
                 'hAlign'=>'center',
                 'attribute'=>'discount',
+                'value'=>function($model){
+                    return $model->style == 1 ? $model->discount:$model->discount.'%';
+                },
                 'filterInputOptions'=>['onkeyup'=>'clearNoNum(this)','class'=>'form-control'],
             ],
             [

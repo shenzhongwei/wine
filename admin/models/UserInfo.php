@@ -32,6 +32,7 @@ use Yii;
  * @property UserPayPassword[] $userPayPasswords
  * @property UserPromotion[] $userPromotions
  * @property UserTicket[] $userTickets
+ * @property TicketInout[] $ticketInouts
  */
 class UserInfo extends \yii\db\ActiveRecord
 {
@@ -133,6 +134,10 @@ class UserInfo extends \yii\db\ActiveRecord
         return $this->hasMany(UserLogin::className(), ['uid' => 'id', 'status' => 'status']);
     }
 
+    public function getTicketInouts()
+    {
+        return $this->hasMany(TicketInout::className(), ['uid' => 'id']);
+    }
 
 
     public function getA(){

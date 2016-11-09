@@ -14,6 +14,7 @@ use Yii;
  * @property integer $pio_type
  * @property integer $amount
  * @property integer $oid
+ * @property string $note
  * @property integer $status
  *
  * @property UserInfo $u
@@ -37,6 +38,7 @@ class PointInout extends \yii\db\ActiveRecord
     {
         return [
             [['uid', 'pid', 'pio_date', 'pio_type', 'amount', 'oid', 'status'], 'integer'],
+            [['note'],'string'],
             [['uid'], 'exist', 'skipOnError' => true, 'targetClass' => UserInfo::className(), 'targetAttribute' => ['uid' => 'id']],
             [['pid'], 'exist', 'skipOnError' => true, 'targetClass' => UserPoint::className(), 'targetAttribute' => ['pid' => 'id']],
             [['oid'], 'exist', 'skipOnError' => true, 'targetClass' => OrderInfo::className(), 'targetAttribute' => ['oid' => 'id']],
@@ -56,6 +58,7 @@ class PointInout extends \yii\db\ActiveRecord
             'pio_type' => '进出类型 1收入 2支出',
             'amount' => '进出数量',
             'oid' => '订单号',
+            'note'=>'备注说明',
             'status' => '状态 1正常 0删除',
         ];
     }

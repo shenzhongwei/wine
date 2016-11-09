@@ -124,7 +124,7 @@ class PromotionInfo extends \yii\db\ActiveRecord
             if (!empty($this->condition) && $this->style==1) {
                 $query = self::find()->where("
             is_active=1 and `condition`=$this->condition and pt_id=$this->pt_id and 
-            `limit`=$this->limit and target_id=$this->target_id");
+            `limit`=$this->limit and target_id=$this->target_id and style=$this->style");
                 if (!empty($this->id)) {
                     $query->andWhere("id<>$this->id");
                 }
@@ -143,9 +143,16 @@ class PromotionInfo extends \yii\db\ActiveRecord
                 }
             }
             if (!empty($this->discount) && $this->style==2) {
-                $query = self::find()->where("
+                if($type->group==2){
+                    $query = self::find()->where("
+            is_active=1 and pt_id=$this->pt_id and `limit`=$this->limit and target_id=$this->target_id and style=$this->style");
+                    $message = '该种类下已存在一个百分比类型的促销，请勿重复添加';
+                }else{
+                    $query = self::find()->where("
             is_active=1 and discount=$this->discount and pt_id=$this->pt_id and 
-            `limit`=$this->limit and target_id=$this->target_id");
+            `limit`=$this->limit and target_id=$this->target_id and style=$this->style");
+                    $message = '已存在一个相同类型百分比相同的优惠，请勿重复添加';
+                }
                 if (!empty($this->id)) {
                     $query->andWhere("id<>$this->id");
                 }
@@ -160,7 +167,7 @@ class PromotionInfo extends \yii\db\ActiveRecord
                 }
                 $model = $query->one();
                 if (!empty($model)) {
-                    $this->addError('condition', '已存在一个相同类型百分比相同的优惠，请勿重复添加');
+                    $this->addError('condition', $message);
                 }
             }
         }
@@ -277,7 +284,7 @@ class PromotionInfo extends \yii\db\ActiveRecord
         }else{
             $type = PromotionType::findOne($limit);
             if(!empty($type)){
-                if(in_array($type->group,[1,3])||$type->env==2){
+                if(in_array($type->group,[1,3])||in_array($type->env,[2,5])){
                     $res = [
                         [
                             'id'=>1,
