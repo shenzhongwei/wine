@@ -491,7 +491,7 @@ class OrderController extends ApiController{
         if(empty($bill_des)&&empty($vip_des)){
             return $this->showResult(301,'暂无充值活动');
         }
-        $billLabels = array_values(array_unique(sort($billLabels)));
+//        $billLabels = array_values(array_unique($billLabels));
         $data = [
             'bill_label'=>$billLabels,
             'vip'=>$vip_des,
