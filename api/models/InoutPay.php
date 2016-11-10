@@ -2,6 +2,7 @@
 
 namespace api\models;
 
+use common\jpush\JPush;
 use common\pay\alipay\helpers\AlipayHelper;
 use common\pay\wepay\helpers\Log;
 use Yii;
@@ -144,6 +145,7 @@ class InoutPay extends \yii\db\ActiveRecord
                 $res = self::SavePoint($billPromotion->id,$user_id,$amount,6,$inout->id);
                 if($res['result']==1){
                     $content = "充值成功，赠送您$amount".'积分,赶快来使用吧';
+                    $target = 15;
                 }else{
                     throw new Exception($res['message'],400);
                 }
@@ -206,30 +208,53 @@ class InoutPay extends \yii\db\ActiveRecord
                     "(SELECT count(*) as num,pid FROM user_promotion WHERE uid=$user_id AND status=1 GROUP BY pid) c", "c.pid=promotion_info.id")
                     ->where("promotion_type.is_active=1 and promotion_info.is_active=1 and ((start_at<=".time().
                         " and end_at>=".time().") or (end_at=0 and start_at=0)) and `group`=3 and `condition`>0 and 
-                        ((style=2) or (style=1 and `condition`<=".$params['pay_money']."))");
+                        style=1 and `condition`<=".$params['pay_money']);
                 $query->select(["promotion_info.*",'promotion_type.group as group','IFNULL(c.num,0) as num']);
                 $query->orderBy(['`condition`'=>SORT_DESC]);
                 $query->having("time=0 or time>num");
                 $vipPromotion = $query->one();
-                if(!empty($promotion)){
-                    if($promotion->condition<=$params['pay_money']){
-                        $userInfo->is_vip=1;
-                        if(!$userInfo->save()){
-                            throw new Exception('更改用户会员状态出错',400);
-                        }
-                        $message = new MessageList();
-                        $message->attributes = [
-                            'type_id'=>2,
-                            'title'=>'会员开通成功',
-                            'content'=>'恭喜您成功充值'.$params['pay_money'].'元并成功开通双天会员，各种优惠等着你',
-                            'own_id'=>$user_id,
-                            'target'=>14,
-                            'status'=>0,
-                            'publish_at'=>date('Y-m-d')
-                        ];
-                        if(!$message->save()){
-                            throw new Exception('生成用户开通会员消息出错');
-                        }
+                if(!empty($vipPromotion)){
+                    $userInfo->is_vip=1;
+                    $userInfo->updated_time = date('Y-m-d H:i:s');
+                    if(!$userInfo->save()){
+                        throw new Exception('更改用户会员状态出错',400);
+                    }
+                    $message = new MessageList();
+                    $message->attributes = [
+                        'type_id'=>2,
+                        'title'=>'会员开通成功',
+                        'content'=>'恭喜您成功充值'.$params['pay_money'].'元并成功开通双天会员，各种优惠等着你',
+                        'own_id'=>$user_id,
+                        'target'=>16,
+                        'status'=>0,
+                        'publish_at'=>date('Y-m-d')
+                    ];
+                    if(!$message->save()){
+                        throw new Exception('生成用户开通会员消息出错');
+                    }
+
+                    //存入用户使用促销记录
+                    $userPromotion = new UserPromotion();
+                    $userPromotion->attributes = [
+                        'uid'=>$user_id,
+                        'type'=>6,
+                        'target_id'=>$inout_id,
+                        'pid'=>$vipPromotion->id,
+                        'add_at'=>time(),
+                        'note'=>"编号为$user_id"."的用户于".date('Y年m月d日 H时i分s秒')."参与编号为$vipPromotion->id"."的活动，开通会员特权成功",
+                        'status'=>1,
+                    ];
+                    if(!$userPromotion->save()){
+                        throw new Exception('用户参与活动的记录保存出错');
+                    }
+                    $content = "尊敬的客户，您已开通双天会员，查看会员专享商品，请点击此处";
+                    $target = 16;
+                }
+                if(!empty($target)&&!empty($content)){
+                    $userLogin = $userInfo->userLogin;
+                    if(!empty($userLogin->reg_id)&&!empty($userLogin->reg_type)){
+                        $jpush = new JPush();
+                        $jpush->push($userLogin->reg_id,$content,$userLogin->reg_type,$target);
                     }
                 }
             }

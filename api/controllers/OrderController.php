@@ -103,7 +103,7 @@ class OrderController extends ApiController{
                 if($goodInfo->vip_price!=$value['unit_price']){
                     return $this->showResult(304,$goodInfo->name.'价格异常');
                 }
-                $payArr = explode('|',$goodInfo->original_pay);
+                $payArr = explode('|',$goodInfo->vip_pay);
                 $point_sup = $goodInfo->point_sup;
             }elseif ($type==3){
                 $goodRush = GoodRush::find()->where("gid=".$value['good_id']."and is_active=1 and start_at<=".time()." and end_at>=".time())->one();
