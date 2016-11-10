@@ -139,7 +139,7 @@ class Dics extends \yii\db\ActiveRecord
 
 
     public static function getPromotionClass(){
-        $data = self::find()->where(['type'=>'促销类别'])->orderBy(['id'=>SORT_ASC])->all();
+        $data = self::find()->where("type='促销类别' and id<>2")->orderBy(['id'=>SORT_ASC])->all();
         return ArrayHelper::map($data,'id','name');
     }
 
@@ -150,7 +150,7 @@ class Dics extends \yii\db\ActiveRecord
 
     public static function getPromotionEnv($class=null){
         if(empty($class)){
-            $data = self::find()->where(['type'=>'促销环境'])->orderBy(['id'=>SORT_ASC])->all();
+            $data = self::find()->where("type='促销环境' and id<>3")->orderBy(['id'=>SORT_ASC])->all();
         }else{
             switch ($class){
                 case 1:
@@ -281,7 +281,7 @@ class Dics extends \yii\db\ActiveRecord
                 ];
             }
         }else{
-            $data = self::find()->where(['type'=>'促销形式'])->orderBy(['id'=>SORT_ASC])->all();
+            $data = self::find()->where("type='促销形式' and id<>4")->orderBy(['id'=>SORT_ASC])->all();
         }
         return ArrayHelper::map($data,'id','name');
     }

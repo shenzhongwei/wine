@@ -266,32 +266,55 @@ class OrderController extends ApiController{
             $data = [];
             //处理查找到的数据
             if(!empty($orders)){
-                $data = ArrayHelper::getColumn($orders,function($element){
-                    return [
-                        'order_id'=>$element->id,
-                        'send_bill'=>$element->send_bill,
-                        'state'=>$element->state,
-                        'pay_price'=>$element->pay_bill,
-                        'order_date'=>date('Y-m-d H:i:s',$element->order_date),
-                        'order_code'=>$element->order_code,
-                        'pay_mode'=>$element->pay_id,
-                        'point'=>$element->point,
-                        'detail'=>ArrayHelper::getColumn($element->orderDetails,function($detail){
-                            return [
-                                'good_id'=>$detail->gid,
-                                'name'=>$detail->g->name,
-                                'volum'=>$detail->g->volum,
-                                'pic'=>Yii::$app->params['img_path'].$detail->g->pic,
-                                'number'=>$detail->g->number,
-                                'unit_price'=>$detail->single_price,
-                                'original_price'=>$detail->g->price,
-                                'unit'=>$detail->g->unit,
-                                'amount'=>$detail->amount,
-                                'total_price'=>$detail->total_price,
-                            ];
-                        }),
-                    ];
-                });
+                $data = [];
+                $transaction = Yii::$app->db->beginTransaction();
+                try{
+                    foreach ($orders as $element){
+                        if($element->state<2&&$element->point>0){
+                            $userPoint = UserPoint::findOne(['uid'=>$element->uid,'is_active'=>1]);
+                            if(empty($userPoint)||$userPoint->point==0){
+                                $element->pay_bill = $element->pay_bill+($element->point/100);
+                                $element->point = 0;
+                            } elseif($userPoint->point<$element->point){
+                                $point = $element->point;
+                                $element->point=$userPoint->point;
+                                $element->pay_bill = $element->pay_bill+($point/100)-($userPoint->point/100);
+                            }
+                            if(!$element->save()){
+                                throw new Exception('保存订单信息出错');
+                            }
+                        }
+                        $data [] = [
+                            'order_id'=>$element->id,
+                            'send_bill'=>$element->send_bill,
+                            'state'=>$element->state,
+                            'pay_price'=>$element->pay_bill,
+                            'order_date'=>date('Y-m-d H:i:s',$element->order_date),
+                            'order_code'=>$element->order_code,
+                            'pay_mode'=>$element->pay_id,
+                            'point'=>$element->point,
+                            'detail'=>ArrayHelper::getColumn($element->orderDetails,function($detail){
+                                return [
+                                    'good_id'=>$detail->gid,
+                                    'name'=>$detail->g->name,
+                                    'volum'=>$detail->g->volum,
+                                    'pic'=>Yii::$app->params['img_path'].$detail->g->pic,
+                                    'number'=>$detail->g->number,
+                                    'unit_price'=>$detail->single_price,
+                                    'original_price'=>$detail->g->price,
+                                    'unit'=>$detail->g->unit,
+                                    'amount'=>$detail->amount,
+                                    'total_price'=>$detail->total_price,
+                                ];
+                            }),
+                        ];
+                    }
+                    $transaction->commit();
+                    return $this->showList(200,'订单列表如下',$count,$data);
+                }catch (Exception $e){
+                    $transaction->rollBack();
+                    return $this->showResult(400,'服务器异常');
+                }
             }
             return $this->showList(200,'订单列表如下',$count,$data);
         }else{

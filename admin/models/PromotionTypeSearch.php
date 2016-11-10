@@ -27,7 +27,7 @@ class PromotionTypeSearch extends PromotionType
 
     public function search($params)
     {
-        $query = PromotionType::find();
+        $query = PromotionType::find()->where("class<>2");
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

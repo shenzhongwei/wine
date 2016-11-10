@@ -411,7 +411,7 @@ class PromotionInfo extends \yii\db\ActiveRecord
      * 获取所有的类型
      */
     public static function getAllTypes($key){
-        $query = PromotionType::find();
+        $query = PromotionType::find()->where("class<>2");
         if($key=='create'){
             $query->andWhere("is_active=1");
         }

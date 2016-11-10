@@ -204,6 +204,7 @@ class OrderInfo extends \yii\db\ActiveRecord
                     }
                     $userOrder->state = 100;//修改字段
                     $userOrder->ticket_id = 0;
+                    $userOrder->point = 0;
                     if(!$userOrder->save()){
                         throw new Exception('取消订单失败');
                     }

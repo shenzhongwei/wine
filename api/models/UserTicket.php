@@ -20,6 +20,8 @@ use Yii;
  */
 class UserTicket extends \yii\db\ActiveRecord
 {
+
+    public $order;
     /**
      * @inheritdoc
      */

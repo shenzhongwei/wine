@@ -252,7 +252,7 @@ class OrderPay extends \yii\db\ActiveRecord
             //生成专属消息
             $message = new MessageList();
             $message->attributes = [
-                'type_id'=>3,
+                'type_id'=>2,
                 'title'=>'订单支付成功',
                 'content'=>"编号为$orderInfo->order_code"."的订单支付成功",
                 'own_id'=>$orderInfo->uid,
