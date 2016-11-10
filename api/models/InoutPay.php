@@ -333,7 +333,7 @@ class InoutPay extends \yii\db\ActiveRecord
                 'own_id'=>$user_id,
                 'target'=>15,
                 'status'=>0,
-                'publish_at'=>date('Y-m-d')
+                'publish_at'=>date('Y-m-d'),
             ];
             if(!$message->save()){
                 throw new Exception('生成用户消息出错');

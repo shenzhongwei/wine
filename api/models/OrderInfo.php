@@ -18,7 +18,7 @@ use yii\base\Exception;
  * @property integer $pay_id
  * @property integer $pay_date
  * @property integer $type
- * @property integer $point
+ * @property string $point
  * @property string $total
  * @property string $discount
  * @property string $send_bill
@@ -56,8 +56,8 @@ class OrderInfo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['sid', 'uid', 'order_date', 'pay_id', 'pay_date', 'point','send_id', 'type','state', 'send_date', 'is_del', 'status','ticket_id','aid'], 'integer'],
-            [['total', 'discount', 'send_bill', 'pay_bill'], 'number'],
+            [['sid', 'uid', 'order_date', 'pay_id', 'pay_date','send_id', 'type','state', 'send_date', 'is_del', 'status','ticket_id','aid'], 'integer'],
+            [['total', 'discount', 'send_bill', 'pay_bill','point'], 'number'],
             [['order_code'], 'string', 'max' => 32],
             [['send_code'],'string','max'=>12],
             [['send_id'], 'exist', 'skipOnError' => true, 'targetClass' => EmployeeInfo::className(), 'targetAttribute' => ['send_id' => 'id']],

@@ -79,5 +79,4 @@ class MessageController extends ApiController{
             return $this->showResult(400,'失败');
         }
     }
-
 }

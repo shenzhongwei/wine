@@ -100,8 +100,8 @@ class UserController extends ApiController{
             return $this->showResult(303,'该用户已注册，请勿重复注册');
         }
         //判断验证码是否正确
-//        $codeCache = Yii::$app->cache->get('message_'.$phone);
-        $codeCache='675401';
+        $codeCache = Yii::$app->cache->get('message_'.$phone);
+//        $codeCache='675401';
         if($codeCache===false){
             return $this->showResult(303,'验证码已过期，请重新获取');
         }elseif($codeCache!=$code){
@@ -161,7 +161,7 @@ class UserController extends ApiController{
                     $message->attributes = [
                         'type_id'=>2,
                         'title'=>$type == 1 ? '推荐成功送优惠':'推荐成功送积分',
-                        'content'=>"手机号为$phone"."的用户成功使用您的邀请码注册成功，送您".($type == 1 ? "一张$amount"."元优惠券":"$amount"."积分").'，购物省钱两不误',
+                        'content'=>"手机号为$phone"."的用户成功使用您的邀请码注册成功，送您".($type == 1 ? ("一张$amount"."元优惠券"):("$amount"."积分")).'，购物省钱两不误',
                         'own_id'=>$invitedUser->id,
                         'target'=>$type == 1 ? 11:15,
                         'status'=>0,
@@ -217,7 +217,7 @@ class UserController extends ApiController{
                 $message->attributes = [
                     'type_id'=>2,
                     'title'=>$type == 1 ? '注册送优惠':'注册送积分',
-                    'content'=>'感谢您注册成为双天酒客户，送您'.($type == 1 ? "一张$amount"."元优惠券":"$amount"."积分").'，购物省钱两不误',
+                    'content'=>'感谢您注册成为双天酒客户，送您'.($type == 1 ? ("一张$amount"."元优惠券"):("$amount"."积分")).'，购物省钱两不误',
                     'own_id'=>$userInfo->id,
                     'target'=>$type == 1 ? 11:15,
                     'status'=>0,
@@ -227,7 +227,7 @@ class UserController extends ApiController{
                     throw new Exception('生成用户消息出错');
                 }
                 if(!empty($reg_id)&&!empty($reg_type)){
-                    $message = '注册成功啦！送您'.($type==1 ? "$amount"."元优惠券":"$amount"."积分")."，赶快来使用吧";
+                    $message = '注册成功啦！送您'.($type==1 ? ("$amount"."元优惠券"):("$amount"."积分"))."，赶快来使用吧";
                     $target = $type == 1 ? 11:15;
                     $jpush = new JPush();
                     $jpush->push($reg_id,$message,$reg_type,$target);

@@ -10,6 +10,7 @@ use api\models\PromotionInfo;
 use api\models\ShoppingCert;
 use api\models\UserAddress;
 use api\models\UserInfo;
+use api\models\UserPoint;
 use api\models\UserPromotion;
 use api\models\UserTicket;
 use Yii;
@@ -94,18 +95,21 @@ class OrderController extends ApiController{
             }
             //验证各类型下的商品信息
             if($type == 1){
+                //普通商品
                 if($goodInfo->pro_price!=$value['unit_price']){
                     return $this->showResult(304,$goodInfo->name.'价格异常');
                 }
                 $payArr = explode('|',$goodInfo->original_pay);
                 $point_sup = $goodInfo->point_sup;
             }elseif ($type==2){
+                //会员商品
                 if($goodInfo->vip_price!=$value['unit_price']){
                     return $this->showResult(304,$goodInfo->name.'价格异常');
                 }
                 $payArr = explode('|',$goodInfo->vip_pay);
                 $point_sup = $goodInfo->point_sup;
             }elseif ($type==3){
+                //抢购商品，判断是否登陆以及可抢购数量
                 $goodRush = GoodRush::find()->where("gid=".$value['good_id']."and is_active=1 and start_at<=".time()." and end_at>=".time())->one();
                 if(empty($goodRush)){
                     return $this->showResult(304,$goodInfo->name.'不是抢购商品，无法下单');
@@ -137,7 +141,7 @@ class OrderController extends ApiController{
             if(!in_array($pay_mode,$payArr)){
                 return $this->showResult(301,$goodInfo->name.'不支持'.$payStr);
             }
-            if($point>0 && $point_sup==1){
+            if($point>0 && $point_sup!=1){
                 return $this->showResult(301,$goodInfo->name.'不支持使用积分');
             }
             $total += ($value['unit_price']*$value['amount']);
@@ -150,6 +154,13 @@ class OrderController extends ApiController{
             $userTicket = UserTicket::findOne(['uid'=>$user_id,'id'=>$ticket_id,'status'=>1]);
             if(empty($userTicket)){
                 return $this->showResult(304,'优惠券信息异常');
+            }
+        }
+        //验证积分是否充足
+        if($point>0){
+            $userPoint=UserPoint::findOne(['uid'=>$user_id,'is_active'=>1]);
+            if(empty($userPoint)||$userPoint->point<$point){
+                return $this->showResult(304,'账户的积分不足');
             }
         }
         /**
@@ -264,6 +275,7 @@ class OrderController extends ApiController{
                         'order_date'=>date('Y-m-d H:i:s',$element->order_date),
                         'order_code'=>$element->order_code,
                         'pay_mode'=>$element->pay_id,
+                        'point'=>$element->point,
                         'detail'=>ArrayHelper::getColumn($element->orderDetails,function($detail){
                             return [
                                 'good_id'=>$detail->gid,

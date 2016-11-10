@@ -120,6 +120,7 @@ class OrderPay extends \yii\db\ActiveRecord
                  * 2、若未下过单，则找出有效的推荐人活动
                  * 3、若是送券，则在用户券库中增加优惠券
                  * 4、若是送余额则为用户的账户添加对应金额，同事生成账户明细
+                 * 5、查看用户是否使用积分，若使用，则存入数据库
                  */
                 $historyOrder = OrderInfo::find()->where(['and','uid='.$orderInfo->uid,'state>=2','state<99'])->one();//1
                 if(empty($historyOrder)){//2
@@ -135,7 +136,7 @@ class OrderPay extends \yii\db\ActiveRecord
                             $message->attributes = [
                                 'type_id'=>2,
                                 'title'=>$type == 1 ? '推荐下单成功送优惠':'推荐下单成功送积分',
-                                'content'=>"您的推荐人$userInfo->phone"."首次下单并付款成功，送您".($type == 1 ? "一张$amount"."元优惠券":"$amount"."积分").'，购物省钱两不误',
+                                'content'=>"您的推荐人$userInfo->phone"."首次下单并付款成功，送您".($type == 1 ? ("一张$amount"."元优惠券"):("$amount"."积分")).'，购物省钱两不误',
                                 'own_id'=>$invitedUser->id,
                                 'target'=>$type == 1 ? 11:15,
                                 'status'=>0,
@@ -145,7 +146,7 @@ class OrderPay extends \yii\db\ActiveRecord
                                 throw new Exception('生成用户消息出错');
                             }
                             if(!empty($inviteLogin->reg_id)&&!empty($inviteLogin->reg_type)){
-                                $message = '有您的推荐人首次下单并付款成功啦！奖励您'.($type==1 ? "$amount"."元优惠券":"$amount"."积分")."，赶快来使用吧";
+                                $message = '有您的推荐人首次下单并付款成功啦！奖励您'.($type==1 ? ("$amount"."元优惠券"):("$amount"."积分"))."，赶快来使用吧";
                                 $target = $type == 1 ? 11:15;
                                 $jpush = new JPush();
                                 $jpush->push($inviteLogin->reg_id,$message,$inviteLogin->reg_type,$target);
@@ -221,6 +222,46 @@ class OrderPay extends \yii\db\ActiveRecord
             ];
             if(!$sysInout->save()){
                 throw new Exception('保存系统账户明细出错',400);
+            }
+            if($orderInfo->point>0){
+                $userPoint = UserPoint::findOne(['uid'=>$userInfo->id,'is_active'=>1]);
+                if(empty($userPoint)){
+                    throw new Exception('用户积分账户异常',304);
+                }
+                $userPoint->point = $userPoint->point-$orderInfo->point;
+                $userPoint->update_at = time();
+                if(!$userPoint->save()){
+                    throw new Exception('保存用户积分出错',400);
+                }
+                $pointInout = new PointInout();
+                $pointInout->attributes = [
+                    'uid'=>$orderInfo->uid,
+                    'pid'=>$userPoint->id,
+                    'pio_date'=>time(),
+                    'pio_type'=>2,
+                    'amount'=>$orderInfo->point,
+                    'oid'=>$orderInfo->id,
+                    'note'=>"用户$userInfo->nickname"."于".date('Y年m月d日 H时i分s秒')."，支出$orderInfo->point"."积分用于支付编号为".$params['order_code']."的订单",
+                    'status'=>1,
+                ];
+                if(!$pointInout->save()){
+                    throw new Exception('用户积分收入记录保存出错',400);
+                }
+            }
+
+            //生成专属消息
+            $message = new MessageList();
+            $message->attributes = [
+                'type_id'=>3,
+                'title'=>'订单支付成功',
+                'content'=>"编号为$orderInfo->order_code"."的订单支付成功",
+                'own_id'=>$orderInfo->uid,
+                'target'=>4,
+                'status'=>0,
+                'publish_at'=>date('Y-m-d'),
+            ];
+            if(!$message->save()){
+                throw new Exception('生成用户消息出错',400);
             }
             $transaction->commit();
             $log->log_result('成功');
