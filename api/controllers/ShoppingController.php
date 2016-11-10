@@ -45,8 +45,6 @@ class ShoppingController extends ApiController{
         $count = $query->count();
         $query->offset(($page-1)*$pageSize)->limit($pageSize);
         $shopCerts = $query->all();
-//        var_dump($shopCerts);
-//        exit;
         $data = [];
         //队购物车内产品数据处理
         if(!empty($shopCerts)){

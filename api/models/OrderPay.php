@@ -135,7 +135,7 @@ class OrderPay extends \yii\db\ActiveRecord
                             $message->attributes = [
                                 'type_id'=>2,
                                 'title'=>$type == 1 ? '推荐下单成功送优惠':'推荐下单成功送积分',
-                                'content'=>"您的推荐人$userInfo->phone 首次下单并付款成功，送您".($type == 1 ? "一张$amount 元优惠券":"$amount 积分").'，购物省钱两不误',
+                                'content'=>"您的推荐人$userInfo->phone"."首次下单并付款成功，送您".($type == 1 ? "一张$amount"."元优惠券":"$amount"."积分").'，购物省钱两不误',
                                 'own_id'=>$invitedUser->id,
                                 'target'=>$type == 1 ? 11:15,
                                 'status'=>0,
@@ -145,7 +145,7 @@ class OrderPay extends \yii\db\ActiveRecord
                                 throw new Exception('生成用户消息出错');
                             }
                             if(!empty($inviteLogin->reg_id)&&!empty($inviteLogin->reg_type)){
-                                $message = '有您的推荐人首次下单并付款成功啦！奖励您'.($type==1 ? "$amount 元优惠券":"$amount 积分")."，赶快来使用吧";
+                                $message = '有您的推荐人首次下单并付款成功啦！奖励您'.($type==1 ? "$amount"."元优惠券":"$amount"."积分")."，赶快来使用吧";
                                 $target = $type == 1 ? 11:15;
                                 $jpush = new JPush();
                                 $jpush->push($inviteLogin->reg_id,$message,$inviteLogin->reg_type,$target);

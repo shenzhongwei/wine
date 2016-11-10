@@ -453,7 +453,7 @@ class OrderController extends ApiController{
         //先查找充值赠送的描述
         $vipPromotion = PromotionInfo::find()->joinWith('pt')->where(
             "promotion_type.is_active=1 and promotion_info.is_active=1 and ((start_at<=".time(). " 
-            and end_at>=".time().") or (end_at=0 and start_at=0)) and `group`=3")->one();
+            and end_at>=".time().") or (end_at=0 and start_at=0)) and `group`=3 and `condition`>0")->one();
         $billLabels = [];
         if(empty($vipPromotion)){
             $vip_des = '';
@@ -491,8 +491,7 @@ class OrderController extends ApiController{
         if(empty($bill_des)&&empty($vip_des)){
             return $this->showResult(301,'暂无充值活动');
         }
-        $billLabels = array_values(array_unique($billLabels));
-        sort($billLabels);
+        $billLabels = array_values(array_unique(sort($billLabels)));
         $data = [
             'bill_label'=>$billLabels,
             'vip'=>$vip_des,

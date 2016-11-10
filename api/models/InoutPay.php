@@ -108,7 +108,7 @@ class InoutPay extends \yii\db\ActiveRecord
                 throw new Exception('付款金额错误',304);
             }
             //数据库操作 0修改用户钱包 1修改订单状态 2存入付款信息 3保存系统账户信息 4根据金额判断用户是否可开通会员 5判断是否有充值活动 6保存用户使用优惠信息
-            $userAccount = UserAccount::findOne(['target'=>$inout->target_id,'type'=>1,'level'=>2]);
+            $userAccount = UserAccount::findOne(['target'=>$user_id,'type'=>1,'level'=>2]);
             if(empty($userAccount)){
                 $userAccount = new UserAccount();
                 $userAccount->create_at = time();
@@ -118,34 +118,47 @@ class InoutPay extends \yii\db\ActiveRecord
                 $userAccount->start = $userAccount->end;
                 $userAccount->end = $userAccount->start+$inout->sum;
             }
-            $userAccount->target=$inout->target_id;
+            $userAccount->target=$user_id;
             $userAccount->level=2;
             $userAccount->type=1;
             $userAccount->is_active = 1;
             if(!$userAccount->save()){
                 throw new Exception('保存用户余额账户信息出错',400);
             }
+            //判断是否有充值活动
             $query = PromotionInfo::find()->joinWith('pt')->leftJoin(
                 "(SELECT count(*) as num,pid FROM user_promotion WHERE uid=$user_id AND status=1 GROUP BY pid) c","c.pid=promotion_info.id")
-                ->where("promotion_type.is_active=1 and promotion_info.is_active=1 and ((start_at<=".time(). " and end_at>=".time().") 
-                or (end_at=0 and start_at=0)) and env=6 and `group`=2 and ((style=2) or (style=1 and `condition`<=".$inout->sum."))");
+                ->where("promotion_type.is_active=1 and promotion_info.is_active=1 and ((start_at<=".time().
+                    " and end_at>=".time().") or (end_at=0 and start_at=0)) and env=6 and `group`=2 and discount>0 and 
+                    ((style=2) or (style=1 and `condition`<=".$params['pay_money']."))");
             $query->select(["promotion_info.*",'promotion_type.group as group','IFNULL(c.num,0) as num']);
             $query->orderBy(['`condition`'=>SORT_DESC]);
             $query->having("time=0 or time>num");
             $billPromotion = $query->one();
             if(!empty($billPromotion)){
-
+                if($billPromotion->style == 1){
+                    $amount = $billPromotion->discount;
+                }else{
+                    $amount = $inout->sum*$billPromotion->discount;
+                }
+                $res = self::SavePoint($billPromotion->id,$user_id,$amount,6,$inout->id);
+                if($res['result']==1){
+                    $content = "充值成功，赠送您$amount".'积分,赶快来使用吧';
+                }else{
+                    throw new Exception($res['message'],400);
+                }
             }
             $inout->status = 1;
+            $inout->discount = empty($amount) ? 0:$amount;
             $inout->aid = $userAccount->id;
-            $inout->note = '用户'.$userInfo->nickname.'于'.date('Y年m月d日 H时i分s秒',$inout->aio_date).'提交充值，于'.date('Y年m月d日 H时i分s秒')."完成付款";
+            $inout->note = '用户'.$userInfo->nickname.'于'.date('Y年m月d日 H时i分s秒',$inout->aio_date).'提交充值，于'.date('Y年m月d日 H时i分s秒')."完成付款。金额：¥".$params['pay_money'];
             if(!$inout->save()){
                 throw new Exception('更改用户充值信息出错',400);
             }
             $payInfo = new InoutPay();
             $payInfo->attributes=[
                 'inout_id' => $inout->id,
-                'uid' => $inout->target_id,
+                'uid' => $user_id,
                 'pay_date' => time(),
                 'pay_id' => $params['pay_id'],
                 'account' => $params['mch_id'],
@@ -179,16 +192,25 @@ class InoutPay extends \yii\db\ActiveRecord
                 'aid'=>$sysAccount->id,
                 'aio_date'=>time(),
                 'type'=>4,
-                'target_id'=>$inout->id,
+                'target_id'=>$user_id,
                 'sum'=>$params['pay_money'],
                 'discount'=>0,
+                'note'=>'用户'.$userInfo->nickname.'于'.date('Y年m月d日 H时i分s秒')."完成单号为$inout->id"."的付款.金额：¥".$params['pay_money'],
                 'status'=>1,
             ];
             if(!$sysInout->save()){
                 throw new Exception('保存系统账户明细出错',400);
             }
             if($userInfo->is_vip==0){
-                $promotion = PromotionInfo::findOne(['pt_id'=>3,'target_id'=>1,'is_active'=>1]);
+                $query = PromotionInfo::find()->joinWith('pt')->leftJoin(
+                    "(SELECT count(*) as num,pid FROM user_promotion WHERE uid=$user_id AND status=1 GROUP BY pid) c", "c.pid=promotion_info.id")
+                    ->where("promotion_type.is_active=1 and promotion_info.is_active=1 and ((start_at<=".time().
+                        " and end_at>=".time().") or (end_at=0 and start_at=0)) and `group`=3 and `condition`>0 and 
+                        ((style=2) or (style=1 and `condition`<=".$params['pay_money']."))");
+                $query->select(["promotion_info.*",'promotion_type.group as group','IFNULL(c.num,0) as num']);
+                $query->orderBy(['`condition`'=>SORT_DESC]);
+                $query->having("time=0 or time>num");
+                $vipPromotion = $query->one();
                 if(!empty($promotion)){
                     if($promotion->condition<=$params['pay_money']){
                         $userInfo->is_vip=1;
@@ -223,5 +245,86 @@ class InoutPay extends \yii\db\ActiveRecord
                 return false;
             }
         }
+    }
+
+    public static function SavePoint($promotion_id,$user_id,$amount,$env,$order_id){
+        $transaction = Yii::$app->db->beginTransaction();
+        try{
+            //存入积分点，用户未开通则重新开户
+            $point = UserPoint::findOne(['uid'=>$user_id,'is_active'=>1]);
+            if(empty($point)){
+                $point = new UserPoint();
+                $total_amount = $amount;
+                $create_at = time();
+            }else{
+                $total_amount = $amount+(double)($point->point);
+                $create_at = $point->create_at;
+            }
+            $point->attributes = [
+                'uid'=>$user_id,
+                'point'=>$total_amount,
+                'is_active'=>1,
+                'create_at'=>$create_at,
+                'update_at'=>time(),
+            ];
+            if(!$point->save()){
+                throw new Exception('用户积分账户保存出错');
+            }
+            //记录明细
+            $pointInout = new PointInout();
+            $pointInout->attributes = [
+                'uid'=>$user_id,
+                'pid'=>$point->id,
+                'pio_date'=>time(),
+                'pio_type'=>1,
+                'amount'=>$amount,
+                'oid'=>empty($order_id) ? null:$order_id,
+                'note'=>"编号为$user_id"."的用户于".date('Y年m月d日 H时i分s秒')."充值后获得了绑定编号为$promotion_id"."活动的积分$amount".",已入账",
+                'status'=>1,
+            ];
+            if(!$pointInout->save()){
+                throw new Exception('用户积分收入记录保存出错');
+            }
+            //存入用户使用促销记录
+            $userPromotion = new UserPromotion();
+            $userPromotion->attributes = [
+                'uid'=>$user_id,
+                'type'=>$env,
+                'target_id'=>empty($order_id) ? 0 :$order_id,
+                'pid'=>$promotion_id,
+                'add_at'=>time(),
+                'note'=>"编号为$user_id"."的用户于".date('Y年m月d日 H时i分s秒')."参与编号为$promotion_id"."的活动，并领取了$amount"."积分",
+                'status'=>1,
+            ];
+            if(!$userPromotion->save()){
+                throw new Exception('用户参与活动的记录保存出错');
+            }
+            //生成专属消息
+            $message = new MessageList();
+            $message->attributes = [
+                'type_id'=>2,
+                'title'=>'充值赠送积分',
+                'content'=>"感谢您的充值，送您$amount"."积分，购物省钱两不误",
+                'own_id'=>$user_id,
+                'target'=>15,
+                'status'=>0,
+                'publish_at'=>date('Y-m-d')
+            ];
+            if(!$message->save()){
+                throw new Exception('生成用户消息出错');
+            }
+            $transaction->commit();
+            $res=1;
+            $message= '操作成功';
+        }catch (Exception $e){
+            $transaction->rollBack();
+            $res = 0;
+            $message = $e->getMessage();
+        }
+        $data = [
+            'result'=>$res,
+            'message'=>$message,
+        ];
+        return $data;
     }
 }

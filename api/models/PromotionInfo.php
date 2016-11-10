@@ -103,7 +103,7 @@ class PromotionInfo extends \yii\db\ActiveRecord
         $query = self::find()->joinWith('pt')->leftJoin(
             "(SELECT count(*) as num,pid FROM user_promotion WHERE uid=$user_id AND status=1 GROUP BY pid) c","c.pid=promotion_info.id")
             ->where("promotion_type.is_active=1 and promotion_info.is_active=1 and ((start_at<=".time(). " 
-            and end_at>=".time().") or (end_at=0 and start_at=0)) and env=$env");
+            and end_at>=".time().") or (end_at=0 and start_at=0)) and discount>0 and env=$env");
         $query->select(["promotion_info.*",'promotion_type.group as group','IFNULL(c.num,0) as num']);
         if(!empty($order_id)){
             $order = OrderInfo::findOne($order_id);
@@ -116,7 +116,7 @@ class PromotionInfo extends \yii\db\ActiveRecord
         $type = 0;
         $amount = 0;
         if(!empty($promotion)){
-            if($promotion->group==1 && $promotion->discount>0){
+            if($promotion->group==1){
                 $start = empty($promotion->valid_circle) ? 0:time();
                 $end = empty($promotion->valid_circle) ? 0:(time()+(24*$promotion->valid_circle*60*60));
                 $res = self::SaveTicket($promotion->id,$start,$end,$user_id,$env,$order_id);
@@ -184,7 +184,7 @@ class PromotionInfo extends \yii\db\ActiveRecord
                 'uid'=>$user_id,
                 'tid'=>$userTicket->id,
                 'regist_at'=>time(),
-                'note'=>"编号为$user_id 的用户于".date('Y年m月d日 H时i分s秒')."领取了绑定编号为$promotion_id 活动的优惠券一张",
+                'note'=>"编号为$user_id"."的用户于".date('Y年m月d日 H时i分s秒')."领取了绑定编号为$promotion_id"."活动的优惠券一张",
                 'status'=>1,
             ];
             if(!$ticketInout->save()){
@@ -198,7 +198,7 @@ class PromotionInfo extends \yii\db\ActiveRecord
                 'target_id'=>empty($order_id) ? 0 :$order_id,
                 'pid'=>$promotion_id,
                 'add_at'=>time(),
-                'note'=>"编号为$user_id 的用户于".date('Y年m月d日 H时i分s秒')."参与编号为$promotion_id 的活动，并领取了编号为$userTicket->id 的优惠券",
+                'note'=>"编号为$user_id"."的用户于".date('Y年m月d日 H时i分s秒')."参与编号为$promotion_id"."的活动，并领取了编号为$userTicket->id"."的优惠券",
                 'status'=>1,
             ];
             if(!$userPromotion->save()){
@@ -251,7 +251,7 @@ class PromotionInfo extends \yii\db\ActiveRecord
                 'pio_type'=>1,
                 'amount'=>$amount,
                 'oid'=>empty($order_id) ? null:$order_id,
-                'note'=>"编号为$user_id 的用户于".date('Y年m月d日 H时i分s秒')."获得了绑定编号为$promotion_id 活动的积分$amount ,已入账",
+                'note'=>"编号为$user_id"."的用户于".date('Y年m月d日 H时i分s秒')."获得了绑定编号为$promotion_id"."活动的积分$amount".",已入账",
                 'status'=>1,
             ];
             if(!$pointInout->save()){
@@ -265,7 +265,7 @@ class PromotionInfo extends \yii\db\ActiveRecord
                 'target_id'=>empty($order_id) ? 0 :$order_id,
                 'pid'=>$promotion_id,
                 'add_at'=>time(),
-                'note'=>"编号为$user_id 的用户于".date('Y年m月d日 H时i分s秒')."参与编号为$promotion_id 的活动，并领取了$amount 积分",
+                'note'=>"编号为$user_id"."的用户于".date('Y年m月d日 H时i分s秒')."参与编号为$promotion_id"."的活动，并领取了$amount"."积分",
                 'status'=>1,
             ];
             if(!$userPromotion->save()){
