@@ -20,7 +20,7 @@ class ShoppingCert extends \yii\db\ActiveRecord
 {
     public $price;
     public $pay;
-    public $type;
+    public $good_type;
     public $sum;
     /**
      * @inheritdoc

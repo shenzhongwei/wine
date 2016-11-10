@@ -424,20 +424,9 @@ class OrderController extends ApiController{
     public function actionAccount(){
         $user_id = Yii::$app->user->identity->getId();
         $bill = Yii::$app->request->post('bill'); //充值金额
-        $billPromotions = PromotionInfo::find()->where(
-            'pt_id=2 and `condition`>0 and discount>0 and is_active=1 and start_at<='.time().' and end_at>='.time().' and `condition`<='.$bill)
-            ->orderBy(['`condition`'=>SORT_DESC])->all();
-        $discount = 0;
-        if(!empty($billPromotions)){
-            foreach($billPromotions as $promotion){
-                $count = UserPromotion::find()->where(['uid'=>$user_id,'type'=>2,'pid'=>$promotion->id,'status'=>1])->count();
-                if($promotion->time==0||$count<$promotion->time){
-                    $discount = $promotion->discount;
-                    break;
-                }else{
-                    continue;
-                }
-            }
+        $userInfo = UserInfo::findOne($user_id);
+        if(empty($userInfo)){
+            return $this->showResult(301,'用户信息异常');
         }
         $inout = new AccountInout();
         $inout->attributes = [
@@ -445,8 +434,9 @@ class OrderController extends ApiController{
             'type'=>4,
             'target_id'=>$user_id,
             'sum'=>$bill,
-            'discount'=>$discount,
+            'discount'=>0,
             'status'=>2,
+            'note'=>'用户'.$userInfo->nickname.'于'.date('Y年m月d日 H时i分s秒').'提交充值，未付款',
         ];
         if($inout->save()){
             return $this->showResult(200,'下单成功',time().$inout->id);
@@ -461,31 +451,48 @@ class OrderController extends ApiController{
      */
     public function actionActivity(){
         //先查找充值赠送的描述
-        $vipPromotion = PromotionInfo::find()->where('pt_id=3 and is_active=1 and `condition`>0')->one();
+        $vipPromotion = PromotionInfo::find()->joinWith('pt')->where(
+            "promotion_type.is_active=1 and promotion_info.is_active=1 and ((start_at<=".time(). " 
+            and end_at>=".time().") or (end_at=0 and start_at=0)) and `group`=3")->one();
         $billLabels = [];
         if(empty($vipPromotion)){
             $vip_des = '';
         }else{
-            $condition =  (int)($vipPromotion->condition);
+            $cond = (int)($vipPromotion->condition);
+            $condition =  $cond == $vipPromotion->condition ? $cond:$vipPromotion->condition;
             $billLabels [] = $condition;
             $vip_des = '充值满'.$condition.'元，获得终生会员资格';
         }
         //在查找充值送优惠的描述
-        $billPromotions = PromotionInfo::find()->where(
-            'pt_id=2 and `condition`>0 and discount>0 and is_active=1 and start_at<='.time().' and end_at>='.time())
-            ->orderBy(['`condition`'=>SORT_ASC])->all();
         $bill_des = [];
-        if(!empty($billPromotions)){
-            foreach($billPromotions as $promotion){
-                $condition = (int)($promotion->condition);
-                $discount = (int)($promotion->discount);
-                $bill_des[] = "充值$condition 送$discount ，实际到账".($condition+$discount)."元";
-                $billLabels [] = $condition;
+        $billPromotion = PromotionInfo::find()->joinWith('pt')->where(
+            "promotion_type.is_active=1 and promotion_info.is_active=1 and ((start_at<=".time(). " 
+            and end_at>=".time().") or (end_at=0 and start_at=0)) and `group`=2 and env=6 and style=2")->one();
+        if(!empty($billPromotion)){
+            $dis = (int)($billPromotion->discount);
+            $discount = $dis == $billPromotion->discount ? $dis:$billPromotion->discount;
+            $bill_des[] = "充值返回$discount"."倍积分";
+        }else{
+            $billPromotions = PromotionInfo::find()->joinWith('pt')->where(
+                "promotion_type.is_active=1 and promotion_info.is_active=1 and ((start_at<=".time(). " 
+            and end_at>=".time().") or (end_at=0 and start_at=0)) and `group`=2 and env=6 and style=1")
+                ->orderBy(['`condition`'=>SORT_DESC])->all();
+            if(!empty($billPromotion)){
+                foreach($billPromotions as $promotion){
+                    $cond = (int)($vipPromotion->condition);
+                    $condition =  $cond == $promotion->condition ? $cond:$promotion->condition;
+                    $dis = (int)($promotion->discount);
+                    $discount = $dis == $promotion->discount ? $dis:$promotion->discount;
+                    $bill_des[] = "充值$condition"."送$discount"."积分。";
+                    $billLabels [] = $condition;
+                }
             }
         }
         if(empty($bill_des)&&empty($vip_des)){
             return $this->showResult(301,'暂无充值活动');
         }
+        $billLabels = array_values(array_unique($billLabels));
+        sort($billLabels);
         $data = [
             'bill_label'=>$billLabels,
             'vip'=>$vip_des,
@@ -497,7 +504,7 @@ class OrderController extends ApiController{
 
     /**
      * 充值金额与赠送金额
-     * 根据用户传递的金额判断赠送多少钱
+     * 根据用户传递的金额判断赠送多少积分
      */
     public function actionPreBill(){
         $user_id = Yii::$app->user->identity->getId();
@@ -511,16 +518,22 @@ class OrderController extends ApiController{
             return $this->showResult(301,'读取信息出错');
         }
         //在查找充值送优惠的数据
-        $billPromotion = PromotionInfo::find()->where(
-            'pt_id=2 and `condition`>0 and discount>0 and is_active=1 and start_at<='.time().' and end_at>='.time().' and `condition`<='.$bill)
-            ->orderBy(['`condition`'=>SORT_DESC])->one();
+//        $query = PromotionInfo::find()->joinWith('pt')->leftJoin(
+//            "(SELECT count(*) as num,pid FROM user_promotion WHERE uid=$user_id AND status=1 GROUP BY pid) c","c.pid=promotion_info.id")
+//            ->where("promotion_type.is_active=1 and promotion_info.is_active=1 and ((start_at<=".time(). " and end_at>=".time().")
+//            or (end_at=0 and start_at=0)) and env=6 and `group`=2 and ((style=2) or (style=1 and `condition`<=".$bill."))");
+//        $query->select(["promotion_info.*",'promotion_type.group as group','IFNULL(c.num,0) as num']);
+//        $query->orderBy(['`condition`'=>SORT_DESC]);
+//        $query->having("time=0 or time>num");
+//        $billPromotion = $query->one();
+        $billPromotion='';
         /*
          * 进行判断，1若存在则加上，不存在则为原金额
          */
         if(empty($billPromotion)){
             $pre = 0;
         }else{
-            $pre = $billPromotion->discount;
+            $pre = 0;
         }
         $data = [
             'pre_bill'=>$bill+$pre,

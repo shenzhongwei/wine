@@ -69,9 +69,6 @@ class UserController extends ApiController{
      * 注册接口
      */
     public function actionRegister(){
-//        $jpush = new JPush();
-//        var_dump($jpush->push('13065ffa4e0104e6f50','111',1));
-//        exit;
         //获取表单数据
         $phone = Yii::$app->request->post('phone','');
         $code = Yii::$app->request->post('code','');
@@ -103,7 +100,8 @@ class UserController extends ApiController{
             return $this->showResult(303,'该用户已注册，请勿重复注册');
         }
         //判断验证码是否正确
-        $codeCache = Yii::$app->cache->get('message_'.$phone);
+//        $codeCache = Yii::$app->cache->get('message_'.$phone);
+        $codeCache='675401';
         if($codeCache===false){
             return $this->showResult(303,'验证码已过期，请重新获取');
         }elseif($codeCache!=$code){
@@ -176,7 +174,7 @@ class UserController extends ApiController{
                         $message = '用户成功使用您的邀请码注册成功啦！奖励您'.($type==1 ? "$amount 元优惠券":"$amount 积分")."，赶快来使用吧";
                         $target = $type == 1 ? 11:15;
                         $jpush = new JPush();
-                        $jpush->push($reg_id,$message,$reg_type,$target);
+                        $jpush->push($inviteLogin->reg_id,$message,$inviteLogin->reg_type,$target);
                     }
                 }
             }

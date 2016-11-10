@@ -2,6 +2,7 @@
 
 namespace api\models;
 
+use common\jpush\JPush;
 use common\pay\alipay\helpers\AlipayHelper;
 use common\pay\wepay\helpers\Log;
 use daixianceng\smser\LuosimaoSmser;
@@ -120,80 +121,35 @@ class OrderPay extends \yii\db\ActiveRecord
                  * 3、若是送券，则在用户券库中增加优惠券
                  * 4、若是送余额则为用户的账户添加对应金额，同事生成账户明细
                  */
-                $historyOrder = OrderInfo::find()->where(['and','uid='.$orderInfo->uid,'state>2','state<>99'])->one();//1
+                $historyOrder = OrderInfo::find()->where(['and','uid='.$orderInfo->uid,'state>=2','state<99'])->one();//1
                 if(empty($historyOrder)){//2
-                    $promotion = PromotionInfo::find()->where('
-                    pt_id in (5,6) and ((start_at<='.time().' and end_at>='.time().') or (start_at=0 and end_at=0)) and is_active=1')->one();
-                    if(!empty($promotion)){
-                        $count = UserPromotion::find()->where(['pid'=>$promotion->id,'uid'=>$userInfo->invite_user_id,'status'=>1,'type'=>3])->count();
-                        if($count<$promotion->time||$promotion->time=0){
+                    $invitedUser = UserInfo::findOne($userInfo->invite_user_id);
+                    if(!empty($invitedUser)&&!empty($invitedUser->userLogin)){
+                        $inviteLogin = $invitedUser->userLogin;
+                        $result = PromotionInfo::GetPromotion(5,$invitedUser->id,$orderInfo->id);
+                        if($result['result']==1){
+                            $type = $result['type'];
+                            $amount = $result['amount'];
+                            //存入消息
                             $message = new MessageList();
-                            if($promotion->pt_id==5){
-                                $userTicket = new UserTicket();
-                                $userTicket->attributes = [
-                                    'uid'=>$userInfo->id,
-                                    'pid'=>$promotion->id,
-                                    'start_at'=>empty($promotion->valid_circle) ? 0:time(),
-                                    'end_at'=>empty($promotion->valid_circle) ? 0:time()+($promotion->valid_circle*86400),
-                                    'status'=>1,
-                                ];
-                                if(!$userTicket->save()){
-                                    throw new Exception('保存推荐人优惠券出错',304);
-                                }
-                                $content = '用户'.$userInfo->phone.'通过您的邀请成功下单，特此赠送您'.$promotion->discount.'元面值优惠券，点击此处查看';
-                                $target = 11;
-                            }else{
-                                $userAccount = UserAccount::findOne(['target'=>$userInfo->invite_user_id,'type'=>1,'level'=>2]);
-                                if(empty($userAccount)){
-                                    $userAccount = new UserAccount();
-                                    $userAccount->create_at = time();
-                                    $userAccount->start = 0;
-                                    $userAccount->end = $promotion->discount;
-                                }else{
-                                    $userAccount->start = $userAccount->end;
-                                    $userAccount->end = $userAccount->start+$promotion->discount;
-                                }
-                                $userAccount->target=$userInfo->invite_user_id;
-                                $userAccount->level=2;
-                                $userAccount->type=1;
-                                $userAccount->is_active = 1;
-                                if(!$userAccount->save()){
-                                    throw new Exception('保存用户余额账户信息出错',400);
-                                }
-                                $accountInout = new AccountInout();
-                                $accountInout->attributes = [
-                                    'aid'=>$userAccount->id,
-                                    'aio_date'=>time(),
-                                    'type'=>3,
-                                    'target_id'=>$promotion->id,
-                                    'sum'=>0,
-                                    'discount'=>$promotion->discount,
-                                    'status'=>1
-                                ];
-                                if(!$accountInout->save()){
-                                    throw new Exception('保存用户余额账户明细出错',400);
-                                }
-                                $content = '用户'.$userInfo->phone.'通过您的邀请成功下单，特此赠送您'.$promotion->discount.'元至至账户余额，点击此处查看';
-                                $target = 12;
-                            }
                             $message->attributes = [
                                 'type_id'=>2,
-                                'title'=>'您的推荐人下单成功',
-                                'content'=>$content,
-                                'own_id'=>$userInfo->invite_user_id,
-                                'target'=>$target,
+                                'title'=>$type == 1 ? '推荐下单成功送优惠':'推荐下单成功送积分',
+                                'content'=>"您的推荐人$userInfo->phone 首次下单并付款成功，送您".($type == 1 ? "一张$amount 元优惠券":"$amount 积分").'，购物省钱两不误',
+                                'own_id'=>$invitedUser->id,
+                                'target'=>$type == 1 ? 11:15,
                                 'status'=>0,
                                 'publish_at'=>date('Y-m-d')
                             ];
-                            $userPromotion = new UserPromotion();
-                            $userPromotion->attributes = [
-                                'uid'=>$userInfo->invite_user_id,
-                                'type'=>3,
-                                'target_id'=>$orderInfo->id,
-                                'pid'=>$promotion->id,
-                                'add_at'=>time(),
-                                'status'=>1,
-                            ];
+                            if(!$message->save()){
+                                throw new Exception('生成用户消息出错');
+                            }
+                            if(!empty($inviteLogin->reg_id)&&!empty($inviteLogin->reg_type)){
+                                $message = '有您的推荐人首次下单并付款成功啦！奖励您'.($type==1 ? "$amount 元优惠券":"$amount 积分")."，赶快来使用吧";
+                                $target = $type == 1 ? 11:15;
+                                $jpush = new JPush();
+                                $jpush->push($inviteLogin->reg_id,$message,$inviteLogin->reg_type,$target);
+                            }
                         }
                     }
                 }

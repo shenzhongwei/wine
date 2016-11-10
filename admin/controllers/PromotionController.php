@@ -383,7 +383,7 @@ class PromotionController extends BaseController
             return $this->showResult(301,'促销种类不存在');
         }
         //优惠与条件
-        if($promotionType->group==1&&$promotion->style=1){
+        if(in_array($promotionType->group,[1,5])&&$promotion->style=1){
             //固定送券时
             $is_condition = 1;
             $condition_value = $promotion->condition;
@@ -392,6 +392,7 @@ class PromotionController extends BaseController
             $condition_placeholder = '输入优惠条件';
             $discount_placeholder = '输入优惠额度';
         }elseif($promotionType->group==3&&$promotion->style=1){
+            //开通会员时
             $is_condition = 1;
             $condition_value = $promotion->condition;
             $is_discount = 0;
@@ -399,6 +400,7 @@ class PromotionController extends BaseController
             $condition_placeholder = '输入优惠条件';
             $discount_placeholder = '该种类无需输入优惠额度';
         }elseif (in_array($promotionType->env,[2,5])&&$promotionType->group==2&&$promotion->style=1){
+            //推荐注册和推荐下单固定送积分
             $is_condition = 0;
             $condition_value = '';
             $is_discount = 1;
@@ -422,7 +424,7 @@ class PromotionController extends BaseController
                 $discount_placeholder = '输入优惠百分比';
             }
         }
-        if($promotionType->group == 1){
+        if(in_array($promotionType->group,[1,5])){
             //是优惠券的形式则可操作
             $is_ticket = 1;
             $ticket_check = $promotion->valid_circle>0 ? 1:0;

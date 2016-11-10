@@ -167,7 +167,26 @@ class PromotionInfo extends \yii\db\ActiveRecord
                 }
                 $model = $query->one();
                 if (!empty($model)) {
-                    $this->addError('condition', $message);
+                    $this->addError('discount', $message);
+                }
+            }
+            if($this->style==1){
+                $query = self::find()->where(['pt_id'=>$this->pt_id,'style'=>2]);
+                if (!empty($this->id)) {
+                    $query->andWhere("id<>$this->id");
+                }
+                if (!empty($this->start_at)) {
+                    $query->andWhere("(start_at<=$this->start_at and end_at>=$this->start_at) or (start_at=0 and end_at=0)");
+                }
+                if (!empty($this->end_at)) {
+                    $query->andWhere("(start_at<=$this->end_at and end_at>=$this->end_at) or (start_at=0 and end_at=0)");
+                }
+                if ($this->date_valid == 0) {
+                    $query->andWhere("(start_at<=" . time() . " and end_at>=" . time() . ") or (start_at=0 and end_at=0)");
+                }
+                $model = $query->one();
+                if (!empty($model)) {
+                    $this->addError('discount', '已存在百分比的此类活动，请勿重复添加');
                 }
             }
         }
@@ -284,7 +303,7 @@ class PromotionInfo extends \yii\db\ActiveRecord
         }else{
             $type = PromotionType::findOne($limit);
             if(!empty($type)){
-                if(in_array($type->group,[1,3])||in_array($type->env,[2])){
+                if(in_array($type->group,[1,3,5])||in_array($type->env,[2])){
                     $res = [
                         [
                             'id'=>1,

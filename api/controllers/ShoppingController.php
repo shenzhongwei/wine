@@ -38,13 +38,15 @@ class ShoppingController extends ApiController{
         //找出购物车内的产品  shopping_cert与good_info
         $query = ShoppingCert::find()->joinWith('g')->leftJoin('merchant_info','good_info.merchant=merchant_info.id')
             ->leftJoin('good_type','good_info.type=good_type.id')->
-            addSelect(['shopping_cert.*',$from == 1 ? 'good_info.pro_price as price':'good_info.vip_price as price',
-            $from == 1 ? 'good_info.original_pay as pay':'good_info.vip_pay as pay',"CONCAT($from) as type"])
+            addSelect(['shopping_cert.*',"CONCAT($from) as good_type",$from == 1 ? 'good_info.pro_price as price':'good_info.vip_price as price',
+            $from == 1 ? 'good_info.original_pay as pay':'good_info.vip_pay as pay'])
             ->where("uid=$user_id and shopping_cert.type=$from and good_info.id>0".' and merchant_info.id>0 and merchant_info.is_active=1 and 
             good_info.merchant>0 and good_type.id>0 and good_type.is_active=1');
         $count = $query->count();
         $query->offset(($page-1)*$pageSize)->limit($pageSize);
         $shopCerts = $query->all();
+//        var_dump($shopCerts);
+//        exit;
         $data = [];
         //队购物车内产品数据处理
         if(!empty($shopCerts)){
@@ -65,7 +67,7 @@ class ShoppingController extends ApiController{
                     'cash_pay'=>in_array(1,$payArr) ? 1:0,
                     'ali_pay'=>in_array(2,$payArr) ? 1:0,
                     'we_pay'=>in_array(3,$payArr) ? 1:0,
-                    'type'=>$element->type,
+                    'type'=>$element->good_type,
                     'operate'=>1,
                 ];
             });

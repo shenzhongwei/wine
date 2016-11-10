@@ -93,6 +93,11 @@ class InoutPay extends \yii\db\ActiveRecord
             if(empty($inout)){
                 throw new Exception('订单不存在',301);
             }
+            $user_id = $inout->target_id;
+            $userInfo = UserInfo::findOne($user_id);
+            if(empty($userInfo)){
+                throw new Exception('用户不存在',302);
+            }
             //判断是否已付款
             $inoutPay = self::findOne(['inout_id'=>$inout->id,'status'=>1]);
             if(!empty($inoutPay)){
@@ -102,7 +107,7 @@ class InoutPay extends \yii\db\ActiveRecord
             if(($params['pay_money']) !=$inout->sum){
                 throw new Exception('付款金额错误',304);
             }
-            //数据库操作 0修改用户钱包 1修改订单状态 2存入付款信息 3保存系统账户信息 4根据金额判断用户是否可开通会员 5保存用户使用优惠信息
+            //数据库操作 0修改用户钱包 1修改订单状态 2存入付款信息 3保存系统账户信息 4根据金额判断用户是否可开通会员 5判断是否有充值活动 6保存用户使用优惠信息
             $userAccount = UserAccount::findOne(['target'=>$inout->target_id,'type'=>1,'level'=>2]);
             if(empty($userAccount)){
                 $userAccount = new UserAccount();
@@ -111,7 +116,7 @@ class InoutPay extends \yii\db\ActiveRecord
                 $userAccount->end = $inout->sum+$inout->discount;
             }else{
                 $userAccount->start = $userAccount->end;
-                $userAccount->end = $userAccount->start+$inout->sum+$inout->discount;
+                $userAccount->end = $userAccount->start+$inout->sum;
             }
             $userAccount->target=$inout->target_id;
             $userAccount->level=2;
@@ -120,8 +125,20 @@ class InoutPay extends \yii\db\ActiveRecord
             if(!$userAccount->save()){
                 throw new Exception('保存用户余额账户信息出错',400);
             }
+            $query = PromotionInfo::find()->joinWith('pt')->leftJoin(
+                "(SELECT count(*) as num,pid FROM user_promotion WHERE uid=$user_id AND status=1 GROUP BY pid) c","c.pid=promotion_info.id")
+                ->where("promotion_type.is_active=1 and promotion_info.is_active=1 and ((start_at<=".time(). " and end_at>=".time().") 
+                or (end_at=0 and start_at=0)) and env=6 and `group`=2 and ((style=2) or (style=1 and `condition`<=".$inout->sum."))");
+            $query->select(["promotion_info.*",'promotion_type.group as group','IFNULL(c.num,0) as num']);
+            $query->orderBy(['`condition`'=>SORT_DESC]);
+            $query->having("time=0 or time>num");
+            $billPromotion = $query->one();
+            if(!empty($billPromotion)){
+
+            }
             $inout->status = 1;
             $inout->aid = $userAccount->id;
+            $inout->note = '用户'.$userInfo->nickname.'于'.date('Y年m月d日 H时i分s秒',$inout->aio_date).'提交充值，于'.date('Y年m月d日 H时i分s秒')."完成付款";
             if(!$inout->save()){
                 throw new Exception('更改用户充值信息出错',400);
             }
@@ -170,8 +187,6 @@ class InoutPay extends \yii\db\ActiveRecord
             if(!$sysInout->save()){
                 throw new Exception('保存系统账户明细出错',400);
             }
-            $user_id = $inout->target_id;
-            $userInfo = UserInfo::findOne($user_id);
             if($userInfo->is_vip==0){
                 $promotion = PromotionInfo::findOne(['pt_id'=>3,'target_id'=>1,'is_active'=>1]);
                 if(!empty($promotion)){
@@ -193,26 +208,6 @@ class InoutPay extends \yii\db\ActiveRecord
                         if(!$message->save()){
                             throw new Exception('生成用户开通会员消息出错');
                         }
-                    }
-                }
-            }
-            if($inout->discount>0){
-                $usedPromotion = PromotionInfo::find()->where([
-                    'and','discount='.$inout->discount,'condition<='.$params['pay_money'],
-                    'pt_id=2','is_active=1','start_at<='.time(),'end_at>='.time()
-                ])->one();
-                if(!empty($usedPromotion)){
-                    $userPromotion = new UserPromotion();
-                    $userPromotion->attributes = [
-                        'uid'=>$inout->target_id,
-                        'type'=>2,
-                        'target_id'=>$inout->id,
-                        'pid'=>$usedPromotion->id,
-                        'add_at'=>time(),
-                        'status'=>1
-                    ];
-                    if(!$userPromotion->save()){
-                        throw new Exception('保存用户使用优惠信息出错',400);
                     }
                 }
             }
