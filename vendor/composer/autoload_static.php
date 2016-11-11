@@ -30,6 +30,10 @@ class ComposerStaticInite4343f3ad7d2ea8db509f2e66bb8db83
         array (
             'warrence\\kartikgii\\' => 19,
         ),
+        'r' => 
+        array (
+            'rmrevin\\yii\\fontawesome\\' => 24,
+        ),
         'p' => 
         array (
             'pjkui\\kindeditor\\' => 17,
@@ -94,6 +98,7 @@ class ComposerStaticInite4343f3ad7d2ea8db509f2e66bb8db83
         ),
         'd' => 
         array (
+            'dmstr\\' => 6,
             'daixianceng\\smser\\' => 18,
         ),
         'c' => 
@@ -154,6 +159,10 @@ class ComposerStaticInite4343f3ad7d2ea8db509f2e66bb8db83
         'warrence\\kartikgii\\' => 
         array (
             0 => __DIR__ . '/..' . '/warrence/yii2-kartikgii',
+        ),
+        'rmrevin\\yii\\fontawesome\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/rmrevin/yii2-fontawesome',
         ),
         'pjkui\\kindeditor\\' => 
         array (
@@ -343,6 +352,10 @@ class ComposerStaticInite4343f3ad7d2ea8db509f2e66bb8db83
         array (
             0 => __DIR__ . '/..' . '/himiklab/yii2-jqgrid-widget',
         ),
+        'dmstr\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/dmstr/yii2-adminlte-asset',
+        ),
         'daixianceng\\smser\\' => 
         array (
             0 => __DIR__ . '/..' . '/daixianceng/yii2-smser/src',
@@ -358,6 +371,13 @@ class ComposerStaticInite4343f3ad7d2ea8db509f2e66bb8db83
     );
 
     public static $prefixesPsr0 = array (
+        'c' => 
+        array (
+            'cebe\\gravatar\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/cebe/yii2-gravatar',
+            ),
+        ),
         'P' => 
         array (
             'PHPExcel' => 

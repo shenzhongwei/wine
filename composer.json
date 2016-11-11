@@ -37,7 +37,8 @@
         "kartik-v/yii2-sortable-input": "*",
         "kartik-v/yii2-editable": "*",
         "kartik-v/yii2-date-range": "*",
-        "yiisoft/yii2-redis": "^2.0"
+        "yiisoft/yii2-redis": "^2.0",
+        "dmstr/yii2-adminlte-asset": "*"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

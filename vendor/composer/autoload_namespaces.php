@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'cebe\\gravatar\\' => array($vendorDir . '/cebe/yii2-gravatar'),
     'PHPExcel' => array($vendorDir . '/phpoffice/phpexcel/Classes'),
     'Michelf' => array($vendorDir . '/michelf/php-markdown', $vendorDir . '/michelf/php-smartypants'),
     'HTMLPurifier' => array($vendorDir . '/ezyang/htmlpurifier/library'),
