@@ -38,7 +38,8 @@ class PointInout extends \yii\db\ActiveRecord
     {
         return [
             [['uid', 'pid', 'pio_date', 'pio_type', 'oid', 'status'], 'integer'],
-            [['note','amount'],'string'],
+            [['amount'],'number'],
+            [['note'],'string'],
             [['uid'], 'exist', 'skipOnError' => true, 'targetClass' => UserInfo::className(), 'targetAttribute' => ['uid' => 'id']],
             [['pid'], 'exist', 'skipOnError' => true, 'targetClass' => UserPoint::className(), 'targetAttribute' => ['pid' => 'id']],
             [['oid'], 'exist', 'skipOnError' => true, 'targetClass' => OrderInfo::className(), 'targetAttribute' => ['oid' => 'id']],

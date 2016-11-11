@@ -34,7 +34,7 @@ class UserPoint extends \yii\db\ActiveRecord
     {
         return [
             [['uid', 'is_active', 'create_at', 'update_at'], 'integer'],
-            [['point'],'string'],
+            [['point'],'number'],
             [['point'], 'required'],
             [['uid'], 'exist', 'skipOnError' => true, 'targetClass' => UserInfo::className(), 'targetAttribute' => ['uid' => 'id']],
         ];
