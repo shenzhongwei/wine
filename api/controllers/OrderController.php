@@ -328,7 +328,7 @@ class OrderController extends ApiController{
                                     'amount'=>$detail->amount,
                                     'total_price'=>$detail->total_price,
                                     'type'=>$type,
-                                    'opreate'=>$operate,
+                                    'operate'=>$operate,
                                 ];
                             }
                         }
