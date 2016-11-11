@@ -79,7 +79,7 @@ class InoutPay extends \yii\db\ActiveRecord
         //根据付款id调用log
         if($params['pay_id']==3){
             $log = new Log();
-        }elseif($params['pay_id'==2]){
+        }elseif($params['pay_id']==2){
             $log = new AlipayHelper();
         }else{
             return false;

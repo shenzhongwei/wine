@@ -20,6 +20,7 @@ use Yii;
  * @property UserInfo $u
  * @property UserPoint $p
  * @property OrderInfo $o
+ * @property AccountInout $inout
  */
 class PointInout extends \yii\db\ActiveRecord
 {
@@ -86,5 +87,10 @@ class PointInout extends \yii\db\ActiveRecord
     public function getO()
     {
         return $this->hasOne(OrderInfo::className(), ['id' => 'oid']);
+    }
+
+    public function getInout()
+    {
+        return $this->hasOne(AccountInout::className(), ['id' => 'oid']);
     }
 }
