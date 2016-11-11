@@ -294,7 +294,7 @@ class OrderController extends ApiController{
                                     $operate = 1;
                                 }elseif ($element->type == 2){
                                     if($userInfo->is_vip==1){
-                                        $type=1;
+                                        $type=2;
                                         $operate = 1;
                                     }else{
                                         $type=2;
