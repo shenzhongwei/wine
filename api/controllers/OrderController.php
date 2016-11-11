@@ -56,7 +56,7 @@ class OrderController extends ApiController{
         $address_id = Yii::$app->request->post('address_id');//收货地址id
         //验证参数
         if(empty($from_val)|| empty($shop_id)||empty($total_price)||
-            empty($pay_mode)||empty($pay_price)||empty($from)||
+            empty($pay_mode)||empty($from)||
             empty($address_id)||empty($type)){
             return $this->showResult(301,'读取订单信息失败');
         }
@@ -110,7 +110,7 @@ class OrderController extends ApiController{
                 $point_sup = $goodInfo->point_sup;
             }elseif ($type==3){
                 //抢购商品，判断是否登陆以及可抢购数量
-                $goodRush = GoodRush::find()->where("gid=".$value['good_id']."and is_active=1 and start_at<=".time()." and end_at>=".time())->one();
+                $goodRush = GoodRush::find()->where("gid=".$value['good_id']." and is_active=1 and start_at<=".time()." and end_at>=".time())->one();
                 if(empty($goodRush)){
                     return $this->showResult(304,$goodInfo->name.'不是抢购商品，无法下单');
                 }
