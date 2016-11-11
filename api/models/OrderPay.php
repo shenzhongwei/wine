@@ -245,6 +245,8 @@ class OrderPay extends \yii\db\ActiveRecord
                     'status'=>1,
                 ];
                 if(!$pointInout->save()){
+                    var_dump($pointInout->getErrors());
+                    exit;
                     throw new Exception('用户积分收入记录保存出错',400);
                 }
             }
