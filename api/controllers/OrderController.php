@@ -242,6 +242,7 @@ class OrderController extends ApiController{
      */
     public function actionOrderList(){
         $user_id = Yii::$app->user->identity->getId();
+        $userInfo = UserInfo::findOne($user_id);
         $state = Yii::$app->request->post('state',0);//订单状态，0全部 1未付款 2待收货 6待评价
         $page = Yii::$app->request->post('page',1);//页数
         $pageSize = Yii::$app->params['pageSize'];
@@ -284,17 +285,38 @@ class OrderController extends ApiController{
                                 throw new Exception('保存订单信息出错');
                             }
                         }
-                        $data [] = [
-                            'order_id'=>$element->id,
-                            'send_bill'=>$element->send_bill,
-                            'state'=>$element->state,
-                            'pay_price'=>$element->pay_bill,
-                            'order_date'=>date('Y-m-d H:i:s',$element->order_date),
-                            'order_code'=>$element->order_code,
-                            'pay_mode'=>$element->pay_id,
-                            'point'=>$element->point,
-                            'detail'=>ArrayHelper::getColumn($element->orderDetails,function($detail){
-                                return [
+                        $details = $element->orderDetails;
+                        $res = [];
+                        if(!empty($details)){
+                            foreach ($details as $detail){
+                                if($element->type == 1){
+                                    $type=1;
+                                    $operate = 1;
+                                }elseif ($element->type == 2){
+                                    if($userInfo->is_vip==1){
+                                        $type=1;
+                                        $operate = 1;
+                                    }else{
+                                        $type=2;
+                                        $operate = 0;
+                                    }
+                                }else{
+                                    $goodQuery = GoodInfo::find()->joinWith(['merchant0','type0']);
+                                    $goodQuery->joinWith('goodRush')->where(
+                                        "good_info.id=$detail->gid and good_rush.is_active=1 and good_rush.id>0 and start_at<=".time()." and end_at>=".time());
+                                    $goodQuery->andWhere('good_info.is_active=1 and merchant>0 
+                                    and merchant_info.id>0 and merchant_info.is_active=1 
+                                    and good_info.type>0 and good_type.is_active=1 and good_type.id>0');
+                                    $goodInfo = $goodQuery->one();
+                                    if(empty($goodInfo)){
+                                        $type=1;
+                                        $operate = 1;
+                                    }else{
+                                        $type=3;
+                                        $operate = 1;
+                                    }
+                                }
+                                $res[]=[
                                     'good_id'=>$detail->gid,
                                     'name'=>$detail->g->name,
                                     'volum'=>$detail->g->volum,
@@ -305,8 +327,21 @@ class OrderController extends ApiController{
                                     'unit'=>$detail->g->unit,
                                     'amount'=>$detail->amount,
                                     'total_price'=>$detail->total_price,
+                                    'type'=>$type,
+                                    'opreate'=>$operate,
                                 ];
-                            }),
+                            }
+                        }
+                        $data [] = [
+                            'order_id'=>$element->id,
+                            'send_bill'=>$element->send_bill,
+                            'state'=>$element->state,
+                            'pay_price'=>$element->pay_bill,
+                            'order_date'=>date('Y-m-d H:i:s',$element->order_date),
+                            'order_code'=>$element->order_code,
+                            'pay_mode'=>$element->pay_id,
+                            'point'=>$element->point,
+                            'detail'=>$res,
                         ];
                     }
                     $transaction->commit();
