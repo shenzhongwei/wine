@@ -303,12 +303,12 @@ class InoutPay extends \yii\db\ActiveRecord
                 'pio_date'=>time(),
                 'pio_type'=>1,
                 'amount'=>$amount,
-                'oid'=>empty($order_id) ? null:$order_id,
+                'oid'=>empty($order_id) ? null:(int)$order_id,
                 'note'=>"编号为$user_id"."的用户于".date('Y年m月d日 H时i分s秒')."充值后获得了绑定编号为$promotion_id"."活动的积分$amount".",已入账",
                 'status'=>1,
             ];
             if(!$pointInout->save()){
-                throw new Exception(array_values($pointInout->getFirstErrors())[0].$order_id);
+                throw new Exception(array_values($pointInout->getFirstErrors())[0]);
             }
             //存入用户使用促销记录
             $userPromotion = new UserPromotion();
