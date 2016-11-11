@@ -10,7 +10,7 @@ $this->title = '管理员列表';
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
-<div class="wrapper wrapper-content">
+<div>
     <div class="ibox float-e-margins">
         <div class="ibox-content">
 <!--            <p>-->

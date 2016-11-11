@@ -8,7 +8,7 @@ use yii\widgets\ActiveForm;
 $this->title = '新增管理员';
 $user = Yii::$app->user->identity;
 ?>
-<div class="wrapper wrapper-content animated fadeInRight">
+<div class="animated fadeInRight">
     <div class="ibox-content">
         <div class="row pd-10">
             <h1><?= Html::encode($this->title) ?></h1>

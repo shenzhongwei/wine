@@ -22,6 +22,8 @@ use yii\web\IdentityInterface;
  * @property integer $wa_status
  * @property string $created_time
  * @property string $updated_time
+ *
+ * @property AuthAssignment $admingroup
  */
 class Admin extends \yii\db\ActiveRecord implements IdentityInterface
 {

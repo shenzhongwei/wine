@@ -5,7 +5,7 @@ use yii\helpers\Html;
 ?>
 <?=Html::cssFile('@web/css/logo.css')?>
 <script type="text/javascript" src="<?=Url::to('@web/js/upload.js?_'.time()) ?>"></script>
-<div class="wrapper wrapper-content">
+<div>
 <div class="container">
     <div class="imageBox">
         <div class="thumbBox"></div>

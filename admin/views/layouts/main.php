@@ -40,7 +40,7 @@ use yii\helpers\Url;
     <?=Html::cssFile('@web/css/style.min862f.css')?>
     <?=Html::cssFile('@web/css/site.css')?>
     <?=Html::cssFile('@web/css/plugins/iCheck/custom.css')?>
-    <?=Html::cssFile('@web/css/plugins/datapicker/datepicker3.css')?>
+<!--    --><?//=Html::cssFile('@web/css/plugins/datapicker/datepicker3.css')?>
     <?=Html::jsFile('@web/js/jquery.min.js')?>
     <?=Html::jsFile('@web/js/contabs.min.js')?>
     <?=Html::jsFile('@web/js/wine/wine.js')?>

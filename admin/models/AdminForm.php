@@ -23,7 +23,8 @@ class AdminForm extends Model
     {
         return [
             // username and password are both required
-            [['wa_username', 'wa_password'], 'required'],
+            [['wa_username'], 'required','message'=>'请输入账号'],
+            [[ 'wa_password'],'required','message'=>'请输入密码'],
             // rememberMe must be a boolean value
             ['rememberMe', 'boolean'],
             // password is validated by validatePassword()
@@ -33,8 +34,9 @@ class AdminForm extends Model
     public function attributeLabels()
     {
         return [
-            'wa_username' => '登录名',
-            'wa_password' => '登录密码',
+            'wa_username' => '账号',
+            'wa_password' => '密码',
+            'rememberMe'=>'记住该账号',
         ];
     }
 

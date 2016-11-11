@@ -298,7 +298,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                         'view' => function ($url, $model) {
                             return Html::a('<i class="fa fa-eye">查看</i>', $url, [
                                 'data-pjax'=>0,
-                                'title' => Yii::t('app', Yii::t('app','View')),
+                                'title' => '查看详细信息',
                                 'class' => 'btn btn-info btn-xs',
                             ]);
                         },

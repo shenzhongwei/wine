@@ -71,10 +71,12 @@ class SiteController extends BaseController
         if(empty($user_id)){
             return $this->goHome();
         }
+//        return $this->redirect(['/index/welcome']);
         $user_info = Yii::$app->authManager->getRolesByUser($user_id);
         $user = Yii::$app->user->identity;
         $menu = new Menu();
         $menu = $menu->getLeftMenuList();
+
         //var_dump(array_key_exists('_child',$menu[0]));exit;
         return $this->render('index',[
             'menu' => $menu,
@@ -93,6 +95,7 @@ class SiteController extends BaseController
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             if($model->UpdateModel()){
                 return $this->goBack();
+                return $this->redirect(['/index/welcome']);
             }else{
                 return $this->render('login', [
                     'model' => $model,

@@ -36,7 +36,7 @@ if(!empty($model->original_pay)){
 }
 ?>
 
-<div class="wrapper wrapper-content">
+<div class="">
     <div class="ibox-content">
         <div class="good-info-view">
             <h1><span class="glyphicon glyphicon-pushpin" aria-hidden="true"></span> <?= Html::encode($this->title) ?></h1>

@@ -100,8 +100,16 @@ return [
     'controllerNamespace' => 'admin\controllers',
     'bootstrap' => ['log'],
     'language'=>'zh-CN',
+    'name'=>'双天酒易购',
     'timeZone'=>'Asia/Shanghai',
     'components' => [
+//        'view' => [
+//            'theme' => [
+//                'pathMap' => [
+//                    '@app/views' => '@vendor/dmstr/yii2-adminlte-asset/example-views/yiisoft/yii2-app'
+//                ],
+//            ],
+//        ],
         'request' => [
             'csrfParam' => '_wine-admin',
         ],
