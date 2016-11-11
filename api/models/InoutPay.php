@@ -308,7 +308,7 @@ class InoutPay extends \yii\db\ActiveRecord
                 'status'=>1,
             ];
             if(!$pointInout->save()){
-                throw new Exception(array_values($pointInout->getFirstErrors())[0]);
+                throw new Exception(array_values($pointInout->getFirstErrors())[0].$pointInout->oid);
             }
             //存入用户使用促销记录
             $userPromotion = new UserPromotion();
