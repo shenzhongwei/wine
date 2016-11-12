@@ -152,6 +152,7 @@ class ShoppingController extends ApiController{
                 'uid'=>$user_id,
                 'gid'=>$good_id,
                 'amount'=>$amount,
+                'type'=>$type,
             ];
         }else{
             $userCert->amount = $userCert->amount+$amount;
