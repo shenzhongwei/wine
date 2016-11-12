@@ -374,7 +374,7 @@ class PayController extends ApiController{
             $transaction->commit();
             $shop=$orderInfo->s;
             $phone = $shop->phone;
-            if(self::validateMobilePhone($phone)) {
+            if(!empty($phone)) {
                 //给店铺发短信
                 $smser = new LuosimaoSmser();
 //                $smser->username = Yii::$app->params['smsParams']['username'];

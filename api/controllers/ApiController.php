@@ -28,7 +28,7 @@ class ApiController extends Controller
     
     /**
      * 验证手机号格式方法
-     * @param unknown $mobilephone
+     * @param string $mobilephone
      * @return boolean
      */
     public function validateMobilePhone($mobilephone){

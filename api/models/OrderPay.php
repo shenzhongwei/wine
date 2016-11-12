@@ -162,7 +162,7 @@ class OrderPay extends \yii\db\ActiveRecord
                 throw new Exception('更新订单状态出错',400);
             }
             $shop=$orderInfo->s;
-            if(self::validateMobilePhone($shop->phone)){
+            if(!empty($shop->phone)){
                 //给店铺发短信
                 $smser = new LuosimaoSmser();
 //                $smser->username = Yii::$app->params['smsParams']['username'];
