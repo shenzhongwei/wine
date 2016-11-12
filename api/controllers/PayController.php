@@ -285,6 +285,8 @@ class PayController extends ApiController{
             return $this->showResult(301,'读取订单信息出错');
         }
         $orderInfo = OrderInfo::findOne(['uid'=>$user_id,'order_code'=>$orderCode,'state'=>1,'is_del'=>0]);//查找订单，炸不到返回错误
+//        var_dump($orderInfo->order_code);
+//        exit;
         if(empty($orderInfo)){
             return $this->showResult(304,'订单信息错误，请重试');
         }
@@ -372,6 +374,7 @@ class PayController extends ApiController{
                 }
             }
             $transaction->commit();
+
             $shop=$orderInfo->s;
             $phone = $shop->phone;
             if(!empty($phone)) {
@@ -380,8 +383,8 @@ class PayController extends ApiController{
 //                $smser->username = Yii::$app->params['smsParams']['username'];
 //                $smser->setPassword(Yii::$app->params['smsParams']['password']);
                 $smser->setPassword(Yii::$app->params['smsParams']['api_key']);
-                $content = "您有新的订单待处理，订单编号：$orderInfo->order_code，请尽快处理！【双天酒易购】";
-                $res = $smser->send($phone, $content);
+                $content = "您有新的订单待处理，订单编号：".$orderInfo->order_code."，请尽快处理！【双天酒易购】";
+                $res = @$smser->send($phone, $content);
             }
             return $this->showResult(200,'余额付款成功');
         }catch (Exception $e){

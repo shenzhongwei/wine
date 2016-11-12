@@ -168,7 +168,7 @@ class OrderPay extends \yii\db\ActiveRecord
 //                $smser->username = Yii::$app->params['smsParams']['username'];
 //                $smser->setPassword(Yii::$app->params['smsParams']['password']);
                 $smser->setPassword(Yii::$app->params['smsParams']['api_key']);
-                $content = "您有新的订单待处理，订单编号：$orderInfo->order_code，请尽快处理！【双天酒易购】";
+                $content = "您有新的订单待处理，订单编号：".$orderInfo->order_code."，请尽快处理！【双天酒易购】";
                 $res = $smser->send($shop->phone,$content);
                 if($res){
                     $log->log_result('短信发送成功');
