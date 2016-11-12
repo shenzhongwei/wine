@@ -11,7 +11,10 @@ use api\models\InoutPay;
 use api\models\MessageList;
 use api\models\OrderInfo;
 use api\models\OrderPay;
+use api\models\PointInout;
 use api\models\UserAccount;
+use api\models\UserInfo;
+use api\models\UserPoint;
 use common\pay\alipay\AlipayNotify;
 use common\pay\alipay\helpers\AlipayHelper;
 use common\pay\wepay\AppUnifiedOrder;
@@ -272,6 +275,10 @@ class PayController extends ApiController{
      */
     public function actionAccountPayOrder(){
         $user_id = Yii::$app->user->identity->getId();
+        $userInfo = UserInfo::findOne($user_id);
+        if(empty($userInfo)){
+            return $this->showResult(302,'用户信息异常');
+        }
         $orderCode = Yii::$app->request->post('order_code');//对应的订单code
         $pay_password = Yii::$app->request->post('pay_password');//对应的订单code
         if(empty($orderCode)||empty($pay_password)){//未获取到返回错误
@@ -330,7 +337,7 @@ class PayController extends ApiController{
             $message->attributes = [
                 'type_id'=>2,
                 'title'=>'余额支付成功',
-                'content'=>'余额付款'.$orderInfo->pay_bill.'元；用途：订单支付;订单号：'.$orderInfo->order_code,
+                'content'=>'余额付款'.$orderInfo->pay_bill.'元；用途：订单支付;订单号：'.$orderInfo->order_code,'积分抵押：'.$orderInfo->point,
                 'own_id'=>$user_id,
                 'target'=>4,
                 'status'=>0,
@@ -338,6 +345,31 @@ class PayController extends ApiController{
             ];
             if(!$message->save()){
                 throw new Exception('生成用户余额变更消息出错');
+            }
+            if($orderInfo->point>0){
+                $userPoint = UserPoint::findOne(['uid'=>$user_id,'is_active'=>1]);
+                if(empty($userPoint)){
+                    throw new Exception('用户积分账户异常',304);
+                }
+                $userPoint->point = $userPoint->point-$orderInfo->point;
+                $userPoint->update_at = time();
+                if(!$userPoint->save()){
+                    throw new Exception('保存用户积分出错',400);
+                }
+                $pointInout = new PointInout();
+                $pointInout->attributes = [
+                    'uid'=>$orderInfo->uid,
+                    'pid'=>$userPoint->id,
+                    'pio_date'=>time(),
+                    'pio_type'=>2,
+                    'amount'=>$orderInfo->point,
+                    'oid'=>$orderInfo->id,
+                    'note'=>"用户$userInfo->nickname"."于".date('Y年m月d日 H时i分s秒')."，支出$orderInfo->point"."积分用于支付编号为".$orderCode."的订单",
+                    'status'=>1,
+                ];
+                if(!$pointInout->save()){
+                    throw new Exception('用户积分收入记录保存出错',400);
+                }
             }
             $transaction->commit();
             $shop=$orderInfo->s;
