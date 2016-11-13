@@ -170,6 +170,13 @@ return [
                 'yii\bootstrap\BootstrapAsset' => [
                     'css' => [],
                 ],
+//                'dosamigos\google\maps\MapAsset' => [
+//                    'options' => [
+//                        'key' => 'this_is_my_key',
+//                        'language' => 'zh-CN',
+//                        'version' => '3.1.18'
+//                    ]
+//                ]
             ],
 
         ],

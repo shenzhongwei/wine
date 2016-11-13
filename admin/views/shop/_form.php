@@ -3,121 +3,299 @@
 use yii\helpers\Html;
 use kartik\widgets\ActiveForm;
 use kartik\builder\Form;
-use kartik\datecontrol\DateControl;
-use yii\helpers\ArrayHelper;
-use admin\models\MerchantInfo;
-use admin\models\Zone;
 use yii\helpers\Url;
+use kartik\select2\Select2;
+use admin\models\ShopInfo;
 use kartik\file\FileInput;
+
 /**
  * @var yii\web\View $this
  * @var admin\models\ShopInfo $model
- * @var yii\widgets\ActiveForm $form
+ * @var kartik\widgets\ActiveForm $form
  */
-$merchant=ArrayHelper::map(MerchantInfo::find()->asArray()->all(),'id','name'); //第2个参数是value,第3个参数是option的值
-//省
-//$province=ArrayHelper::map(Zone::getProvince(),'id','name');
-//$city=[];
-//$district=[];
+$model->wa_password = $model->isNewRecord ? '':'******';
+$model->wa_username = $model->isNewRecord ? '':$model->wa_username;
 ?>
-<style>
-    .shopinfo-no_send_need{width: 50px;height: 30px;;padding-left:2px ;padding-right: 2px; border: 1px solid #ccc;}
-</style>
-<script type="text/javascript">
-    $(document).ready(function() {
-        selectAddress($("#shopinfo-province"),$("#shopinfo-city"),$("#shopinfo-district"));
-    });
-</script>
-<script type="text/javascript" src="<?=Url::to('@web/js/wine/address.js') ?>"></script>
-
-<div class="shop-info-form">
-
-    <?php
-    $form = ActiveForm::begin([
-        'type'=>ActiveForm::TYPE_HORIZONTAL,
+<script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=<?=Yii::$app->params['key'] ?>&plugin=AMap.Autocomplete"></script>
+<div class="good-rush-form">
+    <?php $form = ActiveForm::begin([
+        'type'=>ActiveForm::TYPE_VERTICAL,
+        'formConfig' => [
+            'deviceSize' => ActiveForm::SIZE_LARGE,
+        ],
         'enableAjaxValidation'=>true, //开启ajax验证
         'validationUrl'=>Url::toRoute(['valid-form','id'=>empty($model['id'])?0:$model['id']]), //验证url
-        'options' => ['enctype' => 'multipart/form-data']
     ]);
     ?>
-    <div class="merchant-form" style="margin-top: 10px;width: 90%;">
-        <?= $form->field($model, 'merchant')->dropDownList($merchant,[$model->isNewRecord?'':'disabled'=>true])?>
-        <?= $form->field($model, 'name')->textInput()?>
-        <?= $form->field($model, 'limit')->textInput()?>
-        <?= $form->field($model, 'least_money')->textInput()?>
-        <?= $form->field($model, 'send_bill')->textInput()?>
-        <?= $form->field($model, 'no_send_need',[
-            'template'=> '<label class="control-label col-md-2" for="shopinfo-no_send_need" >免配送条件</label>
-                        <div class="col-sm-10" >
-                        <p>满<input type="text" id="shopinfo-no_send_need" name="ShopInfo[no_send_need]" class="shopinfo-no_send_need" placeholder="0">元，免配送费</p>
-                        <div class="help-block"></div>
-                        </div>'
-        ])->textInput(['maxlength'=>20,'style'=>'width:50px'])?>
+    <div class="row">
+        <div class="col-sm-6">
+            <?php
+            echo Form::widget([
 
-        <input type="hidden" value="<?=$model->bus_pic?>" name="ShopInfo[bus_pic_url]">
-        <?= $form->field($model, 'bus_pic')->widget(FileInput::className(),[
-            'options'=>[
-                'accept'=>'image/*',
-            ],
-            'pluginOptions'=>[
-                'previewFileType' => 'image',
-                'initialPreview' =>$p1,
-                'initialPreviewConfig' =>$PreviewConfig,
-                'initialPreviewAsData' => true,
-                'showUpload'=>false,
-                'showRemove'=>false,
-                'autoReplace'=>true,
-                'maxFileCount'=>1,
-            ]
-        ])?>
-        <input type="hidden" value="<?=$model->bus_pic?>" name="ShopInfo[logo_url]">
-        <?= $form->field($model, 'logo')->widget(FileInput::className(),[
-            'options'=>[
-                'accept'=>'image/*',
-            ],
-            'pluginOptions'=>[
-                'previewFileType' => 'image',
-                'initialPreview' =>$p2,
-                'initialPreviewConfig' =>$PreviewConfig,
-                'initialPreviewAsData' => true,
-                'showUpload'=>false,
-                'showRemove'=>false,
-                'autoReplace'=>true,
-                'maxFileCount'=>1,
-            ]
-        ])?>
-        <?= $form->field($model, 'phone')->textInput()?>
-        <?= $form->field($model, 'province')->dropDownList($province,['prompt'=>'--省--'])?>
-        <?= $form->field($model, 'city')->dropDownList($city,['prompt'=>'--市--',!$model->isNewRecord?'':'disabled'=>true])?>
-        <?= $form->field($model, 'district')->dropDownList($district,['prompt'=>'--区--',!$model->isNewRecord?'':'disabled'=>true])?>
-        <?= $form->field($model, 'region')->textInput(['maxlength' =>50])->label('小区名称') ?>
-        <?= $form->field($model, 'address')->textInput(['maxlength' =>128])->label('门牌号') ?>
-        <hr>
-        <?php if($model->isNewRecord){ //创建时显示?>
-        <?= $form->field($model, 'wa_username')->textInput(['maxlength' =>50])?>
-        <?= $form->field($model, 'wa_password')->textInput(['maxlength' =>50])?>
-        <?= $form->field($model, 'wa_type')->dropDownList($item_arr,['disabled'=>true]) ?>
-        <input type="hidden" id="appliance-logoUrl" class="form-control"  name="MerchantInfo[logoUrl]" value="<?=$model->wa_logo?>">
-        <?= $form->field($model, 'wa_logo')->widget(\kartik\file\FileInput::className(),[
-            'options'=>[
-                'accept'=>'image/*',
-            ],
-            'pluginOptions'=>[
-                'previewFileType' => 'image',
-                'initialPreviewAsData' => true,
-                'showUpload'=>false,
-                'showRemove'=>false,
-                'autoReplace'=>true,
-                'maxFileCount'=>1,
-            ]
-        ])?>
-        <?php } ?>
-        <p style="margin: 0 auto;text-align: center;margin-bottom: 2px;">
-            <?=Html::submitButton($model->isNewRecord ? Yii::t('app', '创建') : Yii::t('app', '更新'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']);?>
-            <?=Html::a('返回', 'javascript:history.go(-1);location.reload()', ['class' => 'btn btn-primary','style'=>'margin-left:10px']);?>
-        </p>
-        <?php
-            ActiveForm::end();
-        ?>
+                'model' => $model,
+                'form' => $form,
+                'columns' => 1,
+                'attributes' => [
+                    'name'=>['type'=>Form::INPUT_TEXT,'label'=>'门店名称','options'=>['placeholder'=>'请填写门店名','maxlength'=>20]],
 
+                    'merchant'=>['type'=>Form::INPUT_WIDGET,'label'=>'所属商户','widgetClass'=>Select2::className(),
+                        'options'=>[
+                            'data'=>ShopInfo::GetMerchants($model->isNewRecord ? 'create':'update'),
+                            'options'=>['placeholder'=>'请选择商品'],
+                            'pluginOptions' => ['allowClear' => true],
+                        ],],
+
+                    'contacter'=>['type'=>Form::INPUT_TEXT,'label'=>'联系人','options'=>['placeholder'=>'请填写联系人','maxlength'=>20]],
+
+                    'phone'=>['type'=>Form::INPUT_TEXT,'label'=>'联系电话','options'=>[
+                        'placeholder'=>'请填写门店电话','maxlength'=>16,'onkeyup'=>'this.value=this.value.replace(/\D/gi,"")'
+                    ]],
+
+                    'region'=>['type'=>Form::INPUT_TEXT,'label'=>'门店地区','options'=>[
+                        'placeholder'=>'请填写门店地区','readOnly'=>true,
+                        'data-toggle' => 'modal',    //弹框
+                        'data-target' => '#shop-modal',    //指定弹框的id
+                    ]],
+
+                    'address'=>['type'=>Form::INPUT_TEXT,'label'=>'详细地址','options'=>['placeholder'=>'请填写详细地址','maxlength'=>36]],
+                ]
+
+            ]);
+
+
+            echo $form->field($model,'province')->hiddenInput()->label(false);
+            echo $form->field($model,'city')->hiddenInput()->label(false);
+            echo $form->field($model,'district')->hiddenInput()->label(false);
+            echo $form->field($model,'lat')->hiddenInput()->label(false);
+            echo $form->field($model,'lng')->hiddenInput()->label(false);
+            echo Form::widget([
+
+                'model' => $model,
+                'form' => $form,
+                'columns' => 1,
+                'attributes' => [
+                    'limit'=>['type'=>Form::INPUT_TEXT,'label'=>'配送范围','options'=>[
+                        'placeholder'=>'请填写配送范围(单位：米；整数)','maxlength'=>10,'onkeyup'=>'clearNoNum(this)'
+                    ]],
+
+                    'least_money'=>['type'=>Form::INPUT_TEXT,'label'=>'下单最低金额','options'=>[
+                        'placeholder'=>'请填写最低金额','maxlength'=>10,'onkeyup'=>'clearNoNum(this)'
+                    ]],
+
+                    'send_bill'=>['type'=>Form::INPUT_TEXT,'label'=>'运费','options'=>[
+                        'placeholder'=>'请填写运费','maxlength'=>10,'onkeyup'=>'clearNoNum(this)'
+                    ]],
+
+                    'no_send_need'=>['type'=>Form::INPUT_TEXT,'label'=>'免配送订单金额','options'=>[
+                        'placeholder'=>'请填写免配送订单金额','maxlength'=>10,'onkeyup'=>'clearNoNum(this)'
+                    ]],
+                ]
+
+            ]);
+            ?>
+        </div>
+        <div class="col-sm-6">
+            <?php
+            echo Form::widget([
+
+                'model' => $model,
+                'form' => $form,
+                'columns' => 1,
+                'attributes' => [
+                    'img'=>[
+                        'label'=>'营业执照',
+                        'type'=> Form::INPUT_WIDGET, 'widgetClass'=>FileInput::className(),
+                        'options'=>[
+                            'options'=>[
+                                'accept'=>'image/*',
+                                'showUpload'=>false,
+                                'showRemove'=>false,
+                            ],
+                            'pluginOptions'=>[
+                                'initialPreview'=>empty($model->bus_pic) ? false:[
+                                    "../../../photo".$model->bus_pic,
+                                ],
+                                'uploadUrl' => Url::to(['/shop/upload']),
+                                'uploadExtraData' => [
+                                    'key'=>'bus',
+                                    'attr'=>'img',
+                                ],
+                                'maxFileSize'=>1000,
+                                'previewFileType' => 'image',
+                                'initialPreviewAsData' => true,
+                                'showUpload'=>true,
+                                'showRemove'=>true,
+                                'autoReplace'=>true,
+                                'browseClass' => 'btn btn-success',
+                                'uploadClass' => 'btn btn-info',
+                                'removeClass' => 'btn btn-danger',
+                                'maxFileCount'=>1,
+                                'fileActionSettings' => [
+                                    'showZoom' => false,
+                                    'showUpload' => false,
+                                    'showRemove' => false,
+                                ],
+                            ],
+                            'pluginEvents'=>[
+                                'fileuploaderror'=>"function(){
+                                                 $('.fileinput-upload-button').attr('disabled',true);
+                                                }",
+                                'fileclear'=>"function(){
+                                    $('#shopinfo-bus_pic').val('');
+                                    }",
+                                'fileuploaded'  => "function (object,data){
+			                    $('#shopinfo-bus_pic').val(data.response.imageUrl);
+		                    }",
+                                //错误的冗余机制
+                                'error' => "function (){
+			                    alert('data.error');
+		                    }"
+                            ]
+                        ],
+                    ],
+                ]
+
+            ]);
+
+            echo $form->field($model,'bus_pic')->hiddenInput()->label(false);
+            echo Form::widget([
+
+                'model' => $model,
+                'form' => $form,
+                'columns' => 1,
+                'attributes' => [
+
+                    'url'=>[
+                        'label'=>'门店logo',
+                        'type'=> Form::INPUT_WIDGET, 'widgetClass'=>FileInput::className(),
+                        'options'=>[
+                            'options'=>[
+                                'accept'=>'image/*',
+                                'showUpload'=>false,
+                                'showRemove'=>false,
+                            ],
+                            'pluginOptions'=>[
+                                'initialPreview'=>empty($model->logo) ? false:[
+                                    "../../../photo".$model->logo,
+                                ],
+                                'uploadUrl' => Url::to(['/shop/upload']),
+                                'uploadExtraData' => [
+                                    'key'=>'logo',
+                                    'attr'=>'url',
+                                ],
+                                'maxFileSize'=>1000,
+                                'previewFileType' => 'image',
+                                'initialPreviewAsData' => true,
+                                'showUpload'=>true,
+                                'showRemove'=>true,
+                                'autoReplace'=>true,
+                                'browseClass' => 'btn btn-success',
+                                'uploadClass' => 'btn btn-info',
+                                'removeClass' => 'btn btn-danger',
+                                'maxFileCount'=>1,
+                                'fileActionSettings' => [
+                                    'showZoom' => false,
+                                    'showUpload' => false,
+                                    'showRemove' => false,
+                                ],
+                            ],
+                            'pluginEvents'=>[
+                                'fileuploaderror'=>"function(){
+                                                 $('.fileinput-upload-button').attr('disabled',true);
+                                                }",
+                                'fileclear'=>"function(){
+                                    $('#shopinfo-logo').val('');
+                                    }",
+                                'fileuploaded'  => "function (object,data){
+			                    $('#shopinfo-logo').val(data.response.imageUrl);
+		                    }",
+                                //错误的冗余机制
+                                'error' => "function (){
+			                    alert('data.error');
+		                    }"
+                            ]
+                        ]
+                    ],
+                ]
+
+            ]);
+            echo $form->field($model,'logo')->hiddenInput()->label(false);
+            echo Form::widget([
+
+                'model' => $model,
+                'form' => $form,
+                'columns' => 1,
+                'attributes' => [
+
+                    'wa_username'=>['type'=>Form::INPUT_TEXT,'label'=>'后台登录名','options'=>[
+                        'placeholder'=>'请填写后台登录名','maxlength'=>10,$model->isNewRecord ? '':'readOnly'=>true,
+                    ]],
+
+                    'wa_password'=>['type'=>Form::INPUT_PASSWORD,'label'=>'后台登录密码','options'=>[
+                        'placeholder'=>'请填写后台登录密码','maxlength'=>16,$model->isNewRecord ? '':'readOnly'=>true,
+                    ]],
+                ]
+
+            ]);
+            ?>
+
+        </div>
     </div>
+    <?php
+    echo '<p style="text-align: center">'.
+     Html::submitButton(Yii::t('app', 'Save') , ['class' =>'btn btn-success',]).'</p>';
+    ?>
+
+    <?php
+    ActiveForm::end(); ?>
+</div>
+<style>
+    .modal-body{
+        height: 800px;
+        padding: 0px;
+    }
+    .modal-footer{
+        text-align: center;
+    }
+    #container{
+        height: 100%;
+    }
+    #search {
+        position: absolute;
+        top: 5px;
+        left: 0.5%;
+        background: #fff none repeat scroll 0 0;
+        margin: 0.5% auto;
+        /*padding: 6px;*/
+        z-index: 999;
+        width: 260px;
+    }
+    .amap-sug-result{
+        z-index: 9999;
+    }
+</style>
+<!--查看看详情弹出框  start-->
+<?php
+
+\yii\bootstrap\Modal::begin([
+    'size'=>\yii\bootstrap\Modal::SIZE_LARGE,
+    'id' => 'shop-modal',
+    'header' => '<h4 class="modal-title">高德地图</h4>',
+    'footer' => '<button class="btn btn-success" data-dismiss="modal" id="confirm">确 定</button>'.
+        '<button class="btn btn-primary" style="margin-left: 10%;" data-dismiss="modal">关 闭</button>',
+    'options' => [
+        'tabindex' => false,
+    ],
+]);
+\yii\bootstrap\Modal::end();
+?>
+<!--查看看详情弹出框  end-->
+<script>
+    $('#shopinfo-region').on('click', function () {  //查看详情的触发事件
+        $.get(toRoute('shop/map'), {},
+            function (data) {
+                $('#shop-modal').find('.modal-body').html(data);  //给该弹框下的body赋值
+            }
+        );
+    });
+</script>

@@ -122,7 +122,7 @@ $count = $dataProvider->totalCount;
     'options' => [
         'tabindex' => false
     ],
-    'header' => '<h4 class="modal-title">新增启动页</h4>',
+    'header' => '<h4 class="modal-title"></h4>',
 ]);
 \yii\bootstrap\Modal::end();
 ?>

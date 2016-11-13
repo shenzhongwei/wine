@@ -134,7 +134,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                             <td><?=$val['wa_last_login_ip'] ?></td>
                                             <td><?php
                                                 if($val['wa_status']==0){
-                                                    echo '<p><span class="label label-default"><i class="fa fa-times"></i> 已 删</span></p>';
+                                                    echo '<p><span class="label label-default"><i class="fa fa-times"></i> 冻结中</span></p>';
                                                 }else{
                                                     echo '<p><span class="label label-info"><i class="fa fa-check"></i> 正 常</span></p>';
                                                 }

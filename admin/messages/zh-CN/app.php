@@ -24,9 +24,9 @@ return [
     'Down'=>'<i class="fa fa-arrow-down"> 下架</i>',
     'Lock'=>'<i class="fa fa-lock"> 冻结</i>',
     'Unlock'=>'<i class="fa fa-unlock"> 激活</i>',
-    'Save'=>'保存',
-    'lock'=>'冻结',
-    'unlock'=>'解冻',
+    'Save'=>'保 存',
+    'lock'=>'冻 结',
+    'unlock'=>'解 冻',
     'GoodDownSure'=>'确认下架该产品？一旦下架用户将无法看到该产品',
     'GoodUpSure'=>'确认上架该产品？一旦上架用户将看到该产品',
 //    'GoodPatchDownSure'=>'确认下架产品？一旦下架用户将无法看到下架的产品',
@@ -38,6 +38,6 @@ return [
     'TypeUpSure'=>'确认上架该检索？一旦上架用户将看到该检索下所有检索',
     'TypeDownSure'=>'确认下架该检索？一旦下架用户将无法看到该检索下所有检索',
     'Good Types'=>'商品检索',
-    'Search' => '搜索',
-    'Reset' => '重置'
+    'Search' => '搜 索',
+    'Reset' => '重 置'
 ];

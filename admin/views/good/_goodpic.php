@@ -119,6 +119,7 @@ $this->registerJsFile("@web/js/good/_script.js");
     'options' => [
         'tabindex' => false
     ],
+    'header' => '<h4 class="modal-title"></h4>',
 ]);
 $updateUrl = \yii\helpers\Url::toRoute(['pic-update','key'=>$key]);  //
 $createUrl = \yii\helpers\Url::toRoute(['pic-create','key'=>$key]);  //

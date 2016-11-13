@@ -93,7 +93,7 @@ class AdminForm extends Model
 
     public function checkType($type){
         if(!$this->hasErrors()){
-            if(!in_array($type,[1,2,3])){
+            if(!in_array($type,[1,2,3,4])){
                 return false;
             }else{
                 return true;
@@ -127,7 +127,6 @@ class AdminForm extends Model
         if ($this->_user === null) {
             $this->_user = Admin::findIdentityByUsername($this->wa_username);
         }
-
         return $this->_user;
     }
 

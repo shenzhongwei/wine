@@ -12,6 +12,7 @@ use yii\web\IdentityInterface;
  * @property string $wa_username
  * @property string $wa_password
  * @property integer $wa_type
+ * @property integer $target_id
  * @property string $wa_name
  * @property string $wa_token
  * @property string $wa_phone
@@ -48,7 +49,7 @@ class Admin extends \yii\db\ActiveRecord implements IdentityInterface
     {
         return [
             [['wa_username', 'wa_password'], 'required',],
-            [['wa_type', 'wa_status','wa_lock'], 'integer'],
+            [['wa_type', 'wa_status','wa_lock','target_id'], 'integer'],
             [['wa_last_login_time', 'created_time', 'updated_time'], 'safe'],
             [['wa_username', 'wa_name','wa_phone'], 'string', 'max' => 16],
             [['wa_token','wa_password','confirm_password'], 'string', 'max' => 64],
@@ -74,6 +75,7 @@ class Admin extends \yii\db\ActiveRecord implements IdentityInterface
             'wa_name' => '姓名',
             'wa_token' => '用户token',
             'wa_last_login_time' => '最近登录时间',
+            'target_id'=>'对象id',
             'wa_logo' => '头像',
             'wa_last_login_ip' => '最近登录ip',
             'wa_lock' => '锁定状态',

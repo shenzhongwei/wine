@@ -113,7 +113,7 @@ $(function(){
                 window.top.location.href=toRoute('site/login');
                 return false;
             }else if(data.status == '200'){
-                location.href = toRoute('manager/list');
+                location.href = toRoute('index/welcome');
                 return true;
             }
         }, 'json');

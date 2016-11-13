@@ -92,10 +92,10 @@ class SiteController extends BaseController
             return $this->goHome();
         }
         $model = new AdminForm();
+
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             if($model->UpdateModel()){
                 return $this->goBack();
-                return $this->redirect(['/index/welcome']);
             }else{
                 return $this->render('login', [
                     'model' => $model,

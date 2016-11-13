@@ -259,7 +259,7 @@ $payArr = [
                                                 'uploadExtraData' => [
                                                     'id' => empty($model->id) ? 0:$model->id,
                                                 ],
-                                                'maxFileSize'=>2800,
+                                                'maxFileSize'=>1000,
                                                 'previewFileType' => 'image',
                                                 'initialPreviewAsData' => true,
                                                 'showUpload'=>true,

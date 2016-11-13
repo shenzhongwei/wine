@@ -16,11 +16,8 @@ class ShopSearch extends ShopInfo
     public function rules()
     {
         return [
-            [['id', 'wa_id', 'lat', 'lng', 'limit', 'regist_at', 'is_active', 'active_at'], 'integer'],
-            [['name', 'region', 'address', 'bus_pic', 'logo', 'province', 'city', 'district'], 'safe'],
-            [['least_money', 'send_bill', 'no_send_need'], 'number'],
-
-            [['merchant_name'],'string','max'=>50]
+            [['id', 'limit', 'regist_at', 'is_active', 'active_at','merchant','wa_status'], 'integer'],
+            [['name','region', 'city', 'district','contacter','phone'], 'string'],
         ];
     }
 
@@ -32,51 +29,41 @@ class ShopSearch extends ShopInfo
 
     public function search($params)
     {
-        $query = ShopInfo::find();
+        $query = ShopInfo::find()->joinWith(['wa'])->addSelect(['shop_info.*','IFNULL(wine_admin.wa_lock,1) as wa_status']);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
+        $sort = $dataProvider->getSort();
+        $sort->attributes['wa_status'] = [
+            'asc' => ['wa_status' => SORT_ASC],
+            'desc' => ['wa_status' => SORT_DESC],
+            'label' => 'wa_status',
+        ];
+        $sort->defaultOrder=[
+            'is_active'=>SORT_DESC,
+            'wa_status'=>SORT_ASC,
+        ];
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }
-
-        $merchantname=$params['ShopSearch']['merchant_name'];
-        if(!empty($merchantname)){
-            $model=MerchantInfo::find()->select(['id'])->andWhere(['like','name',$merchantname])->asArray()->all();
-            $merids=array();
-            foreach($model as $k=>$v){
-                $merids[]=$v['id'];
-            }
-            $query->andFilterWhere(['in','merchant',$merids]);
-        }
-
         $query->andFilterWhere([
-            'limit' => $this->limit,
-            'least_money' => $this->least_money,
-            'send_bill' => $this->send_bill,
-            'no_send_need' => $this->no_send_need,
             'is_active' => $this->is_active,
+            'merchant'=>$this->merchant,
+            'city'=>$this->city,
+            'district'=>$this->district,
+            'region'=>$this->region,
         ]);
-
-        if(!empty($params['ShopSearch']['province'])){
-            $model=Zone::find()->where(['id'=>$params['ShopSearch']['province']])->one();
-            $query->andFilterWhere(['like', 'province', $model->name]);
+        if($this->wa_status==1){
+            $query->andWhere('wine_admin.wa_lock=1 or wine_admin.wa_lock is null');
         }
-        if(!empty($params['ShopSearch']['city'])){
-            $model=Zone::find()->where(['id'=>$params['ShopSearch']['city']])->one();
-            $query->andFilterWhere(['like', 'city', $model->name]);
+        if($this->wa_status==='0'){
+            $query->andFilterWhere(['wine_admin.wa_lock'=>$this->wa_status]);
         }
-        if(!empty($params['ShopSearch']['district'])){
-            $model=Zone::find()->where(['id'=>$params['ShopSearch']['district']])->one();
-            $query->andFilterWhere(['like', 'district', $model->name]);
-        }
+        $query->andFilterWhere(['>=', 'limit', $this->limit]);
         $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'region', $this->region])
-            ->andFilterWhere(['like', 'address', $this->address])
-            ->andFilterWhere(['like', 'bus_pic', $this->bus_pic])
-            ->andFilterWhere(['like', 'logo', $this->logo]);
+            ->andFilterWhere(['like', 'phone', $this->name])
+            ->andFilterWhere(['like', 'contacter', $this->name]);
 
 
         return $dataProvider;

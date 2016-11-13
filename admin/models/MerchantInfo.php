@@ -131,6 +131,7 @@ class MerchantInfo extends \yii\db\ActiveRecord
         }
     }
 
+
     public static function GetMerchants(){
         $admin = Yii::$app->user->identity;
         $adminId = $admin->wa_id;
