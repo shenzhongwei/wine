@@ -85,8 +85,9 @@ $this->registerJsFile("@web/js/good/_script.js");
                 <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-sm btn-primary']) ?>
                 <?= Html::a(Yii::t('app', $model->is_active == 1 ? 'Lock':'Unlock'), ['delete', 'id' => $model->id], [
                     'class' =>  $model->is_active == 1 ? 'btn btn-sm btn-danger':'btn btn-sm btn-info',
-                    'data-confirm' => Yii::t('app', $model->is_active == 1 ? '确定冻结该店铺，一旦冻结，用户将无法看到该店铺的商品':'确定解除冻结，一旦接触，用户将可以购买该店铺的商品'),
-                    'data-method' => 'post',
+                    'data'=>[
+                        'confirm'=>$model->is_active == 1 ? '确定冻结该店铺，一旦冻结，用户将无法看到该店铺的商品':'确定解除冻结，一旦接触，用户将可以购买该店铺的商品',
+                    ],
                 ]); ?>
                 <?= Html::a(Yii::t('app', 'Create'), ['create'], ['class' => 'btn btn-sm btn-success']) ?>
             </p>

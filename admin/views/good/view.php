@@ -51,7 +51,7 @@ if(!empty($model->original_pay)){
             </p>
 
             <div class="row">
-                <div class="col-lg-3">
+                <div class="col-sm-3">
                     <?= DetailView::widget([
                         'options'=>[
                             'style'=>'height:560px',
@@ -135,7 +135,7 @@ if(!empty($model->original_pay)){
                         'hAlign' =>DetailView::ALIGN_MIDDLE,
                     ]) ?>
                 </div>
-                <div class="col-lg-3">
+                <div class="col-sm-3">
                     <?= DetailView::widget([
                         'options'=>[
                             'style'=>'height:560px',
@@ -212,7 +212,7 @@ if(!empty($model->original_pay)){
                         'hAlign' =>DetailView::ALIGN_MIDDLE,
                     ]) ?>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-sm-6">
                     <?= DetailView::widget([
                         'options'=>[
                             'style'=>'height:560px',
