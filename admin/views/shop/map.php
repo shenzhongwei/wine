@@ -103,7 +103,6 @@ use kartik\helpers\Html;
         }else{
             lngLat = new AMap.LngLat(shop_lng,shop_lat);
             map.setZoomAndCenter(14,lngLat);
-            map.panTo(lngLat);
             Geocoder(map,lngLat,auto,1);
             map.panTo(lngLat);
             marker.setMap(map);

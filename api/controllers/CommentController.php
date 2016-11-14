@@ -102,7 +102,7 @@ class CommentController extends  ApiController{
             foreach($good_comment as $value){
                 $commentDetail = new CommentDetail();
                 $commentDetail->attributes = [
-                    'cid'=>$user_id,
+                    'cid'=>$orderComment->id,
                     'gid'=>$value['good_id'],
                     'star'=>$value['good_star'],
                     'content'=>$value['content'],

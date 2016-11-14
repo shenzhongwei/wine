@@ -53,6 +53,9 @@ if(!empty($model->original_pay)){
             <div class="row">
                 <div class="col-lg-3">
                     <?= DetailView::widget([
+                        'options'=>[
+                            'style'=>'height:560px',
+                        ],
                         'model'=>$model,
                         'condensed'=>true,
                         'striped'=>false,
@@ -108,26 +111,6 @@ if(!empty($model->original_pay)){
                                 'value'=> empty($model->style0) ? null:$model->style0->name,
                             ],
                             [
-
-                                'label'=>'图片',
-                                'attribute'=>'pic',
-                                "format" => "raw",
-                                'value'=>Html::img('../../../photo'.$model->pic,[
-                                    'width'=>"50%","onclick"=>"ShowImg(this);",'style'=>'cursor:pointer','title'=>"点击放大"
-                                ]),
-                            ],
-                        ],
-                        'hAlign' =>DetailView::ALIGN_MIDDLE,
-                    ]) ?>
-                </div>
-                <div class="col-lg-3">
-                    <?= DetailView::widget([
-                        'model'=>$model,
-                        'condensed'=>true,
-                        'striped'=>false,
-                        'mode'=>DetailView::MODE_VIEW,
-                        'attributes' => [
-                            [
                                 'label'=>'原价',
                                 'attribute'=>'price',
                                 'value'=> $model->price.'/'.$model->unit,
@@ -147,6 +130,29 @@ if(!empty($model->original_pay)){
                                 'label'=>'成本价',
                                 'attribute'=>'cost',
                                 'value'=> $model->cost.'/'.$model->unit,
+                            ],
+                        ],
+                        'hAlign' =>DetailView::ALIGN_MIDDLE,
+                    ]) ?>
+                </div>
+                <div class="col-lg-3">
+                    <?= DetailView::widget([
+                        'options'=>[
+                            'style'=>'height:560px',
+                        ],
+                        'model'=>$model,
+                        'condensed'=>true,
+                        'striped'=>false,
+                        'mode'=>DetailView::MODE_VIEW,
+                        'attributes' => [
+                            [
+
+                                'label'=>'图片',
+                                'attribute'=>'pic',
+                                "format" => "raw",
+                                'value'=>Html::img('../../../photo'.$model->pic,[
+                                    'width'=>"50%","onclick"=>"ShowImg(this);",'style'=>'cursor:pointer','title'=>"点击放大"
+                                ]),
                             ],
                             'number',
                             [
@@ -208,6 +214,9 @@ if(!empty($model->original_pay)){
                 </div>
                 <div class="col-lg-6">
                     <?= DetailView::widget([
+                        'options'=>[
+                            'style'=>'height:560px',
+                        ],
                         'model' => $model,
                         'condensed'=>true,
                         'striped'=>false,

@@ -77,3 +77,43 @@ function ShowAd(obj){
         });
     }
 }
+
+function ShowBus(obj){
+    path  = obj.src;
+    var img = new Image();
+    // 开始加载图片
+    img.src = path;
+// 为Image对象添加图片加载成功的处理方法
+    img.onload = function(){
+        layer.open({
+            area: ['500px', '750px'],
+            type:1,
+            content:'<div style="text-align: center"><img src="'+path+'" width="500px" style="max-height:750px"></div>',
+            title:false,
+            scrollbar:false,
+            shadeClose:true,
+            move :false,
+            shift:5,
+        });
+    }
+}
+
+function ShowLogo(obj){
+    path  = obj.src;
+    var img = new Image();
+    // 开始加载图片
+    img.src = path;
+// 为Image对象添加图片加载成功的处理方法
+    img.onload = function(){
+        layer.open({
+            area: ['600px', '400px'],
+            type:1,
+            content:'<div style="text-align: center"><img src="'+path+'" height="400px" style="max-width:600px"></div>',
+            title:false,
+            scrollbar:false,
+            shadeClose:true,
+            move :false,
+            shift:5,
+        });
+    }
+}
