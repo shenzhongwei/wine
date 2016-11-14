@@ -257,7 +257,7 @@ $typeArr = [1=>'普通订单','2'=>'会员订单','3'=>'抢购订单'];
                                  return Html::a(Yii::t('app','Truck'),['#'], [
                                      'title' => Yii::t('app', '发货'),
                                      'data-confirm' => '确定发货吗',
-                                     'class' => 'btn btn-primary btn-xs',
+                                     'class' => 'btn btn-success btn-xs',
                                  ]);
                              }
                         }else{
