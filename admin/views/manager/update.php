@@ -38,7 +38,7 @@ $user = Yii::$app->user->identity;
                 <?= $form->field($model, 'wa_name')->textInput()->label('姓名')?>
                 <?php
                 if($user->wa_type<$model->wa_type){
-                    echo $form->field($model->admingroup, 'item_name' )->dropDownList($item)->label('用户组');
+                    echo $form->field($model->admingroup, 'item_name' )->dropDownList($item,['disabled'=>true])->label('用户组');
                 }else{
                     echo $form->field($model->admingroup, 'item_name' )->dropDownList($item,['disabled'=>true])->label('用户组<font style=" font-size: 12px;color: #28866a">（不可修改）</font>');
                 }

@@ -1,8 +1,8 @@
 <?php
 
 use yii\helpers\Html;
-use kartik\detail\DetailView;
-use kartik\datecontrol\DateControl;
+use \kartik\detail\DetailView;
+use yii\helpers\Url;
 
 /**
  * @var yii\web\View $this
@@ -10,104 +10,96 @@ use kartik\datecontrol\DateControl;
  */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Shop Infos', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => '信息列表', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-
-//$img_path=Yii::$app->params['img_path'];
-$img_path='../../../photo';
+\admin\assets\AppAsset::register($this);
+// here
+$this->registerJsFile("@web/js/good/_script.js");
 ?>
-<!--引用css-->
-<?=Html::cssFile('@web/css/wine/pop.css')?>
-<div class="shop-info-view">
-    <?= DetailView::widget([
-            'model' => $model,
-            'condensed'=>true,
-            'hover'=>true,
-            'mode'=>Yii::$app->request->get('edit')=='t' ? DetailView::MODE_EDIT : DetailView::MODE_VIEW,
-            'panel'=>[
-            'heading'=>$this->title,
-            'type'=>DetailView::TYPE_INFO,
-        ],
-        'attributes' => [
-            'id',
-            'name',
-            [
-                'attribute'=>'wa_id',
-                'format'=>'html',
-                'value'=>'<a>'.$model->wa_id.'</a>'
-            ],
-            [
-                'attribute'=>'merchant',
-                'value'=>\admin\models\MerchantInfoSearch::getOneMerchant($model->merchant)
-            ],
-            [
-                'attribute'=>'address',
-                'value'=>empty($model->province)?'':($model->province.'-'.$model->city.'-'.$model->district.'-'.$model->region.$model->address)
-            ],
-            [
-                'label'=>'经纬度',
-                'format'=>'html',
-                'value'=>'经度：'.($model->lng/1000000).'&nbsp;&nbsp; 纬度：'.($model->lat/1000000)
-            ],
-            'limit',
-            'least_money',
-            'send_bill',
-            [
-                'attribute'=>'no_send_need',
-                'value'=>'满'.$model->no_send_need.'元，免配送费'
-            ],
-            [
-                'attribute'=>'bus_pic',
-                'format'=>[
-                    'image',
-                    [
-                        'width'=>'150',
-                        'height'=>'150'
-                    ]
-                ],
-                'value'=>empty($model->bus_pic)?'':$img_path.$model->bus_pic
-            ],
-            [
-                'attribute'=>'logo',
-                'format'=>[
-                    'image',
-                    [
-                        'width'=>'50',
-                        'height'=>'50'
-                    ]
-                ],
-                'value'=>empty($model->logo)?'':$img_path.$model->logo
-            ],
-            [
-                'attribute'=>'is_active',
-                'value'=>$model->is_active==0?'否':'是',
 
-            ],
-            [
-                'attribute'=>'active_at',
-                'value'=>empty($model->active_at)?'':date('Y-m-d H:i:s',$model->active_at),
-            ],
-        ],
+<div class="">
+    <div class="ibox-content">
+        <div class="good-info-view">
+            <h1><span class="glyphicon glyphicon-pushpin" aria-hidden="true"></span> <?= Html::encode($this->title) ?></h1>
+            <p>
+                <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-sm btn-primary']) ?>
+                <?= Html::a(Yii::t('app', $model->is_active == 1 ? 'Lock':'Unlock'), ['delete', 'id' => $model->id], [
+                    'class' =>  $model->is_active == 1 ? 'btn btn-sm btn-danger':'btn btn-sm btn-info',
+                    'data-confirm' => Yii::t('app', $model->is_active == 1 ? '确定冻结该店铺，一旦冻结，用户将无法看到该店铺的商品':'确定解除冻结，一旦接触，用户将可以购买该店铺的商品'),
+                    'data-method' => 'post',
+                ]); ?>
+                <?= Html::a(Yii::t('app', 'Create'), ['create'], ['class' => 'btn btn-sm btn-success']) ?>
+            </p>
 
-        'enableEditMode'=>true,
-    ]) ?>
-    <p style="margin: 0 auto;text-align: center;">
-        <?= Html::a('返回', 'javascript:history.go(-1);', ['class' => 'btn btn-primary']) ?>
-    </p>
+            <div class="row">
+                    <?= DetailView::widget([
+                        'model'=>$model,
+                        'condensed'=>true,
+                        'striped'=>false,
+                        'mode'=>DetailView::MODE_VIEW,
+                        'attributes' => [
+
+                            [
+                                'attribute'=>'name',
+                                'value'=> $model->name,
+                            ],
+                            [
+                                'label'=>'归属商户',
+                                'attribute'=>'merchant',
+                                'format' => 'raw',
+                                'value'=> Html::a($model->merchant0->name,['merchant/view', 'id' => $model->merchant0->id], ['title' => '查看商户信息','class'=>'btn btn-link btn-xs']),
+                            ],
+                            [
+                                'label'=>'后台账号',
+                                'attribute'=>'wa_id',
+                                'format' => 'raw',
+                                'value'=> Html::a($model->wa->wa_name,['manager/update', 'id' => $model->wa->wa_id], ['title' => '查看后台登录信息','class'=>'btn btn-link btn-xs']),
+                            ],
+                            'contacter',
+                            'phone',
+                            [
+                                'attribute'=>'limit',
+                                'value'=> $model->limit.'米'
+                            ],
+                            [
+                                'label'=>'最低订单金额',
+                                'attribute'=>'least_money',
+                                'value'=> '¥'.$model->least_money
+                            ],
+                            [
+                                'label'=>'配送费',
+                                'attribute'=>'send_bill',
+                                'value'=> '¥'.$model->send_bill
+                            ],
+                            [
+                                'label'=>'免配送金额',
+                                'attribute'=>'no_send_need',
+                                'value'=> '¥'.$model->no_send_need
+                            ],
+                            [
+                                'label'=>'状态',
+                                'attribute' => 'is_active',
+                                'format' => 'raw',
+                                'value' => $model->is_active==0 ? '<label class="label label-danger">冻结中</label>':'<label class="label label-success">已激活</label>'
+
+                            ],
+                            [
+                                'label'=>$model->is_active == 0 ? '冻结时间':'激活时间',
+                                'attribute'=>'active_at',
+                                'format'=>["date", "php:Y年m月d日"],
+                                'value'=>$model->active_at,
+                            ],
+                            [
+                                'label'=>'入驻时间',
+                                'attribute'=>'regist_at',
+                                'format'=>["date", "php:Y年m月d日"],
+                                'value'=> $model->regist_at
+                            ],
+                        ],
+                        'hAlign' =>DetailView::ALIGN_MIDDLE,
+                        'vAlign' =>DetailView::ALIGN_CENTER,
+                    ]) ?>
+            </div>
+        </div>
+    </div>
 </div>
-<!--点击后台商户管理员id后 弹出的显示框-->
-<div class="pop_hide"></div>
-<div class="pop_showbrand">
-    <!--关闭按钮-->
-    <button class="close" aria-hidden="true" data-dismiss="modal" type="button">×</button>
-    <h4 class="modal-title" style="padding: 5px;color: #1c94c4;font-size: 20px;font-family:华文楷体;">后台门店管理员信息</h4>
-    <div style="border-radius: 5px ;border: 1px solid #CCCCCC;padding-top: 10px;text-align: center"></div>
-</div>
-<?php
-$tourl=\yii\helpers\Url::toRoute('/manager/view');
-$Js=<<<Js
-    click_pop('{$img_path}','{$tourl}');
-Js;
-    $this->registerJs($Js);
-?>
-<script type="text/javascript" src="<?=\yii\helpers\Url::to('@web/js/wine/pop.js') ?>"></script>

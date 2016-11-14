@@ -285,6 +285,9 @@ class OrderController extends ApiController{
                                 throw new Exception('保存订单信息出错');
                             }
                         }
+                        $cash_pay = 1;
+                        $ali_pay = 1;
+                        $we_pay = 1;
                         $details = $element->orderDetails;
                         $res = [];
                         if(!empty($details)){
@@ -292,6 +295,7 @@ class OrderController extends ApiController{
                                 if($element->type == 1){
                                     $type=1;
                                     $operate = 1;
+                                    $payArr = explode('|',$element->g->original_pay);
                                 }elseif ($element->type == 2){
                                     if($userInfo->is_vip==1){
                                         $type=2;
@@ -300,6 +304,7 @@ class OrderController extends ApiController{
                                         $type=2;
                                         $operate = 0;
                                     }
+                                    $payArr = explode('|',$element->g->vip_pay);
                                 }else{
                                     $goodQuery = GoodInfo::find()->joinWith(['merchant0','type0']);
                                     $goodQuery->joinWith('goodRush')->where(
@@ -311,10 +316,21 @@ class OrderController extends ApiController{
                                     if(empty($goodInfo)){
                                         $type=1;
                                         $operate = 1;
+                                        $payArr = explode('|',$goodInfo->original_pay);
                                     }else{
                                         $type=3;
                                         $operate = 1;
+                                        $payArr = explode('|',$goodInfo->goodRush->rush_pay);
                                     }
+                                }
+                                if(!in_array(1,$payArr)){
+                                    $cash_pay = 0;
+                                }
+                                if(!in_array(2,$payArr)){
+                                    $ali_pay = 0;
+                                }
+                                if(!in_array(3,$payArr)){
+                                    $we_pay = 0;
                                 }
                                 $res[]=[
                                     'good_id'=>$detail->gid,
@@ -339,8 +355,10 @@ class OrderController extends ApiController{
                             'pay_price'=>$element->pay_bill,
                             'order_date'=>date('Y-m-d H:i:s',$element->order_date),
                             'order_code'=>$element->order_code,
-                            'pay_mode'=>$element->pay_id,
                             'point'=>$element->point,
+                            'cash_pay'=>$cash_pay,
+                            'ali_pay'=>$ali_pay,
+                            'we_pay'=>$we_pay,
                             'detail'=>$res,
                         ];
                     }

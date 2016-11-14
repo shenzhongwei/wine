@@ -68,7 +68,7 @@ if(!empty($model->original_pay)){
                                 'label'=>'归属商户',
                                 'attribute'=>'merchant',
                                 'format' => 'raw',
-                                'value'=> Html::a($model->merchant0->name,['merchant/view', 'id' => $model->merchant0->id], ['title' => '查看商户信息','style'=>'color:#2a62bc;font-size:15px']),
+                                'value'=> Html::a($model->merchant0->name,['merchant/view', 'id' => $model->merchant0->id], ['title' => '查看商户信息','class'=>'btn btn-link btn-xs']),
                             ],
                             [
                                 'attribute'=>'type',
