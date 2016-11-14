@@ -28,7 +28,7 @@ use Yii;
  * @property OrderInfo[] $orderInfos
  * @property ShoppingCert[] $shoppingCerts
  * @property UserAddress[] $userAddresses
- * @property UserLogin[] $userLogins
+ * @property UserLogin $userLogin
  * @property UserPayPassword[] $userPayPasswords
  * @property UserPromotion[] $userPromotions
  * @property UserTicket[] $userTickets
@@ -129,9 +129,9 @@ class UserInfo extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUserLogins()
+    public function getUserLogin()
     {
-        return $this->hasMany(UserLogin::className(), ['uid' => 'id', 'status' => 'status']);
+        return $this->hasOne(UserLogin::className(), ['uid' => 'id', 'status' => 'status']);
     }
 
     public function getTicketInouts()

@@ -287,6 +287,9 @@ class UserController extends ApiController{
         if(empty($isExist)){
             return $this->showResult(303,'该用户尚未注册，请前往注册');
         }
+        if($isExist->userInfo->status == 0){
+            return $this->showResult(303,'该用户已被冻结，请联系客服查询');
+        }
         //判断密码
         if($isExist->password != md5(Yii::$app->params['pwd_pre'].$password)){
             return $this->showResult(303,'密码错误，请重新填写');

@@ -324,4 +324,12 @@ class Dics extends \yii\db\ActiveRecord
         }
         return ArrayHelper::map($data,'id','name');
     }
+
+    public static function GetPayModes(){
+        return ArrayHelper::map(self::findAll(['type'=>'付款方式']),'id','name');
+    }
+
+    public static function GetOrderState(){
+        return ArrayHelper::map(self::findAll(['type'=>'订单状态']),'id','name');
+    }
 }

@@ -104,6 +104,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                         'options'=>[
                             'style'=>'height:435px'
                         ],
+                        'labelColOptions' => ['style' => 'width: 40%'],
                         'attributes' => [
 
                             [

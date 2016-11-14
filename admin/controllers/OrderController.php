@@ -2,6 +2,7 @@
 
 namespace admin\controllers;
 
+use common\helpers\ArrayHelper;
 use Yii;
 use admin\models\OrderInfo;
 use admin\models\OrderInfoSearch;
@@ -13,7 +14,7 @@ use yii\filters\VerbFilter;
 /**
  * OrderController implements the CRUD actions for OrderInfo model.
  */
-class OrderController extends Controller
+class OrderController extends BaseController
 {
     public function behaviors()
     {
@@ -21,7 +22,7 @@ class OrderController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['post'],
+                    'delete' => ['post','get'],
                 ],
             ],
         ];
@@ -39,45 +40,11 @@ class OrderController extends Controller
         $dataProvider->pagination=[
                 'pageSize' => 15,
         ];
-        $dataProvider->sort=[
-            'defaultOrder' => [ 'id' => SORT_DESC]
-        ];
-        /*********************在gridview列表页面上直接修改数据 start*****************************************/
-        //获取前面一部传过来的值
-        if (Yii::$app->request->post('hasEditable')) {
-            $id = Yii::$app->request->post('editableKey'); //获取需要编辑的id
-            $model = $this->findModel($id);
-            $out = Json::encode(['output'=>'', 'message'=>'']);
-            //获取用户修改的参数（比如：手机号）
-            $posted = current($_POST['OrderInfo']); //输出数组中当前元素的值，默认初始指向插入到数组中的第一个元素。移动数组内部指针，使用next()和prev()
-
-            $post = ['OrderInfo' => $posted];
-            $output = '';
-            if ($model->load($post)) { //赋值
-                if(isset($posted['state'])){
-                    if($posted['state']==4){ //配送中 ，自动生成 物流编号
-                        $model->send_code=$this->gen_trade_no($id);
-                    }
-                    if($posted['state']==6){ //已收货，修改收货时间
-                        $model->send_date=time();
-                    }
-                }
-                $model->save(); //save()方法会先调用validate()再执行insert()或者update()
-                isset($posted['send_id']) && $output= $model->send->name; //配送人员名称
-                isset($posted['send_code']) && $output= $model->send_code; //物流编号
-                isset($posted['state']) && $output=OrderInfoSearch::getOrderstep($model->state); //订单进度
-            }
-            $out = Json::encode(['output'=>$output, 'message'=>'']);
-            echo $out;
-            return;
-        }
         /*******************在gridview列表页面上直接修改数据 end***********************************************/
             return $this->render('index', [
                 'dataProvider' => $dataProvider,
                 'searchModel' => $searchModel,
             ]);
-
-
     }
 
     /**
@@ -96,42 +63,9 @@ class OrderController extends Controller
         }
     }
 
-    /**
-     * Creates a new OrderInfo model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new OrderInfo;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-    }
 
-    /**
-     * Updates an existing OrderInfo model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
-    }
 
     /**
      * Deletes an existing OrderInfo model.
@@ -141,10 +75,116 @@ class OrderController extends Controller
      */
     public function actionDelete($id)
     {
-        $orderinfo =OrderInfo::findOne([$id]);
-        $orderinfo->status=0;
-        $orderinfo->save();
-        return $this->redirect(['index']);
+        $orderinfo =$this->findModel($id);
+        if($orderinfo->status == 0){
+            $orderinfo->status=1;
+        }else{
+            $orderinfo->status=0;
+        }
+        if($orderinfo->save()){
+            Yii::$app->session->setFlash('success','操作成功');
+        }else{
+            Yii::$app->session->setFlash('danger','操作失败');
+        }
+        return $this->redirect('index');
+    }
+
+    public function actionReceive()
+    {
+        $id = Yii::$app->request->get('id');
+        $orderinfo =$this->findModel($id);
+        if($orderinfo->state == 2){
+            $orderinfo->state=3;
+            if($orderinfo->save()){
+                Yii::$app->session->setFlash('success','接单成功');
+            }else{
+                Yii::$app->session->setFlash('danger','操作失败');
+            }
+        }elseif($orderinfo->state==1){
+            Yii::$app->session->setFlash('danger','订单未付款，无法接单');
+        }elseif ($orderinfo->state==99){
+            Yii::$app->session->setFlash('danger','订单已取消，无法接单');
+        }elseif ($orderinfo->state==100){
+            Yii::$app->session->setFlash('danger','订单已退款，无法接单');
+        }else{
+            Yii::$app->session->setFlash('danger','订单状态已更新，无法接单');
+        }
+        return $this->redirect(['view', 'id' => $orderinfo->id]);
+    }
+
+    public function actionPatch()
+    {
+        $keys = Yii::$app->request->post('keys');
+        $button = Yii::$app->request->post('button');
+        if(empty($keys)){
+            return $this->showResult(304,'非法请求');
+        }
+        $ids = '('.implode(',',$keys).')';
+        if($button == 'order_delete'){
+            $key = 'status';
+            $value = 1;
+            $valueTo = 0;
+        }elseif($button == 'order_recover'){
+            $key = 'status';
+            $value = 0;
+            $valueTo = 1;
+        }else{
+            return $this->showResult(304,'非法请求');
+        }
+        $orders = OrderInfo::find()->where("$key=$value and id in $ids")->one();
+        if(!empty($orders)){
+            $sql = "UPDATE order_info SET $key = $valueTo";
+            $sql .= " WHERE id IN $ids AND $key=$value";
+            $res = Yii::$app->db->createCommand($sql)->execute();
+            if(!empty($res)){
+                return $this->showResult(200,'操作成功');
+            }else{
+                return $this->showResult(400,'操作失败，请稍后重试');
+            }
+        }else{
+            return $this->showResult(200,'操作成功');
+        }
+    }
+
+    public function actionSend(){
+        $id = Yii::$app->request->get('id');
+        $orderinfo =$this->findModel($id);
+        if($orderinfo->state == 3){
+            $orderinfo->state=4;
+            if($orderinfo->save()){
+                Yii::$app->session->setFlash('success','发货成功');
+            }else{
+                Yii::$app->session->setFlash('danger','发货失败');
+            }
+        }elseif($orderinfo->state==1){
+            Yii::$app->session->setFlash('danger','订单未付款，无法接单');
+        }elseif ($orderinfo->state==99){
+            Yii::$app->session->setFlash('danger','订单已取消，无法接单');
+        }elseif ($orderinfo->state==100){
+            Yii::$app->session->setFlash('danger','订单已退款，无法接单');
+        }else{
+            Yii::$app->session->setFlash('danger','订单状态已更新，无法接单');
+        }
+        return $this->redirect(['view', 'id' => $orderinfo->id]);
+    }
+
+    public function actionPatchReceive()
+    {
+        $query = OrderInfo::Query();
+        $query->andWhere("state=2");
+        $orders = $query->all();
+        if(empty($orders)){
+            return $this->showResult(301,'暂无待接单状态的订单');
+        }else{
+            $ids = implode(',',array_values(ArrayHelper::getColumn($orders,'id')));
+            $sql = "UPDATE order_info SET `state`=3 WHERE id IN ($ids) AND `state`=2";
+            $row = Yii::$app->db->createCommand($sql)->execute();
+            if($row){
+                return $this->showResult(200,'接单成功');
+            }else{
+                return $this->showResult(400,'接单失败，稍后再试');
+            }
+        }
     }
 
     /**
@@ -162,6 +202,8 @@ class OrderController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
+
 
     /*获取物流编号*/
     public function gen_trade_no($id){
