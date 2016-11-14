@@ -16,7 +16,14 @@ $this->params['breadcrumbs'][] = $this->title;
 // here
 $this->registerJsFile("@web/js/good/_script.js");
 ?>
-
+<style>
+    #pic div{
+        height:198px;
+        width:100%;
+        overflow:hidden;
+        text-align: center;
+    }
+</style>
 <div class="">
     <div class="ibox-content">
         <div class="good-info-view">
@@ -38,6 +45,9 @@ $this->registerJsFile("@web/js/good/_script.js");
                         'condensed'=>true,
                         'striped'=>false,
                         'mode'=>DetailView::MODE_VIEW,
+                        'options'=>[
+                            'style'=>'height:435px'
+                        ],
                         'attributes' => [
 
                             [
@@ -103,67 +113,28 @@ $this->registerJsFile("@web/js/good/_script.js");
                 </div>
                 <div class="col-sm-4">
                     <?= DetailView::widget([
+                        'options'=>[
+                            'style'=>'height:435px',
+                            'id'=>'pic'
+                        ],
                         'model'=>$model,
                         'condensed'=>true,
                         'striped'=>false,
                         'mode'=>DetailView::MODE_VIEW,
                         'attributes' => [
-
                             [
-                                'attribute'=>'name',
-                                'value'=> $model->name,
+                                'attribute'=>'bus_pic',
+                                "format" => "raw",
+                                'value'=>Html::img('../../../photo'.$model->bus_pic,[
+                                    'height'=>"198px","onclick"=>"ShowImg(this);",'style'=>'cursor:pointer','title'=>"点击放大"
+                                ]),
                             ],
                             [
-                                'label'=>'归属商户',
-                                'attribute'=>'merchant',
-                                'format' => 'raw',
-                                'value'=> Html::a($model->merchant0->name,['merchant/view', 'id' => $model->merchant0->id], ['title' => '查看商户信息','class'=>'btn btn-link btn-xs']),
-                            ],
-                            [
-                                'label'=>'后台账号',
-                                'attribute'=>'wa_id',
-                                'format' => 'raw',
-                                'value'=> Html::a($model->wa->wa_name,['manager/update', 'id' => $model->wa->wa_id], ['title' => '查看后台登录信息','class'=>'btn btn-link btn-xs']),
-                            ],
-                            'contacter',
-                            'phone',
-                            [
-                                'attribute'=>'limit',
-                                'value'=> $model->limit.'米'
-                            ],
-                            [
-                                'label'=>'最低订单金额',
-                                'attribute'=>'least_money',
-                                'value'=> '¥'.$model->least_money
-                            ],
-                            [
-                                'label'=>'配送费',
-                                'attribute'=>'send_bill',
-                                'value'=> '¥'.$model->send_bill
-                            ],
-                            [
-                                'label'=>'免配送金额',
-                                'attribute'=>'no_send_need',
-                                'value'=> '¥'.$model->no_send_need
-                            ],
-                            [
-                                'label'=>'状态',
-                                'attribute' => 'is_active',
-                                'format' => 'raw',
-                                'value' => $model->is_active==0 ? '<label class="label label-danger">冻结中</label>':'<label class="label label-success">已激活</label>'
-
-                            ],
-                            [
-                                'label'=>$model->is_active == 0 ? '冻结时间':'激活时间',
-                                'attribute'=>'active_at',
-                                'format'=>["date", "php:Y年m月d日"],
-                                'value'=>$model->active_at,
-                            ],
-                            [
-                                'label'=>'入驻时间',
-                                'attribute'=>'regist_at',
-                                'format'=>["date", "php:Y年m月d日"],
-                                'value'=> $model->regist_at
+                                'attribute'=>'logo',
+                                "format" => "raw",
+                                'value'=>Html::img('../../../photo'.$model->logo,[
+                                    'height'=>"198px","onclick"=>"ShowImg(this);",'style'=>'cursor:pointer','title'=>"点击放大"
+                                ]),
                             ],
                         ],
                         'hAlign' =>DetailView::ALIGN_MIDDLE,

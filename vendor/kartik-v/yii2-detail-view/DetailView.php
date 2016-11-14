@@ -251,7 +251,7 @@ class DetailView extends \yii\widgets\DetailView
     /**
      * @var bool whether to enable edit mode for the detail view. Defaults to `true`.
      */
-    public $enableEditMode = true;
+    public $enableEditMode = false;
 
     /**
      * @var bool whether to hide rows in view mode if value is null or empty.

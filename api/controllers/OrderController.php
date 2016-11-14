@@ -127,7 +127,7 @@ class OrderController extends ApiController{
                 if($buyNum>=$goodRush->limit){
                     return $this->showResult(304,'您没有可购买的数量');
                 }
-                if(($buyNum+$value['amount'])>=$goodRush->limit){
+                if(($buyNum+$value['amount'])>$goodRush->limit){
                     return $this->showResult(304,'您购买的数量超出可购买的数量');
                 }
                 if($goodRush->price!=$value['unit_price']){
