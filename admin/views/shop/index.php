@@ -210,7 +210,6 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'title' => Yii::t('app', 'lock'),
                                 'class' => 'del btn btn-warning btn-xs',
                                 'data'=>['confirm'=>'确定冻结该店铺，一旦冻结，用户将无法看到该店铺的商品']
-
                             ]);
                         }elseif ($model->is_active == 0){
                             return Html::a(Yii::t('app', 'Unlock'), $url, [

@@ -257,7 +257,7 @@ $this->registerJsFile("@web/js/good/_script.js");
         });
         //实例化信息窗体
         var title = data.name+"<span class='loc'>("+data.lng/1000000+","+data.lat/1000000+")</span>", content = [];
-        content.push("<img src='http://tpc.googlesyndication.com/simgad/5843493769827749134'>地址："+data.province+data.city+data.district+data.region+data.address);
+        content.push("地址："+data.province+data.city+data.district+data.region+data.address);
         content.push("电话："+data.phone);
         content.push("经度："+data.lng/1000000);
         content.push("纬度："+data.lat/1000000);
