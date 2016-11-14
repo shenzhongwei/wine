@@ -295,7 +295,7 @@ class OrderController extends ApiController{
                                 if($element->type == 1){
                                     $type=1;
                                     $operate = 1;
-                                    $payArr = explode('|',$element->g->original_pay);
+                                    $payArr = explode('|',$detail->g->original_pay);
                                 }elseif ($element->type == 2){
                                     if($userInfo->is_vip==1){
                                         $type=2;
@@ -304,7 +304,7 @@ class OrderController extends ApiController{
                                         $type=2;
                                         $operate = 0;
                                     }
-                                    $payArr = explode('|',$element->g->vip_pay);
+                                    $payArr = explode('|',$detail->g->vip_pay);
                                 }else{
                                     $goodQuery = GoodInfo::find()->joinWith(['merchant0','type0']);
                                     $goodQuery->joinWith('goodRush')->where(
