@@ -7,7 +7,7 @@ use kartik\helpers\Html;
  */
 
 ?>
-<div class="user-order-index" style="padding: 0%">
+<div class="shop-order-index" style="padding: 0%">
 
     <?php
     echo GridView::widget([
@@ -21,7 +21,7 @@ use kartik\helpers\Html;
         'pjax'=>true,
         'pjaxSettings'=>[
             'options'=>[
-                'id'=>'userorder',
+                'id'=>'shoporder',
             ],
             'neverTimeout'=>true,
         ],
@@ -35,14 +35,14 @@ use kartik\helpers\Html;
                 'format'=>["date", "php:Y年m月d日"],
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
-                'width'=>'15%',
+                'width'=>'10%',
             ],
             [
                 'header' => '订单编号',
                 'attribute'=>'order_code',
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
-                'width'=>'15%',
+                'width'=>'10%',
                 'format' => 'html',
                 'value'=> function($model){
                     return Html::a($model->order_code,['order/view', 'id' => $model->id],
@@ -53,28 +53,45 @@ use kartik\helpers\Html;
             [
                 'header' => '总金额',
                 'attribute'=>'total',
-                'width'=>'15%',
+                'width'=>'10%',
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
             ],
             [
                 'header' => '优惠金额',
                 'attribute'=>'discount',
-                'width'=>'15%',
+                'width'=>'10%',
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
             ],
             [
+                'header' => '使用积分',
+                'attribute'=>'point',
+                'width'=>'10%',
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+            ],
+            [
+                'header' => '下单用户',
+                'attribute'=>'uid',
+                'width'=>'10%',
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+                'value'=>function($model){
+                    return $model->u->phone;
+                }
+            ],
+            [
                 'header' => '付款金额',
                 'attribute'=>'pay_bill',
-                'width'=>'15%',
+                'width'=>'10%',
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
             ],
             [
                 'header' => '付款方式',
                 'attribute'=>'pay_bill',
-                'width'=>'15%',
+                'width'=>'10%',
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
                 'value'=>function($model){
@@ -89,7 +106,7 @@ use kartik\helpers\Html;
             [
                 'header' => '进度',
                 'attribute'=>'state',
-                'width'=>'15%',
+                'width'=>'10%',
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
                 'format'=>'html',
@@ -128,7 +145,13 @@ use kartik\helpers\Html;
             ],
         ],
         'bordered'=>false,
-        'panel' => false,
+        'panel' => [
+            'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> 门店订单 </h3>',
+            'before'=>false,
+            'after'=>false,
+            'showPanel'=>false,
+            'showFooter'=>false
+        ],
         'responsive'=>false,
         'condensed'=>true,
     ]); ?>

@@ -3,10 +3,12 @@
 use yii\helpers\Html;
 use \kartik\detail\DetailView;
 use yii\helpers\Url;
+use admin\models\OrderInfo;
 
 /**
  * @var yii\web\View $this
  * @var admin\models\ShopInfo $model
+ * @var ActiveDataProvider $orders
  */
 
 $this->title = $model->name;
@@ -93,7 +95,7 @@ $this->registerJsFile("@web/js/good/_script.js");
             </p>
 
             <div class="row">
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                     <?= DetailView::widget([
                         'model'=>$model,
                         'condensed'=>true,
@@ -195,7 +197,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                         'vAlign' =>DetailView::ALIGN_CENTER,
                     ]) ?>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-5">
                     <?= DetailView::widget([
                         'options'=>[
                             'style'=>'height:435px'
@@ -217,6 +219,9 @@ $this->registerJsFile("@web/js/good/_script.js");
                         'vAlign' =>DetailView::ALIGN_CENTER,
                     ]) ?>
                 </div>
+            </div>
+            <div class="row">
+                <?= $this->render('_shoporder',['dataProvider'=>$orders]) ?>
             </div>
         </div>
     </div>

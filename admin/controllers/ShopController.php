@@ -3,10 +3,12 @@
 namespace admin\controllers;
 
 use admin\models\Admin;
+use admin\models\OrderInfo;
 use kartik\form\ActiveForm;
 use Yii;
 use admin\models\ShopInfo;
 use admin\models\ShopSearch;
+use yii\data\ActiveDataProvider;
 use yii\helpers\FileHelper;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -85,11 +87,14 @@ class ShopController extends BaseController
     public function actionView($id)
     {
         $model = $this->findModel($id);
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('view', ['model' => $model]);
-        }
+        $query = OrderInfo::find()->where(['sid'=>$model->id])->orderBy(['order_date'=>SORT_DESC]);
+        $userOrders = new ActiveDataProvider([
+            'query'=>$query,
+        ]);
+        $userOrders->pagination = [
+            'pageSize'=>5,
+        ];
+        return $this->render('view', ['model' => $model,'orders'=>$userOrders]);
     }
 
     public function actionValidForm(){

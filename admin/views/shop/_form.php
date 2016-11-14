@@ -251,7 +251,7 @@ $model->wa_username = $model->isNewRecord ? '':$model->wa_username;
 </div>
 <style>
     .modal-body{
-        height: 600px;
+        height: 00px;
         padding: 0px;
     }
     .modal-footer{
