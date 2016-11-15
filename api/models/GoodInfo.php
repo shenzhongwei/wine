@@ -317,7 +317,7 @@ class GoodInfo extends \yii\db\ActiveRecord
         $res = ArrayHelper::getColumn($arr,function($element){
             if(!empty($element->uid)){
                 $order = OrderDetail::find()->joinWith('o')->addSelect(["SUM(amount) as sum"])
-                    ->where("type=3 and state between 2 and 7 and uid=$element->uid and gid=".$element->gid." 
+                    ->where("type=3 and state between 1 and 7 and uid=$element->uid and gid=".$element->gid." 
                 and rush_id=$element->id and order_date>=$element->start_at and order_date<=$element->end_at")->one();
                 $buyNum =$order->sum;
                 $rest = $element->limit-$buyNum;

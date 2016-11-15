@@ -76,16 +76,18 @@ class OrderInfoSearch extends OrderInfo
         $query->andFilterWhere(['>=','total',$this->total])
             ->andFilterWhere(['>=','pay_bill',$this->pay_bill]);
         $query->andFilterWhere(['>=','(discount+(point/100))',$this->disc]);
-        if(empty($this->is_point) && $this->is_ticket!==''){
-            $query->andFilterWhere(['=', 'point', 0]);
-        }elseif($this->is_ticket>0){
-            $query->andFilterWhere(['>', 'point', 0]);
-        }
-        if(empty($this->is_ticket) && $this->is_ticket!==''){
-            $query->andFilterWhere(['=', 'ticket_id', 0]);
-        }elseif($this->is_ticket>0){
-            $query->andFilterWhere(['>', 'ticket_id', 0]);
-        }
+//        if(empty($this->is_point) && $this->is_ticket!==''){
+//            $query->andFilterWhere(['=', 'point', 0]);
+//        }elseif($this->is_point>0){
+//            $query->andFilterWhere(['>', 'point', 0]);
+//        }
+        $query->andFilterWhere([$this->is_point>0 ? '>':'=', 'point', 0]);
+        $query->andFilterWhere([$this->is_ticket>0 ? '>':'=', 'ticket_id', 0]);
+//        if(empty($this->is_ticket) && $this->is_ticket!==''){
+//            $query->andFilterWhere(['=', 'ticket_id', 0]);
+//        }elseif($this->is_ticket>0){
+//            $query->andFilterWhere(['>', 'ticket_id', 0]);
+//        }
         if(!empty($this->order_date)){
             $order_date = explode('to',str_replace(' ','',$this->order_date));
             $query->andFilterWhere(['between', 'order_info.order_date', strtotime("$order_date[0] 00:00:00"),strtotime("$order_date[1] 23:59:59")]);

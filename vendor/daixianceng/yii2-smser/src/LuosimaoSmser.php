@@ -19,6 +19,7 @@ class LuosimaoSmser extends Smser
      * @inheritdoc
      */
     public $username = 'api';
+
     
     /**
      * @var string
@@ -39,15 +40,15 @@ class LuosimaoSmser extends Smser
      * @var string
      */
     protected $urlXml = 'http://sms-api.luosimao.com/v1/send.xml';
-    
+
+    protected $patchUrlJson = 'http://sms-api.luosimao.com/v1/send_batch.json';
+
+    protected $patchUrlXml = 'http://sms-api.luosimao.com/v1/send_batch.xml';
     /**
      * @inheritdoc
      */
-    public function send($mobile, $content)
+    public function send($mobile, $content,$type=1)
     {
-//        if (parent::send($mobile, $content)) {
-//            return true;
-//        }
         
         $data = [
             'mobile' => $mobile,
@@ -55,7 +56,7 @@ class LuosimaoSmser extends Smser
         ];
         
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->getUrl());
+        curl_setopt($ch, CURLOPT_URL, $this->getUrl($type));
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -108,19 +109,20 @@ class LuosimaoSmser extends Smser
     
     /**
      * 获取请求地址
-     * 
+     *
+     * @var integer $type
      * @return string
      * @throws InvalidConfigException
      */
-    public function getUrl()
+    public function getUrl($type)
     {
         if ($this->url === null) {
             switch ($this->dataType) {
                 case 'json':
-                    $this->url = $this->urlJson;
+                    $this->url = $type==1 ? $this->urlJson:$this->patchUrlJson;
                     break;
                 case 'xml':
-                    $this->url = $this->urlXml;
+                    $this->url = $type==1 ? $this->urlXml:$this->patchUrlXml;
                     break;
                 default:
                     throw new InvalidConfigException('“dataType”配置错误！');

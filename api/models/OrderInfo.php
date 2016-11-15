@@ -2,6 +2,7 @@
 
 namespace api\models;
 
+use common\helpers\ArrayHelper;
 use daixianceng\smser\LuosimaoSmser;
 use Yii;
 use yii\base\Exception;
@@ -42,6 +43,8 @@ use yii\base\Exception;
  */
 class OrderInfo extends \yii\db\ActiveRecord
 {
+
+    public $phone;
     /**
      * @inheritdoc
      */
@@ -170,9 +173,19 @@ class OrderInfo extends \yii\db\ActiveRecord
         return $code;
     }
 
+
+    public static function HandleDetails(){
+
+    }
+
+    /**
+     * @param $user_id
+     * @return bool
+     */
+
     //自动取消订单
     public static function AutoCancelOrder($user_id){
-        $userOrders = self::find()->where(['and',"uid=$user_id",'state=1','order_date<'.(time()-1800)])->all();
+        $userOrders = self::find()->where(['and',"uid=$user_id",'state=1','order_date<'.(time()-900)])->all();
         if(!empty($userOrders)){
             $transaction = Yii::$app->db->beginTransaction();
             try{
@@ -217,6 +230,56 @@ class OrderInfo extends \yii\db\ActiveRecord
                 $phone = UserLogin::findOne(['uid'=>$user_id])->username;
                 $content = "您有订单由于长时间未付款，系统已为您自动取消!【双天酒易购】";
                 $smser->send($phone,$content);
+                return true;
+            }catch (Exception $e){
+                $transaction->rollBack();
+                return false;
+            }
+        }else{
+            return true;
+        }
+    }
+
+
+    /**
+     * 批量取消订单
+     */
+    public static function PatchCancelOrder(){
+        $userOrders = self::find()->joinWith(['u'])->addSelect(['order_info.*','user_info.phone as phone'])
+            ->where(['and','state=1','order_date<'.(time()-1800)])->one();
+        if(!empty($userOrders)){
+            $ticket_ids = implode(',',array_values(ArrayHelper::getColumn($userOrders,'ticket_id')));
+            $userTickets = UserTicket::find()->where("id in ($ticket_ids) and status=2")->one();
+            $transaction = Yii::$app->db->beginTransaction();
+            try{
+                if(!empty($userTickets)){
+                    //还原券状态
+                    $ticket_sql = "UPDATE user_ticket SET status = 1 WHERE id IN";
+                    $ticket_sql.=" (SELECT ticket_id FROM order_info WHERE `state`=1 AND order_date<".(time()-900)." AND ticket_id>0)";
+                    $ticketRows = Yii::$app->db->createCommand($ticket_sql)->execute();
+                    if(empty($ticketRows)){
+                        throw new Exception("修改券的状态出错");
+                    }
+                }
+                //将订单改为已取消
+                $order_sql = "UPDATE order_info SET `state`=100,`point`=0,`ticket_id`=0 WHERE `state`=1 AND order_date<".(time()-1800);
+                $orderRows = Yii::$app->db->createCommand($order_sql)->execute();
+                if(empty($orderRows)){
+                    throw new Exception("取消订单失败");
+                }
+
+                $transaction->commit();
+                /**
+                 * 批量发短信
+                 */
+                $userPhoneArr = array_values(array_unique(ArrayHelper::getColumn($userOrders,'phone')));
+                $phoneStr = implode(',',$userPhoneArr);
+                $smser = new LuosimaoSmser();
+//                $smser->username = Yii::$app->params['smsParams']['username'];
+//                $smser->setPassword(Yii::$app->params['smsParams']['password']);
+                $smser->setPassword(Yii::$app->params['smsParams']['api_key']);
+                $content = "您有订单由于长时间未付款，系统已为您自动取消!【双天酒易购】";
+                $smser->send($phoneStr,$content,2);
                 return true;
             }catch (Exception $e){
                 $transaction->rollBack();

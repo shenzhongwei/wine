@@ -105,7 +105,7 @@ class ProductController extends ApiController{
                         return $this->showResult(302,'用户信息状态异常');
                     }
                     $order = OrderDetail::find()->joinWith('o')->addSelect(["SUM(amount) as sum"])
-                        ->where("type=3 and state between 2 and 7 and uid=$userLogin->uid and gid=".$rushList->gid." and 
+                        ->where("type=3 and state between 1 and 7 and uid=$userLogin->uid and gid=".$rushList->gid." and 
                         rush_id=$rushList->id and order_date>=$rushList->start_at and order_date<=$rushList->end_at")->one();
                     $buyNum =$order->sum;
                     $rest = $rushList->limit-$buyNum;
@@ -504,7 +504,7 @@ class ProductController extends ApiController{
             $rush = $goodInfo->goodRush;
             if(!empty($user_id)){
                 $order = OrderDetail::find()->joinWith('o')->addSelect(["SUM(amount) as sum"])
-                    ->where("type=3 and state between 2 and 7 and uid=$user_id and gid=".$good_id." and 
+                    ->where("type=3 and state between 1 and 7 and uid=$user_id and gid=".$good_id." and 
                         rush_id= $rush->id and order_date>=$rush->start_at and order_date<=$rush->end_at")->one();
                 $buyNum =$order->sum;
                 $rest = $rush->limit-$buyNum;

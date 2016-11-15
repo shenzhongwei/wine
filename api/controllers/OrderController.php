@@ -121,7 +121,7 @@ class OrderController extends ApiController{
                     return $this->showResult(304,'该抢购商品剩余库存不足');
                 }
                 $order = OrderDetail::find()->joinWith('o')->addSelect(["SUM(amount) as sum"])
-                    ->where("type=3 and state between 2 and 7 and uid=$user_id and gid=".$value['good_id']." and rush_id=$goodRush->id and
+                    ->where("type=3 and state between 1 and 7 and uid=$user_id and gid=".$value['good_id']." and rush_id=$goodRush->id and
                     order_date>=$goodRush->start_at and order_date<=$goodRush->end_at")->one();
                 $buyNum =$order->sum;
                 if($buyNum>=$goodRush->limit){
@@ -288,15 +288,20 @@ class OrderController extends ApiController{
                         $cash_pay = 1;
                         $ali_pay = 1;
                         $we_pay = 1;
+                        $can_pay = 1;
                         $details = $element->orderDetails;
                         $res = [];
+                        //判断商品类型
                         if(!empty($details)){
                             foreach ($details as $detail){
-                                if($element->type == 1){
+                                if(empty($detail->g)){
+                                    continue;
+                                }
+                                if($element->type == 1){//一般
                                     $type=1;
                                     $operate = 1;
                                     $payArr = explode('|',$detail->g->original_pay);
-                                }elseif ($element->type == 2){
+                                }elseif ($element->type == 2){//会员
                                     if($userInfo->is_vip==1){
                                         $type=2;
                                         $operate = 1;
@@ -305,23 +310,29 @@ class OrderController extends ApiController{
                                         $operate = 0;
                                     }
                                     $payArr = explode('|',$detail->g->vip_pay);
-                                }else{
-                                    $goodQuery = GoodInfo::find()->joinWith(['merchant0','type0']);
-                                    $goodQuery->joinWith('goodRush')->where(
-                                        "good_info.id=$detail->gid and good_rush.is_active=1 and good_rush.id>0 and start_at<=".time()." and end_at>=".time());
-                                    $goodQuery->andWhere('good_info.is_active=1 and merchant>0 
-                                    and merchant_info.id>0 and merchant_info.is_active=1 
-                                    and good_info.type>0 and good_type.is_active=1 and good_type.id>0');
-                                    $goodInfo = $goodQuery->one();
-                                    if(empty($goodInfo)){
-                                        $type=1;
-                                        $operate = 1;
-                                        $payArr = explode('|',$goodInfo->original_pay);
+                                }elseif($element->type == 3){//抢购
+                                    if(empty($detail->rush_id)){
+                                        continue;
                                     }else{
+                                        $goodRush = GoodRush::findOne($detail->rush_id);
+                                    }
+                                    $order = OrderDetail::find()->joinWith('o')->addSelect(["SUM(amount) as sum"])
+                                        ->where("type=3 and state between 2 and 7 and uid=$user_id and gid=".$detail->gid." and rush_id=$detail->rush_id
+                                         and order_date>=$goodRush->start_at and order_date<=$goodRush->end_at")->one();
+                                    if($order->sum>=$goodRush->limit){
+                                        $can_pay=0;
+                                    }
+                                    if($goodRush->is_active==1&&$goodRush->start_at<=time()&&$goodRush->end_at>=time()){
                                         $type=3;
                                         $operate = 1;
-                                        $payArr = explode('|',$goodInfo->goodRush->rush_pay);
+                                        $payArr = explode('|',$goodRush->rush_pay);
+                                    }else{
+                                        $type=1;
+                                        $operate = 1;
+                                        $payArr = explode('|',$goodRush->rush_pay);
                                     }
+                                }else{
+                                    continue;
                                 }
                                 if(!in_array(1,$payArr)){
                                     $cash_pay = 0;
@@ -356,6 +367,7 @@ class OrderController extends ApiController{
                             'order_date'=>date('Y-m-d H:i:s',$element->order_date),
                             'order_code'=>$element->order_code,
                             'point'=>$element->point,
+                            'can_pay'=>$can_pay,
                             'cash_pay'=>$cash_pay,
                             'ali_pay'=>$ali_pay,
                             'we_pay'=>$we_pay,

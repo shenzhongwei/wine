@@ -113,8 +113,25 @@ class ReportSearch extends OrderDetail
             '(order_info.pay_bill-cost.cost-order_info.send_bill) as profit'
         ])->where("state between 2 and 7");
         if($admin_type==3){
-            $merchant_info = MerchantInfo::findOne(['wa_id'=>$admin_id]);
-            $query->andWhere("good_info.merchant=$merchant_info->id");
+            $manager = MerchantInfo::findOne(['wa_id'=>$admin_id]);
+            if(!empty($manager)){
+                $shops = ShopInfo::find()->where(['merchant'=>$manager->id])->all();
+                $idArr = array_values(ArrayHelper::getColumn($shops,'id'));
+                if(!empty($idArr)){
+                    $query->andWhere("order_info.sid in (".implode(',',$idArr).")");
+                }else{
+                    $query->andWhere('order_info.sid=0');
+                }
+            }else{
+                $query->andWhere('order_info.sid=0');
+            }
+        }elseif ($admin_type==4){
+            $manager = ShopInfo::findOne(['wa_id'=>$admin_id]);
+            if(!empty($manager)){
+                $query->andWhere("order_info.sid=$manager->id");
+            }else{
+                $query->andWhere('order_info.sid=0');
+            }
         }
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
