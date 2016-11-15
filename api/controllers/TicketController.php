@@ -36,7 +36,7 @@ class TicketController extends ApiController{
             }else{
                 return $this->showResult(301,'获取数据异常');
             }
-            $query->addSelect(['*',"CASE `status` WHEN 1 THEN 99 ELSE `status` END as `order`"]);
+            $query->addSelect(['user_ticket.*',"CASE `status` WHEN 1 THEN 99 ELSE `status` END as `order`"]);
             $query->orderBy(["`order`"=>SORT_DESC,'promotion_info.`discount`'=>SORT_DESC]);
             $query->offset(($page-1)*$pageSize)->limit($pageSize);
             $userTickets = $query->all();
