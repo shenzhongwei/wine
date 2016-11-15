@@ -396,7 +396,7 @@ class GoodInfo extends \yii\db\ActiveRecord
      */
     public static function data($arr=[]){
         $res = ArrayHelper::getColumn($arr,function($element){
-            $payArr = explode('|',$element->vip_pay);
+            $payArr = explode('|',$element->original_pay);
             return [
                 'good_id'=>$element->id,
                 'pic'=>Yii::$app->params['img_path'].$element->pic,
