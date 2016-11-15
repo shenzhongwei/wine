@@ -132,13 +132,58 @@ class JPush extends Object{
             return false;
         }
     }
-
-    public function pushByIdarr($tagArr,$content='',$type=1,$target=0,$m_txt='',$m_time='60',$title){
+    public function pushAll($content='',$type=1,$target=0,$m_txt='',$m_time='60',$title=''){
         $base64= $type == 1 ? base64_encode(JPushConfig::APPKEY.':'.JPushConfig::MASTERSECRET):base64_encode(JPushConfig::APPKEY_COM.':'.JPushConfig::MASTERSECRET_COM);
         $header=array('Authorization:Basic '.$base64,"Content-Type:application/json");
         $data = array();
         $data['platform'] = ['android','ios'];          //目标用户终端手机的平台类型android,ios,winphone
-        $data['audience']['registration_id'] = array_values($tagArr);//目标用户
+        $data['audience'] = 'all';//目标用户
+        $data['notification'] = array(
+            //统一的模式--标准模式
+//            "alert"=>$content,
+            //安卓自定义
+            "android"=>array(
+                "alert"=>$content,
+                "title"=>$title,
+                "builder_id"=>1,
+                "extras"=>array("target"=>$target, "txt"=>$m_txt)
+            ),
+            //ios的自定义
+            "ios"=>array(
+                "alert"=>$content,
+                "badge"=>"1",
+                "sound"=>"default",
+                "extras"=>array("target"=>$target, "txt"=>$m_txt)
+            ),
+        );
+
+        //苹果自定义---为了弹出值方便调测
+        $data['message'] = array(
+            "msg_content"=>$content,
+            "extras"=>array("target"=>$target, "txt"=>$m_txt)
+        );
+
+        //附加选项
+        $data['options'] = array(
+            "sendno"=>time(),
+            "time_to_live"=>$m_time, //保存离线时间的秒数默认为一天
+            "apns_production"=>1,        //指定 APNS 通知发送环境：0开发环境，1生产环境。
+        );
+        $param = json_encode($data);
+        $res = $this->push_curl($param,$header);
+        if($res){       //得到返回值--成功已否后面判断
+            return json_decode($res);
+        }else{          //未得到返回值--返回失败
+            return false;
+        }
+    }
+
+    public function pushByIdarr($tagArr,$content='',$type=1,$target=0,$m_txt='',$m_time='60',$title=''){
+        $base64= $type == 1 ? base64_encode(JPushConfig::APPKEY.':'.JPushConfig::MASTERSECRET):base64_encode(JPushConfig::APPKEY_COM.':'.JPushConfig::MASTERSECRET_COM);
+        $header=array('Authorization:Basic '.$base64,"Content-Type:application/json");
+        $data = array();
+        $data['platform'] = ['android','ios'];          //目标用户终端手机的平台类型android,ios,winphone
+        $data['audience']['registration_id'] = array_values(array_unique($tagArr));//目标用户
         $data['notification'] = array(
             //统一的模式--标准模式
 //            "alert"=>$content,

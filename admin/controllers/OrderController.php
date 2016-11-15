@@ -2,11 +2,14 @@
 
 namespace admin\controllers;
 
+use admin\models\EmployeeInfo;
 use admin\models\OrderSend;
 use common\helpers\ArrayHelper;
+use common\jpush\JPush;
 use Yii;
 use admin\models\OrderInfo;
 use admin\models\OrderInfoSearch;
+use yii\base\Exception;
 use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -90,6 +93,37 @@ class OrderController extends BaseController
         return $this->redirect('index');
     }
 
+    public function actionArrive($id)
+    {
+        $orderinfo =$this->findModel($id);
+        $transaction = Yii::$app->db->beginTransaction();
+        try{
+            if($orderinfo->state==4){
+                $orderinfo->state=5;
+                if(!$orderinfo->save()){
+                    throw new Exception('修改订单状态出错');
+                }
+            }else{
+                throw new Exception('订单状态已变更，无法确认');
+            }
+            if(!empty($orderinfo->send_id)){
+                $sender = EmployeeInfo::findOne($orderinfo->send_id);
+                if(!empty($sender)&&$sender->status==2){
+                    $sender->status=1;
+                    if(!$sender->save()){
+                        throw new Exception('修改配送人员状态出错');
+                    }
+                }
+            }
+            $transaction->commit();
+            Yii::$app->session->setFlash('success','操作成功');
+        }catch (Exception $e){
+            $transaction->rollBack();
+            Yii::$app->session->setFlash('danger',$e->getMessage());
+        }
+        return $this->redirect('index');
+    }
+
     public function actionReceive()
     {
         $id = Yii::$app->request->get('id');
@@ -129,38 +163,62 @@ class OrderController extends BaseController
             $key = 'status';
             $value = 0;
             $valueTo = 1;
+        }elseif($button == 'order_arrive'){
+            $key = 'state';
+            $value = 4;
+            $valueTo = 5;
         }else{
             return $this->showResult(304,'非法请求');
         }
         $orders = OrderInfo::find()->where("$key=$value and id in $ids")->one();
         if(!empty($orders)){
-            $sql = "UPDATE order_info SET $key = $valueTo";
-            $sql .= " WHERE id IN $ids AND $key=$value";
-            $res = Yii::$app->db->createCommand($sql)->execute();
-            if(!empty($res)){
+            $transaction = Yii::$app->db->beginTransaction();
+            try{
+                $sql = "UPDATE order_info SET $key = $valueTo";
+                $sql .= " WHERE id IN $ids AND $key=$value";
+                if($button == 'order_arrive'){
+                    $send_ids = implode(',',array_values(array_unique(ArrayHelper::getColumn($orders,'send_id'))));
+                    $sends = EmployeeInfo::find()->where("id in ($ids) and status=2");
+                    if(!empty($sends)){
+                        $send_sql = "UPDATE employee_info SET `status`=1 WHERE id in ($ids) AND `status`=2";
+                        $sendRow = Yii::$app->db->createCommand($sql)->execute();
+                        if(empty($sendRow)){
+                            throw new  Exception("修改配送人员状态出错");
+                        }
+                    }
+                }
+                $res = Yii::$app->db->createCommand($sql)->execute();
+                if(empty($res)){
+                    throw new  Exception("订单状态出错");
+                }
+                $transaction->commit();
                 return $this->showResult(200,'操作成功');
-            }else{
-                return $this->showResult(400,'操作失败，请稍后重试');
+            }catch (Exception $e){
+                $transaction->rollBack();
+                return $this->showResult(400,$e->getMessage());
             }
         }else{
-            return $this->showResult(200,'操作成功');
+            return $this->showResult(303,'您选择的订单无法执行该操作');
         }
     }
 
     public function actionSend(){
         $key = Yii::$app->request->post('key');
         $id = Yii::$app->request->post('id');
+//        var_dump($id);
+//        exit;
         $model = new OrderSend();
-        if($key='single'){
+        if($key=='single'){
             $model->id_str = $id;
-        }elseif ($key='patch'){
+        }elseif ($key=='patch'){
             $model->id_str = implode(',',$id);
         }else{
             $model->id_str = '';
         }
-        return $this->render('send',['model'=>$model]);
+        return $this->renderAjax('send',['model'=>$model]);
     }
 
+    //接单
     public function actionPatchReceive()
     {
         $query = OrderInfo::Query();
@@ -180,6 +238,68 @@ class OrderController extends BaseController
         }
     }
 
+    //配送订单
+    public function actionSendOrder(){
+        $post = Yii::$app->request->post('OrderSend');
+        $send_id = $post['send_id'];
+        $ids = $post['id_str'];
+        $send_now = $post['send_now'];
+        $employee = EmployeeInfo::findOne($send_id);
+        if($employee->status<>1){
+            if($employee->status == 0){
+                Yii::$app->session->setFlash('danger','该人员已被删除');
+            }elseif($employee->status == 2){
+                Yii::$app->session->setFlash('danger','该人员已在配送商品中，无法派单');
+            }elseif($employee->status == 3){
+                Yii::$app->session->setFlash('danger','该人员已下岗');
+            }
+            return $this->redirect(['index',"OrderInfoSearch[step]"=>3]);
+        }
+        if(empty($ids)){
+            Yii::$app->session->setFlash('danger','未获取到您提交的订单信息');
+            return $this->redirect(['index',"OrderInfoSearch[step]"=>3]);
+        }
+        $orders = OrderInfo::find()->where("state=3 and id in ($ids)")->all();
+        if(empty($orders)){
+            Yii::$app->session->setFlash('danger','您所提交的订单非待配送中的订单');
+            return $this->redirect(['index',"OrderInfoSearch[step]"=>3]);
+        }
+        $transaction = Yii::$app->db->beginTransaction();
+        try{
+            $send_code = $this->gen_trade_no();
+            $sql = "UPDATE order_info SET send_id = $send_id, state=4,send_code=CONCAT('$send_code',id) WHERE id in ($ids) AND state=3";
+            $rows = Yii::$app->db->createCommand($sql)->execute();
+            if(empty($rows)){
+                throw new Exception('修改订单出错');
+            }
+            $employee->status = $send_now;
+            if(!$employee->save()){
+                throw new Exception('修改配送人员状态出错');
+            }
+            $userReg = [];
+            $message_sql = "INSERT INTO message_list VALUES ";
+            foreach ($orders as $order){
+                $message_sql.="(NULL,3,'订单配送中','订单编号为$order->order_code 的订单正在配送中',$order->id,3,0,'".date('Y-m-d')."'),";
+                if(!empty($order->u)&&!empty($order->u->userLogin)&&!empty($order->u->userLogin->reg_id)){
+                    $userReg[]=$order->u->userLogin->reg_id;
+                }
+            }
+            $messageRows = $rows = Yii::$app->db->createCommand(rtrim($message_sql,','))->execute();
+            if(empty($messageRows)){
+                throw new Exception('保存订单消息出错');
+            }
+            $transaction->commit();
+            if(!empty($userReg)){
+                $jpush = new JPush();
+                $res = $jpush->pushByIdarr($userReg,'您的订单开始配送啦，点击查看',1,4);
+            }
+            Yii::$app->session->setFlash('success','发货成功');
+            return $this->redirect(['index',"OrderInfoSearch[step]"=>4]);
+        }catch (Exception $e){
+            Yii::$app->session->setFlash('danger',$e->getMessage());
+            return $this->redirect(['index',"OrderInfoSearch[step]"=>3]);
+        }
+    }
     /**
      * Finds the OrderInfo model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
@@ -199,10 +319,10 @@ class OrderController extends BaseController
 
 
     /*获取物流编号*/
-    public function gen_trade_no($id){
+    public function gen_trade_no(){
         $str = 'abcdefghijklmnopqrstuvwxyz';
         $length = strlen($str) - 1;
         $strs = $str[rand(0,$length)].$str[rand(0,$length)];
-        return $strs.date('His').$id;
+        return strtoupper($strs.date('MdHis'));
     }
 }

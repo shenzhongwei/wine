@@ -3,6 +3,8 @@
 namespace admin\controllers;
 
 use admin\models\OrderInfo;
+use admin\models\Push;
+use common\jpush\JPush;
 use Yii;
 use admin\models\UserInfo;
 use admin\models\UserInfoSearch;
@@ -127,6 +129,21 @@ class UserController extends Controller
         $user->updated_time = date('Y-m-d H:i:s');
         $user->save();
         return $this->redirect(['index']);
+    }
+
+    public function actionPush(){
+        $post = Yii::$app->request->post('Push');
+        $content = $post['content'];
+        if(!empty($content)){
+            $push = new JPush();
+            $res = $push->pushAll($content,1,1);
+            if(!empty($res->sendno)&&!empty($res->msg_id)){
+                Yii::$app->session->setFlash('success','推送成功');
+            }else{
+                Yii::$app->session->setFlash('danger','推送失败');
+            }
+        }
+        return $this->render('push',['model'=>new Push()]);
     }
 
     public function actionDeleteImg($id)

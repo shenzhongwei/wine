@@ -48,9 +48,10 @@ use kartik\helpers\Html;
                 'class' => 'kartik\grid\ActionColumn',
                 'buttons' => [
                     'view' => function ($url, $model) {
-                        return Html::a('<i class="fa fa-send"> 发送推送</i>', '#', [
-                            'class' => 'del btn btn-success btn-xs',
-                        ]);
+//                        return Html::a('<i class="fa fa-send"> 发送推送</i>', '#', [
+//                            'class' => 'del btn btn-success btn-xs',
+//                        ]);
+                        return '';
                     },
                     'update' => function ($url, $model) {
                         return '';

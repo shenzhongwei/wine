@@ -176,10 +176,10 @@ $count = $dataProvider->totalCount;
                 }
             );
         });
+        $("#head-modal").on("hidden.bs.modal", function () {
+            $("#ad-form")[0].reset();//重置表单
+        });
         $('.ui-autocomplete').css('z-index','99999');
         $('.datepicker-days').css('z-index','99999');
     }
-    $("#head-modal").on("hidden.bs.modal", function () {
-        $("#ad-form")[0].reset();//重置表单
-    });
 </script>

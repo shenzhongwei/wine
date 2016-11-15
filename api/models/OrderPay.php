@@ -122,8 +122,8 @@ class OrderPay extends \yii\db\ActiveRecord
                  * 4、若是送余额则为用户的账户添加对应金额，同事生成账户明细
                  * 5、查看用户是否使用积分，若使用，则存入数据库
                  */
-                $historyOrder = OrderInfo::find()->where(['and','uid='.$orderInfo->uid,'state>=2','state<99'])->one();//1
-                if(empty($historyOrder)){//2
+//                $historyOrder = OrderInfo::find()->where(['and','uid='.$orderInfo->uid,'state>=2','state<99'])->one();//1
+//                if(empty($historyOrder)){//2
                     $invitedUser = UserInfo::findOne($userInfo->invite_user_id);
                     if(!empty($invitedUser)&&!empty($invitedUser->userLogin)){
                         $inviteLogin = $invitedUser->userLogin;
@@ -153,7 +153,7 @@ class OrderPay extends \yii\db\ActiveRecord
                             }
                         }
                     }
-                }
+//                }
             }
             $orderInfo->state=2;
             $orderInfo->pay_date = time();

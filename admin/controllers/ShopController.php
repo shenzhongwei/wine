@@ -87,10 +87,18 @@ class ShopController extends BaseController
     public function actionView($id)
     {
         $model = $this->findModel($id);
-        $query = OrderInfo::find()->where(['sid'=>$model->id])->orderBy(['order_date'=>SORT_DESC]);
+        $query = OrderInfo::find()->where(['sid'=>$model->id]);
+        $query->addSelect(['order_info.*','(CASE state WHEN 1 THEN 98 ELSE state END) as step']);
         $userOrders = new ActiveDataProvider([
             'query'=>$query,
         ]);
+        $sort = $userOrders->getSort();
+        $sort->attributes['step'] = [
+            'asc' => ['step' => SORT_ASC],
+            'desc' => ['step' => SORT_DESC],
+            'label' => 'step',
+        ];
+        $sort->defaultOrder = ['step'=>SORT_ASC,'order_date'=>SORT_ASC];
         $userOrders->pagination = [
             'pageSize'=>5,
         ];

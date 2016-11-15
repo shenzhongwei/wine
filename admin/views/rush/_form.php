@@ -54,9 +54,9 @@ $payArr = [
                             ],
                         ],
 
-                        'limit'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'请填写每单最大可购数量','onkeyup'=>'this.value=this.value.replace(/\D/gi,"")']],
-
                         'amount'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'请填写用于抢购库存','onkeyup'=>'this.value=this.value.replace(/\D/gi,"")']],
+
+                        'limit'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'请填写每单最大可购数量','onkeyup'=>'this.value=this.value.replace(/\D/gi,"")']],
 
 //            'is_active'=>['type'=> Form::INPUT_TEXT, 'options'=>['placeholder'=>'Enter 是否上架...']],
 

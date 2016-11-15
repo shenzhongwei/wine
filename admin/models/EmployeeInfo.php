@@ -20,7 +20,7 @@ use Yii;
  */
 class EmployeeInfo extends \yii\db\ActiveRecord
 {
-
+    public $num;
     /**
      * @inheritdoc
      */
@@ -68,17 +68,7 @@ class EmployeeInfo extends \yii\db\ActiveRecord
         return $this->hasMany(OrderInfo::className(), ['send_id' => 'id']);
     }
 
-    /*
-     * 获取所有的配送人员
-     */
-    public static function getAllemployee(){
-        $model=self::find()->select(['id','name'])->andWhere(['!=','status',0])->asArray()->all();
-        $query=array();
-        foreach($model as $k=>$v){
-            $query[$v['id']]=$v['name'];
-        }
-            return $query;
-    }
+
 
     public static function getOwners($type){
         switch($type){
@@ -97,6 +87,53 @@ class EmployeeInfo extends \yii\db\ActiveRecord
             $results = ArrayHelper::map($model,'id','name');
         }
         return $results;
+    }
+
+    /**
+     * 获取所有可以配送人员列表
+     */
+    public static function GetAllEmployee(){
+        $admin = Yii::$app->user->identity;
+        $admin_type = $admin->wa_type;
+        $admin_id = $admin->id;
+        $query = self::find()->where("`status`=1");
+        if($admin_type==3){
+            $manager = MerchantInfo::findOne(['wa_id'=>$admin_id]);
+            if(!empty($manager)){
+                $shops = ShopInfo::find()->where(['merchant'=>$manager->id])->all();
+                $idArr = array_values(ArrayHelper::getColumn($shops,'id'));
+                if(!empty($idArr)){
+                    $query->andWhere("owner_id in (".implode(',',$idArr).")");
+                }else{
+                    $query->andWhere('owner_id=0');
+                }
+            }else{
+                $query->andWhere('owner_id=0');
+            }
+        }elseif ($admin_type==4){
+            $manager = ShopInfo::findOne(['wa_id'=>$admin_id]);
+            if(!empty($manager)){
+                $query->andWhere("owner_id=$manager->id");
+            }else{
+                $query->andWhere('owner_id=0');
+            }
+        }
+        $query->leftJoin(
+            "(SELECT send_id,count(*) AS num FROM order_info WHERE state=4 GROUP BY send_id) a",'a.send_id=employee_info.id');
+        $query->addSelect(['employee_info.*','IFNULL(num,0) AS num']);
+        $employees = $query->all();
+        if(empty($employees)){
+            return [
+                0=>'暂无待发中的配送员'
+            ];
+        }else{
+            return ArrayHelper::map(ArrayHelper::getColumn($employees,function($element){
+                return [
+                    'id'=>$element->id,
+                    'name'=>$element->name."(待配送订单数：$element->num)"
+                ];
+            }),'id','name');
+        }
     }
 
 }

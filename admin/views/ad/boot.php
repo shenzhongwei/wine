@@ -136,6 +136,8 @@ $count = $dataProvider->totalCount;
             url = $(this).text();
             window.open('http://'+url);
         });
+        $('.ui-autocomplete').css('z-index','99999');
+        $('.datepicker-days').css('z-index','99999');
         $('.add').on('click', function () {  //查看详情的触发事件
             $('.ad-list-form').remove();
             $('#boot-modal').find('.modal-title').html('新增启动图');
@@ -154,10 +156,8 @@ $count = $dataProvider->totalCount;
                 }
             );
         });
-        $('.ui-autocomplete').css('z-index','99999');
-        $('.datepicker-days').css('z-index','99999');
+        $("#boot-modal").on("hidden.bs.modal", function () {
+            $("#ad-form")[0].reset();//重置表单
+        });
     }
-    $("#boot-modal").on("hidden.bs.modal", function () {
-        $("#ad-form")[0].reset();//重置表单
-    });
 </script>
