@@ -27,7 +27,7 @@ class TicketController extends ApiController{
         }
         if(UserTicket::AutoOverTimeTicket($user_id)){
             $pageSize = Yii::$app->params['pageSize'];
-            $query = UserTicket::find()->joinWith('p')->where(['uid'=>$user_id]);
+            $query = UserTicket::find()->joinWith('p')->where("uid=$user_id");
             if($type==1){
                 $count = $query->count();
             }elseif($type==2){

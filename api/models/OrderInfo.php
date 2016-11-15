@@ -246,10 +246,12 @@ class OrderInfo extends \yii\db\ActiveRecord
      */
     public static function PatchCancelOrder(){
         $userOrders = self::find()->joinWith(['u'])->addSelect(['order_info.*','user_info.phone as phone'])
-            ->where(['and','state=1','order_date<'.(time()-1800)])->one();
+            ->where(['and','state=1','order_date<'.(time()-900)])->one();
         if(!empty($userOrders)){
             $ticket_ids = implode(',',array_values(ArrayHelper::getColumn($userOrders,'ticket_id')));
             $userTickets = UserTicket::find()->where("id in ($ticket_ids) and status=2")->one();
+            $rushOrders = OrderDetail::find()->joinWith(['o','r'])
+                ->where("type=3 and state=1 and order_info.id>0 and good_rush.id>0 and order_date<".(time()-900))->one();
             $transaction = Yii::$app->db->beginTransaction();
             try{
                 if(!empty($userTickets)){
@@ -267,7 +269,17 @@ class OrderInfo extends \yii\db\ActiveRecord
                 if(empty($orderRows)){
                     throw new Exception("取消订单失败");
                 }
-
+                if(!empty($rushOrders)){
+                    $rush_sql = "UPDATE good_rush m LEFT JOIN (SELECT a.id,a.amount,IFNULL(SUM(b.amount),0) as num FROM good_rush a ".
+                        "LEFT JOIN (SELECT c.amount,c.rush_id FROM order_detail c LEFT JOIN order_info d on c.oid=d.id ".
+                        "WHERE d.state=1 AND d.type=3 AND d.id>0 AND c.id>0 AND d.order_date<".(time()-900).") b ".
+                        "on a.id=b.rush_id GROUP BY a.id) n ON m.id=n.id SET m.`amount`=(m.`amount`+n.num) ";
+                    $rushRows = Yii::$app->db->createCommand($rush_sql)->execute();
+                    if(empty($rushRows)){
+                        throw new Exception("返回抢购库存失败");
+                    }
+                }
+                //返回抢购库存
                 $transaction->commit();
                 /**
                  * 批量发短信

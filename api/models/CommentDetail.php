@@ -91,7 +91,7 @@ class CommentDetail extends \yii\db\ActiveRecord
                 'user'=>$nickName,
                 'phone'=>$phone,
                 'comment_at'=>empty($element->c) ? '失效':date('Y-m-d',$element->c->add_at),
-                'content'=>$element->content,
+                'content'=>empty($element->content) ? '':$element->content,
             ];
         });
         return $res;
