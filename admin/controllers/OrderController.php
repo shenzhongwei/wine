@@ -2,6 +2,7 @@
 
 namespace admin\controllers;
 
+use admin\models\OrderSend;
 use common\helpers\ArrayHelper;
 use Yii;
 use admin\models\OrderInfo;
@@ -40,12 +41,12 @@ class OrderController extends BaseController
         $dataProvider->pagination=[
                 'pageSize' => 15,
         ];
-        /*******************在gridview列表页面上直接修改数据 end***********************************************/
-            return $this->render('index', [
-                'dataProvider' => $dataProvider,
-                'searchModel' => $searchModel,
-            ]);
+        return $this->render('index', [
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+        ]);
     }
+
 
     /**
      * Displays a single OrderInfo model.
@@ -147,25 +148,17 @@ class OrderController extends BaseController
     }
 
     public function actionSend(){
-        $id = Yii::$app->request->get('id');
-        $orderinfo =$this->findModel($id);
-        if($orderinfo->state == 3){
-            $orderinfo->state=4;
-            if($orderinfo->save()){
-                Yii::$app->session->setFlash('success','发货成功');
-            }else{
-                Yii::$app->session->setFlash('danger','发货失败');
-            }
-        }elseif($orderinfo->state==1){
-            Yii::$app->session->setFlash('danger','订单未付款，无法接单');
-        }elseif ($orderinfo->state==99){
-            Yii::$app->session->setFlash('danger','订单已取消，无法接单');
-        }elseif ($orderinfo->state==100){
-            Yii::$app->session->setFlash('danger','订单已退款，无法接单');
+        $key = Yii::$app->request->post('key');
+        $id = Yii::$app->request->post('id');
+        $model = new OrderSend();
+        if($key='single'){
+            $model->id_str = $id;
+        }elseif ($key='patch'){
+            $model->id_str = implode(',',$id);
         }else{
-            Yii::$app->session->setFlash('danger','订单状态已更新，无法接单');
+            $model->id_str = '';
         }
-        return $this->redirect(['view', 'id' => $orderinfo->id]);
+        return $this->render('send',['model'=>$model]);
     }
 
     public function actionPatchReceive()

@@ -271,6 +271,14 @@ class GoodController extends BaseController
         $model = new GoodInfo();
         $post = Yii::$app->request->post();
         if(!empty($post)){
+            $post['GoodInfo']['brand'] = empty($post['GoodInfo']['brand']) ? null:$post['GoodInfo']['brand'];
+            $post['GoodInfo']['color'] = empty($post['GoodInfo']['color']) ? null:$post['GoodInfo']['color'];
+            $post['GoodInfo']['smell'] = empty($post['GoodInfo']['smell']) ? null:$post['GoodInfo']['smell'];
+            $post['GoodInfo']['dry'] = empty($post['GoodInfo']['dry']) ? null:$post['GoodInfo']['dry'];
+            $post['GoodInfo']['boot'] = empty($post['GoodInfo']['boot']) ? null:$post['GoodInfo']['boot'];
+            $post['GoodInfo']['country'] = empty($post['GoodInfo']['country']) ? null:$post['GoodInfo']['country'];
+            $post['GoodInfo']['style'] = empty($post['GoodInfo']['style']) ? null:$post['GoodInfo']['style'];
+            $post['GoodInfo']['breed'] = empty($post['GoodInfo']['breed']) ? null:$post['GoodInfo']['breed'];
             $model->regist_at = time();
             $model->is_active = 1;
             $model->active_at = strtotime(date('Y-m-d 00:00:00'));
