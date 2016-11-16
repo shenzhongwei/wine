@@ -101,7 +101,7 @@ class UserController extends ApiController{
         }
         //判断验证码是否正确
         $codeCache = Yii::$app->cache->get('message_'.$phone);
-        $codeCache='675401';
+//        $codeCache='675401';
         if($codeCache===false){
             return $this->showResult(303,'验证码已过期，请重新获取');
         }elseif($codeCache!=$code){
