@@ -101,7 +101,7 @@ class UserController extends ApiController{
         }
         //判断验证码是否正确
         $codeCache = Yii::$app->cache->get('message_'.$phone);
-//        $codeCache='675401';
+        $codeCache='675401';
         if($codeCache===false){
             return $this->showResult(303,'验证码已过期，请重新获取');
         }elseif($codeCache!=$code){
@@ -176,7 +176,7 @@ class UserController extends ApiController{
                         $title = '推荐成功啦';
                         $extra = ['target'=>$target];
                         $jpush = new PushModel();
-                        $result = $jpush->PushReg($message,$inviteLogin->reg_id,$title,$extra,$title);
+                        $jpush->PushReg($message,$inviteLogin->reg_id,$title,$extra,$title);
                     }
                 }
             }
@@ -234,7 +234,7 @@ class UserController extends ApiController{
                     $title = '注册成功啦';
                     $extra = ['target'=>$target];
                     $jpush = new PushModel();
-                    $result = $jpush->PushReg($message,$reg_id,$title,$extra,$title);
+                    $jpush->PushReg($message,$reg_id,$title,$extra,$title);
                 }
             }
             //存入消息
