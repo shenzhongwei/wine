@@ -50,8 +50,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'width'=>'10%',
                 'format'=>'html',
                 'value'=>function($model) {
-                    return Html::a($model->g->name.$model->g->volum,['good/view', 'id' => $model->id],
-                        ['title' => '查看商品详细','class'=>'btn btn-link btn-sm']
+                    return Html::a($model->g->name.$model->g->volum,['good/view', 'id' => $model->gid],
+                        ['title' => '查看商品详细','class'=>' btn-link btn-sm']
                     );
                 },
                 'filterType'=>AutoComplete::className(),
