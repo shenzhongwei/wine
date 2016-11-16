@@ -22,9 +22,13 @@ class PushModel{
             ->addAndroidNotification($content, $title, 1, $extra)
             ->addIosNotification($content,  Config::DISABLE_SOUND, Config::DISABLE_BADGE, true,null, $extra)
             ->setMessage($content, $title, null, $extra)
-            ->setOptions(null, 3600, null, $env)
+            ->setOptions(100000, 3600, null, $env,null)
             ->send();
-        return json_decode($result);
+        if($result->status==200){
+            return true;
+        }else{
+            return false;
+        }
     }
 
 
@@ -40,7 +44,7 @@ class PushModel{
             ->addAndroidNotification($content, $title, 1, $extra)
             ->addIosNotification($content,  Config::DISABLE_SOUND, Config::DISABLE_BADGE, true,null, $extra)
             ->setMessage($content, $title, null, $extra)
-            ->setOptions(null, 3600, null, $env)
+            ->setOptions(100000, 3600, null, $env)
             ->send();
         return json_decode($result);
     }
