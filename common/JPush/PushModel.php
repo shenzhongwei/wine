@@ -24,7 +24,7 @@ class PushModel{
             ->setMessage($content, $title, null, $extra)
             ->setOptions(100000, 3600, null, $env,null)
             ->send();
-        if($result->status==200){
+        if($result['http_code']==200){
             return true;
         }else{
             return false;
@@ -46,7 +46,9 @@ class PushModel{
             ->setMessage($content, $title, null, $extra)
             ->setOptions(100000, 3600, null, $env)
             ->send();
-        if($result->status==200){
+//        var_dump($result);
+//        exit;
+        if($result['http_code']==200){
             return true;
         }else{
             return false;

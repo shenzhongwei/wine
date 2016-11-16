@@ -141,7 +141,7 @@ class UserController extends Controller
         if(!empty($content)){
             $push = new PushModel();
             $res = $push->PushAll($content);
-            if(!empty($res->sendno)&&!empty($res->msg_id)){
+            if($res){
                 Yii::$app->session->setFlash('success','推送成功');
             }else{
                 Yii::$app->session->setFlash('danger','推送失败');
