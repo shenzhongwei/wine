@@ -89,6 +89,12 @@ $typeArr = [1=>'普通订单','2'=>'会员订单','3'=>'抢购订单'];
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
                 'width'=>'8%',
+                'format' => 'raw',
+                'value'=> function($model){
+                    return Html::a($model->order_code,['order/view', 'id' => $model->id],
+                        ['title' => '查看订单详细','class'=>' btn-link btn-sm']
+                    );
+                },
                 'filterType'=>AutoComplete::className(),
                 'filterWidgetOptions'=>[
                     'clientOptions' => [

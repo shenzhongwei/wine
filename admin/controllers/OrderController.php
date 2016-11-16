@@ -93,6 +93,11 @@ class OrderController extends BaseController
         return $this->redirect('index');
     }
 
+    /**
+     * @param $id
+     * @return \yii\web\Response
+     * 确认送达api
+     */
     public function actionArrive($id)
     {
         $orderinfo =$this->findModel($id);
@@ -109,9 +114,13 @@ class OrderController extends BaseController
             if(!empty($orderinfo->send_id)){
                 $sender = EmployeeInfo::findOne($orderinfo->send_id);
                 if(!empty($sender)&&$sender->status==2){
-                    $sender->status=1;
-                    if(!$sender->save()){
-                        throw new Exception('修改配送人员状态出错');
+                    //判断有没有其他订单代配送
+                    $sendingOrder = OrderInfo::find()->where("id<>$id and send_id=$sender->id and state=4")->all();
+                    if(empty($sendingOrder)){
+                        $sender->status=1;
+                        if(!$sender->save()){
+                            throw new Exception('修改配送人员状态出错');
+                        }
                     }
                 }
             }
@@ -124,6 +133,10 @@ class OrderController extends BaseController
         return $this->redirect('index');
     }
 
+    /**
+     * @return \yii\web\Response
+     * 接单api
+     */
     public function actionReceive()
     {
         $id = Yii::$app->request->get('id');
@@ -147,6 +160,10 @@ class OrderController extends BaseController
         return $this->redirect(['view', 'id' => $orderinfo->id]);
     }
 
+    /**
+     * @return array
+     * 批量处理pai
+     */
     public function actionPatch()
     {
         $keys = Yii::$app->request->post('keys');
@@ -174,14 +191,27 @@ class OrderController extends BaseController
         if(!empty($orders)){
             $transaction = Yii::$app->db->beginTransaction();
             try{
+                //订单的sql
                 $sql = "UPDATE order_info SET $key = $valueTo";
                 $sql .= " WHERE id IN $ids AND $key=$value";
+                //批量送达的sql
                 if($button == 'order_arrive'){
-                    $send_ids = implode(',',array_values(array_unique(ArrayHelper::getColumn($orders,'send_id'))));
-                    $sends = EmployeeInfo::find()->where("id in ($ids) and status=2");
+                    $sendArr = array_values(array_unique(ArrayHelper::getColumn($orders,'send_id')));
+                    $send_ids = implode(',',$sendArr);
+                    $sendingOrders = OrderInfo::find()->addSelect(["DISTINCT send_id"])->where("send_id in ($send_ids) and state=4 and id not in ($ids)")->all();
+                    if(!empty($sendingOrders)){
+                        $sendingArr = array_values(array_unique(ArrayHelper::getColumn($orders,'send_id')));
+                        foreach ($sendingArr as $key=>$value){
+                            if(in_array($value,$sendingArr)){
+                                unset($sendingArr[$key]);
+                            }
+                        }
+                        $send_ids = implode(',',$sendArr);
+                    }
+                    $sends = EmployeeInfo::find()->where("id in ($send_ids) and status=2");
                     if(!empty($sends)){
-                        $send_sql = "UPDATE employee_info SET `status`=1 WHERE id in ($ids) AND `status`=2";
-                        $sendRow = Yii::$app->db->createCommand($sql)->execute();
+                        $send_sql = "UPDATE employee_info SET `status`=1 WHERE id in ($send_ids) AND `status`=2";
+                        $sendRow = Yii::$app->db->createCommand($send_sql)->execute();
                         if(empty($sendRow)){
                             throw new  Exception("修改配送人员状态出错");
                         }
@@ -218,7 +248,7 @@ class OrderController extends BaseController
         return $this->renderAjax('send',['model'=>$model]);
     }
 
-    //接单
+    //一键接单接单
     public function actionPatchReceive()
     {
         $query = OrderInfo::Query();

@@ -52,11 +52,11 @@ $this->registerJsFile("@web/js/good/_script.js");
                     'hAlign'=>'center',
                     'vAlign'=>'middle',
                     'attribute'=>'name',
-                    'format' => 'html',
                     'width'=>'10%',
+                    'format' => 'html',
                     'value'=> function($model){
                         return Html::a($model->name.$model->volum,['good/view', 'id' => $model->id],
-                            ['title' => '查看商品详细','class'=>'btn btn-link btn-sm']
+                            ['title' => '查看商品详细','class'=>' btn-link btn-sm']
                         );
                     },
                     'filterType'=>AutoComplete::className(),
@@ -75,7 +75,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                     'format' => 'html',
                     'value'=> function($model){
                         return Html::a($model->merchant0->name,['merchant/view', 'id' => $model->merchant0->id],
-                            ['title' => '查看商品详细','class'=>'btn btn-link btn-sm']
+                            ['title' => '查看商品详细','class'=>' btn-link btn-sm']
                         );
                     },
                     'filterType'=>GridView::FILTER_SELECT2,
