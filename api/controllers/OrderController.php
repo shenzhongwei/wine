@@ -6,6 +6,7 @@ use api\models\GoodInfo;
 use api\models\GoodRush;
 use api\models\OrderDetail;
 use api\models\OrderInfo;
+use api\models\PointInout;
 use api\models\PromotionInfo;
 use api\models\ShoppingCert;
 use api\models\UserAddress;
@@ -192,6 +193,49 @@ class OrderController extends ApiController{
             if(!$order->save()){
                 throw new Exception('保存订单基本信息出错');
             }
+            /**
+             * 如果是无需支付的话
+             * 直接已支付,
+             */
+            if($pay_price == 0){
+                $order->state = 2;
+                $order->pay_date = time();
+                if(!$order->save()){
+                    throw new Exception('保存订单信息出错');
+                }
+                if($order->point>0){
+                    $userPoint = UserPoint::findOne(['uid'=>$user_id,'is_active'=>1]);
+                    if(empty($userPoint)){
+                        throw new Exception('用户积分账户异常',304);
+                    }
+                    $userPoint->point = $userPoint->point-$order->point;
+                    $userPoint->update_at = time();
+                    if(!$userPoint->save()){
+                        throw new Exception('保存用户积分出错',400);
+                    }
+                    $pointInout = new PointInout();
+                    $pointInout->attributes = [
+                        'uid'=>$order->uid,
+                        'pid'=>$userPoint->id,
+                        'pio_date'=>time(),
+                        'pio_type'=>2,
+                        'amount'=>$order->point,
+                        'oid'=>$order->id,
+                        'note'=>"用户$userInfo->nickname"."于".date('Y年m月d日 H时i分s秒')."，支出$order->point"."积分用于支付编号为".$order->order_code."的订单",
+                        'status'=>1,
+                    ];
+                    if(!$pointInout->save()){
+                        throw new Exception('用户积分收入记录保存出错',400);
+                    }
+                }
+            }
+
+            if(!empty($ticket_id)){
+                $userTicket->status = 2;
+                if(!$userTicket->save()){
+                    throw new Exception('优惠券数据异常');
+                }
+            }
             foreach($from_val as $value){
                 $detail = new OrderDetail();
                 $detail->attributes = [
@@ -220,12 +264,6 @@ class OrderController extends ApiController{
                 $row = Yii::$app->db->createCommand($sql)->execute();
                 if(empty($row)){
                     throw new Exception('购物车信息异常');
-                }
-            }
-            if(!empty($ticket_id)){
-                $userTicket->status = 2;
-                if(!$userTicket->save()){
-                    throw new Exception('优惠券数据异常');
                 }
             }
             $transaction->commit();

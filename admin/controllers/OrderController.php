@@ -235,8 +235,6 @@ class OrderController extends BaseController
     public function actionSend(){
         $key = Yii::$app->request->post('key');
         $id = Yii::$app->request->post('id');
-//        var_dump($id);
-//        exit;
         $model = new OrderSend();
         if($key=='single'){
             $model->id_str = $id;
@@ -248,7 +246,7 @@ class OrderController extends BaseController
         return $this->renderAjax('send',['model'=>$model]);
     }
 
-    //一键接单接单
+    //一键接单
     public function actionPatchReceive()
     {
         $query = OrderInfo::Query();
