@@ -2,6 +2,7 @@
 
 namespace admin\models;
 
+use common\helpers\ArrayHelper;
 use Yii;
 
 /**
@@ -19,9 +20,11 @@ use Yii;
  * @property integer $status
  *
  * @property AccountInout $inout
+ * @property UserInfo $u
  */
 class InoutPay extends \yii\db\ActiveRecord
 {
+    public $phone;
     /**
      * @inheritdoc
      */
@@ -69,5 +72,19 @@ class InoutPay extends \yii\db\ActiveRecord
     public function getInout()
     {
         return $this->hasOne(AccountInout::className(), ['id' => 'inout_id']);
+    }
+
+    public function getU()
+    {
+        return $this->hasOne(UserInfo::className(), ['id' => 'uid']);
+    }
+
+
+    public static function GetPhones(){
+        $phones = self::find()->joinWith(['inout','u'])->where("inout_pay.status=1 and account_inout.status=1 and account_inout.type=4
+         and user_info.id>0 and account_inout.id>0
+        ")->addSelect(['user_info.phone as phone'])->all();
+        $data = ArrayHelper::getColumn($phones,'phone');
+        return array_values(array_unique($data));
     }
 }

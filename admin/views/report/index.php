@@ -23,7 +23,7 @@ $discount = array_sum(array_values(ArrayHelper::map($dataProvider->models,'order
 $point = array_sum(array_values(ArrayHelper::map($dataProvider->models,'order_code','point')));
 $real_profit = array_sum(array_values(ArrayHelper::map($dataProvider->models,'order_code','real_profit')));
 ?>
-<div class="report-list-index">
+<div class="order-list-index">
 
     <?php
     echo GridView::widget([
@@ -309,6 +309,7 @@ $real_profit = array_sum(array_values(ArrayHelper::map($dataProvider->models,'or
             'showPanel'=>true,
             'showFooter'=>false,
             'after'=>false,
+            'footer'=>false,
         ],
         'export'=>[
             'fontAwesome'=>true

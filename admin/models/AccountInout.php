@@ -3,6 +3,7 @@
 namespace admin\models;
 
 use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "account_inout".
@@ -14,13 +15,18 @@ use Yii;
  * @property integer $target_id
  * @property string $sum
  * @property string $discount
+ * @property string $note
  * @property integer $status
  *
  * @property UserAccount $a
- * @property InoutPay[] $inoutPays
+ * @property InoutPay $inoutPay
  */
-class AccountInout extends \yii\db\ActiveRecord
+class AccountInout extends ActiveRecord
 {
+    public $pay_id;
+    public $pay_date;
+    public $phone;
+
     /**
      * @inheritdoc
      */
@@ -37,6 +43,7 @@ class AccountInout extends \yii\db\ActiveRecord
         return [
             [['aid', 'aio_date', 'type', 'target_id', 'status'], 'integer'],
             [['sum', 'discount'], 'number'],
+            [['note'], 'string', 'max' => 255],
             [['aid'], 'exist', 'skipOnError' => true, 'targetClass' => UserAccount::className(), 'targetAttribute' => ['aid' => 'id']],
         ];
     }
@@ -47,14 +54,15 @@ class AccountInout extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
+            'id' => '主键',
             'aid' => '钱包id',
             'aio_date' => '生成时间',
-            'type' => '类型',
-            'target_id' => '订单/用户id',
+            'type' => '类型 1订单支付 2订单收入 3活动奖励 4余额充值',
+            'target_id' => '发起对象id',
             'sum' => '金额',
             'discount' => '赠送金额',
-            'status' => '状态',
+            'note' => '备注',
+            'status' => '状态 0删除 1正常 2待付款',
         ];
     }
 
@@ -69,8 +77,11 @@ class AccountInout extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getInoutPays()
+    public function getInoutPay()
     {
         return $this->hasOne(InoutPay::className(), ['inout_id' => 'id']);
     }
+
+
+
 }
