@@ -151,7 +151,7 @@ class OrderPay extends \yii\db\ActiveRecord
                                 $title = '您的推荐人下单成功啦！';
                                 $extra = ['target'=>$target];
                                 $jpush = new PushModel();
-                                $result = $jpush->PushReg($message,$inviteLogin->reg_id,$title,$extra,$title);
+                                $jpush->PushReg($message,$inviteLogin->reg_id,$title,$extra,$title);
                             }
                         }
                     }

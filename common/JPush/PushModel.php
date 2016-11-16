@@ -46,6 +46,10 @@ class PushModel{
             ->setMessage($content, $title, null, $extra)
             ->setOptions(100000, 3600, null, $env)
             ->send();
-        return json_decode($result);
+        if($result->status==200){
+            return true;
+        }else{
+            return false;
+        }
     }
 }

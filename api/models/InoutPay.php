@@ -256,7 +256,7 @@ class InoutPay extends \yii\db\ActiveRecord
                         $title = '开通会员成功啦';
                         $extra = ['target'=>$target];
                         $jpush = new PushModel();
-                        $result = $jpush->PushReg($content,$userLogin->reg_id,$title,$extra,$title);
+                        $jpush->PushReg($content,$userLogin->reg_id,$title,$extra,$title);
                     }
                 }
             }
