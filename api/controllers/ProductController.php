@@ -437,10 +437,16 @@ class ProductController extends ApiController{
         if($goodInfo->is_active!=1){
             return $this->showResult(304,'该商品已下架');
         }
+        $pics = [];
+        if(!empty($goodInfo->pic)){
+            $pics[] = Yii::$app->params['img_path'].$goodInfo->pic;
+        }
         //产品轮播图;
-        $pics = ArrayHelper::getColumn($goodInfo->goodPics,function($element){
-            return Yii::$app->params['img_path'].$element->pic;
-        });
+        if(!empty($goodInfo->goodPics)){
+            foreach ($goodInfo->goodPics as $val){
+                $pics[] = Yii::$app->params['img_path'].$goodInfo->goodPics->pic;
+            }
+        }
         //查找评论   comment_detail与order_comment
         $query = CommentDetail::find()->joinWith('c')->where(['gid'=>$good_id,'comment_detail.status'=>1])->orderBy(['order_comment.add_at'=>SORT_DESC]);
         $query->offset(0)->limit(2);
