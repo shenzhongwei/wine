@@ -4,7 +4,7 @@ namespace admin\controllers;
 
 use admin\models\OrderInfo;
 use admin\models\Push;
-use common\jpush\JPush;
+use common\JPush\PushModel;
 use Yii;
 use admin\models\UserInfo;
 use admin\models\UserInfoSearch;
@@ -139,8 +139,8 @@ class UserController extends Controller
         $post = Yii::$app->request->post('Push');
         $content = $post['content'];
         if(!empty($content)){
-            $push = new JPush();
-            $res = $push->pushAll($content,1,1);
+            $push = new PushModel();
+            $res = $push->PushAll($content);
             if(!empty($res->sendno)&&!empty($res->msg_id)){
                 Yii::$app->session->setFlash('success','推送成功');
             }else{

@@ -31,6 +31,9 @@ class OrderDetail extends \yii\db\ActiveRecord
     public $good_name;
     public $cost;
     public $profit;
+    public $discount;
+    public $point;
+    public $real_profit;
     /**
      * @inheritdoc
      */

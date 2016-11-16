@@ -5,7 +5,7 @@ namespace admin\controllers;
 use admin\models\EmployeeInfo;
 use admin\models\OrderSend;
 use common\helpers\ArrayHelper;
-use common\jpush\JPush;
+use common\JPush\PushModel;
 use Yii;
 use admin\models\OrderInfo;
 use admin\models\OrderInfoSearch;
@@ -318,8 +318,12 @@ class OrderController extends BaseController
             }
             $transaction->commit();
             if(!empty($userReg)){
-                $jpush = new JPush();
-                $res = $jpush->pushByIdarr($userReg,'您的订单开始配送啦，点击查看',1,4);
+                $message = '您的订单开始配送啦，点击查看';
+                $target = 4;
+                $title = '订单配送啦';
+                $extra = ['target'=>$target];
+                $jpush = new PushModel();
+                $result = $jpush->PushReg($message,$userReg,$title,$extra,$title);
             }
             Yii::$app->session->setFlash('success','发货成功');
             return $this->redirect(['index',"OrderInfoSearch[step]"=>4]);

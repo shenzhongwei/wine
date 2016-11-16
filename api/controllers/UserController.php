@@ -8,7 +8,7 @@ use api\models\UserInfo;
 use api\models\UserLogin;
 use api\models\UserTicket;
 use common\helpers\ArrayHelper;
-use common\jpush\JPush;
+use common\JPush\PushModel;
 use daixianceng\smser\LuosimaoSmser;
 use Yii;
 use \Exception;
@@ -173,8 +173,10 @@ class UserController extends ApiController{
                     if(!empty($inviteLogin->reg_id)&&!empty($inviteLogin->reg_type)){
                         $message = '用户成功使用您的邀请码注册成功啦！奖励您'.($type==1 ? "$amount"."元优惠券":"$amount"."积分")."，赶快来使用吧";
                         $target = $type == 1 ? 11:15;
-                        $jpush = new JPush();
-                        $jpush->push($inviteLogin->reg_id,$message,$inviteLogin->reg_type,$target);
+                        $title = '推荐成功啦';
+                        $extra = ['target'=>$target];
+                        $jpush = new PushModel();
+                        $result = $jpush->PushReg($message,$inviteLogin->reg_id,$title,$extra,$title);
                     }
                 }
             }
@@ -229,8 +231,10 @@ class UserController extends ApiController{
                 if(!empty($reg_id)&&!empty($reg_type)){
                     $message = '注册成功啦！送您'.($type==1 ? ("$amount"."元优惠券"):("$amount"."积分"))."，赶快来使用吧";
                     $target = $type == 1 ? 11:15;
-                    $jpush = new JPush();
-                    $jpush->push($reg_id,$message,$reg_type,$target);
+                    $title = '注册成功啦';
+                    $extra = ['target'=>$target];
+                    $jpush = new PushModel();
+                    $result = $jpush->PushReg($message,$reg_id,$title,$extra,$title);
                 }
             }
             //存入消息

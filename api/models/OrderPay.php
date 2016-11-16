@@ -2,7 +2,7 @@
 
 namespace api\models;
 
-use common\jpush\JPush;
+use common\JPush\PushModel;
 use common\pay\alipay\helpers\AlipayHelper;
 use common\pay\wepay\helpers\Log;
 use daixianceng\smser\LuosimaoSmser;
@@ -148,8 +148,10 @@ class OrderPay extends \yii\db\ActiveRecord
                             if(!empty($inviteLogin->reg_id)&&!empty($inviteLogin->reg_type)){
                                 $message = '有您的推荐人首次下单并付款成功啦！奖励您'.($type==1 ? ("$amount"."元优惠券"):("$amount"."积分"))."，赶快来使用吧";
                                 $target = $type == 1 ? 11:15;
-                                $jpush = new JPush();
-                                $jpush->push($inviteLogin->reg_id,$message,$inviteLogin->reg_type,$target);
+                                $title = '您的推荐人下单成功啦！';
+                                $extra = ['target'=>$target];
+                                $jpush = new PushModel();
+                                $result = $jpush->PushReg($message,$inviteLogin->reg_id,$title,$extra,$title);
                             }
                         }
                     }

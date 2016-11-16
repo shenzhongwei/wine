@@ -18,7 +18,7 @@ return [
             'class'=>'common\pay\alipay\AlipayNotify',
         ],
         'jpush' => [
-            'class' => 'common\jpush\JPush',
+            'class' => 'common\JPush\PushModel',
         ],
         'cache'=> [
             'class' => 'yii\caching\FileCache',

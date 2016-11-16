@@ -2,7 +2,7 @@
 
 namespace api\models;
 
-use common\jpush\JPush;
+use common\JPush\PushModel;
 use common\pay\alipay\helpers\AlipayHelper;
 use common\pay\wepay\helpers\Log;
 use Yii;
@@ -253,8 +253,10 @@ class InoutPay extends \yii\db\ActiveRecord
                 if(!empty($target)&&!empty($content)){
                     $userLogin = $userInfo->userLogin;
                     if(!empty($userLogin->reg_id)&&!empty($userLogin->reg_type)){
-                        $jpush = new JPush();
-                        $jpush->push($userLogin->reg_id,$content,$userLogin->reg_type,$target);
+                        $title = '开通会员成功啦';
+                        $extra = ['target'=>$target];
+                        $jpush = new PushModel();
+                        $result = $jpush->PushReg($content,$userLogin->reg_id,$title,$extra,$title);
                     }
                 }
             }

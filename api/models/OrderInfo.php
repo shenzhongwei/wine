@@ -217,6 +217,7 @@ class OrderInfo extends \yii\db\ActiveRecord
                     }
                     $userOrder->state = 100;//修改字段
                     $userOrder->ticket_id = 0;
+                    $userOrder->discount = 0;
                     $userOrder->point = 0;
                     if(!$userOrder->save()){
                         throw new Exception('取消订单失败');
@@ -264,7 +265,7 @@ class OrderInfo extends \yii\db\ActiveRecord
                     }
                 }
                 //将订单改为已取消
-                $order_sql = "UPDATE order_info SET `state`=100,`point`=0,`ticket_id`=0 WHERE `state`=1 AND order_date<".(time()-1800);
+                $order_sql = "UPDATE order_info SET `state`=100,`point`=0,`ticket_id`=0,`discount`=0 WHERE `state`=1 AND order_date<".(time()-1800);
                 $orderRows = Yii::$app->db->createCommand($order_sql)->execute();
                 if(empty($orderRows)){
                     throw new Exception("取消订单失败");

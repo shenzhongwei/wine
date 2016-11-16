@@ -19,6 +19,9 @@ $pay = ['1'=>'余额','2'=>'支付宝','3'=>'微信'];
 $cost = array_sum(array_values(ArrayHelper::map($dataProvider->models,'order_code','cost')));
 $pay_bill = array_sum(array_values(ArrayHelper::map($dataProvider->models,'order_code','pay_bill')));
 $profit = array_sum(array_values(ArrayHelper::map($dataProvider->models,'order_code','profit')));
+$discount = array_sum(array_values(ArrayHelper::map($dataProvider->models,'order_code','discount')));
+$point = array_sum(array_values(ArrayHelper::map($dataProvider->models,'order_code','point')));
+$real_profit = array_sum(array_values(ArrayHelper::map($dataProvider->models,'order_code','real_profit')));
 ?>
 <div class="report-list-index">
 
@@ -26,7 +29,6 @@ $profit = array_sum(array_values(ArrayHelper::map($dataProvider->models,'order_c
     echo GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'filterPosition' => GridView::FILTER_POS_HEADER,
         'containerOptions'=>['style'=>'overflow: auto'], // only set when $responsive = false
         'pjax'=>true,  //pjax is set to always true for this demo
         'pjaxSettings'=>[
@@ -46,7 +48,7 @@ $profit = array_sum(array_values(ArrayHelper::map($dataProvider->models,'order_c
             [
                 'attribute'=>'order_date',
                 'label' => '时间',
-                'width'=>'16%',
+                'width'=>'14%',
                 'hAlign'=>'center',
                 'pageSummary'=>'合计',
                 'vAlign'=>'middle',
@@ -99,7 +101,7 @@ $profit = array_sum(array_values(ArrayHelper::map($dataProvider->models,'order_c
                         'selectOptions' => ['class' => 'text-success'],
                         'unselectOptions' => ['class' => 'text-danger'],
                     ],
-                    'options'=>['placeholder'=>'请选择类型','multiple' => false],
+                    'options'=>['placeholder'=>'类型','multiple' => false],
                     'pluginOptions' => ['allowClear' => true,
                         'tags' => false,
 //                        'maximumInputLength' => 5
@@ -123,7 +125,7 @@ $profit = array_sum(array_values(ArrayHelper::map($dataProvider->models,'order_c
                         'selectOptions' => ['class' => 'text-success'],
                         'unselectOptions' => ['class' => 'text-danger'],
                     ],
-                    'options'=>['placeholder'=>'请选择产品','multiple' => false],
+                    'options'=>['placeholder'=>'产品','multiple' => false],
                     'pluginOptions' => ['allowClear' => true,
                     ],
                 ],
@@ -131,7 +133,7 @@ $profit = array_sum(array_values(ArrayHelper::map($dataProvider->models,'order_c
             [
                 'attribute'=>'amount',
                 'label' => '数量',
-                'width'=>'4%',
+                'width'=>'5%',
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
                 'value'=>function($model){
@@ -143,7 +145,7 @@ $profit = array_sum(array_values(ArrayHelper::map($dataProvider->models,'order_c
                 'header'=>'下单酒庄',
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
-                'width'=>'10%',
+                'width'=>'8%',
                 'attribute'=>'sid',
                 'value'=>function($model){
                     return empty($model->s) ? '缺失':$model->s->name;
@@ -158,7 +160,7 @@ $profit = array_sum(array_values(ArrayHelper::map($dataProvider->models,'order_c
                         'selectOptions' => ['class' => 'text-success'],
                         'unselectOptions' => ['class' => 'text-danger'],
                     ],
-                    'options'=>['placeholder'=>'请选择下单酒庄','multiple' => false],
+                    'options'=>['placeholder'=>'下单酒庄','multiple' => false],
                     'pluginOptions' => ['allowClear' => true,
                         'tags' => false,
 //                        'maximumInputLength' => 5
@@ -170,7 +172,7 @@ $profit = array_sum(array_values(ArrayHelper::map($dataProvider->models,'order_c
             [
                 'header'=>'付款方式',
                 'attribute'=>'pay_id',
-                'width'=>'10%',
+                'width'=>'8%',
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
                 'value'=>function($model){
@@ -194,7 +196,7 @@ $profit = array_sum(array_values(ArrayHelper::map($dataProvider->models,'order_c
                         'selectOptions' => ['class' => 'text-success'],
                         'unselectOptions' => ['class' => 'text-danger'],
                     ],
-                    'options'=>['placeholder'=>'支付方式'],
+                    'options'=>['placeholder'=>'支付'],
                     'pluginOptions'=>[
                         'allowClear'=>true,
                     ]
@@ -202,11 +204,10 @@ $profit = array_sum(array_values(ArrayHelper::map($dataProvider->models,'order_c
                 'group'=>true,  // enable grouping
                 'subGroupOf'=>1 // supplier column index is the parent group
             ],
-
             [
                 'label'=>'成本价',
                 'attribute'=>'cost',
-                'width'=>'7%',
+                'width'=>'6%',
                 'format'=>['decimal', 2],
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
@@ -219,9 +220,33 @@ $profit = array_sum(array_values(ArrayHelper::map($dataProvider->models,'order_c
                 'footer'=>true
             ],
             [
+                'label'=>'优惠额',
+                'attribute'=>'discount',
+                'width'=>'6%',
+                'format'=>['decimal', 2],
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+                'group'=>true,  // enable grouping
+                'subGroupOf'=>1 ,// supplier column index is the parent group
+                'pageSummary'=>$discount,
+                'footer'=>true
+            ],
+            [
+                'label'=>'积分抵',
+                'attribute'=>'point',
+                'width'=>'6%',
+                'format'=>['decimal', 2],
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+                'group'=>true,  // enable grouping
+                'subGroupOf'=>1 ,// supplier column index is the parent group
+                'pageSummary'=>$point,
+                'footer'=>true
+            ],
+            [
                 'label'=>'成交价',
                 'attribute'=>'pay_bill',
-                'width'=>'7%',
+                'width'=>'6%',
                 'format'=>['decimal', 2],
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
@@ -234,9 +259,9 @@ $profit = array_sum(array_values(ArrayHelper::map($dataProvider->models,'order_c
                 'footer'=>true
             ],
             [
-                'label'=>'利润',
+                'label'=>'平台利润',
                 'attribute'=>'profit',
-                'width'=>'7%',
+                'width'=>'6%',
                 'format'=>['decimal', 2],
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
@@ -249,6 +274,22 @@ $profit = array_sum(array_values(ArrayHelper::map($dataProvider->models,'order_c
                 'group'=>true,  // enable grouping
                 'subGroupOf'=>1 // supplier column index is the parent group
             ],
+            [
+                'label'=>'真实利润',
+                'attribute'=>'real_profit',
+                'width'=>'6%',
+                'format'=>['decimal', 2],
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+//                'value'=>function($model){
+//                    return ($model->profit).'元';
+//                },
+                'pageSummary'=>$real_profit,
+//                'pageSummaryFunc'=>GridView::F_SUM,
+                'footer'=>true,
+                'group'=>true,  // enable grouping
+                'subGroupOf'=>1 // supplier column index is the parent group
+            ],
         ],
         'toolbar'=> [
             ['content'=>Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index'], ['class'=>'btn btn-default', 'title'=>'刷新报表'])],
@@ -256,7 +297,6 @@ $profit = array_sum(array_values(ArrayHelper::map($dataProvider->models,'order_c
             '{export}',
         ],
         'responsive'=>false,
-        'hover'=>false,
         'condensed'=>true,
         'bordered'=>true,
         'striped'=>false,

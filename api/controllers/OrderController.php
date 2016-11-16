@@ -183,7 +183,7 @@ class OrderController extends ApiController{
                 'pay_id'=>$pay_mode,
                 'total'=>$total_price,
                 'type'=>$type,
-                'discount'=>$total_price-$pay_price+$send_bill,
+                'discount'=>$total_price-$pay_price+$send_bill-($point/100),
                 'send_bill'=>$userInfo->is_vip ? 0:$send_bill,
                 'ticket_id'=>empty($ticket_id) ? 0:$ticket_id,
                 'point'=>empty($point) ? 0:$point,
