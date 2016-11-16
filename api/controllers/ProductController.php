@@ -318,10 +318,9 @@ class ProductController extends ApiController{
             $value = explode('~',$value);
         }
         if($from == 0){//为0表示大类下列表
-            if(empty($from_val)){
-                return $this->showResult(301,'获取数据异常');
+            if(!empty($from_val)){
+                $query->andWhere(['type'=>$from_val]);
             }
-            $query->andWhere(['type'=>$from_val]);
         }elseif($from == 1){//为1表示店铺商家下的列表
             if(empty($from_val)){
                 return $this->showResult(301,'获取数据异常');
