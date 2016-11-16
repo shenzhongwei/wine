@@ -37,6 +37,10 @@ class UserController extends Controller
     {
         $searchModel = new UserInfoSearch;
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
+
+        $dataProvider->pagination = [
+            'pageSize'=>15,
+        ];
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,

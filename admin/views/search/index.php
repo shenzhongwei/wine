@@ -92,7 +92,6 @@ $this->params['breadcrumbs'][] = $this->title;
         // set your toolbar
         'toolbar'=> false,
         'responsive'=>false,
-        'hover'=>true,
         'condensed'=>true,
         'panel' => [
             'type'=>'info',

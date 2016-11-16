@@ -176,7 +176,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'buttons'=>[
                     'view' => function ($url, $model) {
                         return Html::a('点击查看', ['type/view', 'id' => $model->id,'key'=>'brand'], [//指定弹框的id
-                            'class' => 'detail btn btn-link btn-xs',
+                            'class' => 'btn-link btn-xs detail',
                         ]);
                     },
                     'update' =>  function ($url, $model) {
@@ -228,14 +228,12 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
 
         'responsive'=>false,
-        'hover'=>true,
         'condensed'=>true,
         'panel' => [
             'type'=>'info',
             'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> '.Html::encode($this->title).' </h3>',
-            'showPanel'=>true,
-//            'showFooter'=>true,
             'after'=>false,
+            'showPanel'=>true,
             'footer'=>false,
         ],
         'export'=>[

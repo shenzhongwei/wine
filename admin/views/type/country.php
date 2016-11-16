@@ -156,7 +156,6 @@ GridView::widget([
     ],
 
     'responsive'=>false,
-    'hover'=>true,
     'condensed'=>true,
     'toolbar'=> [
         ['content'=>

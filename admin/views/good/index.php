@@ -251,7 +251,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                         'view' => function ($url, $model) {
                             return Html::a('点击查看', ['good/pic','id'=>$model->id], [
                                 'data-pjax'=>0,
-                                'class' => 'btn btn-link btn-xs',
+                                'class' => ' btn-link btn-xs',
                             ]);
                         },
                         'update' =>  function ($url, $model) {
@@ -275,7 +275,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                                 'id'=>'detail',//属性
                                 'data-toggle' => 'modal',    //弹框
                                 'data-target' => '#good-modal',    //指定弹框的id
-                                'class' => 'detail btn btn-link btn-xs',
+                                'class' => 'btn-link btn-xs detail',
                                 'data-id' => $model->id,
                             ]);
                         },
@@ -350,7 +350,6 @@ $this->registerJsFile("@web/js/good/_script.js");
                     Html::a("批量取消积分", "javascript:void(0);", ["class" => "btn btn-primary",'style'=>'margin-left:0.1%','id'=>'point_down']):'',
                 'after'=>false,
                 'showPanel'=>true,
-                'showFooter'=>true
             ],
             'export'=>[
                 'fontAwesome'=>true
