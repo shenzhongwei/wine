@@ -20,7 +20,7 @@ class PushModel{
             ->addRegistrationId($registArr)
             ->setNotificationAlert($alert)
             ->addAndroidNotification($content, $title, 1, $extra)
-            ->addIosNotification($content,  Config::DISABLE_SOUND, Config::DISABLE_BADGE, true,null, $extra)
+            ->addIosNotification($content,  'default', Config::DISABLE_BADGE, true,null, $extra)
             ->setMessage($content, $title, null, $extra)
             ->setOptions(100000, 3600, null, $env,null)
             ->send();
