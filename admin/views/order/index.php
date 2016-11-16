@@ -42,7 +42,7 @@ $typeArr = [1=>'普通订单','2'=>'会员订单','3'=>'抢购订单'];
                 'class'=>'kartik\grid\CheckboxColumn',
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
-                'width'=>'2%',
+                'width'=>'1%',
                 'name'=>'id',
             ],
             [
