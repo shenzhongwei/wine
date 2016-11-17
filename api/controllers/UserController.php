@@ -65,6 +65,19 @@ class UserController extends ApiController{
         }
     }
 
+    public function actionIsvip(){
+        $userLogin = Yii::$app->user->identity;
+        if(empty($userLogin)||empty($userLogin->userInfo)){
+            $is_vip=0;
+        }else{
+            $is_vip = $userLogin->userInfo->is_vip;
+        }
+        $data = [
+            'is_vip'=>$is_vip
+        ];
+        return $this->showResult(200,'成功',$data);
+    }
+
     /**
      * 注册接口
      */
