@@ -118,28 +118,36 @@ class AdController extends BaseController
         $key = Yii::$app->request->post('key');
         if(Yii::$app->request->isPost) {
             $image = UploadedFile::getInstance($goodType, 'url');
-            $path = '../../photo/ad/'.$key;
-            if(!is_dir($path) || !is_writable($path)){
-                FileHelper::createDirectory($path,0777,true);
-            }
-            $filePath = $path.'/'.$file_name.'.'.$image->extension;
-            if( $image->saveAs($filePath)){
-                echo json_encode([
-                    'imageUrl'=>'/ad/'.$key.'/'.$file_name.'.'.$image->extension,
-                    'error'=>'',
-                ]);
-                exit;
+            if(!empty($image)) {
+                $path = '../../photo/ad/'.$key;
+                if(!is_dir($path) || !is_writable($path)){
+                    FileHelper::createDirectory($path,0777,true);
+                }
+                $filePath = $path.'/'.$file_name.'.'.$image->extension;
+                if( $image->saveAs($filePath)){
+                    echo json_encode([
+                        'imageUrl'=>'/ad/'.$key.'/'.$file_name.'.'.$image->extension,
+                        'error'=>'',
+                    ]);
+                    exit;
+                }else{
+                    echo json_encode([
+                        'imageUrl'=>'',
+                        'error'=>'保存图片失败，请重试',
+                    ]);
+                    exit;
+                }
             }else{
                 echo json_encode([
                     'imageUrl'=>'',
-                    'error'=>'保存图片失败，请重试',
+                    'error'=>'请重新选择图片后上传',
                 ]);
                 exit;
             }
         }else{
             echo json_encode([
                 'imageUrl'=>'',
-                'error'=>'未获取到图片信息',
+                'error'=>'请选择图片后上传',
             ]);
             exit;
         }

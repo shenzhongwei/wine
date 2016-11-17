@@ -14,7 +14,8 @@ use admin\models\AdList;
  * @var admin\models\AdList $model
  * @var yii\widgets\ActiveForm $form
  */
-
+//var_dump($model->postion);
+//exit;
 ?>
 <style>
     .select2-dropdown--below{

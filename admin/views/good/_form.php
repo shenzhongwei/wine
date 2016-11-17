@@ -276,10 +276,14 @@ $payArr = [
                                                 ],
                                             ],
                                             'pluginEvents'=>[
-                                                'fileuploaderror'=>"function(){
+                                                'fileuploaderror'=>"function(object,data){
+                                                 $('.fileinput-upload-button').attr('disabled',true);
+                                                }",
+                                                'fileerror'=>"function(object,data){
                                                  $('.fileinput-upload-button').attr('disabled',true);
                                                 }",
                                                 'fileclear'=>"function(){
+                                                $('.fileinput-upload-button').attr('disabled',false);
                                     $('#goodinfo-pic').val('');
                                     }",
                                                 'fileuploaded'  => "function (object,data){

@@ -170,7 +170,7 @@ $count = $dataProvider->totalCount;
         $('.update').on('click', function () {  //查看详情的触发事件
             $('.ad-list-form').remove();
             $('#middle-modal').find('.modal-title').html('编辑首页中间广告');
-            $.get(toRoute('ad/update'), { id:$(this).closest('tr').data('key'),key:'head'  },
+            $.get(toRoute('ad/update'), { id:$(this).closest('tr').data('key'),key:'middle'  },
                 function (data) {
                     $('#middle-modal').find('.modal-body').html(data);  //给该弹框下的body赋值
                 }
