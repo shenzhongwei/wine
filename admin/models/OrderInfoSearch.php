@@ -34,7 +34,7 @@ class OrderInfoSearch extends OrderInfo
     {
         $query = self::Query();
         $query->joinWith('u');
-        $query->addSelect(['order_info.*','(discount+(point/100)) as disc','(CASE state WHEN 1 THEN 98 ELSE state END) as step',
+        $query->addSelect(['order_info.*','(discount+point) as disc','(CASE state WHEN 1 THEN 98 ELSE state END) as step',
         'user_info.phone as username','(CASE WHEN point>0 THEN 1 ELSE 0 END) as is_point',
             '(CASE WHEN ticket_id>0 THEN 1 ELSE 0 END) as is_ticket']);
         $dataProvider = new ActiveDataProvider([
@@ -71,23 +71,15 @@ class OrderInfoSearch extends OrderInfo
             'pay_id'=>$this->pay_id,
             'order_info.status'=>$this->status,
         ]);
+        var_dump($this->order_code);
+        exit;
         $query->andFilterWhere(['like', 'user_info.phone', $this->username])
             ->andFilterWhere(['like', 'order_code', $this->order_code]);
         $query->andFilterWhere(['>=','total',$this->total])
             ->andFilterWhere(['>=','pay_bill',$this->pay_bill]);
-        $query->andFilterWhere(['>=','(discount+(point/100))',$this->disc]);
-//        if(empty($this->is_point) && $this->is_ticket!==''){
-//            $query->andFilterWhere(['=', 'point', 0]);
-//        }elseif($this->is_point>0){
-//            $query->andFilterWhere(['>', 'point', 0]);
-//        }
+        $query->andFilterWhere(['>=','(discount+point)',$this->disc]);
         $query->andFilterWhere([$this->is_point>0 ? '>':'=', 'point', 0]);
         $query->andFilterWhere([$this->is_ticket>0 ? '>':'=', 'ticket_id', 0]);
-//        if(empty($this->is_ticket) && $this->is_ticket!==''){
-//            $query->andFilterWhere(['=', 'ticket_id', 0]);
-//        }elseif($this->is_ticket>0){
-//            $query->andFilterWhere(['>', 'ticket_id', 0]);
-//        }
         if(!empty($this->order_date)){
             $order_date = explode('to',str_replace(' ','',$this->order_date));
             $query->andFilterWhere(['between', 'order_info.order_date', strtotime("$order_date[0] 00:00:00"),strtotime("$order_date[1] 23:59:59")]);
@@ -104,7 +96,7 @@ class OrderInfoSearch extends OrderInfo
         $query = self::Query();
         $query->joinWith('u');
         $query->andWhere("state=3");
-        $query->addSelect(['order_info.*','(discount+(point/100)) as disc','(CASE state WHEN 1 THEN 98 ELSE state END) as step',
+        $query->addSelect(['order_info.*','(discount+point) as disc','(CASE state WHEN 1 THEN 98 ELSE state END) as step',
             'user_info.phone as username','(CASE WHEN point>0 THEN 1 ELSE 0 END) as is_point',
             '(CASE WHEN ticket_id>0 THEN 1 ELSE 0 END) as is_ticket']);
         $dataProvider = new ActiveDataProvider([
@@ -145,19 +137,9 @@ class OrderInfoSearch extends OrderInfo
             ->andFilterWhere(['like', 'order_code', $this->order_code]);
         $query->andFilterWhere(['>=','total',$this->total])
             ->andFilterWhere(['>=','pay_bill',$this->pay_bill]);
-        $query->andFilterWhere(['>=','(discount+(point/100))',$this->disc]);
-//        if(empty($this->is_point) && $this->is_ticket!==''){
-//            $query->andFilterWhere(['=', 'point', 0]);
-//        }elseif($this->is_point>0){
-//            $query->andFilterWhere(['>', 'point', 0]);
-//        }
+        $query->andFilterWhere(['>=','(discount+point)',$this->disc]);
         $query->andFilterWhere([$this->is_point>0 ? '>':'=', 'point', 0]);
         $query->andFilterWhere([$this->is_ticket>0 ? '>':'=', 'ticket_id', 0]);
-//        if(empty($this->is_ticket) && $this->is_ticket!==''){
-//            $query->andFilterWhere(['=', 'ticket_id', 0]);
-//        }elseif($this->is_ticket>0){
-//            $query->andFilterWhere(['>', 'ticket_id', 0]);
-//        }
         if(!empty($this->order_date)){
             $order_date = explode('to',str_replace(' ','',$this->order_date));
             $query->andFilterWhere(['between', 'order_info.order_date', strtotime("$order_date[0] 00:00:00"),strtotime("$order_date[1] 23:59:59")]);

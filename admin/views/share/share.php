@@ -4,7 +4,6 @@ use yii\helpers\Url;
 /**
  * @var string $message
  * @var string $name
- * @var string $code
  */
 ?>
 <!DOCTYPE html>
@@ -38,8 +37,7 @@ use yii\helpers\Url;
 				if(!empty($name)) {
 					?>
 					<div class="recom">
-						<span>推荐人：<em><?=$name ?></em></span>
-						<span>推荐码：<em><?=$code ?></em></span>
+						<span>推荐人手机：<em><?=$name ?></em></span>
 					</div>
 					<?php
 				}

@@ -83,7 +83,7 @@ class ShopController extends ApiController{
         $count = $query->count();
         $query->orderBy(['distance'=>SORT_ASC]);
         $query->offset(($page-1)*$pageSize)->limit($pageSize);
-        $shops = $query->asArray()->all();
+        $shops = $query->all();
         $data = [];
         if(!empty($shops)){
            foreach($shops as $element){

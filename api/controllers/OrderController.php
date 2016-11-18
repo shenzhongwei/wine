@@ -183,7 +183,7 @@ class OrderController extends ApiController{
                 'pay_id'=>$pay_mode,
                 'total'=>$total_price,
                 'type'=>$type,
-                'discount'=>$total_price-$pay_price+$send_bill-($point/100),
+                'discount'=>$total_price-$pay_price+$send_bill-$point,
                 'send_bill'=>$userInfo->is_vip ? 0:$send_bill,
                 'ticket_id'=>empty($ticket_id) ? 0:$ticket_id,
                 'point'=>empty($point) ? 0:$point,
@@ -312,12 +312,12 @@ class OrderController extends ApiController{
                         if($element->state<2&&$element->point>0){
                             $userPoint = UserPoint::findOne(['uid'=>$element->uid,'is_active'=>1]);
                             if(empty($userPoint)||$userPoint->point==0){
-                                $element->pay_bill = $element->pay_bill+($element->point/100);
+                                $element->pay_bill = $element->pay_bill+($element->point);
                                 $element->point = 0;
                             } elseif($userPoint->point<$element->point){
                                 $point = $element->point;
                                 $element->point=$userPoint->point;
-                                $element->pay_bill = $element->pay_bill+($point/100)-($userPoint->point/100);
+                                $element->pay_bill = $element->pay_bill+$point-$userPoint->point;
                             }
                             if(!$element->save()){
                                 throw new Exception('保存订单信息出错');

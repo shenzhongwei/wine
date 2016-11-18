@@ -68,7 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'label'=>'账户余额',
-                'width'=>'9%',
+                'width'=>'10%',
                 'attribute'=>'end',
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
@@ -103,19 +103,20 @@ $this->params['breadcrumbs'][] = $this->title;
                     'pluginOptions' => ['allowClear' => true],
                 ],
             ],
-            [
-                'attribute'=>'invite_code',
-                'width'=>'10%',
-                'hAlign'=>'center',
-                'vAlign'=>'middle',
-                'header'=>'邀请码',
-                'filterType'=>AutoComplete::className(),
-                'filterWidgetOptions'=>[
-                    'clientOptions' => [
-                        'source' =>UserInfoSearch::getAllCode(),
-                    ],
-                ]
-            ],
+            //邀请人不需要
+//            [
+//                'attribute'=>'invite_code',
+//                'width'=>'10%',
+//                'hAlign'=>'center',
+//                'vAlign'=>'middle',
+//                'header'=>'邀请码',
+//                'filterType'=>AutoComplete::className(),
+//                'filterWidgetOptions'=>[
+//                    'clientOptions' => [
+//                        'source' =>UserInfoSearch::getAllCode(),
+//                    ],
+//                ]
+//            ],
             [
                 'attribute'=>'created_time',
                 'width'=>'20%',
@@ -141,7 +142,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'label'=>'会员状态',
-                'width'=>'8%',
+                'width'=>'10%',
                 'attribute'=>'is_vip',
                 'trueLabel'=>'会员',
                 'falseLabel'=>'非会员',
@@ -154,7 +155,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute'=>'status',
                 'class'=>'kartik\grid\BooleanColumn',
-                'width'=>'8%',
+                'width'=>'10%',
                 'trueLabel'=>'激活中',
                 'falseLabel'=>'非激活',
                 'trueIcon'=>'<label class="label label-info">激活中</label>',
@@ -166,7 +167,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'header'=>'操作',
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
-                'width'=>'10%',
+                'width'=>'15%',
                 'class' => 'kartik\grid\ActionColumn',
                 'template'=>'{view}&nbsp;&nbsp;{delete}',
                 'buttons' => [

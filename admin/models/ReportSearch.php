@@ -108,13 +108,13 @@ class ReportSearch extends OrderDetail
                 'order_info.sid as sid',
                 'order_info.pay_id as pay_id',
                 'order_info.discount as discount',
-                '(order_info.point/100) as point',
+                'order_info.point as point',
                 'order_info.pay_bill as pay_bill',
                 'good_type.id as good_type',
                 '(cost.cost+order_info.send_bill) as cost',
                 '(order_info.pay_bill-cost.cost-order_info.send_bill) as real_profit',
-                '(order_info.pay_bill+order_info.discount+(order_info.point/100)-cost.cost-order_info.send_bill) as profit'
-        ])->where("state between 2 and 7");
+                '(order_info.pay_bill+order_info.discount+order_info.point-cost.cost-order_info.send_bill) as profit'
+        ])->where("state between 2 and 7 and order_info.status=0");
         if($admin_type==3){
             $manager = MerchantInfo::findOne(['wa_id'=>$admin_id]);
             if(!empty($manager)){

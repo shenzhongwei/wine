@@ -131,7 +131,7 @@ class PromotionInfo extends \yii\db\ActiveRecord
                     $discount = $promotion->discount;
                 }else{
                     if(!empty($pay_bill)){
-                        $discount = $pay_bill*$promotion->discount;
+                        $discount = $pay_bill*$promotion->discount/100;
                     }
                 }
                 if($discount>0){

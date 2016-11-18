@@ -22,15 +22,15 @@ class ShareController extends BaseController {
             $username = '';
             $recommendCode = '';
         }else{
-            $user = UserLogin::findOne(['token'=>$token])->u;
+            $user = UserLogin::findOne(['token'=>$token]);
             $message = '';
-            $username = $user->nickname;
-            $recommendCode = $user->invite_code;
+            $username = $user->username;
+//            $recommendCode = $user->invite_code;
         }
         return $this->renderAjax('share',[
             'message'=>$message,
             'name'=>$username,
-            'code'=>$recommendCode,
+//            'code'=>$recommendCode,
         ]);
     }
 }

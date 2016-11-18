@@ -157,8 +157,8 @@ class UserInfo extends \yii\db\ActiveRecord
         return $this->hasMany(UserTicket::className(), ['uid' => 'id']);
     }
 
-    public static function getInfoByInviteCode($inviteCode){
-        return static::findOne(['invite_code'=>$inviteCode]);
+    public static function getInfoByPhone($invitePhone){
+        return static::findOne(['phone'=>$invitePhone]);
     }
 
     public static function GenerateCode($user_id){

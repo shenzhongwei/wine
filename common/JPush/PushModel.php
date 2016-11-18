@@ -10,7 +10,7 @@ use Yii;
  */
 class PushModel{
 
-    public function PushReg($content,$registArr,$title='',$extra=[],$alert='',$env=false,$alias=[],$tag=[],$platform=['ios', 'android']){
+    public function PushReg($content,$registArr,$title='',$extra=[],$alert='',$env=false,$platform=['ios', 'android']){
         $key = Yii::$app->params['pushParams']['key'];
         $secret = Yii::$app->params['pushParams']['secret'];
         $push = new Jpush($key,$secret);
@@ -32,7 +32,7 @@ class PushModel{
     }
 
 
-    public function PushAll($content,$title='',$extra=[],$alert='',$env=false,$alias=[],$tag=[],$platform=['ios', 'android']){
+    public function PushAll($content,$title='',$extra=[],$alert='',$env=false,$platform=['ios', 'android']){
         $key = Yii::$app->params['pushParams']['key'];
         $secret = Yii::$app->params['pushParams']['secret'];
         $push = new Jpush($key,$secret);

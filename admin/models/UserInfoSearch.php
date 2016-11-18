@@ -17,7 +17,7 @@ class UserInfoSearch extends UserInfo
     {
         return [
             [['id', 'invite_user_id', 'is_vip', 'status'], 'integer'],
-            [['phone', 'sex', 'head_url', 'birth', 'nickname', 'realname', 'invite_code', 'created_time', 'updated_time'], 'safe'],
+            [['phone', 'sex', 'head_url', 'birth', 'nickname', 'realname', 'created_time', 'updated_time'], 'safe'],
             [['end'],'number'],
             [['name','invite_user'],'string','max'=>50]
         ];
@@ -100,8 +100,8 @@ class UserInfoSearch extends UserInfo
             $query->andFilterWhere(['between', 'created_time', "$create_date[0] 00:00:00","$create_date[1] 23:59:59"]);
         }
         $query->andFilterWhere(['like', 'phone', $this->phone])
-            ->andFilterWhere(['like', 'nickname', $this->nickname])
-            ->andFilterWhere(['like', 'invite_code', $this->invite_code]);
+            ->andFilterWhere(['like', 'nickname', $this->nickname]);
+//            ->andFilterWhere(['like', 'invite_code', $this->invite_code]);
         $query->andFilterWhere(['>=', 'end', $this->end]);
         return $dataProvider;
     }

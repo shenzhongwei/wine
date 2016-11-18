@@ -87,7 +87,7 @@ class UserController extends ApiController{
         $code = Yii::$app->request->post('code','');
         $password = Yii::$app->request->post('password','');
         $confirmPwd = Yii::$app->request->post('confirmPwd','');
-        $inviteCode = Yii::$app->request->post('inviteCode','');
+        $invitePhone = Yii::$app->request->post('invitePhone','');
         $reg_id = Yii::$app->request->post('reg_id','');//推送的手机设备号
         $reg_type = Yii::$app->request->post('reg_type',1);//类型
         //判断数据是否完整获取
@@ -121,12 +121,12 @@ class UserController extends ApiController{
             return $this->showResult(303,'验证码错误，请重新输入');
         }
         //判断邀请码是否存在
-        if(!empty($inviteCode)){
-            $invitedUser = UserInfo::getInfoByInviteCode(strtoupper($inviteCode));
+        if(!empty($invitePhone)){
+            $invitedUser = UserInfo::getInfoByPhone($invitePhone);
             if(empty($invitedUser)){
-                return $this->showResult(303,'邀请码错误，请重新输入');
+                return $this->showResult(303,'该手机号尚未注册，请重新输入');
             }elseif($invitedUser->status==0){
-                return $this->showResult(303,'该邀请码账户状态异常，使用邀请码失败');
+                return $this->showResult(303,'该手机号账户状态异常，使用邀请手机号失败');
             }
         }
         //开始数据库操作
@@ -154,7 +154,7 @@ class UserController extends ApiController{
                 $Invitemessage->attributes = [
                     'type_id'=>2,
                     'title'=>'推荐成功',
-                    'content'=>"手机号为$phone 的用户成功使用您的邀请码注册",
+                    'content'=>"手机号为$phone 的用户收您的邀请注册成功",
                     'own_id'=>$invitedUser->id,
                     'target'=>13,
                     'status'=>0,
@@ -174,7 +174,7 @@ class UserController extends ApiController{
                     $message->attributes = [
                         'type_id'=>2,
                         'title'=>$type == 1 ? '推荐成功送优惠':'推荐成功送积分',
-                        'content'=>"手机号为$phone"."的用户成功使用您的邀请码注册成功，送您".($type == 1 ? ("一张$amount"."元优惠券"):("$amount"."积分")).'，购物省钱两不误',
+                        'content'=>"手机号为$phone"."的用户成功受您的邀请注册成功，送您".($type == 1 ? ("一张$amount"."元优惠券"):("$amount"."积分")).'，购物省钱两不误',
                         'own_id'=>$invitedUser->id,
                         'target'=>$type == 1 ? 11:15,
                         'status'=>0,
@@ -184,7 +184,7 @@ class UserController extends ApiController{
                         throw new Exception('生成用户消息出错');
                     }
                     if(!empty($inviteLogin->reg_id)&&!empty($inviteLogin->reg_type)){
-                        $message = '用户成功使用您的邀请码注册成功啦！奖励您'.($type==1 ? "$amount"."元优惠券":"$amount"."积分")."，赶快来使用吧";
+                        $message = '用户成功受您的邀请注册成功啦！奖励您'.($type==1 ? "$amount"."元优惠券":"$amount"."积分")."，赶快来使用吧";
                         $target = $type == 1 ? 11:15;
                         $title = '推荐成功啦';
                         $extra = ['target'=>$target];
@@ -208,20 +208,20 @@ class UserController extends ApiController{
             if(!$userLogin->save()){
                 throw new Exception('生成登陆信息出错');
             }
-            //生成邀请码
-            $userCode= '';
-            $is_unique = true;
-            while($is_unique){
-                $userCode = UserInfo::GenerateCode($userInfo->id);
-                $isExistCode = UserInfo::getInfoByInviteCode($userCode);
-                if(empty($isExistCode)){
-                    $is_unique = false;
-                }
-            }
-            $userInfo->invite_code = $userCode;
-            if(!$userInfo->save()){
-                throw new Exception('生成用户邀请码出错');
-            }
+            //生成邀请码 暂无，改为输入手机号
+//            $userCode= '';
+//            $is_unique = true;
+//            while($is_unique){
+//                $userCode = UserInfo::GenerateCode($userInfo->id);
+//                $isExistCode = UserInfo::getInfoByInviteCode($userCode);
+//                if(empty($isExistCode)){
+//                    $is_unique = false;
+//                }
+//            }
+//            $userInfo->invite_code = $userCode;
+//            if(!$userInfo->save()){
+//                throw new Exception('生成用户邀请码出错');
+//            }
             //判断是否有新用户活动以及型用户活动的形式,券则存券，积分则存入积分
             $result = PromotionInfo::GetPromotion(1,$userInfo->id);
             if($result['result']==1){
@@ -346,7 +346,7 @@ class UserController extends ApiController{
      */
 
     public function actionUploadHead(){
-        $user_id = Yii::$app->user->identity->uid;
+        $user_id = Yii::$app->user->identity->id;
         //获取数据
         $post = Yii::$app->request->isPost;
         if(!$post){

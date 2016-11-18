@@ -140,7 +140,7 @@ class InoutPay extends \yii\db\ActiveRecord
                 if($billPromotion->style == 1){
                     $amount = $billPromotion->discount;
                 }else{
-                    $amount = $inout->sum*$billPromotion->discount;
+                    $amount = $inout->sum*$billPromotion->discount/100;
                 }
                 $res = self::SavePoint($billPromotion->id,$user_id,$amount,6,$inout->id);
                 if($res['result']==1){
