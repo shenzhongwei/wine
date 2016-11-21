@@ -245,20 +245,17 @@ class PromotionController extends BaseController
             $id = end($depDrop);
             $type = PromotionType::findOne($id);
             if(!empty($type)){
-                if(in_array($type->group,[1,4,5])){
-                    $results = Dics::getPromotionRange(0);
-                    foreach ($results as $key=>$value){
-                        $res[]=[
-                            'id'=>$key,
-                            'name'=>$value,
-                        ];
-                    }
-                }else{
-                    $res = [[
-                        'id'=>1,
-                        'name'=>'平台通用',]
+                if ($type->env == 5) {
+                    $model = Dics::find()->where("type='优惠适用对象'")->all();
+                } else {
+                    $model = Dics::find()->where("type='优惠适用对象' and id=1")->all();
+                }
+                $res = ArrayHelper::getColumn($model,function($element){
+                    return [
+                        'id'=>$element->id,
+                        'name'=>$element->name
                     ];
-            }
+                });
             }
         }
         echo Json::encode(['output' => empty($res) ? '':$res, 'selected'=>'']);

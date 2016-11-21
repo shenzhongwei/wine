@@ -96,7 +96,6 @@ class ReportSearch extends OrderDetail
         $admin = Yii::$app->user->identity;
         $admin_type = $admin->wa_type;
         $admin_id = $admin->wa_id;
-
         //pay_id in (2,3) and4
         $query = OrderDetail::find()->joinWith(['o','g'])->leftJoin('good_type','good_type.id=good_info.type')
             ->leftJoin("
@@ -114,7 +113,7 @@ class ReportSearch extends OrderDetail
                 '(cost.cost+order_info.send_bill) as cost',
                 '(order_info.pay_bill-cost.cost-order_info.send_bill) as real_profit',
                 '(order_info.pay_bill+order_info.discount+order_info.point-cost.cost-order_info.send_bill) as profit'
-        ])->where("state between 2 and 7 and order_info.status=0");
+        ])->where("state between 2 and 7 and order_info.status=1");
         if($admin_type==3){
             $manager = MerchantInfo::findOne(['wa_id'=>$admin_id]);
             if(!empty($manager)){
@@ -180,6 +179,11 @@ class ReportSearch extends OrderDetail
         $sort->defaultOrder = ['order_date' => SORT_DESC];
         $dataProvider->pagination->pageSize=100;
         if (!($this->load($params) && $this->validate())) {
+            $start = date('Y-m-01',time());
+            $end =  date('Y-m-d', strtotime($start . ' +1 month -1 day'));
+            $params['ReportSearch']['order_date'] = $start.' to '.$end;
+            $this->load($params);
+            $query->andWhere(['between', 'order_info.order_date', strtotime("$start 00:00:00"),strtotime("$end 23:59:59")]);
             return $dataProvider;
         }
         $query->andFilterWhere(['like', 'order_info.order_code', $this->order_code]);

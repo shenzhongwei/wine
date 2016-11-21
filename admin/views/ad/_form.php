@@ -115,7 +115,7 @@ use admin\models\AdList;
                     ]
                 ],
                 'url'=>[
-                    'label'=>'广告图片（建议180*100）',
+                    'label'=>'广告图片（宽高比：5:9）',
                     'type'=> Form::INPUT_WIDGET,
                     'widgetClass'=>FileInput::className(),
                     'options'=>[

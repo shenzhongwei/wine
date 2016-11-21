@@ -216,7 +216,7 @@ class PromotionTypeController extends BaseController
             $env = $depDrop[1];
             $group = $depDrop[2];
             if(!empty($class)&&!empty($env)&&!empty($group)){
-                if($class==1||$class==3){
+                if($class==1){
                     $results = [
                         [
                             'id'=>1,
@@ -230,6 +230,22 @@ class PromotionTypeController extends BaseController
                             'name'=>'多个共存',
                         ],
                     ];
+                }else if($class==3){
+                    if($env == 5){
+                        $results = [
+                            [
+                                'id'=>2,
+                                'name'=>'多个共存',
+                            ],
+                        ];
+                    }else{
+                        $results = [
+                            [
+                                'id'=>1,
+                                'name'=>'唯一',
+                            ],
+                        ];
+                    }
                 }else{
                     if($group==2){
                         $results = [

@@ -71,9 +71,5 @@ class MerchantInfoSearch extends MerchantInfo
         return $data;
     }
 
-    /*查询某一商户名称*/
-    public static function getOneMerchant($id){
-        $model=MerchantInfo::findOne($id);
-        return empty($model)?'<span class="not-set">未设置</span>':$model->name;
-    }
+
 }

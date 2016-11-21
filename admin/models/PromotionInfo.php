@@ -66,10 +66,10 @@ class PromotionInfo extends \yii\db\ActiveRecord
             if(empty($type)){
                 $this->addError('pt_id','异常类型');
             }else{
-                if(in_array($type->env,[1,2,4,5])||$type->group == 3){
+                if(in_array($type->env,[1,2,4])||$type->group == 3){
                     $query = self::find()->joinWith('pt')->where("
             promotion_type.id>0 and promotion_info.id>0 and promotion_info.is_active=1");
-                    if(in_array($type->env,[1,2,4,5])){
+                    if(in_array($type->env,[1,2,4])){
                         $query->andWhere("promotion_type.env=$type->env ");
                     }
                     if ($type->group == 3){
@@ -328,14 +328,10 @@ class PromotionInfo extends \yii\db\ActiveRecord
                 ];
                 break;
             case 2;
-                $res = MerchantInfo::find()->all();
+                $res = GoodType::find()->all();
                 $result = ArrayHelper::map($res,'id','name');
                 break;
             case 3;
-                $res = ShopInfo::find()->all();
-                $result = ArrayHelper::map($res,'id','name');
-                break;
-            case 4;
                 $res = GoodInfo::find()->where('is_active=1')->all();
                 $result = ArrayHelper::map($res,'id','name');
                 break;
@@ -354,15 +350,11 @@ class PromotionInfo extends \yii\db\ActiveRecord
                 case 1: //平台
                     $str='平台通用';
                     break;
-                case 2: //商家
-                    $str=MerchantInfoSearch::getOneMerchant($model->target_id);
+                case 2: //种类
+                    $str=GoodType::getOneType($model->target_id);
                     break;
-                case 3: //店铺
-                    $str=ShopSearch::getOneShopname($model->target_id);
-                    break;
-                case 4: //某商品
-                    $query=GoodInfo::findOne($model->target_id);
-                    $str=empty($query)?'<span class="not-set">未设置</span>':$query->name;
+                case 3: //商品
+                    $str=GoodInfo::getGoodName($model->target_id);
                     break;
                 default: $str='<span class="not-set">未设置</span>'; break;
             }
@@ -372,15 +364,12 @@ class PromotionInfo extends \yii\db\ActiveRecord
     public static function getTargetsRange($type){
         switch($type){
             case 1: //平台
-                $query =array(['id'=>'1','name'=>'平台']);
+                $query =array(['id'=>'1','name'=>'平台通用']);
                 break;
-            case 2: //商家
-                $query=MerchantInfo::find()->select(['id','name'])->where(['is_active'=>1])->all();
+            case 2: //大类
+                $query=GoodType::find()->select(['id','name'])->where(['is_active'=>1])->all();
                 break;
-            case 3: //店铺
-                $query=ShopInfo::find()->select(['id','name'])->where(['is_active'=>1])->all();
-                break;
-            case 4: //某商品
+            case 3: //商品
                 $query=GoodInfo::find()->select(['id','name'])->where(['is_active'=>1])->all();
                 break;
             default:

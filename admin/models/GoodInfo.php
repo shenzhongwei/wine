@@ -319,4 +319,11 @@ class GoodInfo extends \yii\db\ActiveRecord
         $code=$arr[$key];
         return $code;
     }
+
+
+    //根据商品id查找商品名称
+    public static function getGoodName($id){
+        $model=GoodInfo::findOne($id);
+        return empty($model)?'<span class="not-set">未设置</span>':$model->name;
+    }
 }

@@ -63,17 +63,14 @@ class Dics extends \yii\db\ActiveRecord
      */
     public static function getPromotionRange($id){
         if(empty($id)){
-            $model=Dics::find()->andWhere(['type'=>'优惠适用对象'])->all();
+            $model=Dics::find()->where("type='优惠适用对象' and id=1")->all();
         }else {
             $type = PromotionType::findOne($id);
             if (!empty($type)) {
-                if (in_array($type->group, [1, 4])) {
-                    $model = Dics::find()->andWhere(['type' => '优惠适用对象'])->all();
+                if ($type->env == 5) {
+                    $model = Dics::find()->where("type='优惠适用对象'")->all();
                 } else {
-                    $model = [[
-                        'id' => 1,
-                        'name' => '平台通用',]
-                    ];
+                    $model = Dics::find()->where("type='优惠适用对象' and id=1")->all();
                 }
             }else{
                 $model=[];

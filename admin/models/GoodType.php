@@ -192,4 +192,10 @@ class GoodType extends \yii\db\ActiveRecord
             $this->addError('name',$this->name.'类型已存在');
         }
     }
+
+    /*查询某一商户类型名称*/
+    public static function getOneType($id){
+        $model=GoodType::findOne($id);
+        return empty($model)?'<span class="not-set">未设置</span>':$model->name;
+    }
 }

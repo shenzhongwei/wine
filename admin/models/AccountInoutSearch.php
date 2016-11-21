@@ -49,6 +49,11 @@ class AccountInoutSearch extends AccountInout
         ];
         $sort->defaultOrder = ['pay_date' => SORT_DESC];
         if (!($this->load($params) && $this->validate())) {
+            $start = date('Y-m-01',time());
+            $end =  date('Y-m-d', strtotime($start . ' +1 month -1 day'));
+            $params['AccountInoutSearch']['pay_date'] = $start.' to '.$end;
+            $this->load($params);
+            $query->andWhere(['between', 'inout_pay.pay_date', strtotime("$start 00:00:00"),strtotime("$end 23:59:59")]);
             return $dataProvider;
         }
         $query->andFilterWhere(['inout_pay.pay_id'=>$this->pay_id]);

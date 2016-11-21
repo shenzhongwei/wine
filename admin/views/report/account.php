@@ -10,6 +10,7 @@ use common\helpers\ArrayHelper;
  * @var yii\web\View $this
  * @var yii\data\ActiveDataProvider $dataProvider
  * @var admin\models\ReportSearch $searchModel
+ * @var $total
  */
 //var_dump($searchModel->sid);
 //exit;
@@ -139,6 +140,9 @@ $pay = ['2'=>'支付宝','3'=>'微信'];
             'type'=>'info',
             'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> '.Html::encode($this->title).' </h3>',
             'showPanel'=>true,
+            'before'=>'<label class="btn btn-info">用户账户总额：¥ '.
+                            $total['sum']
+                        .'</label>',
             'showFooter'=>false,
             'after'=>false,
             'footer'=>false,

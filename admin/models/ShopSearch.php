@@ -69,9 +69,5 @@ class ShopSearch extends ShopInfo
         return $dataProvider;
     }
 
-    //根据门店id查找门店名称
-    public static function getOneShopname($shop_id){
-        $model=ShopInfo::findOne($shop_id);
-        return empty($model)?'<span class="not-set">未设置</span>':$model->name;
-    }
+
 }
