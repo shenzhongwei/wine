@@ -108,6 +108,33 @@ class MerchantController extends BaseController
 
             $transaction = Yii::$app->db->beginTransaction();
             try{
+                //获取省-市-区
+                $p=Zone::getDetailName($merchant['province']);
+                $c=$d='';
+                if(isset($merchant['city'])){
+                    $c=Zone::getDetailName($merchant['city']);
+                }
+                if(isset($merchant['district'])){
+                    $d=Zone::getDetailName($merchant['district']);
+                }
+                //创建商户信息
+                $model->attributes=[
+                    'name'=>$merchant['name'],
+                    'wa_id'=>null,
+                    'region'=>$merchant['region'],
+                    'address'=>$merchant['address'],
+                    'phone'=>$merchant['phone'],
+                    'registe_at'=>time(),
+                    'active_at'=>time(),
+                    'province'=>$p,
+                    'city'=>$c,
+                    'district'=>$d,
+                    'lng'=>empty($d)?(empty($c)?(empty($p)?'':Zone::getLngLat($c)['lng']*1000000):Zone::getLngLat($p)['lng']*1000000):Zone::getLngLat($d)['lng']*1000000,
+                    'lat'=>empty($d)?(empty($c)?(empty($p)?'':Zone::getLngLat($c)['lat']*1000000):Zone::getLngLat($p)['lat']*1000000):Zone::getLngLat($d)['lat']*1000000,
+                ];
+                if(!$model->save()){
+                    throw new Exception;
+                }
                 //创建后台商户管理员
                 $admin=new Admin();
                 $admin->attributes=[
@@ -123,30 +150,7 @@ class MerchantController extends BaseController
                 if(!$admin->save()){
                     throw new Exception;
                 }
-                //获取省-市-区
-                $p=Zone::getDetailName($merchant['province']);
-                $c=$d='';
-                if(isset($merchant['city'])){
-                    $c=Zone::getDetailName($merchant['city']);
-                }
-                if(isset($merchant['district'])){
-                    $d=Zone::getDetailName($merchant['district']);
-                }
-                //创建商户信息
-                $model->attributes=[
-                    'name'=>$merchant['name'],
-                    'wa_id'=>$admin->wa_id,
-                    'region'=>$merchant['region'],
-                    'address'=>$merchant['address'],
-                    'phone'=>$merchant['phone'],
-                    'registe_at'=>time(),
-                    'active_at'=>time(),
-                    'province'=>$p,
-                    'city'=>$c,
-                    'district'=>$d,
-                    'lng'=>empty($d)?(empty($c)?(empty($p)?'':Zone::getLngLat($c)['lng']*1000000):Zone::getLngLat($p)['lng']*1000000):Zone::getLngLat($d)['lng']*1000000,
-                    'lat'=>empty($d)?(empty($c)?(empty($p)?'':Zone::getLngLat($c)['lat']*1000000):Zone::getLngLat($p)['lat']*1000000):Zone::getLngLat($d)['lat']*1000000,
-                ];
+                $model->wa_id=$admin->wa_id;
                 if(!$model->save()){
                     throw new Exception;
                 }
@@ -154,15 +158,21 @@ class MerchantController extends BaseController
                 $user_id = $model->wa_id;
                 $role = $auth->createRole('商家管理员');      //创建角色对象
                 $auth->assign($role, $user_id);                           //添加对应关系
-
                 $transaction->commit();//提交
                 return $this->redirect(['view', 'id' => $model->id]);
               }catch(Exception $e){
                 $transaction->rollBack();
+                return $this->render('create', [
+                    'model' => $model,
+                    'item_arr'=>$itemArr,
+                    'province'=>ArrayHelper::map(Zone::getProvince(),'id','name'),
+                    'city'=>[],
+                    'district'=>[],
+                ]);
               }
         } else {
             //跳到 新建 页面
-            $model->wa_type='3';
+            $model->wa_type=3;
             return $this->render('create', [
                 'model' => $model,
                 'item_arr'=>$itemArr,

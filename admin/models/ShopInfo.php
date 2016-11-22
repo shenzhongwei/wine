@@ -143,10 +143,15 @@ class ShopInfo extends \yii\db\ActiveRecord
 
     //判断商户后台用户名是否唯一
     public function validUsername(){
-        $query = Admin::find()->where(['wa_username'=>$this->wa_username]);
+        $query = Admin::find()->where(['wa_username'=>$this->wa_username,'wa_type'=>4]);
         if(!empty($this->id)){
             $model = self::findOne($this->id);
-            $query->andWhere("wa_id <> $model->wa_id");
+            if(!empty($model)&&!empty($model->wa_id)){
+                $query->andWhere("wa_id <> $model->wa_id");
+            }
+            if(!empty($model)){
+                $query->andWhere("target_id<>$model->id");
+            }
         }
         $model=$query->one();
         if(!empty($model)){

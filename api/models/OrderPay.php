@@ -195,7 +195,7 @@ class OrderPay extends \yii\db\ActiveRecord
             if(!$payInfo->save()){
                 throw new Exception('保存付款信息出错',400);
             }
-            $sysAccount = UserAccount::findOne(['target'=>1,'level'=>1,'type'=>$params['pay_id']]);
+            $sysAccount = UserAccount::findOne(['target'=>2,'level'=>1,'type'=>$params['pay_id']]);
             if(empty($sysAccount)){
                 $sysAccount = new UserAccount();
                 $sysAccount->create_at = time();
@@ -205,7 +205,7 @@ class OrderPay extends \yii\db\ActiveRecord
                 $sysAccount->start = $sysAccount->end;
                 $sysAccount->end = $sysAccount->start+$params['pay_money'];
             }
-            $sysAccount->target=1;
+            $sysAccount->target=2;
             $sysAccount->level=1;
             $sysAccount->type=$params['pay_id'];
             $sysAccount->is_active = 1;

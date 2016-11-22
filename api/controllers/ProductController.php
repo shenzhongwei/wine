@@ -213,6 +213,7 @@ class ProductController extends ApiController{
             );
 
         $count = $query->count();
+        $query->orderBy(['end_at'=>SORT_ASC]);
         $query->offset(($page-1)*$pageSize)->limit($pageSize);
         $goods = $query->all();
         $data = [];

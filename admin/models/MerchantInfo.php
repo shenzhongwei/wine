@@ -94,7 +94,7 @@ class MerchantInfo extends \yii\db\ActiveRecord
     public function scenarios()
     {
         $n=parent::scenarios();
-        $n['create']=['name','phone','province','city','district','region','address','wa_username','wa_password','wa_type','wa_logo','id'];
+        $n['create']=['id','name','phone','province','city','district','region','address','wa_username','wa_password','wa_type','wa_logo','id'];
         return $n;
     }
 
@@ -125,9 +125,19 @@ class MerchantInfo extends \yii\db\ActiveRecord
 
     //判断商户后台用户名是否唯一
     public function validusername(){
-        $model=Admin::findIdentityByUsername($this->wa_username);
+        $query = Admin::find()->where(['wa_username'=>$this->wa_username,'wa_type'=>3]);
+        if(!empty($this->id)){
+            $model = self::findOne($this->id);
+            if(!empty($model)&&!empty($model->wa_id)){
+                $query->andWhere("wa_id <> $model->wa_id");
+            }
+            if(!empty($model)){
+                $query->andWhere("target_id<>$model->id");
+            }
+        }
+        $model=$query->one();
         if(!empty($model)){
-            return $this->addError('wa_username','用户名已存在');
+            $this->addError('wa_username','该后台登录名已存在');
         }
     }
 

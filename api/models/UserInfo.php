@@ -161,6 +161,11 @@ class UserInfo extends \yii\db\ActiveRecord
         return static::findOne(['phone'=>$invitePhone]);
     }
 
+
+    public static function getInfoByInviteCode($invitePhone){
+        return static::findOne(['invite_code'=>$invitePhone]);
+    }
+
     public static function GenerateCode($user_id){
         $arr = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','2','3','4','5','6','7','8','9',($user_id%10)];
         $code = '';

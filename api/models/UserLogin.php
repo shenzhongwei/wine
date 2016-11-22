@@ -79,7 +79,7 @@ class UserLogin extends \yii\db\ActiveRecord implements IdentityInterface
 
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        return static::findOne(['token' => $token]);
+        return static::find()->joinWith('UserInfo')->where("token='$token' and user_info.status=1")->one();
     }
 
     public static function findIdentityByUsername($username){

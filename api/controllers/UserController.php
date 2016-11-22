@@ -209,19 +209,19 @@ class UserController extends ApiController{
                 throw new Exception('生成登陆信息出错');
             }
             //生成邀请码 暂无，改为输入手机号
-//            $userCode= '';
-//            $is_unique = true;
-//            while($is_unique){
-//                $userCode = UserInfo::GenerateCode($userInfo->id);
-//                $isExistCode = UserInfo::getInfoByInviteCode($userCode);
-//                if(empty($isExistCode)){
-//                    $is_unique = false;
-//                }
-//            }
-//            $userInfo->invite_code = $userCode;
-//            if(!$userInfo->save()){
-//                throw new Exception('生成用户邀请码出错');
-//            }
+            $userCode= '';
+            $is_unique = true;
+            while($is_unique){
+                $userCode = UserInfo::GenerateCode($userInfo->id);
+                $isExistCode = UserInfo::getInfoByInviteCode($userCode);
+                if(empty($isExistCode)){
+                    $is_unique = false;
+                }
+            }
+            $userInfo->invite_code = $userCode;
+            if(!$userInfo->save()){
+                throw new Exception('生成用户邀请码出错');
+            }
             //判断是否有新用户活动以及型用户活动的形式,券则存券，积分则存入积分
             $result = PromotionInfo::GetPromotion(1,$userInfo->id);
             if($result['result']==1){
