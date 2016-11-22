@@ -444,7 +444,7 @@ class ProductController extends ApiController{
         //产品轮播图;
         if(!empty($goodInfo->goodPics)){
             foreach ($goodInfo->goodPics as $val){
-                $pics[] = Yii::$app->params['img_path'].$goodInfo->goodPics->pic;
+                $pics[] = Yii::$app->params['img_path'].$val->pic;
             }
         }
         //查找评论   comment_detail与order_comment
