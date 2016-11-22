@@ -66,7 +66,7 @@ $payArr = [
                                     'merchant'=>['type'=> Form::INPUT_WIDGET,'widgetClass'=>Select2::className(),
                                         'options'=>[
                                             'data'=>$merchants,
-                                            'options'=>['placeholder'=>'请选择商品所属商户', 'disabled'=>$wa_type>=2 ? true:false,],
+                                            'options'=>['placeholder'=>'请选择商品所属商户', 'disabled'=>$wa_type>2 ? true:false,],
                                             'pluginOptions' => ['allowClear' => true],
                                         ]
                                     ],

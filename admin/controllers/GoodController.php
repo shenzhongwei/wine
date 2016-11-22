@@ -309,7 +309,7 @@ class GoodController extends BaseController
             Yii::$app->session->setFlash('success','保存成功');
             return $this->render('view', ['model' => $model]);
         } else {
-            if($admin->wa_type>=2){
+            if($admin->wa_type>2){
                 $model->merchant = MerchantInfo::findOne(['wa_id'=>$admin->id])->id;
             }
             if(Yii::$app->request->isPost){
@@ -351,6 +351,7 @@ class GoodController extends BaseController
      */
     public function actionUpdate($id)
     {
+        $admin = Yii::$app->user->identity;
         $model = $this->findModel($id);
         $url = $model->pic;
         $post = Yii::$app->request->post();
@@ -388,6 +389,9 @@ class GoodController extends BaseController
                 ]);
             }
         } else {
+            if($admin->wa_type>2){
+                $model->merchant = MerchantInfo::findOne(['wa_id'=>$admin->id])->id;
+            }
             $model->vip_pay = explode('|',$model->vip_pay);
             $model->original_pay = explode('|',$model->original_pay);
             return $this->render('update', [
