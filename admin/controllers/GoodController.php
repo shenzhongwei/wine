@@ -91,7 +91,7 @@ class GoodController extends BaseController
         if(empty($id)){
             $file_name = 'good_pic_'.time();
         }else{
-            $file_name = 'good_pic_'.$id;
+            $file_name = 'good_pic_'.$id.'_'.time();
         }
         if(Yii::$app->request->isPost) {
             $image = UploadedFile::getInstance($goodInfo, 'img');
@@ -376,11 +376,6 @@ class GoodController extends BaseController
                 $model->pic = $filename;
             }
             if($model->save()){
-                Yii::$app->session->setFlash('success','保存成功');
-                @unlink('../../photo'.$pic);
-                if(!empty($url)){
-                    @unlink('../../photo'.$url);
-                }
                 return $this->render('view', ['model' => $model]);
             }else{
                 Yii::$app->session->setFlash('danger','保存失败');
