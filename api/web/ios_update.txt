@@ -1,1 +1,1 @@
-﻿{"verName": "酒双天","lastVerCode": "110","apkUrl": "https://www.pgyer.com/STJYG","updateContent": "1、版本优化；\n2、版本升为V1.1。","force": "0"}
+﻿{"verName": "酒双天","lastVerCode": "100","apkUrl": "https://www.pgyer.com/STJYG","updateContent": "1、版本优化；\n2、版本升为V1.1。","force": "0"}
