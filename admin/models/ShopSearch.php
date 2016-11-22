@@ -69,5 +69,8 @@ class ShopSearch extends ShopInfo
         return $dataProvider;
     }
 
+    public static function getOneShopname($id){
+        return ShopInfo::findOne($id)->name;
+    }
 
 }

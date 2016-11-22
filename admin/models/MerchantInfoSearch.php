@@ -71,5 +71,9 @@ class MerchantInfoSearch extends MerchantInfo
         return $data;
     }
 
+    public static function getOneMerchant($id){
+        return MerchantInfo::findOne($id)->name;
+    }
+
 
 }
