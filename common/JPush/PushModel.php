@@ -22,6 +22,7 @@ class PushModel{
             ->addAndroidNotification($content, $title, 1, $extra)
             ->addIosNotification($content,  'default', Config::DISABLE_BADGE, true,null, $extra)
             ->setMessage($content, $title, null, $extra)
+            //$env True 表示推送生产环境，False 表示要推送开发环境；
             ->setOptions(100000, 3600, null, $env,null)
             ->send();
         if($result['http_code']==200){

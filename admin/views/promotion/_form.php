@@ -57,9 +57,6 @@ $this->registerJs($this->render('_script.js'));
                     'data'=>PromotionInfo::getAllTypes($model->isNewRecord ? 'create':'update'),
                     'options'=>['placeholder'=>'请选择促销种类'],
                     'pluginOptions'=>['allowClear'=>true],
-                    'pluginEvents'=>[
-                        'change'=>"function() { TypeChange(this); }",
-                    ]
                 ]
             ],
 
@@ -141,13 +138,13 @@ $this->registerJs($this->render('_script.js'));
             ],
 
             'time'=>['type'=> Form::INPUT_TEXT ,'label'=>'可参与次数', 'options'=>[
-                'placeholder'=>$model->isNewRecord ? '请先选择参与次数形式':($model->time_valid==1 ? '输入可参与次数':'该形式无需输入参与次数'),
-                'disabled'=>$model->isNewRecord ? true:($model->time_valid==1 ? false:true),
+                'placeholder'=>$model->isNewRecord ? '请先选择参与次数形式':'',
+                'disabled'=>$model->isNewRecord ? true:false,
                 'onkeyup'=>'this.value=this.value.replace(/\D/gi,"")'
             ]],
 
             'condition'=>['type'=> Form::INPUT_TEXT, 'label'=>'活动条件','options'=>[
-                'placeholder'=>$model->isNewRecord ? '请先选择优惠形式':($model->style==2 ? '该类型无需输入优惠条件':'输入优惠条件'),
+                'placeholder'=>$model->isNewRecord ? '请先选择优惠形式':'',
                 'maxlength'=>10,'onkeyup'=>'clearNoNum(this)',
                 'disabled'=>$model->isNewRecord ? true:($model->style==2 ? true:false),
             ]],
@@ -155,14 +152,14 @@ $this->registerJs($this->render('_script.js'));
             'circle_valid'=>['type'=> Form::INPUT_RADIO_LIST,'items'=>['0'=>'永久有效','1'=>'非永久有效'],'options'=>['inline'=>true]],
 
             'discount'=>['type'=> Form::INPUT_TEXT, 'label'=>'活动优惠', 'options'=>[
-                'placeholder'=>$model->isNewRecord ? '请先选择优惠形式':($model->style==2 ? '输入所占百分比':'输入优惠额度'),
+                'placeholder'=>$model->isNewRecord ? '请先选择优惠形式':'',
                 'maxlength'=>10,'onkeyup'=>'clearNoNum(this)',
                 'disabled'=>$model->isNewRecord ? true:false,
             ]],
 
             'valid_circle'=>['type'=> Form::INPUT_TEXT, 'label'=>'优惠券有效期限（单位：天）','options'=>[
-                'placeholder'=>$model->isNewRecord ? '请先选择参与优惠券期限形式':($model->circle_valid==1 ? '输入优惠券有效期(单位：天)':'该形式无需输入优惠券的有效期'),
-                'disabled'=>$model->isNewRecord ? true:($model->circle_valid==1 ? false:true),
+                'placeholder'=>$model->isNewRecord ? '请先选择参与优惠券期限形式':'',
+                'disabled'=>$model->isNewRecord ? true:false,
                 'maxlength'=>10,
                 'onkeyup'=>'this.value=this.value.replace(/\D/gi,"")'
             ]],

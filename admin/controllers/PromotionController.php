@@ -181,6 +181,8 @@ class PromotionController extends BaseController
                 Yii::$app->session->setFlash('success','操作成功');
                 return $this->redirect(['index']);
             }else{
+//                var_dump($model->getErrors());
+//                exit;
                 Yii::$app->session->setFlash('danger','操作失败');
                 return $this->render('update', [
                     'model' => $model,
@@ -191,16 +193,6 @@ class PromotionController extends BaseController
                 $model->date_valid=1;
             }else{
                 $model->date_valid=0;
-            }
-            if($model->time>0){
-                $model->time_valid=1;
-            }else{
-                $model->time_valid=0;
-            }
-            if($model->valid_circle>0){
-                $model->circle_valid=1;
-            }else{
-                $model->circle_valid=0;
             }
 //            var_dump($is_time);
 //            exit;
@@ -310,20 +302,60 @@ class PromotionController extends BaseController
             return $this->showResult(302,'读取用户信息出错');
         }
         $type = Yii::$app->request->post('type');
-        $promotionType = PromotionType::findOne(['name'=>$type]);
-        if(empty($promotionType)){
-            return $this->showResult(301,'服务器异常');
-        }
-        if($promotionType->group == 3){
-            //开通会员不需要discount
-            $res = 1;
-        }elseif (in_array($promotionType->env,[2,5]) && $promotionType->group==2){
-            //推荐成功且为赠送积分时不需condition
-            $res = 2;
+        $style = Yii::$app->request->post('style');
+        if(empty($type)||empty($style)){
+            $conditionDisable = 1;
+            $conditionVlaue = '';
+            $conditionPlaceholder = '请先选择优惠形式';
+            $discountDisable = 1;
+            $discountValue = '';
+            $discountPlaceholder = '请先选择优惠形式';
         }else{
-            $res = 0;
+            $promotionType = PromotionType::findOne($type);
+            if(empty($promotionType)){
+                return $this->showResult(301,'未获取到优惠种类信息');
+            }
+            if($style==1){
+                if($promotionType->group==3){
+                    $conditionDisable = 0;
+                    $conditionVlaue = '';
+                    $conditionPlaceholder = '请输入开通会员条件';
+                    $discountDisable = 1;
+                    $discountValue = '';
+                    $discountPlaceholder = '该优惠种类无需输入优惠额';
+                }elseif (($promotionType->env==2&&$promotionType->group==2)||($promotionType->env==5&&$promotionType->group==2)){
+                    $conditionDisable = 1;
+                    $conditionVlaue = '';
+                    $conditionPlaceholder = '该优惠种类无需输入条件';
+                    $discountDisable = 0;
+                    $discountValue = '';
+                    $discountPlaceholder = '请输入优惠额度';
+                }else{
+                    $conditionDisable = 0;
+                    $conditionVlaue = '';
+                    $conditionPlaceholder = '请输入优惠条件';
+                    $discountDisable = 0;
+                    $discountValue = '';
+                    $discountPlaceholder = '请输入优惠额';
+                }
+            }else{
+                $conditionDisable = 1;
+                $conditionVlaue = '';
+                $conditionPlaceholder = '该优惠种类无需输入条件';
+                $discountDisable = 0;
+                $discountValue = '';
+                $discountPlaceholder = '请输入优惠百分比';
+            }
         }
-        return $this->showResult(200,'成功',$res);
+        $data = [
+            'conditionDisable'=>$conditionDisable,
+            'conditionValue'=>$conditionVlaue,
+            'conditionPlaceholder'=>$conditionPlaceholder,
+            'discountDisable'=>$discountDisable,
+            'discountValue'=>$discountValue,
+            'discountPlaceholder'=>$discountPlaceholder,
+        ];
+        return $this->showResult(200,'成功',$data);
     }
 
     public function actionTypeChange(){
@@ -332,159 +364,173 @@ class PromotionController extends BaseController
             return $this->showResult(302,'读取用户信息出错');
         }
         $type = Yii::$app->request->post('type');
-        $is_ticket = 1;
-        $is_time = 1;
         if(!empty($type)){
             $promotionType = PromotionType::findOne($type);
-            if(empty($promotionType)){
-                return $this->showResult(301,'服务器异常');
-            }
-            if($promotionType->group == 1){
-                //是优惠券的形式则可操作
-                $is_ticket = 1;
+            if(!empty($promotionType)){
+                if($promotionType->env==1||$promotionType->group==3){
+                    $timeDisable = 1;
+                    $timeValidDisable = 1;
+                    $timeValidValue = 1;
+                    $timeValue = '1';
+                    $timePlaceHolder = '';
+                }elseif(in_array($promotionType->env,[2,5,6])){
+                    $timeDisable = 1;
+                    $timeValidDisable = 0;
+                    $timeValidValue = '';
+                    $timeValue = '';
+                    $timePlaceHolder = '请先选择参与次数的形式';
+                }else{
+                    $timeDisable = 1;
+                    $timeValidDisable = 1;
+                    $timeValidValue = 0;
+                    $timeValue = '';
+                    $timePlaceHolder = '该优惠种类无需输入参与次数';
+                }
+                if($promotionType->group==1||$promotionType->group==5){
+                    $ticketDisable = 1;
+                    $ticketValidDisable = 0;
+                    $ticketValidValue = '';
+                    $ticketValue = '';
+                    $ticketPlaceHolder = '请先选择优惠券的有效期的形式';
+                }else{
+                    $ticketDisable = 1;
+                    $ticketValidDisable = 1;
+                    $ticketValidValue = '';
+                    $ticketValue = '';
+                    $ticketPlaceHolder = '该优惠种类无需选择优惠券的有效期形式';
+                }
+                $data = [
+                    'timeDisable'=>$timeDisable,
+                    'timeValidDisable'=>$timeValidDisable,
+                    'timeValidValue'=>$timeValidValue,
+                    'timeVlaue'=>$timeValue,
+                    'timePlaceHolder'=>$timePlaceHolder,
+                    'ticketDisable'=>$ticketDisable,
+                    'ticketValidDisable'=>$ticketValidDisable,
+                    'ticketValidValue'=>$ticketValidValue,
+                    'ticketVlaue'=>$ticketValue,
+                    'ticketPlaceHolder'=>$ticketPlaceHolder,
+                ];
+                return $this->showResult(200,'成功',$data);
             }else{
-                //费优惠券不可操作
-                $is_ticket = 0;
+                return $this->showResult(301,'未获取到优惠种类信息');
             }
-            if($promotionType->group==3||$promotionType->env==1){
-                //会员特权和用户注册的活动次数限制一次
-                $is_time = 0;
-            }elseif ($promotionType->group==5||$promotionType->env == 3){
-                //分享网页与下单时无限制
-                $is_time = 2;
-            }else{
-                //其他可操作
-                $is_time = 1;
-            }
+        }else{
+            return $this->showResult(301,'未获取到优惠种类信息');
         }
-
-        $data = [
-            'is_ticket'=>$is_ticket,
-            'is_time'=>$is_time,
-        ];
-        return $this->showResult(200,'成功',$data);
     }
 
-    public function actionPromotion(){
+    public function actionPromotion()
+    {
         $user_id = Yii::$app->user->identity;
-        if(empty($user_id)){
-            return $this->showResult(302,'读取用户信息出错');
+        if (empty($user_id)) {
+            return $this->showResult(302, '读取用户信息出错');
         }
         $id = Yii::$app->request->post('id');
         $promotion = PromotionInfo::findOne($id);
-        if(empty($promotion)){
-            return $this->showResult(301,'服务器异常');
-        }
-        $promotionType = $promotion->pt;
-        if(empty($promotion)){
-            return $this->showResult(301,'促销种类不存在');
-        }
-        //优惠与条件
-        if(in_array($promotionType->group,[1,5])&&$promotion->style=1){
-            //固定送券时
-            $is_condition = 1;
-            $condition_value = $promotion->condition;
-            $is_discount = 1;
-            $discount_value = $promotion->discount;
-            $condition_placeholder = '输入优惠条件';
-            $discount_placeholder = '输入优惠额度';
-        }elseif($promotionType->group==3&&$promotion->style=1){
-            //开通会员时
-            $is_condition = 1;
-            $condition_value = $promotion->condition;
-            $is_discount = 0;
-            $discount_value = '';
-            $condition_placeholder = '输入优惠条件';
-            $discount_placeholder = '该种类无需输入优惠额度';
-        }elseif (in_array($promotionType->env,[2,5])&&$promotionType->group==2&&$promotion->style=1){
-            //推荐注册和推荐下单固定送积分
-            $is_condition = 0;
-            $condition_value = '';
-            $is_discount = 1;
-            $discount_value = $promotion->discount;
-            $condition_placeholder = '该种类下无需输入条件';
-            $discount_placeholder = '输入优惠额度';
-        }else{
-            if($promotion->style==1){
-                $is_condition = 1;
-                $condition_value = $promotion->condition;
-                $is_discount = 1;
-                $discount_value = $promotion->discount;
-                $condition_placeholder = '输入优惠条件';
-                $discount_placeholder = '输入优惠额度';
-            }else{
-                $is_condition = 0;
-                $condition_value = '';
-                $is_discount = 1;
-                $discount_value = $promotion->discount;
-                $condition_placeholder = '该优惠形式无需输入条件';
-                $discount_placeholder = '输入优惠百分比';
+        if (empty($promotion) || empty($promotion->pt)) {
+            $conditionDisable = 1;
+            $conditionVlaue = '';
+            $conditionPlaceholder = '请先选择优惠形式';
+            $discountDisable = 1;
+            $discountValue = '';
+            $discountPlaceholder = '请先选择优惠形式';
+            $timeDisable = 1;
+            $timeValidDisable = 1;
+            $timeValidValue = 1;
+            $timeValue = '';
+            $timePlaceHolder = '请先选择参与次数形式';
+            $ticketDisable = 1;
+            $ticketValidDisable = 0;
+            $ticketValidValue = '';
+            $ticketValue = '';
+            $ticketPlaceHolder = '请先选择优惠券的有效期的形式';
+        } else {
+            $promotionType = $promotion->pt;
+            $style = $promotion->style;
+            if ($promotionType->env == 1 || $promotionType->group == 3) {//注册或者开会员
+                $timeDisable = 1;
+                $timeValidDisable = 1;
+                $timeValidValue = 1;
+                $timeValue = $promotion->time;
+                $timePlaceHolder = '';
+            } elseif (in_array($promotionType->env, [2, 5, 6])) {//充值送积分，推荐活动，推荐下单活动，限制次数
+                $timeDisable = $promotion->time>0 ? 0:1;
+                $timeValidDisable = 0;
+                $timeValidValue = $promotion->time>0 ? 1:0;
+                $timeValue = $promotion->time>0 ? $promotion->time:'';
+                $timePlaceHolder = $promotion->time>0 ? '请先选择参与次数的形式':'该形式无需输入使用次数';
+            } else {//其他无需次数
+                $timeDisable = 1;
+                $timeValidDisable = 1;
+                $timeValidValue = 0;
+                $timeValue = '';
+                $timePlaceHolder = '该优惠种类无需输入参与次数';
+            }
+            if ($promotionType->group == 1 || $promotionType->group == 5) {//发券形式 需要券有效期
+                $ticketDisable = $promotion->valid_circle>0 ? 0:1;
+                $ticketValidDisable = 0;
+                $ticketValidValue = $promotion->valid_circle>0 ? 1:0;
+                $ticketValue = $promotion->valid_circle>0 ? $promotion->valid_circle:'';
+                $ticketPlaceHolder = $promotion->valid_circle>0 ? '请先选择优惠券的有效期的形式':'该形式无需输入优惠券的有消息';
+            } else {//其他无需
+                $ticketDisable = 1;
+                $ticketValidDisable = 1;
+                $ticketValidValue = '';
+                $ticketValue = '';
+                $ticketPlaceHolder = '该优惠种类无需选择优惠券的有效期形式';
+            }
+            if($style==1){//固定的
+                if($promotionType->group==3){//开会员条件需要的
+                    $conditionDisable = 0;
+                    $conditionVlaue = $promotion->condition;
+                    $conditionPlaceholder = '请输入开通会员条件';
+                    $discountDisable = 1;
+                    $discountValue = '';
+                    $discountPlaceholder = '该优惠种类无需输入优惠额';
+                }elseif (($promotionType->env==2&&$promotionType->group==2)||($promotionType->env==5&&$promotionType->group==2)){//积分推荐和下单
+                    $conditionDisable = 1;
+                    $conditionVlaue = '';
+                    $conditionPlaceholder = '该优惠种类无需输入条件';
+                    $discountDisable = 0;
+                    $discountValue = $promotion->discount;
+                    $discountPlaceholder = '请输入优惠额度';
+                }else{//其他都要输入
+                    $conditionDisable = 0;
+                    $conditionVlaue = $promotion->condition;
+                    $conditionPlaceholder = '请输入优惠条件';
+                    $discountDisable = 0;
+                    $discountValue = $promotion->discount;
+                    $discountPlaceholder = '请输入优惠额';
+                }
+            }else{//百分比
+                $conditionDisable = 1;
+                $conditionVlaue = '';
+                $conditionPlaceholder = '该优惠种类无需输入条件';
+                $discountDisable = 0;
+                $discountValue = $promotion->discount;
+                $discountPlaceholder = '请输入优惠百分比';
             }
         }
-        if(in_array($promotionType->group,[1,5])){
-            //是优惠券的形式则可操作
-            $is_ticket = 1;
-            $ticket_check = $promotion->valid_circle>0 ? 1:0;
-            $ticket_value = $promotion->valid_circle>0 ? $promotion->valid_circle:'';
-            $ticket_disable = $promotion->valid_circle>0 ? 0:1;
-            $ticket_placeholder = $promotion->valid_circle>0 ? '输入优惠券有效期(单位：天)':'该形式无需输入优惠券的有效期';
-        }else{
-            //费优惠券不可操作
-            $is_ticket = 0;
-            $ticket_check = 0;
-            $ticket_value = '';
-            $ticket_disable = 1;
-            $ticket_placeholder = '该形式无需输入优惠券的有效期';
-        }
-        if($promotionType->group==3||$promotionType->env==1){
-            //会员特权和用户注册的活动次数限制一次
-            $is_time = 0;
-            $time_check =  1;
-            $time_value = 1;
-            $time_disable = 1;
-            $time_placeholder = '请输入可参与次数';
-        }elseif ($promotionType->group==5||$promotionType->env == 3){
-            //分享网页与下单时无限制
-            $is_time = 0;
-            $time_check =  0;
-            $time_value = '';
-            $time_disable = 1;
-            $time_placeholder = '该形式无需输入优惠券的有效期';
-        }else{
-            //其他可操作
-            $is_time = 1;
-            $time_check =  $promotion->time>0 ? 1:0;
-            $time_value = $promotion->time>0 ? $promotion->time:'';
-            $time_disable = $promotion->time>0 ? 0:1;
-            $time_placeholder = $promotion->time>0 ? '请输入优惠券的有效期（单位：天）':'该形式无需输入优惠券的有效期';;
-        }
         $data = [
-            'ticket'=>[
-                'is_ticket'=>$is_ticket,
-                'ticket_check'=>$ticket_check,
-                'ticket_value'=>$ticket_value,
-                'ticket_disable'=>$ticket_disable,
-                'ticket_placeholder'=>$ticket_placeholder,
-            ],
-            'time'=>[
-                'is_time'=>$is_time,
-                'time_check'=>$time_check,
-                'time_value'=>$time_value,
-                'time_disable'=>$time_disable,
-                'time_placeholder'=>$time_placeholder,
-            ],
-            'condition'=>[
-                'is_condition'=>$is_condition,
-                'condition_value'=>$condition_value,
-                'condition_placeholder'=>$condition_placeholder,
-            ],
-            'discount'=>[
-                'is_discount'=>$is_discount,
-                'discount_value'=>$discount_value,
-                'discount_placeholder'=>$discount_placeholder,
-            ],
+            'timeDisable'=>$timeDisable,
+            'timeValidDisable'=>$timeValidDisable,
+            'timeValidValue'=>$timeValidValue,
+            'timeVlaue'=>$timeValue,
+            'timePlaceHolder'=>$timePlaceHolder,
+            'ticketDisable'=>$ticketDisable,
+            'ticketValidDisable'=>$ticketValidDisable,
+            'ticketValidValue'=>$ticketValidValue,
+            'ticketVlaue'=>$ticketValue,
+            'ticketPlaceHolder'=>$ticketPlaceHolder,
+            'conditionDisable'=>$conditionDisable,
+            'conditionValue'=>$conditionVlaue,
+            'conditionPlaceholder'=>$conditionPlaceholder,
+            'discountDisable'=>$discountDisable,
+            'discountValue'=>$discountValue,
+            'discountPlaceholder'=>$discountPlaceholder,
         ];
-        return $this->showResult(200,'成功',$data);
+        return $this->showResult(200, '成功', $data);
     }
 
     public function actionPatch(){

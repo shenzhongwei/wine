@@ -187,7 +187,7 @@ class OrderController extends BaseController
         }else{
             return $this->showResult(304,'非法请求');
         }
-        $orders = OrderInfo::find()->where("$key=$value and id in $ids")->one();
+        $orders = OrderInfo::find()->where("$key=$value and id in $ids")->all();
         if(!empty($orders)){
             $transaction = Yii::$app->db->beginTransaction();
             try{
@@ -198,7 +198,7 @@ class OrderController extends BaseController
                 if($button == 'order_arrive'){
                     $sendArr = array_values(array_unique(ArrayHelper::getColumn($orders,'send_id')));
                     $send_ids = implode(',',$sendArr);
-                    $sendingOrders = OrderInfo::find()->addSelect(["DISTINCT send_id"])->where("send_id in ($send_ids) and state=4 and id not in ($ids)")->all();
+                    $sendingOrders = OrderInfo::find()->addSelect(["DISTINCT`send_id` as send_id"])->where("send_id in ($send_ids) and state=4 and id not in $ids")->all();
                     if(!empty($sendingOrders)){
                         $sendingArr = array_values(array_unique(ArrayHelper::getColumn($orders,'send_id')));
                         foreach ($sendingArr as $key=>$value){
