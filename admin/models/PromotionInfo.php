@@ -97,20 +97,23 @@ class PromotionInfo extends \yii\db\ActiveRecord
                 }
                 if($this->style==1){
                     if($promotionType->group==3){
-                        if($this->condition!=0 &&$this->condition==''){
+                        if($this->condition!==0 &&$this->condition===''){
                             return $this->addError('condition','请填写开通会员条件');
                         }
                         if($this->condition<0){
                             return $this->addError('condition','充值条件不能于0');
                         }
                     }elseif (in_array($promotionType->group,[1,5])){
-                        if($this->discount!=0 &&$this->discount==''){
+                        if($this->discount!==0 &&$this->discount===''){
                             return $this->addError('discount','请填写优惠券的优惠额');
+                        }
+                        if($this->circle_valid!==0 &&$this->circle_valid===''){
+                            return $this->addError('circle_valid','请选择优惠券期限形式');
                         }
                         if($this->discount<=0){
                             return $this->addError('discount','优惠额必须大于0');
                         }
-                        if($this->condition!=0 &&$this->condition==''){
+                        if($this->condition!==0 &&$this->condition===''){
                             return $this->addError('condition','请填写优惠券的使用条件');
                         }
                         if($this->condition<0){
@@ -118,20 +121,20 @@ class PromotionInfo extends \yii\db\ActiveRecord
                         }
                     }elseif ($promotionType->group==2){
                         if(in_array($promotionType->env,[2,5])){
-                            if($this->discount!=0 &&$this->discount==''){
+                            if($this->discount!==0 &&$this->discount===''){
                                 return $this->addError('discount','请填写积分数');
                             }
                             if($this->discount<=0){
                                 return $this->addError('discount','积分数必须大于0');
                             }
                         }elseif ($promotionType->env==6){
-                            if($this->discount!=0 &&$this->discount==''){
+                            if($this->discount!==0 &&$this->discount===''){
                                 return $this->addError('discount','请填写积分数');
                             }
                             if($this->discount<=0){
                                 return $this->addError('discount','积分数必须大于0');
                             }
-                            if($this->condition!=0 &&$this->condition==''){
+                            if($this->condition!==0 &&$this->condition===''){
                                 return $this->addError('condition','请填写赠送积分的条件');
                             }
                             if($this->condition<0){
@@ -145,15 +148,15 @@ class PromotionInfo extends \yii\db\ActiveRecord
                         if($this->discount<=0){
                             return $this->addError('discount','优惠额必须大于0');
                         }
-                        if($this->condition!=0 &&$this->condition==''){
+                        if($this->condition!==0 &&$this->condition===''){
                             return $this->addError('condition','请填写促销的使用条件');
                         }
                         if($this->condition<0){
-                            return $this->addError('condition','使用条件比不能小于0');
+                            return $this->addError('condition','使用条件不能小于0');
                         }
                     }
                 }elseif($this->style==2){
-                    if($this->discount!=0 &&$this->discount==''){
+                    if($this->discount!==0 &&$this->discount===''){
                         return $this->addError('discount','优惠请填写百分比');
                     }
                     if($this->discount<=0){
@@ -179,7 +182,8 @@ class PromotionInfo extends \yii\db\ActiveRecord
                     if($this->date_valid==0&&$this->date_valid!=''){
                         $query2->andWhere("(start_at<=".time()." and end_at>=".time().") or (start_at=0 and end_at=0)");
                     }
-                    $query2->andWhere("promotion_info.limit=$this->limit and promotion_info.target_id=$this->target_id and pt_id=$this->pt_id");
+                    $query2->andWhere("promotion_info.limit=$this->limit and promotion_info.target_id=$this->target_id");
+
 //                    var_dump($promotionType);
 //                    exit;
                     if($promotionType->env==5){
@@ -189,7 +193,7 @@ class PromotionInfo extends \yii\db\ActiveRecord
                         $sttr = 'target_id';
                         $message2 = '该范围对象已存在一个推荐下单活动请勿重复添加';
                     }else{
-                        $query2->andWhere("promotion_info.style<>$this->style");
+                        $query2->andWhere("promotion_info.style<>$this->style and pt_id=$this->pt_id");
                         $str = $this->style == 1 ? '百分比':'固定';
                         $sttr = 'style';
                         $message2 = "该种类已存在".$str."形式的优惠活动，请勿添加该类型的优惠活动";

@@ -27,6 +27,10 @@ use yii\helpers\ArrayHelper;
 
 class OrderController extends ApiController{
 
+    public function actionIndex(){
+        PromotionInfo::GetPromotion(5,1,14);
+    }
+
     /**
      * @return array
      * @throws \yii\db\Exception

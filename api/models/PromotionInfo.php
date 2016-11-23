@@ -2,6 +2,7 @@
 
 namespace api\models;
 
+use common\helpers\ArrayHelper;
 use Yii;
 use yii\base\Exception;
 
@@ -104,14 +105,46 @@ class PromotionInfo extends \yii\db\ActiveRecord
             "(SELECT count(*) as num,pid FROM user_promotion WHERE uid=$user_id AND status=1 GROUP BY pid) c","c.pid=promotion_info.id")
             ->where("promotion_type.is_active=1 and promotion_info.is_active=1 and ((start_at<=".time(). " 
             and end_at>=".time().") or (end_at=0 and start_at=0)) and discount>0 and env=$env");
-        $query->select(["promotion_info.*",'promotion_type.group as group','IFNULL(c.num,0) as num']);
         if(!empty($order_id)){
             $order = OrderInfo::findOne($order_id);
-            $pay_bill = $order->pay_bill;
-//            $query->andWhere("((`condition=0` or `condition`>$condition) and style=1) or style=2");
+            if(!empty($order)){
+                $pay_bill = $order->pay_bill;
+            }
         }
+        $query->select(["promotion_info.*",'promotion_type.group as group','IFNULL(c.num,0) as num']);
         $query->having("time=0 or time>num");
-        $promotion = $query->one();
+        if($env == 5){
+            $promotions = $query->orderBy('limit')->all();
+            $orderDetails = $order->orderDetails;
+            $goodIdArr = ArrayHelper::getColumn($orderDetails,'gid');
+            $typeArr = ArrayHelper::getColumn($orderDetails,function($element){
+                return $element->g->type;
+            });
+            if(!empty($promotions)){
+                $style = $promotions[0]->style;
+                $limit = $promotions[0]->limit;
+                foreach ($promotions as $key=>$val){
+                    if($style!=$val->style && $limit==$val->limit&&count($goodIdArr)>1){
+                        unset($promotions[$key]);
+                        continue;
+                    }elseif($val->limit == 3 && !in_array($val->target_id,$goodIdArr)){
+                        unset($promotions[$key]);
+                        continue;
+                    } elseif($val->limit == 2 && !in_array($val->target_id,$typeArr)){
+                        unset($promotions[$key]);
+                        continue;
+                    }
+                    $style = $val->style;
+                    $limit=$val->limit;
+                }
+                if(!empty($promotions)){
+                    ArrayHelper::multisort($promotions,['limit','discount'],[SORT_DESC,SORT_ASC]);
+                    $promotion = $promotions[0];
+                }
+            }
+        }else{
+            $promotion = $query->one();
+        }
         $result = 0;
         $type = 0;
         $amount = 0;
