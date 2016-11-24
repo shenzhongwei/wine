@@ -126,7 +126,7 @@ use admin\models\AdList;
                         ],
                         'pluginOptions'=>[
                             'initialPreview'=>empty($model->pic) ? false:[
-                                '../../../photo'.$model->pic,
+                                '../../../../photo'.$model->pic,
                             ],
                             'uploadUrl' => Url::to(['/ad/upload']),
                             'uploadExtraData' => [

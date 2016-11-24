@@ -41,7 +41,7 @@ use yii\helpers\Url;
                     ],
                     'pluginOptions'=>[
                         'initialPreview'=>empty($model->logo) ? false:[
-                            "../../../photo".$model->logo,
+                            "../../../../photo".$model->logo,
                         ],
                         'uploadUrl' => Url::to(['/type/upload']),
                         'maxFileSize'=>200,

@@ -49,7 +49,7 @@ use kartik\file\FileInput;
                         ],
                         'pluginOptions'=>[
                             'initialPreview'=>empty($model->pic) ? false:[
-                                "../../../photo".$model->pic,
+                                "../../../../photo".$model->pic,
                             ],
                             'uploadUrl' => Url::to(['/good/upload-pic']),
                             'uploadExtraData' => [

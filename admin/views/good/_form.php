@@ -253,7 +253,7 @@ $payArr = [
                                             ],
                                             'pluginOptions'=>[
                                                 'initialPreview'=>empty($model->pic) ? false:[
-                                                    "../../../photo".$model->pic,
+                                                    "../../../../photo".$model->pic,
                                                 ],
                                                 'uploadUrl' => Url::to(['/good/upload']),
                                                 'uploadExtraData' => [

@@ -113,7 +113,7 @@ $model->wa_username = $model->isNewRecord ? '':$model->wa_username;
                             ],
                             'pluginOptions'=>[
                                 'initialPreview'=>empty($model->bus_pic) ? false:[
-                                    "../../../photo".$model->bus_pic,
+                                    "../../../../photo".$model->bus_pic,
                                 ],
                                 'uploadUrl' => Url::to(['/shop/upload']),
                                 'uploadExtraData' => [
@@ -176,7 +176,7 @@ $model->wa_username = $model->isNewRecord ? '':$model->wa_username;
                             ],
                             'pluginOptions'=>[
                                 'initialPreview'=>empty($model->logo) ? false:[
-                                    "../../../photo".$model->logo,
+                                    "../../../../photo".$model->logo,
                                 ],
                                 'uploadUrl' => Url::to(['/shop/upload']),
                                 'uploadExtraData' => [
