@@ -30,7 +30,7 @@ class PicController extends ApiController{
     }
 
     /**
-     * 首页广告图片头部和中间
+     * 首页广告图片
      */
     public function actionAdList(){
         $ads = AdList::find()->where('type<>7 and is_show=1 and postion=1')->limit(5)->asArray()->all();
