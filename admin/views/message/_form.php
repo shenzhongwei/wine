@@ -10,7 +10,7 @@ use kartik\widgets\DepDrop;
  * @var admin\models\MessageList $model
  * @var yii\widgets\ActiveForm $form
  */
-if($wa_type==2 ){ //系统管理员
+if($wa_type<=2 ){ //系统管理员
     $type_list=['1'=>'系统消息','4'=>'商品通知'];
 
 }elseif($wa_type==3){//商家管理员

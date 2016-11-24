@@ -19,8 +19,13 @@ class PicController extends ApiController{
      */
     public function actionBootPic(){
         $colum = ['pic','pic_url'];
-        $bootPic = AdList::Search($colum)->andWhere(['type'=>7])->one()->toArray();
-        $bootPic['pic'] = Yii::$app->params['img_path'].$bootPic['pic'];
+        $boot = AdList::Search($colum)->andWhere(['type'=>7])->one();
+        if(!empty($boot)){
+            $bootPic = $boot->toArray();
+            $bootPic['pic'] = Yii::$app->params['img_path'].$bootPic['pic'];
+        }else{
+            $bootPic = [];
+        }
         return $this->showResult(200,'成功',$bootPic);
     }
 
