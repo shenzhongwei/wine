@@ -135,6 +135,9 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
+        'urlManager'=>[
+            'enablePrettyUrl'=>true
+        ],
 
 //        "urlManager" => [
 //            //用于表明urlManager是否启用URL美化功能，在Yii1.1中称为path格式URL，
