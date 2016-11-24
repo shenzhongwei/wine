@@ -281,7 +281,7 @@ class GoodInfo extends \yii\db\ActiveRecord
         }elseif($this->price<$this->cost){
             $this->addError('price','成本价不得高于原价');
         }elseif($this->pro_price<$this->cost){
-            $this->addError('price','成本价不得高于优惠价');
+            $this->addError('pro_price','成本价不得高于优惠价');
         }elseif ($this->vip_price>$this->pro_price){
             $this->addError('vip_price','会员价不得高于优惠价');
         }

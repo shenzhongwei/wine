@@ -504,7 +504,7 @@ class ProductController extends ApiController{
             'operate'=>$operate,
             'is_collected'=>$is_collected,
             'collection_id'=>$collection_id,
-            'detail'=>'http://120.25.144.153/wine/admin/web/index.php/good/info?id='.$goodInfo->id,
+            'detail'=>Yii::$app->params['detail_path'].'?id='.$goodInfo->id,
         ];
         if($type == 3){
             $rush = $goodInfo->goodRush;

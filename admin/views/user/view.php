@@ -66,8 +66,9 @@ $useraccount=UserAccount::find()->where(['target'=>$model->id,'level'=>2,'type'=
                     [
                         'attribute'=>'head_url',
                         'format'=>'html',
-                        'value'=>!empty($model->head_url)?'<img src="../../../photo'.$model->head_url.'" width="50" height="50">':
-                            '<img src="../../../photo/logo/user_default.jpg" width="50px" height="50px">',
+                        'value'=>
+                            !empty($model->head_url)?'<img src="../../../../photo'.$model->head_url.'" width="50" height="50">':
+                            '<img src="../../../../photo/logo/user_default.jpg" width="50px" height="50px">',
                     ],
                     [
                         'attribute'=>'birth',

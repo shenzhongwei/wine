@@ -65,7 +65,7 @@ $count = $dataProvider->totalCount;
                 'vAlign'=>'middle',
                 "format" => "raw",
                 'value'=>function($data){
-                    return Html::img('../../../photo'.$data->pic,[
+                    return Html::img('../../../../photo'.$data->pic,[
                         'width'=>"180px",'height'=>"100px","onclick"=>"ShowAd(this);",'style'=>'cursor:pointer','title'=>"点击放大"
                     ]);
                 }

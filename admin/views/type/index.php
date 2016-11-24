@@ -163,7 +163,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 "format" => "raw",
                 'value'=>function($model){
-                    return empty($model->logo) ? '<label class="label label-primary">暂无</label>':Html::img('../../../photo'.$model->logo,[
+                    return empty($model->logo) ? '<label class="label label-primary">暂无</label>':Html::img('../../../../photo'.$model->logo,[
                         'width'=>"20px",'height'=>"20px"
                     ]);
                 }

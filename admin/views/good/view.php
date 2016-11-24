@@ -150,7 +150,7 @@ if(!empty($model->original_pay)){
                                 'label'=>'图片',
                                 'attribute'=>'pic',
                                 "format" => "raw",
-                                'value'=>Html::img('../../../photo'.$model->pic,[
+                                'value'=>Html::img('../../../../photo'.$model->pic,[
                                     'width'=>"50%","onclick"=>"ShowImg(this);",'style'=>'cursor:pointer','title'=>"点击放大"
                                 ]),
                             ],

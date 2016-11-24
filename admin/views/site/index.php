@@ -24,7 +24,7 @@ $this->title = '双天酒';
                     <li class="nav-header">
                         <div class="dropdown profile-element" style="text-align: center">
                             <span><img id="wa_logo" alt="image" class="img-circle" style="width:96px;margin-top:4px;border-radius:128px;box-shadow:0px 0px 12px #7E7E7E;"
-                                       src="<?=empty($user->wa_logo) ? ('../../photo/logo/profile_small.jpg'):('../../photo/'.$user->wa_logo);?>" />
+                                       src="<?=empty($user->wa_logo) ? ('../../photo/logo/profile_small.jpg'):('../../photo'.$user->wa_logo);?>" />
                             </span>
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                 <span class="clear">
@@ -143,9 +143,7 @@ $this->title = '双天酒';
         <!--右侧边栏开始-->
         <div id="right-sidebar">
             <div class="sidebar-container">
-
                 <ul class="nav nav-tabs navs-3">
-
                     <li class="active">
                         <a data-toggle="tab" href="#tab-1">
                             <i class="fa fa-gear"></i> 主题

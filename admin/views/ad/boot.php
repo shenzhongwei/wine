@@ -43,7 +43,7 @@ $count = $dataProvider->totalCount;
                 'vAlign'=>'middle',
                 "format" => "raw",
                 'value'=>function($model){
-                    return Html::img('../../../photo'.$model->pic,[
+                    return Html::img('../../../../photo'.$model->pic,[
                         'width'=>"100px",'height'=>"180px","onclick"=>"ShowBoot(this);",'style'=>'cursor:pointer','title'=>"点击放大"
                     ]);
                 }

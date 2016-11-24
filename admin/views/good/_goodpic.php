@@ -44,7 +44,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                 'width'=>'40%',
                 "format" => "raw",
                 'value'=>function($model){
-                    return empty($model->pic) ? '<label class="label label-primary">暂无</label>':Html::img('../../../photo'.$model->pic,[
+                    return empty($model->pic) ? '<label class="label label-primary">暂无</label>':Html::img('../../../../photo'.$model->pic,[
                         'width'=>"60px",'height'=>"40px","onclick"=>"ShowPic(this);",'style'=>'cursor:pointer','title'=>"点击放大"
                     ]);
                 }
