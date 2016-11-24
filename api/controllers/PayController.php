@@ -47,7 +47,7 @@ class PayController extends ApiController{
             $wxUnified->setParameter('body','APP订单付款');
 //            $wxUnified->setParameter('total_fee',1);
             $wxUnified->setParameter('total_fee',($orderInfo->pay_bill)*100);
-            $wxUnified->setParameter('notify_url',WxPayConfig::NOTIFY_URL_ORDER);
+            $wxUnified->setParameter('notify_url',Yii::$app->params['wxNotifuUrl']['order']);
         }elseif($type == 2){ //充值
             $inout_id = substr($orderCode,10);
             $inout = AccountInout::findOne(['target_id'=>$user_id,'id'=>$inout_id,'type'=>4,'status'=>2]);
@@ -57,7 +57,7 @@ class PayController extends ApiController{
             $wxUnified->setParameter('body','APP充值支付');
 //            $wxUnified->setParameter('total_fee',1);
             $wxUnified->setParameter('total_fee',($inout->sum)*100);
-            $wxUnified->setParameter('notify_url',WxPayConfig::NOTIFY_URL_BILL);
+            $wxUnified->setParameter('notify_url',Yii::$app->params['wxNotifuUrl']['bill']);
         }else{
             return $this->showResult(301,'数据异常');
         }
