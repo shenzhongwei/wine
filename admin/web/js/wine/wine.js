@@ -65,5 +65,7 @@ function clearNoNum(obj){
 function toRoute(val){
     var url = document.URL;
     var path = url.split('index.php');
+    alert(path[0]+'index.php'+'/'+val);
+    return false;
     return path[0]+'index.php'+'/'+val;
 }
