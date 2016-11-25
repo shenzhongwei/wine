@@ -102,11 +102,13 @@ class AdController extends BaseController
         }elseif ($key == 'middle'){
             $model->postion = 2;
         }
-        if($data['AdList']['type']==1){
-            $model->target_id=0;
-        }elseif ($data['AdList']['type']==8){
-            $model->target_id=0;
-            $model->pic_url='';
+        if(!empty($data['AdList']['type'])){
+            if($data['AdList']['type']==1){
+                $model->target_id=0;
+            }elseif ($data['AdList']['type']==8){
+                $model->target_id=0;
+                $model->pic_url='';
+            }
         }
         $model->load($data);
         return ActiveForm::validate($model);
