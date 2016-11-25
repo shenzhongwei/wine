@@ -181,6 +181,9 @@ class AdController extends BaseController
         }
         $post = Yii::$app->request->post();
         if($post){
+            if($key == 'boot'){
+                $post['AdList']['type'] = 7;
+            }
             if(in_array($post['AdList']['type'],[1,7])){
                 $model->target_id=0;
             }elseif ($post['AdList']['type']==8){
@@ -220,6 +223,9 @@ class AdController extends BaseController
         }
         $post = Yii::$app->request->post();
         if($post){
+            if($key == 'boot'){
+                $post['AdList']['type'] = 7;
+            }
             if(in_array($post['AdList']['type'],[1,7])){
                 $model->target_id=0;
             }elseif ($post['AdList']['type']==8){
