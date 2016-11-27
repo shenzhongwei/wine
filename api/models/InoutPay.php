@@ -90,6 +90,7 @@ class InoutPay extends \yii\db\ActiveRecord
         try{
             //判断订单状态
             $inout_id = substr($params['order_code'],10);
+            $log->log_result($inout_id);
             $inout = AccountInout::findOne(['id'=>$inout_id,'type'=>4,'status'=>2]);
             if(empty($inout)){
                 throw new Exception('订单不存在',301);

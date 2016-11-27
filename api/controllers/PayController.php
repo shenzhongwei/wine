@@ -93,8 +93,7 @@ class PayController extends ApiController{
         $log = new Log();
         $log->log_result('开始微信订单回调');
         //存储微信的回调
-        $xml = $GLOBALS['HTTP_RAW_POST_DATA'];
-        $log->log_result($xml);
+        $xml = $GLOBALS['php://input'];
         $callback = $notify->saveData($xml);
 //        $log->log_result($callback);
         //以log文件形式记录回调信息
@@ -186,7 +185,7 @@ class PayController extends ApiController{
         $log = new Log();
         $log->log_result('开始微信充值回调');
         //存储微信的回调
-        $xml = $GLOBALS['HTTP_RAW_POST_DATA'];
+        $xml = $GLOBALS['php://input'];
         $log->log_result($xml);
         $callback = $notify->saveData($xml);
 //        $log->log_result($callback);
