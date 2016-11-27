@@ -215,7 +215,9 @@ if($admin->wa_type>3){
             'hAlign'=>'center',
             'vAlign'=>'middle',
             'format'=>'raw',
-            'value'=>"<a id='adress' class='btn-link btn-mx'><i class='fa fa-map-marker'> 查看</i></a>",
+            'value'=>function(){
+                return "<a id='adress' class='btn-link btn-mx'><i class='fa fa-map-marker'> 查看</i></a>";
+            },
             'width'=>'4%',
         ],
 
