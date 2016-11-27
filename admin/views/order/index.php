@@ -286,7 +286,7 @@ if($admin->wa_type>3){
             'class'=>'kartik\grid\CheckboxColumn',
             'hAlign'=>'center',
             'vAlign'=>'middle',
-            'width'=>'1%',
+            'width'=>'2%',
             'name'=>'id',
         ],
         [
@@ -295,7 +295,7 @@ if($admin->wa_type>3){
             'vAlign'=>'middle',
             'attribute'=>'order_date',
             'format' => ["date", "php:Y-m-d H:i:s"],
-            'width'=>'18%',
+            'width'=>'17%',
             'filterType'=>GridView::FILTER_DATE_RANGE,
             'filterWidgetOptions'=>[
                 'presetDropdown'=>true,
@@ -369,7 +369,7 @@ if($admin->wa_type>3){
             'attribute'=>'sid',
             'hAlign'=>'center',
             'vAlign'=>'middle',
-            'width'=>'8%',
+            'width'=>'7%',
             'format'=>'raw',
             'value'=>function($model){
                 return empty($model->s->name) ? '<span class="not-set">未设置</span>':
@@ -472,7 +472,7 @@ if($admin->wa_type>3){
             'header' => '操作',
             'hAlign'=>'center',
             'vAlign'=>'middle',
-            'width'=>'13%',
+            'width'=>'14%',
             'class' =>  'kartik\grid\ActionColumn',
             'buttons' => [
                 'view' => function ($url, $model) {
