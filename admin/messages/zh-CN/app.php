@@ -23,7 +23,7 @@ return [
     'Receive' => '<i class="fa fa-hand-lizard-o"> 接单</i>',
     'Truck'=> '<i class="fa fa-truck"> 发货</i>',
     'Arrive'=> '<i class="fa fa-car"> 送达</i>',
-    'view'=>'<i class="fa fa-eye"> 查看</i>',
+    'View'=>'<i class="fa fa-eye"> 查看</i>',
     'Up'=>'<i class="fa fa-arrow-up"> 上架</i>',
     'Down'=>'<i class="fa fa-arrow-down"> 下架</i>',
     'Lock'=>'<i class="fa fa-lock"> 冻结</i>',

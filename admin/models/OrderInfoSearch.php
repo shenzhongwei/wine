@@ -17,7 +17,7 @@ class OrderInfoSearch extends OrderInfo
     public function rules()
     {
         return [
-            [['id', 'aid', 'pay_id', 'pay_date', 'ticket_id', 'send_id', 'send_date', 'state','is_del', 'status','step','type'], 'integer'],
+            [['id', 'aid', 'sid','pay_id', 'pay_date', 'ticket_id', 'send_id', 'send_date', 'state','is_del', 'status','step','type'], 'integer'],
             [['order_date','username','order_code','pay_date'], 'safe'],
             [['total', 'disc', 'pay_bill'], 'number'],
             [['is_ticket','is_point'],'integer'],
@@ -69,6 +69,7 @@ class OrderInfoSearch extends OrderInfo
             'type' => $this->type,
             'state' => $this->step,
             'pay_id'=>$this->pay_id,
+            'sid'=>$this->sid,
             'order_info.status'=>$this->status,
         ]);
         $query->andFilterWhere(['like', 'user_info.phone', "$this->username"])

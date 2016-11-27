@@ -32,7 +32,7 @@ class ReportController extends BaseController {
      */
     public function actionAccount()
     {
-        $sql = "SELECT SUM(end) AS sum FROM user_account WHERE is_active = 1";
+        $sql = "SELECT SUM(end) AS sum FROM user_account WHERE is_active = 1 AND `typ`e=1 AND `level`=2";
         $total = Yii::$app->db->createCommand($sql)->queryOne();
         $searchModel = new AccountInoutSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());

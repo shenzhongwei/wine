@@ -165,6 +165,29 @@ class OrderInfo extends \yii\db\ActiveRecord
         return array_values(ArrayHelper::getColumn($orderCodes,'order_code'));
     }
 
+    public static function getShopNames(){
+        $admin = Yii::$app->user->identity;
+        $admin_type = $admin->wa_type;
+        $admin_id = $admin->id;
+        $query = ShopInfo::find()->joinWith('orderInfos')->where("order_info.sid>0");
+        if($admin_type==3){
+            $manager = MerchantInfo::findOne(['wa_id'=>$admin_id]);
+            if(!empty($manager)){
+                $shops = ShopInfo::find()->where(['merchant'=>$manager->id])->all();
+                $idArr = array_values(ArrayHelper::getColumn($shops,'id'));
+                if(!empty($idArr)){
+                    $query->andWhere("order_info.sid in (".implode(',',$idArr).")");
+                }else{
+                    $query->andWhere('order_info.sid=0');
+                }
+            }else{
+                $query->andWhere('order_info.sid=0');
+            }
+        }
+        $shops = $query->all();
+        return ArrayHelper::map($shops,'id','name');
+    }
+
     public static function Query(){
         $admin = Yii::$app->user->identity;
         $admin_type = $admin->wa_type;

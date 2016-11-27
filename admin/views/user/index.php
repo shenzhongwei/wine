@@ -172,8 +172,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'template'=>'{view}&nbsp;&nbsp;{delete}',
                 'buttons' => [
                     'view' => function ($url, $model) {
-                        return Html::a('<i class="fa fa-eye">查看</i>', $url, [
-                            'title' => Yii::t('app', 'view'),
+                        return Html::a(Yii::t('app', 'View'), $url, [
+                            'title' => '查看用户详情',
                             'class' => 'del btn btn-primary btn-xs',
                         ]);
                     },

@@ -17,6 +17,503 @@ $this->params['breadcrumbs'][] = $this->title;
 \admin\assets\AppAsset::register($this);
 // here
 $typeArr = [1=>'普通订单','2'=>'会员订单','3'=>'抢购订单'];
+$admin = Yii::$app->user->identity;
+if($admin->wa_type>3){
+
+    $colum = [
+        [
+            'class'=>'kartik\grid\CheckboxColumn',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'width'=>'1%',
+            'name'=>'id',
+        ],
+        [
+            'label'=>'下单时间',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'attribute'=>'order_date',
+            'format' => ["date", "php:Y-m-d H:i:s"],
+            'width'=>'16%',
+            'filterType'=>GridView::FILTER_DATE_RANGE,
+            'filterWidgetOptions'=>[
+                'presetDropdown'=>true,
+                'hideInput'=>true,
+                'language'=>'zh-CN',
+                'value'=>'',
+                'convertFormat'=>true,
+                'pluginOptions'=>[
+                    'locale'=>[
+                        'format'=>'Y-m-d',
+                        'separator'=>' to ',
+                    ],
+                ],
+            ]
+        ],
+        [
+            'header'=>'下单手机',
+            'attribute'=>'username',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'width'=>'7%',
+            'value'=> function($model){
+                return $model->username;
+            },
+            'filterType'=>AutoComplete::className(),
+            'filterWidgetOptions'=>[
+                'clientOptions' => [
+                    'source' =>OrderInfo::GetUsernames(),
+                ],
+            ],
+        ],
+        [
+            'header'=>'订单编号',
+            'attribute'=>'order_code',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'width'=>'8%',
+            'format' => 'raw',
+            'value'=> function($model){
+                return Html::a($model->order_code,['order/view', 'id' => $model->id],
+                    ['title' => '查看订单详细','class'=>' btn-link btn-sm']
+                );
+            },
+            'filterType'=>AutoComplete::className(),
+            'filterWidgetOptions'=>[
+                'clientOptions' => [
+                    'source' =>OrderInfo::GetOrderCodes(),
+                ],
+            ],
+        ],
+        [
+            'header'=>'订单类型',
+            'attribute'=>'type',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'width'=>'7%',
+            'format'=>'html',
+            'value'=>function($model){
+                $typeArr = [1=>'普通订单','2'=>'会员订单','3'=>'抢购订单'];
+                return empty($typeArr[$model->type]) ? '<span class="not-set">未知类型</span>':$typeArr[$model->type];
+            },
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter'=>$typeArr,
+            'filterWidgetOptions'=>[
+                'options'=>['placeholder'=>'选择类型'],
+                'pluginOptions' => ['allowClear' => true],
+            ],
+        ],
+
+        [
+            'label'=>'商品总价',
+            'attribute'=>'total',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'width'=>'5%',
+            'value'=>function($model){
+                return '¥'.round($model->total,2);
+            },
+            'filterInputOptions'=>['onkeyup'=>'clearNoNum(this)','class'=>'form-control'],
+        ],
+
+        [
+            'label'=>'优惠金额',
+            'attribute'=>'disc',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'width'=>'5%',
+            'value'=>function($model){
+                return round($model->disc,2)==0 ? '无':'¥'.round($model->disc,2);
+            },
+            'filterInputOptions'=>['onkeyup'=>'clearNoNum(this)','class'=>'form-control'],
+        ],
+
+        [
+            'label'=>'支付价格',
+            'attribute'=>'pay_bill',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'width'=>'5%',
+            'value'=>function($model){
+                return '¥'.round($model->pay_bill,2);
+            },
+            'filterInputOptions'=>['onkeyup'=>'clearNoNum(this)','class'=>'form-control'],
+        ],
+
+        [
+            'label'=>'用券',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'class'=>'kartik\grid\BooleanColumn',
+            'trueIcon'=>'<label class="label label-success">用 券</label>',
+            'falseIcon'=>'<label class="label label-danger">无 券</label>',
+            'width'=>'6%',
+            'attribute' => 'is_ticket',
+            'trueLabel'=>'用 券',
+            'falseLabel'=>'无 券',
+        ],
+
+        [
+            'label'=>'积分',
+            'class'=>'kartik\grid\BooleanColumn',
+            'trueIcon'=>'<label class="label label-success">有积分</label>',
+            'falseIcon'=>'<label class="label label-danger">无积分</label>',
+            'width'=>'6%',
+            'attribute' => 'is_point',
+            'trueLabel'=>'有积分',
+            'falseLabel'=>'无积分',
+        ],
+
+        [
+            'label'=>'订单进度',
+            'attribute'=>'step',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'width'=>'7%',
+            'value'=>function($model){
+                return OrderInfo::getOrderstep($model->state);
+            },
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter'=>Dics::GetOrderState(),
+            'filterWidgetOptions'=>[
+                'options'=>['placeholder'=>'订单进度'],
+                'pluginOptions' => ['allowClear' => true],
+            ],
+        ],
+
+        [
+            'header'=>'付款方式',
+            'attribute'=>'pay_id',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'width'=>'7%',
+            'value'=>function($model){
+                return OrderInfo::getPaytype($model->pay_id);
+            },
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter'=>Dics::GetPayModes(),
+            'filterWidgetOptions'=>[
+                'options'=>['placeholder'=>'支付方式'],
+                'pluginOptions' => ['allowClear' => true],
+            ],
+        ],
+
+        [
+            'label'=>'状态',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'class'=>'kartik\grid\BooleanColumn',
+            'trueIcon'=>'<label class="label label-success">正 常</label>',
+            'falseIcon'=>'<label class="label label-danger">已删除</label>',
+            'width'=>'7%',
+            'attribute' => 'status',
+            'trueLabel'=>'正 常',
+            'falseLabel'=>'已删除',
+        ],
+
+        [
+            'header' => '操作',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'width'=>'13%',
+            'class' =>  'kartik\grid\ActionColumn',
+            'buttons' => [
+                'view' => function ($url, $model) {
+                    return Html::a('<i class="fa fa-eye">查看</i>', $url, [
+                        'data-pjax'=>0,
+                        'title' => '查看详细信息',
+                        'class' => 'btn btn-info btn-xs',
+                    ]);
+                },
+                'delete' => function ($url, $model) {
+                    if($model->status == 0){
+                        return Html::a(Yii::t('app','Recover'), $url, [
+                            'title' => Yii::t('app', '还原订单'),
+                            'class' => 'btn btn-success btn-xs',
+                            'data-confirm' => '确认还原该订单吗？',
+                        ]);
+                    }else{
+                        return Html::a(Yii::t('app','Delete'), $url, [
+                            'title' => Yii::t('app', '删除订单'),
+                            'class' => 'btn btn-danger btn-xs',
+                            'data-confirm' => '确认删除该订单吗?',
+                        ]);
+                    }
+                },
+                'update' => function ($url, $model) {
+                    if(in_array($model->state,[2,3,4])){
+                        if($model->state == 2){
+                            return Html::a(Yii::t('app','Receive'),['receive','id'=>$model->id], [
+                                'title' => Yii::t('app', '接单'),
+                                'class' => 'btn btn-primary btn-xs',
+                                'data-confirm' => '确定接单吗',
+                            ]);
+                        }elseif($model->state == 3){
+                            return Html::a(Yii::t('app','Truck'),['#'], [
+                                'title' => Yii::t('app', '发货'),
+                                'class' => 'btn btn-success btn-xs send',
+                                'data-toggle' => 'modal',    //弹框
+                                'data-target' => '#send-modal',    //指定弹框的id
+                                'data-id' => $model->id,
+                            ]);
+                        }else{
+                            return Html::a(Yii::t('app','Arrive'),['arrive','id'=>$model->id], [
+                                'title' => Yii::t('app', '已送达'),
+                                'class' => 'btn btn-default btn-xs',
+                                'data-confirm' => '确定已送达吗',
+                            ]);
+                        }
+                    }else{
+                        return '';
+                    }
+                },
+            ],
+        ],
+    ];
+}else{
+    $colum = [
+        [
+            'class'=>'kartik\grid\CheckboxColumn',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'width'=>'1%',
+            'name'=>'id',
+        ],
+        [
+            'label'=>'下单时间',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'attribute'=>'order_date',
+            'format' => ["date", "php:Y-m-d H:i:s"],
+            'width'=>'16%',
+            'filterType'=>GridView::FILTER_DATE_RANGE,
+            'filterWidgetOptions'=>[
+                'presetDropdown'=>true,
+                'hideInput'=>true,
+                'language'=>'zh-CN',
+                'value'=>'',
+                'convertFormat'=>true,
+                'pluginOptions'=>[
+                    'locale'=>[
+                        'format'=>'Y-m-d',
+                        'separator'=>' to ',
+                    ],
+                ],
+            ]
+        ],
+        [
+            'header'=>'下单手机',
+            'attribute'=>'username',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'width'=>'7%',
+            'value'=> function($model){
+                return $model->username;
+            },
+            'filterType'=>AutoComplete::className(),
+            'filterWidgetOptions'=>[
+                'clientOptions' => [
+                    'source' =>OrderInfo::GetUsernames(),
+                ],
+            ],
+        ],
+        [
+            'header'=>'订单编号',
+            'attribute'=>'order_code',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'width'=>'8%',
+            'format' => 'raw',
+            'value'=> function($model){
+                return Html::a($model->order_code,['order/view', 'id' => $model->id],
+                    ['title' => '查看订单详细','class'=>' btn-link btn-sm']
+                );
+            },
+            'filterType'=>AutoComplete::className(),
+            'filterWidgetOptions'=>[
+                'clientOptions' => [
+                    'source' =>OrderInfo::GetOrderCodes(),
+                ],
+            ],
+        ],
+        [
+            'header'=>'订单类型',
+            'attribute'=>'type',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'width'=>'7%',
+            'format'=>'html',
+            'value'=>function($model){
+                $typeArr = [1=>'普通订单','2'=>'会员订单','3'=>'抢购订单'];
+                return empty($typeArr[$model->type]) ? '<span class="not-set">未知类型</span>':$typeArr[$model->type];
+            },
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter'=>$typeArr,
+            'filterWidgetOptions'=>[
+                'options'=>['placeholder'=>'选择类型'],
+                'pluginOptions' => ['allowClear' => true],
+            ],
+        ],
+        [
+            'label'=>'下单门店',
+            'attribute'=>'sid',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'width'=>'10%',
+            'value'=>function($model){
+                return empty($model->s->name) ? '<span class="not-set">未设置</span>':$model->s->name;
+            },
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter'=>OrderInfo::getShopNames(),
+            'filterWidgetOptions'=>[
+                'options'=>['placeholder'=>'下单门店'],
+                'pluginOptions' => ['allowClear' => true],
+            ],
+        ],
+
+        [
+            'label'=>'支付价格',
+            'attribute'=>'pay_bill',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'width'=>'5%',
+            'value'=>function($model){
+                return '¥'.round($model->pay_bill,2);
+            },
+            'filterInputOptions'=>['onkeyup'=>'clearNoNum(this)','class'=>'form-control'],
+        ],
+
+        [
+            'label'=>'用券',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'class'=>'kartik\grid\BooleanColumn',
+            'trueIcon'=>'<label class="label label-success">用 券</label>',
+            'falseIcon'=>'<label class="label label-danger">无 券</label>',
+            'width'=>'6%',
+            'attribute' => 'is_ticket',
+            'trueLabel'=>'用 券',
+            'falseLabel'=>'无 券',
+        ],
+
+        [
+            'label'=>'积分',
+            'class'=>'kartik\grid\BooleanColumn',
+            'trueIcon'=>'<label class="label label-success">有积分</label>',
+            'falseIcon'=>'<label class="label label-danger">无积分</label>',
+            'width'=>'6%',
+            'attribute' => 'is_point',
+            'trueLabel'=>'有积分',
+            'falseLabel'=>'无积分',
+        ],
+
+        [
+            'label'=>'订单进度',
+            'attribute'=>'step',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'width'=>'7%',
+            'value'=>function($model){
+                return OrderInfo::getOrderstep($model->state);
+            },
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter'=>Dics::GetOrderState(),
+            'filterWidgetOptions'=>[
+                'options'=>['placeholder'=>'订单进度'],
+                'pluginOptions' => ['allowClear' => true],
+            ],
+        ],
+
+        [
+            'header'=>'付款方式',
+            'attribute'=>'pay_id',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'width'=>'7%',
+            'value'=>function($model){
+                return OrderInfo::getPaytype($model->pay_id);
+            },
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter'=>Dics::GetPayModes(),
+            'filterWidgetOptions'=>[
+                'options'=>['placeholder'=>'支付方式'],
+                'pluginOptions' => ['allowClear' => true],
+            ],
+        ],
+
+        [
+            'label'=>'状态',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'class'=>'kartik\grid\BooleanColumn',
+            'trueIcon'=>'<label class="label label-success">正 常</label>',
+            'falseIcon'=>'<label class="label label-danger">已删除</label>',
+            'width'=>'7%',
+            'attribute' => 'status',
+            'trueLabel'=>'正 常',
+            'falseLabel'=>'已删除',
+        ],
+
+        [
+            'header' => '操作',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'width'=>'13%',
+            'class' =>  'kartik\grid\ActionColumn',
+            'buttons' => [
+                'view' => function ($url, $model) {
+                    return Html::a('<i class="fa fa-eye">查看</i>', $url, [
+                        'data-pjax'=>0,
+                        'title' => '查看详细信息',
+                        'class' => 'btn btn-info btn-xs',
+                    ]);
+                },
+                'delete' => function ($url, $model) {
+                    if($model->status == 0){
+                        return Html::a(Yii::t('app','Recover'), $url, [
+                            'title' => Yii::t('app', '还原订单'),
+                            'class' => 'btn btn-success btn-xs',
+                            'data-confirm' => '确认还原该订单吗？',
+                        ]);
+                    }else{
+                        return Html::a(Yii::t('app','Delete'), $url, [
+                            'title' => Yii::t('app', '删除订单'),
+                            'class' => 'btn btn-danger btn-xs',
+                            'data-confirm' => '确认删除该订单吗?',
+                        ]);
+                    }
+                },
+                'update' => function ($url, $model) {
+                    if(in_array($model->state,[2,3,4])){
+                        if($model->state == 2){
+                            return Html::a(Yii::t('app','Receive'),['receive','id'=>$model->id], [
+                                'title' => Yii::t('app', '接单'),
+                                'class' => 'btn btn-primary btn-xs',
+                                'data-confirm' => '确定接单吗',
+                            ]);
+                        }elseif($model->state == 3){
+                            return Html::a(Yii::t('app','Truck'),['#'], [
+                                'title' => Yii::t('app', '发货'),
+                                'class' => 'btn btn-success btn-xs send',
+                                'data-toggle' => 'modal',    //弹框
+                                'data-target' => '#send-modal',    //指定弹框的id
+                                'data-id' => $model->id,
+                            ]);
+                        }else{
+                            return Html::a(Yii::t('app','Arrive'),['arrive','id'=>$model->id], [
+                                'title' => Yii::t('app', '已送达'),
+                                'class' => 'btn btn-default btn-xs',
+                                'data-confirm' => '确定已送达吗',
+                            ]);
+                        }
+                    }else{
+                        return '';
+                    }
+                },
+            ],
+        ],
+    ];
+}
 ?>
 <div class="order-info-index">
     <?php
@@ -37,250 +534,7 @@ $typeArr = [1=>'普通订单','2'=>'会员订单','3'=>'抢购订单'];
             ],
             'neverTimeout'=>true,
         ],
-        'columns' => [
-            [
-                'class'=>'kartik\grid\CheckboxColumn',
-                'hAlign'=>'center',
-                'vAlign'=>'middle',
-                'width'=>'1%',
-                'name'=>'id',
-            ],
-            [
-                'label'=>'下单时间',
-                'hAlign'=>'center',
-                'vAlign'=>'middle',
-                'attribute'=>'order_date',
-                'format' => ["date", "php:Y-m-d H:i:s"],
-                'width'=>'16%',
-                'filterType'=>GridView::FILTER_DATE_RANGE,
-                'filterWidgetOptions'=>[
-                    'presetDropdown'=>true,
-                    'hideInput'=>true,
-                    'language'=>'zh-CN',
-                    'value'=>'',
-                    'convertFormat'=>true,
-                    'pluginOptions'=>[
-                        'locale'=>[
-                            'format'=>'Y-m-d',
-                            'separator'=>' to ',
-                        ],
-                    ],
-                ]
-            ],
-            [
-                'header'=>'下单手机',
-                'attribute'=>'username',
-                'hAlign'=>'center',
-                'vAlign'=>'middle',
-                'width'=>'7%',
-                'value'=> function($model){
-                    return $model->username;
-                },
-                'filterType'=>AutoComplete::className(),
-                'filterWidgetOptions'=>[
-                    'clientOptions' => [
-                        'source' =>OrderInfo::GetUsernames(),
-                    ],
-                ],
-            ],
-            [
-                'header'=>'订单编号',
-                'attribute'=>'order_code',
-                'hAlign'=>'center',
-                'vAlign'=>'middle',
-                'width'=>'8%',
-                'format' => 'raw',
-                'value'=> function($model){
-                    return Html::a($model->order_code,['order/view', 'id' => $model->id],
-                        ['title' => '查看订单详细','class'=>' btn-link btn-sm']
-                    );
-                },
-                'filterType'=>AutoComplete::className(),
-                'filterWidgetOptions'=>[
-                    'clientOptions' => [
-                        'source' =>OrderInfo::GetOrderCodes(),
-                    ],
-                ],
-            ],
-            [
-                'header'=>'订单类型',
-                'attribute'=>'type',
-                'hAlign'=>'center',
-                'vAlign'=>'middle',
-                'width'=>'7%',
-                'format'=>'html',
-                'value'=>function($model){
-                    $typeArr = [1=>'普通订单','2'=>'会员订单','3'=>'抢购订单'];
-                    return empty($typeArr[$model->type]) ? '<span class="not-set">未知类型</span>':$typeArr[$model->type];
-                },
-                'filterType'=>GridView::FILTER_SELECT2,
-                'filter'=>$typeArr,
-                'filterWidgetOptions'=>[
-                    'options'=>['placeholder'=>'选择类型'],
-                    'pluginOptions' => ['allowClear' => true],
-                ],
-            ],
-
-            [
-                'label'=>'商品总价',
-                'attribute'=>'total',
-                'hAlign'=>'center',
-                'vAlign'=>'middle',
-                'width'=>'5%',
-                'value'=>function($model){
-                    return '¥'.round($model->total,2);
-                },
-                'filterInputOptions'=>['onkeyup'=>'clearNoNum(this)','class'=>'form-control'],
-            ],
-
-            [
-                'label'=>'支付价格',
-                'attribute'=>'pay_bill',
-                'hAlign'=>'center',
-                'vAlign'=>'middle',
-                'width'=>'5%',
-                'value'=>function($model){
-                    return '¥'.round($model->pay_bill,2);
-                },
-                'filterInputOptions'=>['onkeyup'=>'clearNoNum(this)','class'=>'form-control'],
-            ],
-
-            [
-                'label'=>'优惠金额',
-                'attribute'=>'disc',
-                'hAlign'=>'center',
-                'vAlign'=>'middle',
-                'width'=>'5%',
-                'value'=>function($model){
-                    return round($model->disc,2)==0 ? '无':'¥'.round($model->disc,2);
-                },
-                'filterInputOptions'=>['onkeyup'=>'clearNoNum(this)','class'=>'form-control'],
-            ],
-            [
-                'label'=>'用券',
-                'hAlign'=>'center',
-                'vAlign'=>'middle',
-                'class'=>'kartik\grid\BooleanColumn',
-                'trueIcon'=>'<label class="label label-success">用 券</label>',
-                'falseIcon'=>'<label class="label label-danger">无 券</label>',
-                'width'=>'6%',
-                'attribute' => 'is_ticket',
-                'trueLabel'=>'用 券',
-                'falseLabel'=>'无 券',
-            ],
-            [
-                'label'=>'积分',
-                'class'=>'kartik\grid\BooleanColumn',
-                'trueIcon'=>'<label class="label label-success">有积分</label>',
-                'falseIcon'=>'<label class="label label-danger">无积分</label>',
-                'width'=>'6%',
-                'attribute' => 'is_point',
-                'trueLabel'=>'有积分',
-                'falseLabel'=>'无积分',
-            ],
-            [
-                'label'=>'订单进度',
-                'attribute'=>'step',
-                'hAlign'=>'center',
-                'vAlign'=>'middle',
-                'width'=>'7%',
-                'value'=>function($model){
-                    return OrderInfo::getOrderstep($model->state);
-                },
-                'filterType'=>GridView::FILTER_SELECT2,
-                'filter'=>Dics::GetOrderState(),
-                'filterWidgetOptions'=>[
-                    'options'=>['placeholder'=>'订单进度'],
-                    'pluginOptions' => ['allowClear' => true],
-                ],
-            ],
-            [
-                'header'=>'付款方式',
-                'attribute'=>'pay_id',
-                'hAlign'=>'center',
-                'vAlign'=>'middle',
-                'width'=>'7%',
-                'value'=>function($model){
-                    return OrderInfo::getPaytype($model->pay_id);
-                },
-                'filterType'=>GridView::FILTER_SELECT2,
-                'filter'=>Dics::GetPayModes(),
-                'filterWidgetOptions'=>[
-                    'options'=>['placeholder'=>'支付方式'],
-                    'pluginOptions' => ['allowClear' => true],
-                ],
-            ],
-            [
-                'label'=>'状态',
-                'hAlign'=>'center',
-                'vAlign'=>'middle',
-                'class'=>'kartik\grid\BooleanColumn',
-                'trueIcon'=>'<label class="label label-success">正 常</label>',
-                'falseIcon'=>'<label class="label label-danger">已删除</label>',
-                'width'=>'7%',
-                'attribute' => 'status',
-                'trueLabel'=>'正 常',
-                'falseLabel'=>'已删除',
-            ],
-            [
-                'header' => '操作',
-                'hAlign'=>'center',
-                'vAlign'=>'middle',
-                'width'=>'13%',
-                'class' =>  'kartik\grid\ActionColumn',
-                'buttons' => [
-                    'view' => function ($url, $model) {
-                        return Html::a('<i class="fa fa-eye">查看</i>', $url, [
-                            'data-pjax'=>0,
-                            'title' => '查看详细信息',
-                            'class' => 'btn btn-info btn-xs',
-                        ]);
-                    },
-                    'delete' => function ($url, $model) {
-                        if($model->status == 0){
-                            return Html::a(Yii::t('app','Recover'), $url, [
-                                'title' => Yii::t('app', '还原订单'),
-                                'class' => 'btn btn-success btn-xs',
-                                'data-confirm' => '确认还原该订单吗？',
-                            ]);
-                        }else{
-                            return Html::a(Yii::t('app','Delete'), $url, [
-                                'title' => Yii::t('app', '删除订单'),
-                                'class' => 'btn btn-danger btn-xs',
-                                'data-confirm' => '确认删除该订单吗?',
-                            ]);
-                        }
-                    },
-                    'update' => function ($url, $model) {
-                         if(in_array($model->state,[2,3,4])){
-                             if($model->state == 2){
-                                 return Html::a(Yii::t('app','Receive'),['receive','id'=>$model->id], [
-                                     'title' => Yii::t('app', '接单'),
-                                     'class' => 'btn btn-primary btn-xs',
-                                     'data-confirm' => '确定接单吗',
-                                 ]);
-                             }elseif($model->state == 3){
-                                 return Html::a(Yii::t('app','Truck'),['#'], [
-                                     'title' => Yii::t('app', '发货'),
-                                     'class' => 'btn btn-success btn-xs send',
-                                     'data-toggle' => 'modal',    //弹框
-                                     'data-target' => '#send-modal',    //指定弹框的id
-                                     'data-id' => $model->id,
-                                 ]);
-                             }else{
-                                 return Html::a(Yii::t('app','Arrive'),['arrive','id'=>$model->id], [
-                                     'title' => Yii::t('app', '已送达'),
-                                     'class' => 'btn btn-default btn-xs',
-                                     'data-confirm' => '确定已送达吗',
-                                 ]);
-                             }
-                        }else{
-                             return '';
-                         }
-                    },
-                ],
-            ],
-        ],
+        'columns' => $colum,
         // set your toolbar
         'toolbar'=> [
             ['content'=>$dataProvider->totalCount>0 ?
