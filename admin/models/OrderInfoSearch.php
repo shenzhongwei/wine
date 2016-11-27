@@ -85,8 +85,8 @@ class OrderInfoSearch extends OrderInfo
             $query->andFilterWhere([$this->is_ticket>0 ? '>':'=', 'ticket_id', 0]);
         }
         if(!empty($this->order_date)){
-            $order_date = explode('to',str_replace(' ','',$this->order_date));
-            $query->andFilterWhere(['between', 'order_info.order_date', strtotime("$order_date[0] 00:00:00"),strtotime("$order_date[1] 23:59:59")]);
+            $order_date = $this->order_date;
+            $query->andFilterWhere(['between', 'order_info.order_date', strtotime("$order_date 00:00:00"),strtotime("$order_date 23:59:59")]);
         }
         if(!empty($this->pay_date)){
             $pay_date = explode('to',str_replace(' ','',$this->pay_date));

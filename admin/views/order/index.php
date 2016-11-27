@@ -24,7 +24,7 @@ if($admin->wa_type>3){
             'class'=>'kartik\grid\CheckboxColumn',
             'hAlign'=>'center',
             'vAlign'=>'middle',
-            'width'=>'1%',
+            'width'=>'2%',
             'name'=>'id',
         ],
         [
@@ -33,20 +33,17 @@ if($admin->wa_type>3){
             'vAlign'=>'middle',
             'attribute'=>'order_date',
             'format' => ["date", "php:Y-m-d H:i:s"],
-            'width'=>'16%',
-            'filterType'=>GridView::FILTER_DATE_RANGE,
+            'width'=>'9%',
+            'filterType'=>GridView::FILTER_DATE,
             'filterWidgetOptions'=>[
-                'presetDropdown'=>true,
-                'hideInput'=>true,
-                'language'=>'zh-CN',
-                'value'=>'',
-                'convertFormat'=>true,
-                'pluginOptions'=>[
-                    'locale'=>[
-                        'format'=>'Y-m-d',
-                        'separator'=>' to ',
-                    ],
-                ],
+                // inline too, not bad
+                'language' => 'zh-CN',
+                'options' => ['placeholder' => '下单日期','readonly'=>true],
+                'pluginOptions' => [
+                    'format' => 'yyyy年mm月dd日',
+                    'autoclose' => true,
+
+                ]
             ]
         ],
         [
@@ -157,7 +154,7 @@ if($admin->wa_type>3){
             'class'=>'kartik\grid\BooleanColumn',
             'trueIcon'=>'<label class="label label-success">有积分</label>',
             'falseIcon'=>'<label class="label label-danger">无积分</label>',
-            'width'=>'6%',
+            'width'=>'7%',
             'attribute' => 'is_point',
             'trueLabel'=>'有积分',
             'falseLabel'=>'无积分',
@@ -210,16 +207,16 @@ if($admin->wa_type>3){
             'falseLabel'=>'删 除',
         ],
 
-//        [
-//            'header'=>'收货地',
-//            'hAlign'=>'center',
-//            'vAlign'=>'middle',
-//            'format'=>'raw',
-//            'value'=>function(){
-//                return "<a id='adress' class='btn-link btn-mx'><i class='fa fa-map-marker'> 查看</i></a>";
-//            },
-//            'width'=>'4%',
-//        ],
+        [
+            'header'=>'收货地址',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'format'=>'raw',
+            'value'=>function(){
+                return "<a id='adress' class='btn-link btn-mx'><i class='fa fa-map-marker'> 查看</i></a>";
+            },
+            'width'=>'5%',
+        ],
 
         [
             'header' => '操作',
@@ -295,20 +292,17 @@ if($admin->wa_type>3){
             'vAlign'=>'middle',
             'attribute'=>'order_date',
             'format' => ["date", "php:Y-m-d H:i:s"],
-            'width'=>'17%',
-            'filterType'=>GridView::FILTER_DATE_RANGE,
+            'width'=>'9%',
+            'filterType'=>GridView::FILTER_DATE,
             'filterWidgetOptions'=>[
-                'presetDropdown'=>true,
-                'hideInput'=>true,
-                'language'=>'zh-CN',
-                'value'=>'',
-                'convertFormat'=>true,
-                'pluginOptions'=>[
-                    'locale'=>[
-                        'format'=>'Y-m-d',
-                        'separator'=>' to ',
-                    ],
-                ],
+                // inline too, not bad
+                'language' => 'zh-CN',
+                'options' => ['placeholder' => '下单日期','readonly'=>true],
+                'pluginOptions' => [
+                    'format' => 'yyyy年mm月dd日',
+                    'autoclose' => true,
+
+                ]
             ]
         ],
         [
@@ -351,7 +345,7 @@ if($admin->wa_type>3){
             'attribute'=>'type',
             'hAlign'=>'center',
             'vAlign'=>'middle',
-            'width'=>'7%',
+            'width'=>'8%',
             'format'=>'html',
             'value'=>function($model){
                 $typeArr = [1=>'普通订单','2'=>'会员订单','3'=>'抢购订单'];
@@ -369,7 +363,7 @@ if($admin->wa_type>3){
             'attribute'=>'sid',
             'hAlign'=>'center',
             'vAlign'=>'middle',
-            'width'=>'7%',
+            'width'=>'8%',
             'format'=>'raw',
             'value'=>function($model){
                 return empty($model->s->name) ? '<span class="not-set">未设置</span>':
@@ -390,7 +384,7 @@ if($admin->wa_type>3){
             'attribute'=>'pay_bill',
             'hAlign'=>'center',
             'vAlign'=>'middle',
-            'width'=>'5%',
+            'width'=>'6%',
             'value'=>function($model){
                 return '¥'.round($model->pay_bill,2);
             },
@@ -404,7 +398,7 @@ if($admin->wa_type>3){
             'class'=>'kartik\grid\BooleanColumn',
             'trueIcon'=>'<label class="label label-success">用 券</label>',
             'falseIcon'=>'<label class="label label-danger">无 券</label>',
-            'width'=>'6%',
+            'width'=>'8%',
             'attribute' => 'is_ticket',
             'trueLabel'=>'用 券',
             'falseLabel'=>'无 券',
@@ -415,7 +409,7 @@ if($admin->wa_type>3){
             'class'=>'kartik\grid\BooleanColumn',
             'trueIcon'=>'<label class="label label-success">有积分</label>',
             'falseIcon'=>'<label class="label label-danger">无积分</label>',
-            'width'=>'6%',
+            'width'=>'8%',
             'attribute' => 'is_point',
             'trueLabel'=>'有积分',
             'falseLabel'=>'无积分',
@@ -426,7 +420,7 @@ if($admin->wa_type>3){
             'attribute'=>'step',
             'hAlign'=>'center',
             'vAlign'=>'middle',
-            'width'=>'7%',
+            'width'=>'8%',
             'value'=>function($model){
                 return OrderInfo::getOrderstep($model->state);
             },
@@ -443,7 +437,7 @@ if($admin->wa_type>3){
             'attribute'=>'pay_id',
             'hAlign'=>'center',
             'vAlign'=>'middle',
-            'width'=>'7%',
+            'width'=>'8%',
             'value'=>function($model){
                 return OrderInfo::getPaytype($model->pay_id);
             },
@@ -462,7 +456,7 @@ if($admin->wa_type>3){
             'class'=>'kartik\grid\BooleanColumn',
             'trueIcon'=>'<label class="label label-success">正 常</label>',
             'falseIcon'=>'<label class="label label-danger">已删除</label>',
-            'width'=>'7%',
+            'width'=>'8%',
             'attribute' => 'status',
             'trueLabel'=>'正 常',
             'falseLabel'=>'删 除',
@@ -472,7 +466,7 @@ if($admin->wa_type>3){
             'header' => '操作',
             'hAlign'=>'center',
             'vAlign'=>'middle',
-            'width'=>'14%',
+            'width'=>'12%',
             'class' =>  'kartik\grid\ActionColumn',
             'buttons' => [
                 'view' => function ($url, $model) {
