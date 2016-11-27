@@ -33,14 +33,14 @@ if($admin->wa_type>3){
             'vAlign'=>'middle',
             'attribute'=>'order_date',
             'format' => ["date", "php:Y-m-d H:i:s"],
-            'width'=>'12%',
+            'width'=>'10%',
             'filterType'=>GridView::FILTER_DATE,
             'filterWidgetOptions'=>[
                 // inline too, not bad
                 'language' => 'zh-CN',
                 'options' => ['placeholder' => '下单日期','readonly'=>true],
                 'pluginOptions' => [
-                    'format' => 'yyyy年mm月dd日',
+                    'format' => 'yyyy-mm-dd',
                     'autoclose' => true,
 
                 ]
@@ -165,7 +165,7 @@ if($admin->wa_type>3){
             'attribute'=>'step',
             'hAlign'=>'center',
             'vAlign'=>'middle',
-            'width'=>'5%',
+            'width'=>'7%',
             'value'=>function($model){
                 return OrderInfo::getOrderstep($model->state);
             },
@@ -292,7 +292,7 @@ if($admin->wa_type>3){
             'vAlign'=>'middle',
             'attribute'=>'order_date',
             'format' => ["date", "php:Y-m-d H:i:s"],
-            'width'=>'12%',
+            'width'=>'10%',
             'filterType'=>GridView::FILTER_DATE,
             'filterWidgetOptions'=>[
                 // inline too, not bad
@@ -326,7 +326,7 @@ if($admin->wa_type>3){
             'attribute'=>'order_code',
             'hAlign'=>'center',
             'vAlign'=>'middle',
-            'width'=>'8%',
+            'width'=>'9%',
             'format' => 'raw',
             'value'=> function($model){
                 return Html::a($model->order_code,['order/view', 'id' => $model->id],
@@ -466,7 +466,7 @@ if($admin->wa_type>3){
             'header' => '操作',
             'hAlign'=>'center',
             'vAlign'=>'middle',
-            'width'=>'12%',
+            'width'=>'13%',
             'class' =>  'kartik\grid\ActionColumn',
             'buttons' => [
                 'view' => function ($url, $model) {
@@ -532,9 +532,9 @@ if($admin->wa_type>3){
         ],
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'containerOptions'=>['style'=>'overflow: auto'], // only set when $responsive = false
-        'headerRowOptions'=>['class'=>'kartik-sheet-style'],
-        'filterRowOptions'=>['class'=>'kartik-sheet-style'],
+//        'containerOptions'=>['style'=>'overflow: auto'], // only set when $responsive = false
+//        'headerRowOptions'=>['class'=>'kartik-sheet-style'],
+//        'filterRowOptions'=>['class'=>'kartik-sheet-style'],
         'pjax'=>true,  //pjax is set to always true for this demo
         'pjaxSettings'=>[
             'options'=>[

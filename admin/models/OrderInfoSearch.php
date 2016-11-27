@@ -86,8 +86,6 @@ class OrderInfoSearch extends OrderInfo
         }
         if(!empty($this->order_date)){
             $order_date = $this->order_date;
-            var_dump($order_date);
-            exit;
             $query->andFilterWhere(['between', 'order_info.order_date', strtotime("$order_date 00:00:00"),strtotime("$order_date 23:59:59")]);
         }
         if(!empty($this->pay_date)){
