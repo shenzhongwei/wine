@@ -33,7 +33,7 @@ if($admin->wa_type>3){
             'vAlign'=>'middle',
             'attribute'=>'order_date',
             'format' => ["date", "php:Y-m-d H:i:s"],
-            'width'=>'10%',
+            'width'=>'12%',
             'filterType'=>GridView::FILTER_DATE,
             'filterWidgetOptions'=>[
                 // inline too, not bad
@@ -165,7 +165,7 @@ if($admin->wa_type>3){
             'attribute'=>'step',
             'hAlign'=>'center',
             'vAlign'=>'middle',
-            'width'=>'7%',
+            'width'=>'5%',
             'value'=>function($model){
                 return OrderInfo::getOrderstep($model->state);
             },
@@ -182,7 +182,7 @@ if($admin->wa_type>3){
             'attribute'=>'pay_id',
             'hAlign'=>'center',
             'vAlign'=>'middle',
-            'width'=>'7%',
+            'width'=>'6%',
             'value'=>function($model){
                 return OrderInfo::getPaytype($model->pay_id);
             },
@@ -283,7 +283,7 @@ if($admin->wa_type>3){
             'class'=>'kartik\grid\CheckboxColumn',
             'hAlign'=>'center',
             'vAlign'=>'middle',
-            'width'=>'2%',
+            'width'=>'1%',
             'name'=>'id',
         ],
         [
@@ -292,7 +292,7 @@ if($admin->wa_type>3){
             'vAlign'=>'middle',
             'attribute'=>'order_date',
             'format' => ["date", "php:Y-m-d H:i:s"],
-            'width'=>'9%',
+            'width'=>'12%',
             'filterType'=>GridView::FILTER_DATE,
             'filterWidgetOptions'=>[
                 // inline too, not bad
@@ -310,7 +310,7 @@ if($admin->wa_type>3){
             'attribute'=>'username',
             'hAlign'=>'center',
             'vAlign'=>'middle',
-            'width'=>'7%',
+            'width'=>'8%',
             'value'=> function($model){
                 return $model->username;
             },
@@ -398,7 +398,7 @@ if($admin->wa_type>3){
             'class'=>'kartik\grid\BooleanColumn',
             'trueIcon'=>'<label class="label label-success">用 券</label>',
             'falseIcon'=>'<label class="label label-danger">无 券</label>',
-            'width'=>'8%',
+            'width'=>'7%',
             'attribute' => 'is_ticket',
             'trueLabel'=>'用 券',
             'falseLabel'=>'无 券',
@@ -420,7 +420,7 @@ if($admin->wa_type>3){
             'attribute'=>'step',
             'hAlign'=>'center',
             'vAlign'=>'middle',
-            'width'=>'8%',
+            'width'=>'7%',
             'value'=>function($model){
                 return OrderInfo::getOrderstep($model->state);
             },
@@ -437,7 +437,7 @@ if($admin->wa_type>3){
             'attribute'=>'pay_id',
             'hAlign'=>'center',
             'vAlign'=>'middle',
-            'width'=>'8%',
+            'width'=>'7%',
             'value'=>function($model){
                 return OrderInfo::getPaytype($model->pay_id);
             },
