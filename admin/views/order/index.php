@@ -19,7 +19,6 @@ $this->params['breadcrumbs'][] = $this->title;
 $typeArr = [1=>'普通订单','2'=>'会员订单','3'=>'抢购订单'];
 $admin = Yii::$app->user->identity;
 if($admin->wa_type>3){
-
     $colum = [
         [
             'class'=>'kartik\grid\CheckboxColumn',
@@ -208,7 +207,7 @@ if($admin->wa_type>3){
             'width'=>'7%',
             'attribute' => 'status',
             'trueLabel'=>'正 常',
-            'falseLabel'=>'已删除',
+            'falseLabel'=>'删 除',
         ],
 
         [
@@ -360,8 +359,12 @@ if($admin->wa_type>3){
             'hAlign'=>'center',
             'vAlign'=>'middle',
             'width'=>'10%',
+            'format'=>'raw',
             'value'=>function($model){
-                return empty($model->s->name) ? '<span class="not-set">未设置</span>':$model->s->name;
+                return empty($model->s->name) ? '<span class="not-set">未设置</span>':
+                    Html::a($model->s->name,['shop/view', 'id' => $model->sid],
+                        ['title' => '查看门店信息','class'=>' btn-link btn-sm']
+                    );
             },
             'filterType'=>GridView::FILTER_SELECT2,
             'filter'=>OrderInfo::getShopNames(),
@@ -451,7 +454,7 @@ if($admin->wa_type>3){
             'width'=>'7%',
             'attribute' => 'status',
             'trueLabel'=>'正 常',
-            'falseLabel'=>'已删除',
+            'falseLabel'=>'删 除',
         ],
 
         [
