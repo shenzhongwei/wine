@@ -143,7 +143,7 @@ class ShopInfo extends \yii\db\ActiveRecord
 
     //判断商户后台用户名是否唯一
     public function validUsername(){
-        $query = Admin::find()->where(['wa_username'=>$this->wa_username,'wa_type'=>4]);
+        $query = Admin::find()->where(['wa_username'=>$this->wa_username]);
         if(!empty($this->id)){
             $model = self::findOne($this->id);
             if(!empty($model)&&!empty($model->wa_id)){
@@ -263,6 +263,34 @@ class ShopInfo extends \yii\db\ActiveRecord
                 $transaction->rollBack();
                 return false;
             }
+    }
+
+
+    /**
+     * @var self $model
+     * @return boolean
+     */
+    public function updateForm($model){
+        $transaction = Yii::$app->db->beginTransaction();
+        try{
+            if(!$model->save()){
+                throw new Exception('保存商店信息出错');
+            }
+            if(!empty($model->wa_id)){
+                $admin = Admin::findOne($model->wa_id);
+                if(!empty($admin)&&$admin->wa_logo!=$model->logo){
+                    $admin->wa_logo=$model->logo;
+                    if(!$admin->save()){
+                        throw new Exception('保存管理员信息出错');
+                    }
+                }
+            }
+            $transaction->commit();
+            return true;
+        }catch (Exception $e){
+            $transaction->rollBack();
+            return false;
+        }
     }
 
 

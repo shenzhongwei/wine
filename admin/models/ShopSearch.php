@@ -16,7 +16,7 @@ class ShopSearch extends ShopInfo
     public function rules()
     {
         return [
-            [['id', 'limit', 'regist_at', 'is_active', 'active_at','merchant','wa_status'], 'integer'],
+            [['id', 'limit', 'is_active', 'active_at','merchant','wa_status'], 'integer'],
             [['name','region', 'city', 'district','contacter','phone'], 'string'],
         ];
     }

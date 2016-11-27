@@ -24,7 +24,7 @@ $model->wa_username = $model->isNewRecord ? '':$model->wa_username;
             'deviceSize' => ActiveForm::SIZE_LARGE,
         ],
         'enableAjaxValidation'=>true, //开启ajax验证
-        'validationUrl'=>Url::toRoute(['valid-form','id'=>empty($model['id'])?0:$model['id']]), //验证url
+        'validationUrl'=>Url::toRoute(['valid-form','id'=>empty($model->id)?0:$model->id]), //验证url
     ]);
     ?>
     <div class="row">

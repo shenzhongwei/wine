@@ -5,7 +5,6 @@ namespace admin\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use admin\models\MerchantInfo;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -17,8 +16,8 @@ class MerchantInfoSearch extends MerchantInfo
     public function rules()
     {
         return [
-            [['id', 'wa_id', 'lat', 'lng', 'registe_at', 'is_active', 'active_at'], 'integer'],
-            [['name', 'region', 'address', 'phone', 'province', 'city', 'district'], 'safe'],
+            [['is_active','wa_status'], 'integer'],
+            [['name', 'region', 'contacter', 'phone', 'city', 'district','registe_at'], 'safe'],
         ];
     }
 
@@ -28,36 +27,42 @@ class MerchantInfoSearch extends MerchantInfo
         return Model::scenarios();
     }
 
+
     public function search($params)
     {
-        $query = MerchantInfo::find();
-
+        $query = MerchantInfo::find()->joinWith(['wa'])->addSelect(['merchant_info.*','IFNULL(wine_admin.wa_lock,1) as wa_status']);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
+        $sort = $dataProvider->getSort();
+        $sort->attributes['wa_status'] = [
+            'asc' => ['wa_status' => SORT_ASC],
+            'desc' => ['wa_status' => SORT_DESC],
+            'label' => 'wa_status',
+        ];
+        $sort->defaultOrder=[
+            'is_active'=>SORT_DESC,
+            'wa_status'=>SORT_ASC,
+        ];
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }
-
         $query->andFilterWhere([
-            'id' => $this->id,
-            'wa_id' => $this->wa_id,
-            'lat' => $this->lat,
-            'lng' => $this->lng,
-            'registe_at' => $this->registe_at,
             'is_active' => $this->is_active,
-            'active_at' => $this->active_at,
+            'city'=>$this->city,
+            'district'=>$this->district,
+            'region'=>$this->region,
         ]);
-
+        if($this->wa_status==1){
+            $query->andWhere('wine_admin.wa_lock=1 or wine_admin.wa_lock is null');
+        }
+        if($this->wa_status==='0'){
+            $query->andFilterWhere(['wine_admin.wa_lock'=>$this->wa_status]);
+        }
         $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'region', $this->region])
-            ->andFilterWhere(['like', 'address', $this->address])
-            ->andFilterWhere(['like', 'phone', $this->phone])
-            ->andFilterWhere(['like', 'province', $this->province])
-            ->andFilterWhere(['like', 'city', $this->city])
-            ->andFilterWhere(['like', 'district', $this->district]);
-
+            ->andFilterWhere(['like', 'phone', $this->name])
+            ->andFilterWhere(['like', 'contacter', $this->name]);
+        $query->andFilterWhere(['>=',"FROM_UNIXTIME(registe_at,'%Y年%m月%d日')",$this->registe_at]);
         return $dataProvider;
     }
 

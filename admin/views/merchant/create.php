@@ -7,18 +7,21 @@ use yii\helpers\Html;
  * @var admin\models\MerchantInfo $model
  */
 
-$this->title = '新添商户';
+$this->title = ' 新添商户';
 $this->params['breadcrumbs'][] = ['label' => 'Merchant Infos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="merchant-info-create">
-
-    <?= $this->render('_form', [
-        'model' => $model,
-        'item_arr'=>$item_arr,
-        'province'=>$province,
-        'city'=>$city,
-        'district'=>$district,
-    ]) ?>
-
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <span class="glyphicon glyphicon-plus"></span><?= $this->title ?>
+        </div>
+        <div class="panel-body">
+            <!--    <div class="row">-->
+            <?= $this->render('_form', [
+                'model' => $model,
+            ]) ?>
+            <!--    </div>-->
+        </div>
+    </div>
 </div>

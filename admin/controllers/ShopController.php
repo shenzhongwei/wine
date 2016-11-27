@@ -31,9 +31,6 @@ class ShopController extends BaseController
         $dataProvider->pagination=[
             'pageSize' => 15
         ];
-        //获取所有的商户名称
-//        $mername=MerchantInfoSearch::getAllMerchant();
-
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
@@ -147,7 +144,7 @@ class ShopController extends BaseController
     {
         $model = $this->findModel($id);
         $post = Yii::$app->request->post();
-        if ($model->load($post) && $model->save()) {
+        if ($model->load($post) && $model->updateForm($model)) {
             Yii::$app->session->setFlash('success','操作成功');
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -180,58 +177,58 @@ class ShopController extends BaseController
 
 
     public function actionPatch()
-    {
-        $keys = Yii::$app->request->post('keys');
-        $button = Yii::$app->request->post('button');
-        if(empty($keys)){
-            return $this->showResult(304,'非法请求');
-        }
-        $ids = '('.implode(',',$keys).')';
-        if($button == 'shop_up'){
-            $key = 'is_active';
-            $value = 0;
-            $valueTo = 1;
-        }elseif($button == 'shop_down'){
-            $key = 'is_active';
-            $value = 1;
-            $valueTo = 0;
-        }elseif($button == 'shop_unlock'){
-            $key = 'wa_lock';
-            $value = 1;
-            $valueTo = 0;
-        }elseif($button == 'shop_lock'){
-            $key = 'wa_lock';
-            $value = 0;
-            $valueTo = 1;
-        }else{
-            return $this->showResult(304,'非法请求');
-        }
-        if(in_array($button,['shop_up','shop_down'])){
-            $table = 'shop_info';
-            $models = ShopInfo::find()->where("$key=$value and id in $ids")->one();
-        }else{
-            $table = 'wine_admin';
-            $models = Admin::find()->where("$key=$value and wa_id in (SELECT wa_id FROM shop_info WHERE id IN $ids)")->one();
-        }
-        if(!empty($models)){
-            $sql = "UPDATE $table SET $key = $valueTo";
-            if($key == 'is_active'){
-                $sql .= " ,active_at=".time();
-                $sql .= " WHERE id IN $ids AND $key=$value";
-            }else{
-                $sql.= " ,updated_time='".date('Y-m-d H:i:s')."'";
-                $sql .= " WHERE wa_id in (SELECT wa_id FROM shop_info WHERE id IN $ids)";
-            }
-            $res = Yii::$app->db->createCommand($sql)->execute();
-            if(!empty($res)){
-                return $this->showResult(200,'操作成功');
-            }else{
-                return $this->showResult(400,'操作失败，请稍后重试');
-            }
-        }else{
-            return $this->showResult(200,'操作成功');
-        }
+{
+    $keys = Yii::$app->request->post('keys');
+    $button = Yii::$app->request->post('button');
+    if(empty($keys)){
+        return $this->showResult(304,'非法请求');
     }
+    $ids = '('.implode(',',$keys).')';
+    if($button == 'shop_up'){
+        $key = 'is_active';
+        $value = 0;
+        $valueTo = 1;
+    }elseif($button == 'shop_down'){
+        $key = 'is_active';
+        $value = 1;
+        $valueTo = 0;
+    }elseif($button == 'shop_unlock'){
+        $key = 'wa_lock';
+        $value = 1;
+        $valueTo = 0;
+    }elseif($button == 'shop_lock'){
+        $key = 'wa_lock';
+        $value = 0;
+        $valueTo = 1;
+    }else{
+        return $this->showResult(304,'非法请求');
+    }
+    if(in_array($button,['shop_up','shop_down'])){
+        $table = 'shop_info';
+        $models = ShopInfo::find()->where("$key=$value and id in $ids")->one();
+    }else{
+        $table = 'wine_admin';
+        $models = Admin::find()->where("$key=$value and wa_id in (SELECT wa_id FROM shop_info WHERE id IN $ids)")->one();
+    }
+    if(!empty($models)){
+        $sql = "UPDATE $table SET $key = $valueTo";
+        if($key == 'is_active'){
+            $sql .= " ,active_at=".time();
+            $sql .= " WHERE id IN $ids AND $key=$value";
+        }else{
+            $sql.= " ,updated_time='".date('Y-m-d H:i:s')."'";
+            $sql .= " WHERE wa_id in (SELECT wa_id FROM shop_info WHERE id IN $ids)";
+        }
+        $res = Yii::$app->db->createCommand($sql)->execute();
+        if(!empty($res)){
+            return $this->showResult(200,'操作成功');
+        }else{
+            return $this->showResult(400,'操作失败，请稍后重试');
+        }
+    }else{
+        return $this->showResult(200,'操作成功');
+    }
+}
 
     protected function findModel($id)
     {

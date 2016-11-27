@@ -198,7 +198,7 @@ class InoutPay extends \yii\db\ActiveRecord
                 'target_id'=>$user_id,
                 'sum'=>$params['pay_money'],
                 'discount'=>0,
-                'note'=>'用户'.$userInfo->nickname.'于'.date('Y年m月d日 H时i分s秒')."完成单号为$inout->id"."的付款.金额：¥".$params['pay_money'],
+                'note'=>'用户'.$userInfo->nickname.'于'.date('Y年m月d日 H时i分s秒')."完成充值单号为$inout->id"."的付款.金额：¥".$params['pay_money'],
                 'status'=>1,
             ];
             if(!$sysInout->save()){

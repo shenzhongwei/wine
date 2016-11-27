@@ -288,7 +288,7 @@ $this->params['breadcrumbs'][] = $this->title;
             if(button == 'shop_up'){
                 confirm = '确认解除冻结？一旦解除用户将看到门店中的产品';
             }else if(button == 'shop_down') {
-                confirm = '确认冻结门店？一旦冻结用户将无法冻结门店中的产品';
+                confirm = '确认冻结门店？一旦冻结用户将无法购买门店中的产品';
             }else if(button == 'shop_unlock') {
                 confirm = '确认解除锁定，一旦解除，门店将能够登陆后台';
             }else if(button == 'shop_lock') {
