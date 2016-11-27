@@ -24,7 +24,7 @@ if($admin->wa_type>3){
             'class'=>'kartik\grid\CheckboxColumn',
             'hAlign'=>'center',
             'vAlign'=>'middle',
-            'width'=>'2%',
+            'width'=>'1%',
             'name'=>'id',
         ],
         [
@@ -33,7 +33,7 @@ if($admin->wa_type>3){
             'vAlign'=>'middle',
             'attribute'=>'order_date',
             'format' => ["date", "php:Y-m-d H:i:s"],
-            'width'=>'9%',
+            'width'=>'10%',
             'filterType'=>GridView::FILTER_DATE,
             'filterWidgetOptions'=>[
                 // inline too, not bad
