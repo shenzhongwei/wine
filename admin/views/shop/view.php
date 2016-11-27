@@ -182,14 +182,14 @@ $this->registerJsFile("@web/js/good/_script.js");
                             [
                                 'attribute'=>'bus_pic',
                                 "format" => "raw",
-                                'value'=>empty($model->bus_pic) ? '<span class="not-set">未设置</span>':Html::img('../../../../photo'.$model->bus_pic,[
+                                'value'=>Html::img('../../../../photo'.$model->bus_pic,[
                                     'height'=>"198px","onclick"=>"ShowBus(this);",'style'=>'cursor:pointer','title'=>"点击放大"
                                 ]),
                             ],
                             [
                                 'attribute'=>'logo',
                                 "format" => "raw",
-                                'value'=>empty($model->logo) ? '<span class="not-set">未设置</span>':Html::img('../../../../photo'.$model->logo,[
+                                'value'=>Html::img('../../../../photo'.$model->logo,[
                                     'height'=>"198px","onclick"=>"ShowLogo(this);",'style'=>'cursor:pointer','title'=>"点击放大"
                                 ]),
                             ],
