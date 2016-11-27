@@ -295,7 +295,7 @@ if($admin->wa_type>3){
             'vAlign'=>'middle',
             'attribute'=>'order_date',
             'format' => ["date", "php:Y-m-d H:i:s"],
-            'width'=>'16%',
+            'width'=>'18%',
             'filterType'=>GridView::FILTER_DATE_RANGE,
             'filterWidgetOptions'=>[
                 'presetDropdown'=>true,
@@ -369,7 +369,7 @@ if($admin->wa_type>3){
             'attribute'=>'sid',
             'hAlign'=>'center',
             'vAlign'=>'middle',
-            'width'=>'10%',
+            'width'=>'8%',
             'format'=>'raw',
             'value'=>function($model){
                 return empty($model->s->name) ? '<span class="not-set">未设置</span>':
