@@ -50,7 +50,6 @@ use kartik\helpers\Html;
             [
                 'header' => '下单门店',
                 'attribute'=>'sid',
-                'format'=>["date", "php:Y年m月d日"],
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
                 'width'=>'10%',
