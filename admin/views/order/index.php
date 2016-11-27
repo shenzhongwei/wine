@@ -168,7 +168,7 @@ if($admin->wa_type>3){
             'attribute'=>'step',
             'hAlign'=>'center',
             'vAlign'=>'middle',
-            'width'=>'7%',
+            'width'=>'6%',
             'value'=>function($model){
                 return OrderInfo::getOrderstep($model->state);
             },
@@ -185,7 +185,7 @@ if($admin->wa_type>3){
             'attribute'=>'pay_id',
             'hAlign'=>'center',
             'vAlign'=>'middle',
-            'width'=>'7%',
+            'width'=>'6%',
             'value'=>function($model){
                 return OrderInfo::getPaytype($model->pay_id);
             },
@@ -203,18 +203,27 @@ if($admin->wa_type>3){
             'vAlign'=>'middle',
             'class'=>'kartik\grid\BooleanColumn',
             'trueIcon'=>'<label class="label label-success">正 常</label>',
-            'falseIcon'=>'<label class="label label-danger">已删除</label>',
-            'width'=>'7%',
+            'falseIcon'=>'<label class="label label-danger">删 除</label>',
+            'width'=>'6%',
             'attribute' => 'status',
             'trueLabel'=>'正 常',
             'falseLabel'=>'删 除',
         ],
 
         [
+            'header'=>'收货地',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'format'=>'raw',
+            'value'=>"<a id='adress' class='btn-link btn-mx'><i class='fa fa-map-marker'> 查看</i></a>",
+            'width'=>'4%',
+        ],
+
+        [
             'header' => '操作',
             'hAlign'=>'center',
             'vAlign'=>'middle',
-            'width'=>'13%',
+            'width'=>'12%',
             'class' =>  'kartik\grid\ActionColumn',
             'buttons' => [
                 'view' => function ($url, $model) {

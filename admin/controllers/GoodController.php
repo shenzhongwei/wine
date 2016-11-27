@@ -202,7 +202,7 @@ class GoodController extends BaseController
     {
         $model = $this->findModel($id);
 
-        echo '<div class="good-detail">'.$model->detail.'</div>';
+        echo '<div class="good-detail" style="max-width: 840px">'.$model->detail.'</div>';
         exit;
     }
 
