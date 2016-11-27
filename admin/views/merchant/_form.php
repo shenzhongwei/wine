@@ -49,7 +49,7 @@ $model->wa_username = $model->isNewRecord ? '':$model->wa_username;
 
             'address'=>['type'=>Form::INPUT_TEXT,'label'=>'详细地址','options'=>['placeholder'=>'请填写详细地址','maxlength'=>36]],
             'url'=>[
-                'label'=>'商户logo',
+                'label'=>'商户logo(宽高比1:1)',
                 'type'=> Form::INPUT_WIDGET, 'widgetClass'=>FileInput::className(),
                 'options'=>[
                     'options'=>[

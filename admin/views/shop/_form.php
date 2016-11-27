@@ -103,7 +103,7 @@ $model->wa_username = $model->isNewRecord ? '':$model->wa_username;
                 'columns' => 1,
                 'attributes' => [
                     'img'=>[
-                        'label'=>'营业执照',
+                        'label'=>'营业执照(宽高比1:2)',
                         'type'=> Form::INPUT_WIDGET, 'widgetClass'=>FileInput::className(),
                         'options'=>[
                             'options'=>[
@@ -166,7 +166,7 @@ $model->wa_username = $model->isNewRecord ? '':$model->wa_username;
                 'attributes' => [
 
                     'url'=>[
-                        'label'=>'门店logo',
+                        'label'=>'门店logo(宽高比1:1)',
                         'type'=> Form::INPUT_WIDGET, 'widgetClass'=>FileInput::className(),
                         'options'=>[
                             'options'=>[
