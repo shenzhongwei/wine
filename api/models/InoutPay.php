@@ -88,7 +88,6 @@ class InoutPay extends \yii\db\ActiveRecord
         //开始事务..
         $log->log_result($params['order_code']);
         $inout_id = substr($params['order_code'],10);
-        $log->log_result($inout_id);
         $transaction = Yii::$app->db->beginTransaction();
         try{
             //判断订单状态
