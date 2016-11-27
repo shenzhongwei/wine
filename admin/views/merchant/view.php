@@ -158,7 +158,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                                 'attribute'=>'wa_logo',
                                 'label'=>'商户logo',
                                 "format" => "raw",
-                                'value'=>Html::img('../../../../photo'.$model->wa_logo,[
+                                'value'=>empty($model->wa_logo) ? '<span class="not-set">未设置</span>':Html::img('../../../../photo'.$model->wa_logo,[
                                     'height'=>"320px","onclick"=>"ShowLogo(this);",'style'=>'cursor:pointer','title'=>"点击放大"
                                 ]),
                             ],
