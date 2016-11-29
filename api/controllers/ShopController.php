@@ -30,7 +30,7 @@ class ShopController extends ApiController{
         //搜索数据库找出5KM之内的店铺
         $query = ShopInfo::find()->select(['*']);
         $query->addSelect(["ROUND(6378.138*2*ASIN(SQRT(POW(SIN(($lat*PI()/180-lat/1000000*PI()/180)/2),2)+COS($lat*PI()/180)*COS(lat/1000000*PI()/180)*POW(SIN(($lng*PI()/180-lng/1000000*PI()/180)/2),2)))*1000) as distance"]);
-        $query->where("is_active=1 and lat>0 and lng>0")->having('distance<=limit');
+        $query->where("is_active=1 and lat>0 and lng>0")->having('distance<=`limit`');
         $query->orderBy(['distance'=>SORT_ASC]);
         $count = $query->count();
         $data = [];
