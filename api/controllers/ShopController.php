@@ -30,22 +30,40 @@ class ShopController extends ApiController{
         //搜索数据库找出5KM之内的店铺
         $query = ShopInfo::find()->select(['*']);
         $query->addSelect(["ROUND(6378.138*2*ASIN(SQRT(POW(SIN(($lat*PI()/180-lat/1000000*PI()/180)/2),2)+COS($lat*PI()/180)*COS(lat/1000000*PI()/180)*POW(SIN(($lng*PI()/180-lng/1000000*PI()/180)/2),2)))*1000) as distance"]);
-        $query->where("is_active=1 and lat>0 and lng>0")->having('distance<=5000');
+        $query->where("is_active=1 and lat>0 and lng>0")->having('distance<=limit');
         $query->orderBy(['distance'=>SORT_ASC]);
-        $shops = $query->all();
+        $count = $query->count();
         $data = [];
-        if(!empty($shops)){
-            $data = ArrayHelper::getColumn($shops,function($element){
-                return [
-                    'shop_id'=>$element->id,
-                    'name'=>$element->name,
-                    'phone'=>$element->phone,
-                    'address'=>$element->province.$element->city.$element->district.$element->region.$element->address,
-                    'lat'=>$element->lat/1000000,
-                    'lng'=>$element->lng/1000000,
-                    'distance'=>$element->distance<500 ? $element->distance.'m':number_format($element->distance/1000,1).'km',
+        if(empty($count)){
+            $shop = ShopInfo::find()->select(['*'])
+                ->addSelect(["ROUND(6378.138*2*ASIN(SQRT(POW(SIN(($lat*PI()/180-lat/1000000*PI()/180)/2),2)+COS($lat*PI()/180)*COS(lat/1000000*PI()/180)*POW(SIN(($lng*PI()/180-lng/1000000*PI()/180)/2),2)))*1000) as distance"])
+                ->where("is_active=1 and lat>0 and lng>0")->orderBy(['distance'=>SORT_ASC])->one();
+            if(!empty($shop)){
+                $data[]=[
+                    'shop_id'=>$shop->id,
+                    'name'=>$shop->name,
+                    'phone'=>$shop->phone,
+                    'address'=>$shop->province.$shop->city.$shop->district.$shop->region.$shop->address,
+                    'lat'=>$shop->lat/1000000,
+                    'lng'=>$shop->lng/1000000,
+                    'distance'=>$shop->distance<500 ? $shop->distance.'m':number_format($shop->distance/1000,1).'km',
                 ];
-            });
+            }
+        }else{
+            $shops = $query->all();
+            if(!empty($shops)){
+                $data = ArrayHelper::getColumn($shops,function($element){
+                    return [
+                        'shop_id'=>$element->id,
+                        'name'=>$element->name,
+                        'phone'=>$element->phone,
+                        'address'=>$element->province.$element->city.$element->district.$element->region.$element->address,
+                        'lat'=>$element->lat/1000000,
+                        'lng'=>$element->lng/1000000,
+                        'distance'=>$element->distance<500 ? $element->distance.'m':number_format($element->distance/1000,1).'km',
+                    ];
+                });
+            }
         }
         return $this->showResult(200,'成功',$data);
     }
