@@ -10,6 +10,7 @@ use Yii;
 use admin\models\OrderInfo;
 use admin\models\OrderInfoSearch;
 use yii\base\Exception;
+use yii\base\Object;
 use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -65,6 +66,19 @@ class OrderController extends BaseController
         } else {
             return $this->render('view', ['model' => $model]);
         }
+    }
+
+
+    public function actionLocate()
+    {
+        $id = Yii::$app->request->post('id');
+        $model = $this->findModel($id);
+        if (empty($model) || empty($model->a)) {
+            $address = [];
+        } else {
+            $address = $model->a;
+        }
+        return $this->render('locate', ['model' => $address]);
     }
 
 

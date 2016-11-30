@@ -212,8 +212,14 @@ if($admin->wa_type>3){
             'hAlign'=>'center',
             'vAlign'=>'middle',
             'format'=>'raw',
-            'value'=>function(){
-                return "<a id='adress' class='btn-link btn-mx'><i class='fa fa-map-marker'> 查看</i></a>";
+            'value' => function ($model) {
+                return Html::a("<i class='fa fa-map-marker'> 查看</i>", '#', [
+                    'id' => 'locate',//属性
+                    'data-toggle' => 'modal',    //弹框
+                    'data-target' => '#locate-modal',    //指定弹框的id
+                    'class' => 'btn-link btn-xs locate',
+                    'data-id' => $model->id,
+                ]);
             },
             'width'=>'5%',
         ],
@@ -532,9 +538,9 @@ if($admin->wa_type>3){
         ],
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-//        'containerOptions'=>['style'=>'overflow: auto'], // only set when $responsive = false
-//        'headerRowOptions'=>['class'=>'kartik-sheet-style'],
-//        'filterRowOptions'=>['class'=>'kartik-sheet-style'],
+        'containerOptions' => ['style' => 'overflow: auto'], // only set when $responsive = false
+        'headerRowOptions' => ['class' => 'kartik-sheet-style'],
+        'filterRowOptions' => ['class' => 'kartik-sheet-style'],
         'pjax'=>true,  //pjax is set to always true for this demo
         'pjaxSettings'=>[
             'options'=>[
@@ -576,13 +582,74 @@ if($admin->wa_type>3){
     ]); ?>
 
 </div>
+<script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=<?= Yii::$app->params['key'] ?>"></script>
 <style>
-    /*.modal-footer{*/
-        /*text-align: center;*/
-    /*}*/
     .modal-header{
         text-align: center;
     }
+
+    .modal-body {
+        height: 300px;
+        padding: 0px;
+    }
+
+    .modal-footer {
+        text-align: center;
+    }
+
+    #locate {
+        height: 100%;
+    }
+
+    /*.info {*/
+    /*border: solid 1px silver;*/
+    /*}*/
+    /*div.info-top {*/
+    /*position: relative;*/
+    /*background: none repeat scroll 0 0 #F9F9F9;*/
+    /*border-bottom: 1px solid #CCC;*/
+    /*border-radius: 5px 5px 0 0;*/
+    /*}*/
+    /*div.info-top div {*/
+    /*display: inline-block;*/
+    /*color: #333333;*/
+    /*font-size: 14px;*/
+    /*font-weight: bold;*/
+    /*line-height: 31px;*/
+    /*padding: 0 10px;*/
+    /*}*/
+    /*div.info-top img {*/
+    /*position: absolute;*/
+    /*top: 10px;*/
+    /*right: 10px;*/
+    /*transition-duration: 0.25s;*/
+    /*}*/
+    /*div.info-top img:hover {*/
+    /*box-shadow: 0px 0px 5px #000;*/
+    /*}*/
+    /*div.info-middle {*/
+    /*font-size: 12px;*/
+    /*padding: 6px;*/
+    /*line-height: 20px;*/
+    /*}*/
+    /*div.info-bottom {*/
+    /*height: 0px;*/
+    /*width: 100%;*/
+    /*clear: both;*/
+    /*text-align: center;*/
+    /*}*/
+    /*div.info-bottom img {*/
+    /*position: relative;*/
+    /*z-index: 104;*/
+    /*}*/
+    /*.loc {*/
+    /*margin-left: 5px;*/
+    /*font-size: 11px;*/
+    /*}*/
+    /*.info-middle img {*/
+    /*float: left;*/
+    /*margin-right: 6px;*/
+    /*}*/
 </style>
 <!--查看看详情弹出框  start-->
 <?php
@@ -590,6 +657,14 @@ if($admin->wa_type>3){
 \yii\bootstrap\Modal::begin([
     'id' => 'send-modal',
     'header' => '<h4 class="modal-title">订单发配</h4><small>请选择已装箱的订单进行配送，否则无法发起配送</small>',
+    'footer' =>
+        '<button class="btn btn-primary" style="margin-left: 10%;" data-dismiss="modal">关 闭</button>',
+]);
+\yii\bootstrap\Modal::end();
+
+\yii\bootstrap\Modal::begin([
+    'id' => 'locate-modal',
+    'header' => '<h4 class="modal-title">高德地图</h4>',
     'footer' =>
         '<button class="btn btn-primary" style="margin-left: 10%;" data-dismiss="modal">关 闭</button>',
 ]);
@@ -602,6 +677,13 @@ if($admin->wa_type>3){
         $(document).on('pjax:complete', function() {init();});
     });
     function init() {
+        $('.locate').on('click', function () {  //查看详情的触发事件
+            $.post(toRoute('order/locate'), {id: $(this).closest('tr').data('key')},
+                function (data) {
+                    $('#locate-modal').find('.modal-body').html(data);  //给该弹框下的body赋值
+                }
+            );
+        });
         $('.panel').find('.dropdown-toggle').unbind();
         $('.panel').find('.dropdown-toggle').attr('class','btn btn-default dropdown-toggle');
         $('.ui-autocomplete').css('z-index','99999');

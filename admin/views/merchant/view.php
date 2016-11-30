@@ -205,7 +205,7 @@ $this->registerJsFile("@web/js/good/_script.js");
             $('#location').css('text-align','center').html('<span class="not-set">暂未设置地址</span>')
             return false;
         }
-       var map,lngLat,marker,circle;
+        var map, lngLat, marker;
         lngLat = new AMap.LngLat(data.lng/1000000,data.lat/1000000);
         //加载地图，调用浏览器定位服务
         map = new AMap.Map('location', {
@@ -217,19 +217,10 @@ $this->registerJsFile("@web/js/good/_script.js");
             draggable:false,
             clickable:true
         });
-        circle = new AMap.Circle({
-            map:map,
-            strokeColor: "#63B8FF", //线颜色
-            strokeOpacity: 0.5, //线透明度
-            strokeWeight: 1.5, //线粗细度
-            fillColor: "#63B8FF", //填充颜色
-            fillOpacity: 0.2//填充透明度
-        });
         map.setZoomAndCenter(13,lngLat);
         map.panTo(lngLat);
         marker.setMap(map);
         marker.setPosition(lngLat);
-        circle.setCenter(lngLat);
         //输入提示
         AMap.event.addListener(marker, 'click', function() {
             infoWindow.open(map, lngLat);

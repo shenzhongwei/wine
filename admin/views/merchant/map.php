@@ -21,10 +21,9 @@ use kartik\helpers\Html;
         shop_lat = ($('#merchantinfo-lat').val())/1000000;
         shop_lng = ($('#merchantinfo-lng').val())/1000000;
         shop_name = $('#merchantinfo-name').val();
-        shop_limit = $('#merchantinfo-limit').val()*1;
         shop_region = $('#merchantinfo-region').val();
         shop_address = $('#merchantinfo-address').val();
-        $(document).ready(init(shop_lat,shop_lng,shop_name,shop_limit,shop_region,shop_address));
+        $(document).ready(init(shop_lat, shop_lng, shop_name, shop_region, shop_address));
 
         $('#confirm').on('click',function () {
             $('#merchantinfo-province').val($('#province').val());
@@ -36,8 +35,8 @@ use kartik\helpers\Html;
             $('#merchantinfo-lng').val($('#lng').val());
         });
     });
-    function init(shop_lat,shop_lng,shop_name,shop_limit,shop_region,shop_address) {
-        var map,toolbar,scale,auto,lngLat,marker,circle;
+    function init(shop_lat, shop_lng, shop_name, shop_region, shop_address) {
+        var map, toolbar, scale, auto, lngLat, marker;
 
         //加载地图，调用浏览器定位服务
         map = new AMap.Map('container', {
@@ -56,7 +55,6 @@ use kartik\helpers\Html;
             }
             marker.setMap(map);
             marker.setPosition(e.poi.location);
-            circle.setCenter(e.poi.location);
             map.setZoomAndCenter(14,e.poi.location);
             map.panTo(e.poi.location);
             var lng = marker.getPosition().getLng();
@@ -66,20 +64,6 @@ use kartik\helpers\Html;
             Geocoder(map,new AMap.LngLat(lng,lat),auto,2);
             $('#address').val(e.poi.name);
         });
-        //范围圈
-        circle = new AMap.Circle({
-            map:map,
-            strokeColor: "#63B8FF", //线颜色
-            strokeOpacity: 0.5, //线透明度
-            strokeWeight: 1.5, //线粗细度
-            fillColor: "#63B8FF", //填充颜色
-            fillOpacity: 0.2//填充透明度
-        });
-        if(!isNaN(shop_limit)&&shop_limit>0){
-            circle.setRadius(shop_limit);
-        }else{
-            circle.setRadius(0);
-        }
         //标注
         marker = new AMap.Marker({
             draggable:true,
@@ -88,7 +72,6 @@ use kartik\helpers\Html;
         //拖拽事件
         marker.on('dragging', function() {
             var pos = marker.getPosition();
-            circle.setCenter(pos);
             $('#lat').val((pos.getLat()*1000000));
             $('#lng').val((pos.getLng()*1000000));
             Geocoder(map,pos,auto,2);
@@ -107,7 +90,6 @@ use kartik\helpers\Html;
             map.panTo(lngLat);
             marker.setMap(map);
             marker.setPosition(lngLat);
-            circle.setCenter(lngLat);
             $('#region').val(shop_region);
             $('#address').val(shop_address);
             $('#lat').val(shop_lat*1000000);
