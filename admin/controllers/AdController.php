@@ -41,7 +41,6 @@ class AdController extends BaseController
     }
 
     /**
-     * 1
      * Lists all AdList models.
      * @return mixed
      */
