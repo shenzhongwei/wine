@@ -330,7 +330,7 @@ $payArr = [1=>'余额支付','2'=>'支付宝支付','3'=>'微信支付'];
     $(function(){
         $(document).ready(init(<?=$model->distance ?>,<?=empty($model->a) ? '':json_encode($model->a->toArray(),true); ?>));
         $('.send').on('click', function () {  //查看详情的触发事件
-            var key = $(this).closest('tr').data('key');
+            var key = $(this).data('id');
             $('.send-list-form').remove();
             $.post(toRoute('order/send'), { id:key,key:'single'  },
                 function (data) {
