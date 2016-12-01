@@ -117,7 +117,7 @@ class OrderController extends BaseController
         try{
             if($orderinfo->state==4){
                 $orderinfo->state=5;
-                $orderinfo->order_date = time();
+                $orderinfo->send_date = time();
                 if(!$orderinfo->save()){
                     throw new Exception('修改订单状态出错');
                 }
@@ -217,7 +217,7 @@ class OrderController extends BaseController
                 $sql = "UPDATE order_info SET $key = $valueTo";
                 //批量送达的sql
                 if($button == 'order_arrive'){
-                    $sql.=",order_date=".time();
+                    $sql.=",send_date=".time();
                     $sendArr = array_values(array_unique(ArrayHelper::getColumn($orders,'send_id')));
                     $send_ids = implode(',',$sendArr);
                     $sendingOrders = OrderInfo::find()->where("send_id in ($send_ids) and state=4 and id not in $ids")->all();
