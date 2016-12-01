@@ -66,7 +66,7 @@ use kartik\helpers\Html;
                 'format' => 'html',
                 'value'=> function($model){
                     return Html::a($model->order_code,['order/view', 'id' => $model->id],
-                        ['title' => '查看订单详细','class'=>'btn btn-link btn-sm']
+                        ['title' => '查看订单详细','class'=>' btn-link btn-sm']
                     );
                 },
             ],

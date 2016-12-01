@@ -115,7 +115,7 @@ $this->registerJsFile("@web/js/good/_script.js");
                                 'label'=>'后台账号',
                                 'attribute'=>'wa_id',
                                 'format' => 'raw',
-                                'value'=> Html::a($model->wa->wa_name,['manager/update', 'id' => $model->wa->wa_id], ['title' => '查看后台登录信息','class'=>'btn btn-link btn-xs']),
+                                'value'=> Html::a($model->wa->wa_name,['manager/update', 'id' => $model->wa->wa_id], ['title' => '查看后台登录信息','class'=>' btn-link btn-xs']),
                             ],
                             'contacter',
                             'phone',

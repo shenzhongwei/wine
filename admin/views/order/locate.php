@@ -1,13 +1,17 @@
 <?php
 /**
  * @var \admin\models\UserAddress $model
+ * @var string $distance
  */
 ?>
+<div id="locate">
+
+</div>
 <script type="text/javascript">
     $(function () {
-        $(document).ready(init(<?=json_encode($model->toArray(), true); ?>));
+        $(document).ready(init(<?=json_encode($model->toArray(), true); ?>,<?=$distance ?>));
     });
-    function init(data) {
+    function init(data,distance) {
         if (data.lng == '0' || data.lat == '0') {
             $('#locate').css('text-align', 'center').html('<span class="not-set">暂未设置地址</span>')
             return false;
@@ -33,17 +37,17 @@
             infoWindow.open(map, lngLat);
         });
         //实例化信息窗体
-        var title = data.name + "<span class='loc'>(" + data.lng / 1000000 + "," + data.lat / 1000000 + ")</span>", content = [];
-        content.push("地址：" + data.province + data.city + data.district + data.region + data.address);
-        content.push("电话：" + data.phone);
-        content.push("经度：" + data.lng / 1000000);
-        content.push("纬度：" + data.lat / 1000000);
+        var title = "收货信息<span class='loc'>(" + data.lng / 1000000 + "," + data.lat / 1000000 + ")</span>", content = [];
+        content.push("收货人：" + data.get_person);
+        content.push("收货电话：" + data.get_phone);
+        content.push("直线距离：" + distance+'米');
+        content.push("收货地址：" + data.province + data.city + data.district + data.region + data.address);
         var infoWindow = new AMap.InfoWindow({
             isCustom: true,  //使用自定义窗体
             content: createInfoWindow(title, content.join("<br/>")),
             offset: new AMap.Pixel(16, -45)
         });
-
+        infoWindow.open(map, lngLat);
         //构建自定义信息窗体
         function createInfoWindow(title, content) {
             var info = document.createElement("div");

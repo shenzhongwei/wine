@@ -29,6 +29,8 @@ use Yii;
  */
 class UserAddress extends \yii\db\ActiveRecord
 {
+
+    public $distance;
     /**
      * @inheritdoc
      */

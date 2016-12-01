@@ -48,7 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'width'=>'15%',
                 'value'=>function($model) {
                     return Html::a($model->g->name.$model->g->volum,['good/view', 'id' => $model->id],
-                        ['title' => '查看商品详细','class'=>'btn btn-link btn-sm']
+                        ['title' => '查看商品详细','class'=>' btn-link btn-sm']
                     );
                 }
             ],

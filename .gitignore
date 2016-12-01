@@ -16,3 +16,5 @@ themes/classic/views/
 /pull.sh
 /local.zip
 /photo
+/api/web/android_update.txt
+/api/web/ios_update.txt

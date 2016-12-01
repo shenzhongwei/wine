@@ -79,7 +79,7 @@ $count = $dataProvider->totalCount;
                 'format' => 'raw',
                 'value'=> function($model){
                     return $model->type==1 ? Html::a(str_replace('http://','',$model->pic_url),'#',
-                        ['class'=>'btn btn-link btn-sm']
+                        ['class'=>'btn-link btn-sm']
                     ):'<span class="not-set">(非外链广告无需设置)</span>';
                 },
             ],

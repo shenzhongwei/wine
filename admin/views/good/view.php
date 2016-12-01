@@ -71,7 +71,7 @@ if(!empty($model->original_pay)){
                                 'label'=>'归属商户',
                                 'attribute'=>'merchant',
                                 'format' => 'raw',
-                                'value'=> Html::a($model->merchant0->name,['merchant/view', 'id' => $model->merchant0->id], ['title' => '查看商户信息','class'=>'btn btn-link btn-xs']),
+                                'value'=> Html::a($model->merchant0->name,['merchant/view', 'id' => $model->merchant0->id], ['title' => '查看商户信息','class'=>'btn-link btn-xs']),
                             ],
                             [
                                 'attribute'=>'type',
@@ -158,7 +158,7 @@ if(!empty($model->original_pay)){
                             [
                                 'attribute'=>'detail',
                                 "format" => "html",
-                                'value'=>'<a class="btn btn-link btn-xs" href="'.Url::toRoute(['good/detail','id'=>$model->id]).'">点击查看</a>',
+                                'value'=>'<a class=" btn-link btn-xs" href="'.Url::toRoute(['good/detail','id'=>$model->id]).'">点击查看</a>',
                             ],
 
                             [

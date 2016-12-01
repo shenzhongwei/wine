@@ -57,7 +57,7 @@ $count = $dataProvider->totalCount;
                 'format' => 'raw',
                 'value'=> function($model){
                     return Html::a(str_replace('http://','',$model->pic_url),'#',
-                        ['class'=>'btn btn-link btn-sm']
+                        ['class'=>'btn-link btn-sm']
                     );
                 },
             ],

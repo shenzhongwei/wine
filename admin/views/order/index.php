@@ -164,6 +164,7 @@ if($admin->wa_type>3){
             'label'=>'订单进度',
             'attribute'=>'step',
             'hAlign'=>'center',
+            'format'=>'raw',
             'vAlign'=>'middle',
             'width'=>'7%',
             'value'=>function($model){
@@ -214,7 +215,6 @@ if($admin->wa_type>3){
             'format'=>'raw',
             'value' => function ($model) {
                 return Html::a("<i class='fa fa-map-marker'> 查看</i>", '#', [
-                    'id' => 'locate',//属性
                     'data-toggle' => 'modal',    //弹框
                     'data-target' => '#locate-modal',    //指定弹框的id
                     'class' => 'btn-link btn-xs locate',
@@ -426,6 +426,7 @@ if($admin->wa_type>3){
             'attribute'=>'step',
             'hAlign'=>'center',
             'vAlign'=>'middle',
+            'format'=>'raw',
             'width'=>'7%',
             'value'=>function($model){
                 return OrderInfo::getOrderstep($model->state);
@@ -588,12 +589,12 @@ if($admin->wa_type>3){
         text-align: center;
     }
 
-    .modal-body {
-        height: 300px;
+    #locate-modal .modal-body {
+        height: 500px;
         padding: 0px;
     }
 
-    .modal-footer {
+    #send-modal .modal-footer {
         text-align: center;
     }
 
@@ -601,55 +602,55 @@ if($admin->wa_type>3){
         height: 100%;
     }
 
-    /*.info {*/
-    /*border: solid 1px silver;*/
-    /*}*/
-    /*div.info-top {*/
-    /*position: relative;*/
-    /*background: none repeat scroll 0 0 #F9F9F9;*/
-    /*border-bottom: 1px solid #CCC;*/
-    /*border-radius: 5px 5px 0 0;*/
-    /*}*/
-    /*div.info-top div {*/
-    /*display: inline-block;*/
-    /*color: #333333;*/
-    /*font-size: 14px;*/
-    /*font-weight: bold;*/
-    /*line-height: 31px;*/
-    /*padding: 0 10px;*/
-    /*}*/
-    /*div.info-top img {*/
-    /*position: absolute;*/
-    /*top: 10px;*/
-    /*right: 10px;*/
-    /*transition-duration: 0.25s;*/
-    /*}*/
-    /*div.info-top img:hover {*/
-    /*box-shadow: 0px 0px 5px #000;*/
-    /*}*/
-    /*div.info-middle {*/
-    /*font-size: 12px;*/
-    /*padding: 6px;*/
-    /*line-height: 20px;*/
-    /*}*/
-    /*div.info-bottom {*/
-    /*height: 0px;*/
-    /*width: 100%;*/
-    /*clear: both;*/
-    /*text-align: center;*/
-    /*}*/
-    /*div.info-bottom img {*/
-    /*position: relative;*/
-    /*z-index: 104;*/
-    /*}*/
-    /*.loc {*/
-    /*margin-left: 5px;*/
-    /*font-size: 11px;*/
-    /*}*/
-    /*.info-middle img {*/
-    /*float: left;*/
-    /*margin-right: 6px;*/
-    /*}*/
+    .info {
+    border: solid 1px silver;
+    }
+    div.info-top {
+    position: relative;
+    background: none repeat scroll 0 0 #F9F9F9;
+    border-bottom: 1px solid #CCC;
+    border-radius: 5px 5px 0 0;
+    }
+    div.info-top div {
+    display: inline-block;
+    color: #333333;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 31px;
+    padding: 0 10px;
+    }
+    div.info-top img {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    transition-duration: 0.25s;
+    }
+    div.info-top img:hover {
+    box-shadow: 0px 0px 5px #000;
+    }
+    div.info-middle {
+    font-size: 12px;
+    padding: 6px;
+    line-height: 20px;
+    }
+    div.info-bottom {
+    height: 0px;
+    width: 100%;
+    clear: both;
+    text-align: center;
+    }
+    div.info-bottom img {
+    position: relative;
+    z-index: 104;
+    }
+    .loc {
+    margin-left: 5px;
+    font-size: 11px;
+    }
+    .info-middle img {
+    float: left;
+    margin-right: 6px;
+    }
 </style>
 <!--查看看详情弹出框  start-->
 <?php
@@ -658,7 +659,7 @@ if($admin->wa_type>3){
     'id' => 'send-modal',
     'header' => '<h4 class="modal-title">订单发配</h4><small>请选择已装箱的订单进行配送，否则无法发起配送</small>',
     'footer' =>
-        '<button class="btn btn-primary" style="margin-left: 10%;" data-dismiss="modal">关 闭</button>',
+        '<button class="btn btn-primary" data-dismiss="modal">关 闭</button>',
 ]);
 \yii\bootstrap\Modal::end();
 
@@ -666,7 +667,7 @@ if($admin->wa_type>3){
     'id' => 'locate-modal',
     'header' => '<h4 class="modal-title">高德地图</h4>',
     'footer' =>
-        '<button class="btn btn-primary" style="margin-left: 10%;" data-dismiss="modal">关 闭</button>',
+        '<button class="btn btn-primary" data-dismiss="modal">关 闭</button>',
 ]);
 \yii\bootstrap\Modal::end();
 ?>

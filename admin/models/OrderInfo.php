@@ -2,6 +2,7 @@
 
 namespace admin\models;
 
+use api\models\UserTicket;
 use common\helpers\ArrayHelper;
 use Yii;
 
@@ -36,6 +37,7 @@ use Yii;
  * @property EmployeeInfo $send
  * @property ShopInfo $s
  * @property UserInfo $u
+ * @property UserTicket $t
  * @property OrderPay[] $orderPays
  */
 class OrderInfo extends \yii\db\ActiveRecord
@@ -46,6 +48,7 @@ class OrderInfo extends \yii\db\ActiveRecord
     public $step;
     public $is_ticket;
     public $is_point;
+    public $distance;
 
     /**
      * @inheritdoc
@@ -127,6 +130,14 @@ class OrderInfo extends \yii\db\ActiveRecord
     public function getA()
     {
         return $this->hasOne(UserAddress::className(), ['id' => 'aid']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getT()
+    {
+        return $this->hasOne(UserTicket::className(), ['id' => 'ticket_id']);
     }
 
     /**
@@ -237,6 +248,6 @@ class OrderInfo extends \yii\db\ActiveRecord
      */
     public static function getOrderstep($state){
         $model=Dics::find()->select(['name'])->where(['type'=>'订单状态','id'=>$state])->asArray()->one();
-        return empty($model)?'<span class="not-set">未知状态</span>':$model['name'];
+        return empty($model)?'<span class="not-set">未知状态</span>':'<label class="label label-default">'.$model['name'].'</label>';
     }
 }

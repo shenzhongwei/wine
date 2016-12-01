@@ -61,7 +61,7 @@ class OrderInfoSearch extends OrderInfo
             'desc' => ['is_point' => SORT_DESC],
             'label' => 'is_point',
         ];
-        $sort->defaultOrder = ['step'=>SORT_ASC,'order_date'=>SORT_ASC];
+        $sort->defaultOrder = ['step'=>SORT_ASC,'order_date'=>SORT_DESC];
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }
