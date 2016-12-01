@@ -316,9 +316,28 @@ $payArr = [1=>'余额支付','2'=>'支付宝支付','3'=>'微信支付'];
         </div>
     </div>
 </div>
+<?php
+
+\yii\bootstrap\Modal::begin([
+    'id' => 'send-modal',
+    'header' => '<h4 class="modal-title">订单发配</h4><small>请选择已装箱的订单进行配送，否则无法发起配送</small>',
+    'footer' =>
+        '<button class="btn btn-primary" data-dismiss="modal">关 闭</button>',
+]);
+\yii\bootstrap\Modal::end();
+?>
 <script type="text/javascript">
     $(function(){
         $(document).ready(init(<?=$model->distance ?>,<?=empty($model->a) ? '':json_encode($model->a->toArray(),true); ?>));
+        $('.send').on('click', function () {  //查看详情的触发事件
+            var key = $(this).closest('tr').data('key');
+            $('.send-list-form').remove();
+            $.post(toRoute('order/send'), { id:key,key:'single'  },
+                function (data) {
+                    $('#send-modal').find('.modal-body').html(data);  //给该弹框下的body赋值
+                }
+            );
+        });
     });
     function init(distance,userAddress) {
         if (userAddress == '') {
