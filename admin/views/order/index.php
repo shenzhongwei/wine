@@ -71,7 +71,6 @@ if($admin->wa_type>3){
             <tr>
                 <th valign='top'>配送地址：</th>
                 <td valign='top'>$address</td>
-
             </tr>
             <tr>
                 <th valign='top'>优惠额度：</th>
@@ -436,7 +435,6 @@ if($admin->wa_type>3){
             <tr>
                 <th valign='top'>配送地址：</th>
                 <td valign='top'>$address</td>
-
             </tr>
             <tr>
                 <th valign='top'>优惠额度：</th>
@@ -452,22 +450,19 @@ if($admin->wa_type>3){
             </tr>
             <tr>";
                     if(empty($model->orderDetails)){
-                        $ordertable.= "
-                <td valign='top'>丢失</td>
+                        $ordertable.= "<td valign='top'>丢失</td>
                 <td valign='top'>丢失</td>
                 <td valign='top'>丢失</td>
                 <td valign='top'>丢失</td>";
                     }else{
                         foreach($model->orderDetails as $detail){
                             if(empty($detail->g)){
-                                $ordertable.= "
-                <td valign='top'>丢失</td>
+                                $ordertable.= "<td valign='top'>丢失</td>
                 <td valign='top'>".$detail->amount."</td>
                 <td valign='top'>".$detail->single_price."</td>
                 <td valign='top'>".$detail->total_price."</td>";
                             }else{
-                                $ordertable.= "
-                <td valign='top'>".$detail->g->name.$detail->g->volum."</td>
+                                $ordertable.= "<td valign='top'>".$detail->g->name.$detail->g->volum."</td>
                 <td valign='top'>".$detail->amount."</td>
                 <td valign='top'>".$detail->single_price."</td>
                 <td valign='top'>".$detail->total_price."</td>";
@@ -731,7 +726,10 @@ if($admin->wa_type>3){
 }
 ?>
 <?=Html::cssFile('@web/css/wine/order.css')?>
-<?=Html::cssFile('@web/css/wine/print.css')?>
+<?=Html::cssFile('@web/css/wine/print.css',[
+    'type'=>"text/css",
+    'media'=>'print',
+])?>
 <?=Html::jsFile('@web/js/wine/jquery.PrintArea.js')?>
 <div class="order-info-index">
     <?php
@@ -774,8 +772,8 @@ if($admin->wa_type>3){
                     "class" => "btn btn-primary patch_send",'style'=>'margin-left:0.1%',
                     'data-toggle' => 'modal',    //弹框
                     'data-target' => '#send-modal',    //指定弹框的id
-                ]).Html::a("批量送达", "javascript:void(0);", ["class" => "btn btn-primary",'style'=>'margin-left:0.1%','id'=>'order_arrive']).
-                Html::a("批量打印", "javascript:void(0);", ["class" => "btn btn-primary",'style'=>'margin-left:0.1%','id'=>'order_print'])
+                ]).Html::a("批量送达", "javascript:void(0);", ["class" => "btn btn-primary",'style'=>'margin-left:0.1%','id'=>'order_arrive'])
+                . Html::a("批量打印", "javascript:void(0);", ["class" => "btn btn-primary",'style'=>'margin-left:0.1%','id'=>'order_print'])
                 :'',
             'after'=>false,
             'showPanel'=>true,
@@ -807,53 +805,53 @@ if($admin->wa_type>3){
     }
 
     .info {
-    border: solid 1px silver;
+        border: solid 1px silver;
     }
     div.info-top {
-    position: relative;
-    background: none repeat scroll 0 0 #F9F9F9;
-    border-bottom: 1px solid #CCC;
-    border-radius: 5px 5px 0 0;
+        position: relative;
+        background: none repeat scroll 0 0 #F9F9F9;
+        border-bottom: 1px solid #CCC;
+        border-radius: 5px 5px 0 0;
     }
     div.info-top div {
-    display: inline-block;
-    color: #333333;
-    font-size: 14px;
-    font-weight: bold;
-    line-height: 31px;
-    padding: 0 10px;
+        display: inline-block;
+        color: #333333;
+        font-size: 14px;
+        font-weight: bold;
+        line-height: 31px;
+        padding: 0 10px;
     }
     div.info-top img {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    transition-duration: 0.25s;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        transition-duration: 0.25s;
     }
     div.info-top img:hover {
-    box-shadow: 0px 0px 5px #000;
+        box-shadow: 0px 0px 5px #000;
     }
     div.info-middle {
-    font-size: 12px;
-    padding: 6px;
-    line-height: 20px;
+        font-size: 12px;
+        padding: 6px;
+        line-height: 20px;
     }
     div.info-bottom {
-    height: 0px;
-    width: 100%;
-    clear: both;
-    text-align: center;
+        height: 0px;
+        width: 100%;
+        clear: both;
+        text-align: center;
     }
     div.info-bottom img {
-    position: relative;
-    z-index: 104;
+        position: relative;
+        z-index: 104;
     }
     .loc {
-    margin-left: 5px;
-    font-size: 11px;
+        margin-left: 5px;
+        font-size: 11px;
     }
     .info-middle img {
-    float: left;
-    margin-right: 6px;
+        float: left;
+        margin-right: 6px;
     }
 </style>
 <!--查看看详情弹出框  start-->

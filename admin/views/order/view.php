@@ -83,7 +83,7 @@ $payArr = [1=>'余额支付','2'=>'支付宝支付','3'=>'微信支付'];
     <div class="ibox-content">
         <div class="order-info-view">
             <h1><span class="glyphicon glyphicon-pushpin" aria-hidden="true"></span> <?= Html::encode($this->title) ?></h1>
-            <p>
+            <p style="margin: 0 0 10px">
                 <?php
                 if($model->status == 0){
                     echo Html::a(Yii::t('app','Recover'), ['delete', 'id' => $model->id], [
@@ -415,7 +415,6 @@ $payArr = [1=>'余额支付','2'=>'支付宝支付','3'=>'微信支付'];
             </tr>
         </table>
         <p class="tips">尊敬的客户：您签收时，请务必对防伪挂锁进行校验，确认编码与上述信息一致，并在核对商品数量金额无误后签字。即日起当月内凭小票换取发票。</p>
-
     </div>
 </div>
 <?php
@@ -442,6 +441,7 @@ $payArr = [1=>'余额支付','2'=>'支付宝支付','3'=>'微信支付'];
         });
         $('#print').click(function () {
             $('#order_ticket').printArea();
+            return false;
         });
     });
     function init(distance,userAddress) {
