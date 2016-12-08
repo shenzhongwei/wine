@@ -16,6 +16,7 @@ use yii\base\Exception;
  * @property string $aid
  * @property integer $order_date
  * @property string $order_code
+ * @property string $real_code
  * @property integer $pay_id
  * @property integer $pay_date
  * @property integer $type
@@ -92,6 +93,7 @@ class OrderInfo extends \yii\db\ActiveRecord
             'send_id' => '配送人id',
             'point'=>'使用积分',
             'type'=>'购买类型 1普通商品 2会员 3抢购',
+            'real_code'=>'防伪编码',
             'pay_bill' => '付款金额',
             'state' => '订单进度',
             'send_date' => '送达时间',

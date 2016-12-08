@@ -35,6 +35,9 @@ class AddressController extends ApiController{
         if(empty($province)||empty($city)||empty($district)){
             return $this->showResult(301,'请选择省市区');
         }
+        if(strpos($street,$province.$city.$district)>0){
+            $street = str_replace($province.$city.$district,'',$street);
+        }
         if(empty($phone)||empty($receiver)){
             return $this->showResult(301,'未获取到收货人信息');
         }

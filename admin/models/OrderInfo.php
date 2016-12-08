@@ -15,6 +15,7 @@ use Yii;
  * @property integer $aid
  * @property integer $order_date
  * @property string $order_code
+ * @property string $real_code
  * @property integer $type
  * @property string $point
  * @property integer $pay_id
@@ -97,6 +98,7 @@ class OrderInfo extends \yii\db\ActiveRecord
             'pay_bill' => '付款金额',
             'state' => '订单进度',
             'send_date' => '送达时间',
+            'real_code'=>'防伪编码',
             'point'=>'使用积分',
             'is_del' => '是否删除',
             'step'=>'订单进度',

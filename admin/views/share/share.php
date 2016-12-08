@@ -48,8 +48,7 @@ use yii\helpers\Url;
 					<button class="btn download">下载APP客户端</button>
 				</div>
 			</div>
-		</div>
-		<?php
+		</div>		<?php
 	}
 	?>
 	</body>

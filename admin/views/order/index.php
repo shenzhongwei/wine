@@ -28,17 +28,126 @@ if($admin->wa_type>3){
             'name'=>'id',
         ],
         [
+            'header'=>'订单编号',
+            'attribute'=>'order_code',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'width'=>'8%',
+            'format' => 'raw',
+            'value'=> function($model){
+                $ordertable=Html::a($model->order_code,['order/view', 'id' => $model->id],
+                    ['title' => '查看订单详细','class'=>' btn-link btn-sm']
+                );
+                if($model->state>=2 && $model->state<=7){
+                    $shop_name = empty($model->s) ? '数据丢失':$model->s->name;
+                    $shop_region = empty($model->s) ? '数据丢失':$model->s->region;
+                    $shop_phone = empty($model->s) ? '数据丢失':$model->s->phone;
+                    $shop_address = empty($model->s) ? '数据丢失':$model->s->address;
+                    $payArr = [1=>'余额支付','2'=>'支付宝支付','3'=>'微信支付'];
+                    $pay = empty($payArr[$model->pay_id]) ? '未知':$payArr[$model->pay_id];
+                    $get_phone = empty($model->a) ? '数据丢失':$model->a->get_person.' '.$model->a->get_phone;
+                    $address = empty($model->a) ? '数据丢失':$model->a->province.$model->a->city.$model->a->district.$model->a->region.$model->a->address;
+                    $discount = empty(((double)$model->discount+(double)$model->point)-0) ? '未使用优惠':((double)$model->discount+(double)$model->point).'元';
+                    $ordertable .= "<div class='wine-wrap' id='model$model->id'>
+        <h3>$shop_name</h3>
+        <div class='wine-title clearfix'>$shop_region<span class='fr'>$shop_phone</span>
+        </div>
+        <p class='addre'>地址：$shop_address</p>
+        <div class='bordbblue'></div>";
+                    $ordertable .= "<table class='wine-det'>
+            <tr>
+                <th valign='top'>订单编号：</th>
+                <td valign='top'>$model->order_code </td>
+            </tr>
+            <tr>
+                <th valign='top'>购买时间：</th>
+                <td valign='top'>".date('Y-m-d H:i:s',$model->order_date)."</td>
+            </tr>
+            <tr>
+                <th valign='top'>接收人：</th>
+                <td valign='top'>$get_phone</td>
+
+            </tr>
+            <tr>
+                <th valign='top'>配送地址：</th>
+                <td valign='top'>$address</td>
+
+            </tr>
+            <tr>
+                <th valign='top'>优惠额度：</th>
+                <td valign='top'>$discount</td>
+            </tr>
+        </table>
+        <div class='bordbblue'></div><table class='wine-price'>
+            <tr>
+                <th valign='top'>商品名称</th>
+                <th valign='top'>数量</th>
+                <th valign='top'>单价</th>
+                <th valign='top'>金额</th>
+            </tr>
+            <tr>";
+                    if(empty($model->orderDetails)){
+                        $ordertable.= "
+                <td valign='top'>丢失</td>
+                <td valign='top'>丢失</td>
+                <td valign='top'>丢失</td>
+                <td valign='top'>丢失</td>";
+                    }else{
+                        foreach($model->orderDetails as $detail){
+                            if(empty($detail->g)){
+                                $ordertable.= "
+                <td valign='top'>丢失</td>
+                <td valign='top'>".$detail->amount."</td>
+                <td valign='top'>".$detail->single_price."</td>
+                <td valign='top'>".$detail->total_price."</td>";
+                            }else{
+                                $ordertable.= "
+                <td valign='top'>".$detail->g->name.$detail->g->volum."</td>
+                <td valign='top'>".$detail->amount."</td>
+                <td valign='top'>".$detail->single_price."</td>
+                <td valign='top'>".$detail->total_price."</td>";
+                            }
+                        }
+                    }
+                    $ordertable.="</tr>
+<tr>
+    <td colspan='4' style='text-align: right;'>合计：<?=$model->total ?></td>
+</tr>
+</table>
+<div class='bordbblue'></div>
+<table class='wine-det'>
+    <tr>
+        <th valign='top'>支付方式：</th>
+        <td valign='top'>$pay</td>
+    </tr>
+    <tr>
+        <th valign='top'>防伪挂锁编码：</th>
+        <td valign='top'>$model->real_code</td>
+    </tr>
+</table>
+<p class='tips'>尊敬的客户：您签收时，请务必对防伪挂锁进行校验，确认编码与上述信息一致，并在核对商品数量金额无误后签字。即日起当月内凭小票换取发票。</p></div>";
+                }
+                return $ordertable;
+            },
+            'filterType'=>AutoComplete::className(),
+            'filterWidgetOptions'=>[
+                'clientOptions' => [
+                    'source' =>OrderInfo::GetOrderCodes(),
+                ],
+            ],
+        ],
+        [
             'label'=>'下单时间',
             'hAlign'=>'center',
             'vAlign'=>'middle',
             'attribute'=>'order_date',
             'format' => ["date", "php:Y-m-d H:i:s"],
-            'width'=>'10%',
+            'width'=>'9%',
             'filterType'=>GridView::FILTER_DATE,
             'filterWidgetOptions'=>[
                 // inline too, not bad
                 'language' => 'zh-CN',
-                'options' => ['placeholder' => '下单日期','readonly'=>true],
+                'options' => ['placeholder' => '','readonly'=>true],
                 'pluginOptions' => [
                     'format' => 'yyyy-mm-dd',
                     'autoclose' => true,
@@ -63,25 +172,6 @@ if($admin->wa_type>3){
             ],
         ],
         [
-            'header'=>'订单编号',
-            'attribute'=>'order_code',
-            'hAlign'=>'center',
-            'vAlign'=>'middle',
-            'width'=>'8%',
-            'format' => 'raw',
-            'value'=> function($model){
-                return Html::a($model->order_code,['order/view', 'id' => $model->id],
-                    ['title' => '查看订单详细','class'=>' btn-link btn-sm']
-                );
-            },
-            'filterType'=>AutoComplete::className(),
-            'filterWidgetOptions'=>[
-                'clientOptions' => [
-                    'source' =>OrderInfo::GetOrderCodes(),
-                ],
-            ],
-        ],
-        [
             'header'=>'订单类型',
             'attribute'=>'type',
             'hAlign'=>'center',
@@ -95,7 +185,7 @@ if($admin->wa_type>3){
             'filterType'=>GridView::FILTER_SELECT2,
             'filter'=>$typeArr,
             'filterWidgetOptions'=>[
-                'options'=>['placeholder'=>'选择类型'],
+                'options'=>['placeholder'=>''],
                 'pluginOptions' => ['allowClear' => true],
             ],
         ],
@@ -166,31 +256,30 @@ if($admin->wa_type>3){
             'hAlign'=>'center',
             'format'=>'raw',
             'vAlign'=>'middle',
-            'width'=>'7%',
+            'width'=>'6%',
             'value'=>function($model){
                 return OrderInfo::getOrderstep($model->state);
             },
             'filterType'=>GridView::FILTER_SELECT2,
             'filter'=>Dics::GetOrderState(),
             'filterWidgetOptions'=>[
-                'options'=>['placeholder'=>'订单进度'],
+                'options'=>['placeholder'=>''],
                 'pluginOptions' => ['allowClear' => true],
             ],
         ],
-
         [
             'header'=>'付款方式',
             'attribute'=>'pay_id',
             'hAlign'=>'center',
             'vAlign'=>'middle',
-            'width'=>'6%',
+            'width'=>'5%',
             'value'=>function($model){
                 return OrderInfo::getPaytype($model->pay_id);
             },
             'filterType'=>GridView::FILTER_SELECT2,
             'filter'=>Dics::GetPayModes(),
             'filterWidgetOptions'=>[
-                'options'=>['placeholder'=>'支付方式'],
+                'options'=>['placeholder'=>''],
                 'pluginOptions' => ['allowClear' => true],
             ],
         ],
@@ -202,7 +291,7 @@ if($admin->wa_type>3){
             'class'=>'kartik\grid\BooleanColumn',
             'trueIcon'=>'<label class="label label-success">正 常</label>',
             'falseIcon'=>'<label class="label label-danger">删 除</label>',
-            'width'=>'7%',
+            'width'=>'6%',
             'attribute' => 'status',
             'trueLabel'=>'正 常',
             'falseLabel'=>'删 除',
@@ -212,6 +301,7 @@ if($admin->wa_type>3){
             'header'=>'收货地址',
             'hAlign'=>'center',
             'vAlign'=>'middle',
+            'width'=>'5%',
             'format'=>'raw',
             'value' => function ($model) {
                 return Html::a("<i class='fa fa-map-marker'> 查看</i>", '#', [
@@ -221,14 +311,14 @@ if($admin->wa_type>3){
                     'data-id' => $model->id,
                 ]);
             },
-            'width'=>'5%',
         ],
 
         [
             'header' => '操作',
             'hAlign'=>'center',
             'vAlign'=>'middle',
-            'width'=>'13%',
+            'width'=>'18%',
+            'template' => '{view} {update} {delete} {print}',
             'class' =>  'kartik\grid\ActionColumn',
             'buttons' => [
                 'view' => function ($url, $model) {
@@ -280,6 +370,16 @@ if($admin->wa_type>3){
                         return '';
                     }
                 },
+                'print'=>function ($url,$model) {
+                    if($model->state>=2 && $model->state<=7){
+                        return Html::button(Yii::t('app','Print'), [
+                            'class' => 'btn btn-default btn-xs',
+                            'onclick'=>'Print(this)',
+                        ]);
+                    }else{
+                        return '';
+                    }
+                }
             ],
         ],
     ];
@@ -293,6 +393,115 @@ if($admin->wa_type>3){
             'name'=>'id',
         ],
         [
+            'header'=>'订单编号',
+            'attribute'=>'order_code',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'width'=>'9%',
+            'format' => 'raw',
+            'value'=> function($model){
+                $ordertable=Html::a($model->order_code,['order/view', 'id' => $model->id],
+                    ['title' => '查看订单详细','class'=>' btn-link btn-sm']
+                );
+                if($model->state>=2 && $model->state<=7){
+                    $shop_name = empty($model->s) ? '数据丢失':$model->s->name;
+                    $shop_region = empty($model->s) ? '数据丢失':$model->s->region;
+                    $shop_phone = empty($model->s) ? '数据丢失':$model->s->phone;
+                    $shop_address = empty($model->s) ? '数据丢失':$model->s->address;
+                    $payArr = [1=>'余额支付','2'=>'支付宝支付','3'=>'微信支付'];
+                    $pay = empty($payArr[$model->pay_id]) ? '未知':$payArr[$model->pay_id];
+                    $get_phone = empty($model->a) ? '数据丢失':$model->a->get_person.' '.$model->a->get_phone;
+                    $address = empty($model->a) ? '数据丢失':$model->a->province.$model->a->city.$model->a->district.$model->a->region.$model->a->address;
+                    $discount = empty(((double)$model->discount+(double)$model->point)-0) ? '未使用优惠':((double)$model->discount+(double)$model->point).'元';
+                    $ordertable .= "<div class='wine-wrap' id='model$model->id'>
+        <h3>$shop_name</h3>
+        <div class='wine-title clearfix'>$shop_region<span class='fr'>$shop_phone</span>
+        </div>
+        <p class='addre'>地址：$shop_address</p>
+        <div class='bordbblue'></div>";
+                    $ordertable .= "<table class='wine-det'>
+            <tr>
+                <th valign='top'>订单编号：</th>
+                <td valign='top'>$model->order_code </td>
+            </tr>
+            <tr>
+                <th valign='top'>购买时间：</th>
+                <td valign='top'>".date('Y-m-d H:i:s',$model->order_date)."</td>
+            </tr>
+            <tr>
+                <th valign='top'>接收人：</th>
+                <td valign='top'>$get_phone</td>
+
+            </tr>
+            <tr>
+                <th valign='top'>配送地址：</th>
+                <td valign='top'>$address</td>
+
+            </tr>
+            <tr>
+                <th valign='top'>优惠额度：</th>
+                <td valign='top'>$discount</td>
+            </tr>
+        </table>
+        <div class='bordbblue'></div><table class='wine-price'>
+            <tr>
+                <th valign='top'>商品名称</th>
+                <th valign='top'>数量</th>
+                <th valign='top'>单价</th>
+                <th valign='top'>金额</th>
+            </tr>
+            <tr>";
+                    if(empty($model->orderDetails)){
+                        $ordertable.= "
+                <td valign='top'>丢失</td>
+                <td valign='top'>丢失</td>
+                <td valign='top'>丢失</td>
+                <td valign='top'>丢失</td>";
+                    }else{
+                        foreach($model->orderDetails as $detail){
+                            if(empty($detail->g)){
+                                $ordertable.= "
+                <td valign='top'>丢失</td>
+                <td valign='top'>".$detail->amount."</td>
+                <td valign='top'>".$detail->single_price."</td>
+                <td valign='top'>".$detail->total_price."</td>";
+                            }else{
+                                $ordertable.= "
+                <td valign='top'>".$detail->g->name.$detail->g->volum."</td>
+                <td valign='top'>".$detail->amount."</td>
+                <td valign='top'>".$detail->single_price."</td>
+                <td valign='top'>".$detail->total_price."</td>";
+                            }
+                        }
+                    }
+                    $ordertable.="</tr>
+<tr>
+    <td colspan='4' style='text-align: right;'>合计：<?=$model->total ?></td>
+</tr>
+</table>
+<div class='bordbblue'></div>
+<table class='wine-det'>
+    <tr>
+        <th valign='top'>支付方式：</th>
+        <td valign='top'>$pay</td>
+    </tr>
+    <tr>
+        <th valign='top'>防伪挂锁编码：</th>
+        <td valign='top'>$model->real_code</td>
+    </tr>
+</table>
+<p class='tips'>尊敬的客户：您签收时，请务必对防伪挂锁进行校验，确认编码与上述信息一致，并在核对商品数量金额无误后签字。即日起当月内凭小票换取发票。</p></div>";
+                }
+                return $ordertable;
+            },
+            'filterType'=>AutoComplete::className(),
+            'filterWidgetOptions'=>[
+                'clientOptions' => [
+                    'source' =>OrderInfo::GetOrderCodes(),
+                ],
+            ],
+        ],
+        [
             'label'=>'下单时间',
             'hAlign'=>'center',
             'vAlign'=>'middle',
@@ -303,7 +512,7 @@ if($admin->wa_type>3){
             'filterWidgetOptions'=>[
                 // inline too, not bad
                 'language' => 'zh-CN',
-                'options' => ['placeholder' => '下单日期','readonly'=>true],
+                'options' => ['placeholder' => '','readonly'=>true],
                 'pluginOptions' => [
                     'format' => 'yyyy年mm月dd日',
                     'autoclose' => true,
@@ -328,25 +537,6 @@ if($admin->wa_type>3){
             ],
         ],
         [
-            'header'=>'订单编号',
-            'attribute'=>'order_code',
-            'hAlign'=>'center',
-            'vAlign'=>'middle',
-            'width'=>'9%',
-            'format' => 'raw',
-            'value'=> function($model){
-                return Html::a($model->order_code,['order/view', 'id' => $model->id],
-                    ['title' => '查看订单详细','class'=>' btn-link btn-sm']
-                );
-            },
-            'filterType'=>AutoComplete::className(),
-            'filterWidgetOptions'=>[
-                'clientOptions' => [
-                    'source' =>OrderInfo::GetOrderCodes(),
-                ],
-            ],
-        ],
-        [
             'header'=>'订单类型',
             'attribute'=>'type',
             'hAlign'=>'center',
@@ -360,7 +550,7 @@ if($admin->wa_type>3){
             'filterType'=>GridView::FILTER_SELECT2,
             'filter'=>$typeArr,
             'filterWidgetOptions'=>[
-                'options'=>['placeholder'=>'选择类型'],
+                'options'=>['placeholder'=>''],
                 'pluginOptions' => ['allowClear' => true],
             ],
         ],
@@ -380,7 +570,7 @@ if($admin->wa_type>3){
             'filterType'=>GridView::FILTER_SELECT2,
             'filter'=>OrderInfo::getShopNames(),
             'filterWidgetOptions'=>[
-                'options'=>['placeholder'=>'下单门店'],
+                'options'=>['placeholder'=>''],
                 'pluginOptions' => ['allowClear' => true],
             ],
         ],
@@ -415,7 +605,7 @@ if($admin->wa_type>3){
             'class'=>'kartik\grid\BooleanColumn',
             'trueIcon'=>'<label class="label label-success">有积分</label>',
             'falseIcon'=>'<label class="label label-danger">无积分</label>',
-            'width'=>'8%',
+            'width'=>'7%',
             'attribute' => 'is_point',
             'trueLabel'=>'有积分',
             'falseLabel'=>'无积分',
@@ -427,14 +617,14 @@ if($admin->wa_type>3){
             'hAlign'=>'center',
             'vAlign'=>'middle',
             'format'=>'raw',
-            'width'=>'7%',
+            'width'=>'6%',
             'value'=>function($model){
                 return OrderInfo::getOrderstep($model->state);
             },
             'filterType'=>GridView::FILTER_SELECT2,
             'filter'=>Dics::GetOrderState(),
             'filterWidgetOptions'=>[
-                'options'=>['placeholder'=>'订单进度'],
+                'options'=>['placeholder'=>''],
                 'pluginOptions' => ['allowClear' => true],
             ],
         ],
@@ -444,14 +634,14 @@ if($admin->wa_type>3){
             'attribute'=>'pay_id',
             'hAlign'=>'center',
             'vAlign'=>'middle',
-            'width'=>'7%',
+            'width'=>'6%',
             'value'=>function($model){
                 return OrderInfo::getPaytype($model->pay_id);
             },
             'filterType'=>GridView::FILTER_SELECT2,
             'filter'=>Dics::GetPayModes(),
             'filterWidgetOptions'=>[
-                'options'=>['placeholder'=>'支付方式'],
+                'options'=>['placeholder'=>''],
                 'pluginOptions' => ['allowClear' => true],
             ],
         ],
@@ -463,18 +653,18 @@ if($admin->wa_type>3){
             'class'=>'kartik\grid\BooleanColumn',
             'trueIcon'=>'<label class="label label-success">正 常</label>',
             'falseIcon'=>'<label class="label label-danger">已删除</label>',
-            'width'=>'8%',
+            'width'=>'7%',
             'attribute' => 'status',
             'trueLabel'=>'正 常',
             'falseLabel'=>'删 除',
         ],
-
         [
             'header' => '操作',
             'hAlign'=>'center',
             'vAlign'=>'middle',
-            'width'=>'13%',
+            'width'=>'17%',
             'class' =>  'kartik\grid\ActionColumn',
+            'template' => '{view} {update} {delete} {print}',
             'buttons' => [
                 'view' => function ($url, $model) {
                     return Html::a('<i class="fa fa-eye">查看</i>', $url, [
@@ -525,11 +715,24 @@ if($admin->wa_type>3){
                         return '';
                     }
                 },
+                'print'=>function ($url,$model) {
+                    if($model->state>=2 && $model->state<=7){
+                        return Html::button(Yii::t('app','Print'), [
+                            'class' => 'btn btn-default btn-xs',
+                            'onclick'=>'Print(this)',
+                        ]);
+                    }else{
+                        return '';
+                    }
+                }
             ],
         ],
     ];
 }
 ?>
+<?=Html::cssFile('@web/css/wine/order.css')?>
+<?=Html::cssFile('@web/css/wine/print.css')?>
+<?=Html::jsFile('@web/js/wine/jquery.PrintArea.js')?>
 <div class="order-info-index">
     <?php
     echo GridView::widget([
@@ -571,7 +774,8 @@ if($admin->wa_type>3){
                     "class" => "btn btn-primary patch_send",'style'=>'margin-left:0.1%',
                     'data-toggle' => 'modal',    //弹框
                     'data-target' => '#send-modal',    //指定弹框的id
-                ]).Html::a("批量送达", "javascript:void(0);", ["class" => "btn btn-primary",'style'=>'margin-left:0.1%','id'=>'order_arrive'])
+                ]).Html::a("批量送达", "javascript:void(0);", ["class" => "btn btn-primary",'style'=>'margin-left:0.1%','id'=>'order_arrive']).
+                Html::a("批量打印", "javascript:void(0);", ["class" => "btn btn-primary",'style'=>'margin-left:0.1%','id'=>'order_print'])
                 :'',
             'after'=>false,
             'showPanel'=>true,
@@ -677,6 +881,11 @@ if($admin->wa_type>3){
         $(document).ready(init());
         $(document).on('pjax:complete', function() {init();});
     });
+    function Print(obj) {
+        var print = $(obj).closest('tr').find(".wine-wrap");
+        $( print ).printArea();
+        return false;
+    }
     function init() {
         $('.locate').on('click', function () {  //查看详情的触发事件
             $.post(toRoute('order/locate'), {id: $(this).closest('tr').data('key')},
@@ -774,6 +983,27 @@ if($admin->wa_type>3){
                     }
                 },'json');
             });
+        });
+        $("#order_print").on("click",function () {
+            var print = '';
+            $('.kv-row-checkbox:checked').each(function(){
+                var order = $(this).closest('tr').find(".wine-wrap");
+                if(typeof(order.html()) == "undefined"){
+                    return true;
+                }else{
+                    print += (print.length > 0 ? "," : "") + "div#" + order.attr('id');
+                }
+            });
+            if(print.length>0){
+                $( print ).printArea();
+            }else{
+                layer.msg('请选择可打印的订单(可打印订单为可付款订单)',{
+                    icon: 0,
+                    time: 1500 //2秒关闭（如果不配置，默认是3秒）
+                });
+                return false;
+            }
+            return false;
         });
         $("#patch_receive").on("click", function () {
             var csrfToken = $('meta[name="csrf-token"]').attr("content");

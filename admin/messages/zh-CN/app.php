@@ -28,6 +28,7 @@ return [
     'Down'=>'<i class="fa fa-arrow-down"> 下架</i>',
     'Lock'=>'<i class="fa fa-lock"> 冻结</i>',
     'Unlock'=>'<i class="fa fa-unlock"> 激活</i>',
+    'Print'=>'<i class="fa fa-print"> 打印</i>',
     'Save'=>'保 存',
     'lock'=>'冻 结',
     'unlock'=>'解 冻',

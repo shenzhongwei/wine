@@ -18,6 +18,12 @@ $admin = Yii::$app->user->identity;
 $typeArr = [1=>'普通订单','2'=>'会员订单','3'=>'抢购订单'];
 $payArr = [1=>'余额支付','2'=>'支付宝支付','3'=>'微信支付'];
 ?>
+<?=Html::cssFile('@web/css/wine/order.css')?>
+<?=Html::cssFile('@web/css/wine/print.css',[
+    'type'=>"text/css",
+    'media'=>'print',
+])?>
+<?=Html::jsFile('@web/js/wine/jquery.PrintArea.js')?>
 <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=<?=Yii::$app->params['key'] ?>"></script>
 <style>
     #address {
@@ -73,247 +79,343 @@ $payArr = [1=>'余额支付','2'=>'支付宝支付','3'=>'微信支付'];
         margin-right: 6px;
     }
 </style>
-<div class="ibox-content">
-    <div class="order-info-view">
-        <h1><span class="glyphicon glyphicon-pushpin" aria-hidden="true"></span> <?= Html::encode($this->title) ?></h1>
-        <p>
-            <?php
-
-            if($model->status == 0){
-                echo Html::a(Yii::t('app','Recover'), ['delete', 'id' => $model->id], [
-                    'title' => Yii::t('app', '还原订单'),
-                    'class' => 'btn btn-success btn-xs',
-                    'data-confirm' => '确认还原该订单吗？',
-                ]);
-            }else{
-                echo Html::a(Yii::t('app','Delete'), ['delete', 'id' => $model->id], [
-                    'title' => Yii::t('app', '删除订单'),
-                    'class' => 'btn btn-danger btn-xs',
-                    'data-confirm' => '确认删除该订单吗？',
-                ]);
-            }
-            if(in_array($model->state,[2,3,4])){
-                if($model->state == 2){
-                    echo Html::a(Yii::t('app','Receive'),['receive','id'=>$model->id], [
-                        'title' => Yii::t('app', '接单'),
-                        'class' => 'btn btn-primary btn-xs',
-                        'data-confirm' => '确定接单吗',
-                        'style'=>'margin-left:0.2%',
-                    ]);
-                }elseif($model->state == 3){
-                    echo Html::a(Yii::t('app','Truck'),['#'], [
-                        'title' => Yii::t('app', '发货'),
-                        'class' => 'btn btn-success btn-xs send',
-                        'data-toggle' => 'modal',    //弹框
-                        'data-target' => '#send-modal',    //指定弹框的id
-                        'data-id' => $model->id,
-                        'style'=>'margin-left:0.2%',
+<div class="">
+    <div class="ibox-content">
+        <div class="order-info-view">
+            <h1><span class="glyphicon glyphicon-pushpin" aria-hidden="true"></span> <?= Html::encode($this->title) ?></h1>
+            <p>
+                <?php
+                if($model->status == 0){
+                    echo Html::a(Yii::t('app','Recover'), ['delete', 'id' => $model->id], [
+                        'title' => Yii::t('app', '还原订单'),
+                        'class' => 'btn btn-sm btn-success',
+                        'data-confirm' => '确认还原该订单吗？',
                     ]);
                 }else{
-                    echo Html::a(Yii::t('app','Arrive'),['arrive','id'=>$model->id], [
-                        'title' => Yii::t('app', '已送达'),
-                        'class' => 'btn btn-default btn-xs',
-                        'data-confirm' => '确定已送达吗',
+                    echo Html::a(Yii::t('app','Delete'), ['delete', 'id' => $model->id], [
+                        'title' => Yii::t('app', '删除订单'),
+                        'class' => 'btn btn-sm btn-danger',
+                        'data-confirm' => '确认删除该订单吗？',
+                    ]);
+                }
+                if(in_array($model->state,[2,3,4])){
+                    if($model->state == 2){
+                        echo Html::a(Yii::t('app','Receive'),['receive','id'=>$model->id], [
+                            'title' => Yii::t('app', '接单'),
+                            'class' => 'btn btn-sm btn-primary',
+                            'data-confirm' => '确定接单吗',
+                            'style'=>'margin-left:0.2%',
+                        ]);
+                    }elseif($model->state == 3){
+                        echo Html::a(Yii::t('app','Truck'),['#'], [
+                            'title' => Yii::t('app', '发货'),
+                            'class' => 'btn btn-sm btn-success send',
+                            'data-toggle' => 'modal',    //弹框
+                            'data-target' => '#send-modal',    //指定弹框的id
+                            'data-id' => $model->id,
+                            'style'=>'margin-left:0.2%',
+                        ]);
+                    }else{
+                        echo Html::a(Yii::t('app','Arrive'),['arrive','id'=>$model->id], [
+                            'title' => Yii::t('app', '已送达'),
+                            'class' => 'btn btn-sm btn-default',
+                            'data-confirm' => '确定已送达吗',
+                            'style'=>'margin-left:0.2%',
+                        ]);
+                    }
+                }
+                if($model->state >= 2 && $model->state<=7){
+                    echo Html::button(Yii::t('app','Print'),[
+                        'id'=>'print',
+                        'class'=>'btn btn-sm btn-info',
                         'style'=>'margin-left:0.2%',
                     ]);
                 }
-            }
-            ?>
-        </p>
-<div class="row">
-    <div class="col col-lg-4"><?= DetailView::widget([
-            'options'=>[
-                'style'=>'height:310px'
-            ],
-            'model'=>$model,
-            'condensed'=>true,
-            'striped'=>false,
-            'mode'=>DetailView::MODE_VIEW,
-            'attributes' => [
-                [
-                    'label'=>'订单编号',
-                    'attribute'=>'order_code',
-                    'value'=> $model->order_code,
-                ],
-                [
-                    'label'=>'下单手机',
-                    'attribute'=>'uid',
-                    'format' => 'raw',
-                    'value'=> $admin->wa_type>3 ? $model->u->phone:Html::a($model->u->phone,['user/view', 'id' => $model->uid], ['title' => '查看用户信息','class'=>'btn-link btn-xs']),
-                ],
-                [
-                    'label'=>'下单时间',
-                    'attribute'=>'order_date',
-                    'format' => ["date", "php:Y-m-d H:i:s"],
-                    'value'=> $model->order_date,
-                ],
-                [
-                    'label'=>'所属门店',
-                    'attribute'=>'sid',
-                    'format' => 'raw',
-                    'value'=> $admin->wa_type>3 ? $model->s->name:Html::a($model->s->name,['user/view', 'id' => $model->sid], ['title' => '查看门店信息','class'=>'btn-link btn-xs']),
-                ],
-                [
-                    'label'=>'订单类型',
-                    'attribute'=>'type',
-                    'format' => 'raw',
-                    'value'=> $model->type==1 ? '<label class="label label-info">'.$typeArr[$model->type].'</label>' : ($model->type==2 ?
-                        '<label class="label label-success">'.$typeArr[$model->type].'</label>' :
-                        '<label class="label label-primary">'.$typeArr[$model->type].'</label>' ),
-                ],
-                [
-                    'label'=>'订单进度',
-                    'attribute'=>'state',
-                    'format' => 'raw',
-                    'value'=> OrderInfo::getOrderstep($model->state),
-                ],
-                [
-                    'label'=>'后台订单状态',
-                    'attribute'=>'status',
-                    'format' => 'raw',
-                    'value' => $model->status==0 ? '<label class="label label-danger">报表不可见</label>':'<label class="label label-success">报表可见</label>'
-                ],
-                [
-                    'label'=>'用户订单状态',
-                    'attribute'=>'is_del',
-                    'format' => 'raw',
-                    'value' => $model->is_del==0 ? '<label class="label label-success">用户可见</label>':'<label class="label label-danger">用户不可见</label>'
-                ],
-            ],
-            'hAlign' =>DetailView::ALIGN_MIDDLE,
-            'vAlign' =>DetailView::ALIGN_CENTER,
-        ]) ?></div>
-    <div class="col col-lg-4"><?= DetailView::widget([
-            'options'=>[
-                'style'=>'height:310px'
-            ],
-            'model'=>$model,
-            'condensed'=>true,
-            'striped'=>false,
-            'mode'=>DetailView::MODE_VIEW,
-            'attributes' => [
-                [
-                    'label'=>'付款方式',
-                    'attribute'=>'pay_id',
-                    'format' => 'raw',
-                    'value'=> $model->pay_id==1 ? '<label class="label label-info">'.$payArr[$model->pay_id].'</label>' : ($model->pay_id==2 ?
-                        '<label class="label label-success">'.$payArr[$model->pay_id].'</label>' :
-                        '<label class="label label-primary">'.$payArr[$model->pay_id].'</label>' ),
-                ],
-                [
-                    'label'=>'付款时间',
-                    'attribute'=>'pay_date',
-                    'format' => 'raw',
-                    'value'=>$model->state<2 ? '<span class="not-set">未付款</span>':date('Y-m-d H:i:s'),
-                ],
-                [
-                    'label'=>'订单总金额',
-                    'attribute'=>'total',
-                ],
-                [
-                    'label'=>'运费',
-                    'attribute'=>'send_bill',
-                    'format' => 'raw',
-                    'value'=>empty($model->send_bill-0) ? '<span class="not-set">无运费</span>':$model->send_bill,
-                ],
-                [
-                    'label'=>'用券情况',
-                    'attribute'=>'ticket_id',
-                    'format' => 'raw',
-                    'value'=>$model->ticket_id==0 ||empty($model->t)||empty($model->t->p) ? '<span class="not-set">未用券</span>':
-                        '<span class="not-set">'.$model->t->p->discount.'元优惠券</span>',
-                ],
-                [
-                    'label'=>'使用积分情况',
-                    'attribute'=>'point',
-                    'format' => 'raw',
-                    'value'=>empty($model->point-0) ? '<span class="not-set">未用积分</span>':
-                        '<span class="not-set">'.$model->point.'积分抵'.$model->point.'元</span>',
-                ],
-                [
-                    'label'=>'付款金额',
-                    'attribute'=>'pay_bill',
-                    'value'=>$model->pay_bill,
-                ],
-            ],
-            'hAlign' =>DetailView::ALIGN_MIDDLE,
-            'vAlign' =>DetailView::ALIGN_CENTER,
-        ]) ?></div>
-    <div class="col col-lg-4">
-        <?= DetailView::widget([
-            'options'=>[
-                'style'=>'height:310px'
-            ],
-            'model'=>$model,
-            'condensed'=>true,
-            'striped'=>false,
-            'mode'=>DetailView::MODE_VIEW,
-            'attributes' => [
-                [
-                    'label'=>'配送地址',
+                ?>
+            </p>
+
+            <div class="row">
+                <div class="col col-lg-4"><?= DetailView::widget([
+                        'options'=>[
+                            'style'=>'height:310px'
+                        ],
+                        'model'=>$model,
+                        'condensed'=>true,
+                        'striped'=>false,
+                        'mode'=>DetailView::MODE_VIEW,
+                        'attributes' => [
+                            [
+                                'label'=>'订单编号',
+                                'attribute'=>'order_code',
+                                'value'=> $model->order_code,
+                            ],
+                            [
+                                'label'=>'下单手机',
+                                'attribute'=>'uid',
+                                'format' => 'raw',
+                                'value'=> $admin->wa_type>3 ? $model->u->phone:Html::a($model->u->phone,['user/view', 'id' => $model->uid], ['title' => '查看用户信息','class'=>'btn-link btn-xs']),
+                            ],
+                            [
+                                'label'=>'下单时间',
+                                'attribute'=>'order_date',
+                                'format' => ["date", "php:Y-m-d H:i:s"],
+                                'value'=> $model->order_date,
+                            ],
+                            [
+                                'label'=>'所属门店',
+                                'attribute'=>'sid',
+                                'format' => 'raw',
+                                'value'=> $admin->wa_type>3 ? $model->s->name:Html::a($model->s->name,['user/view', 'id' => $model->sid], ['title' => '查看门店信息','class'=>'btn-link btn-xs']),
+                            ],
+                            [
+                                'label'=>'订单类型',
+                                'attribute'=>'type',
+                                'format' => 'raw',
+                                'value'=> $model->type==1 ? '<label class="label label-info">'.$typeArr[$model->type].'</label>' : ($model->type==2 ?
+                                    '<label class="label label-success">'.$typeArr[$model->type].'</label>' :
+                                    '<label class="label label-primary">'.$typeArr[$model->type].'</label>' ),
+                            ],
+                            [
+                                'label'=>'订单进度',
+                                'attribute'=>'state',
+                                'format' => 'raw',
+                                'value'=> OrderInfo::getOrderstep($model->state),
+                            ],
+                            [
+                                'label'=>'后台订单状态',
+                                'attribute'=>'status',
+                                'format' => 'raw',
+                                'value' => $model->status==0 ? '<label class="label label-danger">报表不可见</label>':'<label class="label label-success">报表可见</label>'
+                            ],
+                            [
+                                'label'=>'用户订单状态',
+                                'attribute'=>'is_del',
+                                'format' => 'raw',
+                                'value' => $model->is_del==0 ? '<label class="label label-success">用户可见</label>':'<label class="label label-danger">用户不可见</label>'
+                            ],
+                        ],
+                        'hAlign' =>DetailView::ALIGN_MIDDLE,
+                        'vAlign' =>DetailView::ALIGN_CENTER,
+                    ]) ?></div>
+                <div class="col col-lg-4"><?= DetailView::widget([
+                        'options'=>[
+                            'style'=>'height:310px'
+                        ],
+                        'model'=>$model,
+                        'condensed'=>true,
+                        'striped'=>false,
+                        'mode'=>DetailView::MODE_VIEW,
+                        'attributes' => [
+                            [
+                                'label'=>'付款方式',
+                                'attribute'=>'pay_id',
+                                'format' => 'raw',
+                                'value'=> $model->pay_id==1 ? '<label class="label label-info">'.$payArr[$model->pay_id].'</label>' : ($model->pay_id==2 ?
+                                    '<label class="label label-success">'.$payArr[$model->pay_id].'</label>' :
+                                    '<label class="label label-primary">'.$payArr[$model->pay_id].'</label>' ),
+                            ],
+                            [
+                                'label'=>'付款时间',
+                                'attribute'=>'pay_date',
+                                'format' => 'raw',
+                                'value'=>$model->state<2 ? '<span class="not-set">未付款</span>':date('Y-m-d H:i:s'),
+                            ],
+                            [
+                                'label'=>'订单总金额',
+                                'attribute'=>'total',
+                            ],
+                            [
+                                'label'=>'运费',
+                                'attribute'=>'send_bill',
+                                'format' => 'raw',
+                                'value'=>empty($model->send_bill-0) ? '<span class="not-set">无运费</span>':$model->send_bill,
+                            ],
+                            [
+                                'label'=>'用券情况',
+                                'attribute'=>'ticket_id',
+                                'format' => 'raw',
+                                'value'=>$model->ticket_id==0 ||empty($model->t)||empty($model->t->p) ? '<span class="not-set">未用券</span>':
+                                    '<span class="not-set">'.$model->t->p->discount.'元优惠券</span>',
+                            ],
+                            [
+                                'label'=>'使用积分情况',
+                                'attribute'=>'point',
+                                'format' => 'raw',
+                                'value'=>empty($model->point-0) ? '<span class="not-set">未用积分</span>':
+                                    '<span class="not-set">'.$model->point.'积分抵'.$model->point.'元</span>',
+                            ],
+                            [
+                                'label'=>'付款金额',
+                                'attribute'=>'pay_bill',
+                                'value'=>$model->pay_bill,
+                            ],
+                        ],
+                        'hAlign' =>DetailView::ALIGN_MIDDLE,
+                        'vAlign' =>DetailView::ALIGN_CENTER,
+                    ]) ?></div>
+                <div class="col col-lg-4">
+                    <?= DetailView::widget([
+                        'options'=>[
+                            'style'=>'height:310px'
+                        ],
+                        'model'=>$model,
+                        'condensed'=>true,
+                        'striped'=>false,
+                        'mode'=>DetailView::MODE_VIEW,
+                        'attributes' => [
+                            [
+                                'label'=>'配送地址',
 //                    'attribute'=>'aid',
-                    'value'=>'',
-                    'valueColOptions'=>[
-                        'id'=>'user_address',
-                    ],
-                ],
-            ],
-            'hAlign' =>DetailView::ALIGN_MIDDLE,
-            'vAlign' =>DetailView::ALIGN_CENTER,
-        ]) ?>
+                                'value'=>'',
+                                'valueColOptions'=>[
+                                    'id'=>'user_address',
+                                ],
+                            ],
+                        ],
+                        'hAlign' =>DetailView::ALIGN_MIDDLE,
+                        'vAlign' =>DetailView::ALIGN_CENTER,
+                    ]) ?>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-lg-12">
+                    <?= DetailView::widget([
+                        'options'=>[
+                        ],
+                        'model'=>$model,
+                        'condensed'=>true,
+                        'striped'=>false,
+                        'mode'=>DetailView::MODE_VIEW,
+                        'attributes' => [
+                            [
+                                'label'=>'订单详情',
+                                'format' => 'html',
+                                'value'=>$this->render('_orderdetail',[
+                                    'dataProvider'=>new ActiveDataProvider([
+                                        'query'=>OrderDetail::find()->where("oid=$model->id"),
+                                    ])
+                                ]),
+                            ]
+                        ],
+                        'hAlign' =>DetailView::ALIGN_MIDDLE,
+                        'vAlign' =>DetailView::ALIGN_CENTER,
+                    ]) ?>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-lg-12">
+                    <?= DetailView::widget([
+                        'options'=>[
+                        ],
+                        'model'=>$model,
+                        'condensed'=>true,
+                        'striped'=>false,
+                        'mode'=>DetailView::MODE_VIEW,
+                        'attributes' => [
+                            [
+                                'label'=>'配送详情',
+                                'format' => 'html',
+                                'value'=>$model->state<4||empty($model->send_id) ? '<span class="not-set">尚未配送</span>':(empty($model->send) ?
+                                    '<span class="not-set">配送人员信息异常</span>':$this->render('_ordersend',[
+                                        'dataProvider'=>new ActiveDataProvider([
+                                            'query'=>OrderInfo::find()->where("id=$model->id"),
+                                        ])
+                                    ])),
+                            ]
+                        ],
+                        'hAlign' =>DetailView::ALIGN_MIDDLE,
+                        'vAlign' =>DetailView::ALIGN_CENTER,
+                    ]) ?>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-        <div class="row">
-            <div class="col col-lg-12">
-                <?= DetailView::widget([
-                    'options'=>[
-                    ],
-                    'model'=>$model,
-                    'condensed'=>true,
-                    'striped'=>false,
-                    'mode'=>DetailView::MODE_VIEW,
-                    'attributes' => [
-                        [
-                            'label'=>'订单详情',
-                            'format' => 'html',
-                            'value'=>$this->render('_orderdetail',[
-                                'dataProvider'=>new ActiveDataProvider([
-                                    'query'=>OrderDetail::find()->where("oid=$model->id"),
-                                ])
-                            ]),
-                        ]
-                    ],
-                    'hAlign' =>DetailView::ALIGN_MIDDLE,
-                    'vAlign' =>DetailView::ALIGN_CENTER,
-                ]) ?>
-            </div>
+    <div class="wine-wrap" id="order_ticket">
+        <h3><?=$model->s->name ?></h3>
+        <div class="wine-title clearfix">
+            <?=$model->s->region ?>
+            <span class="fr"><?=empty($model->s) ? '数据丢失':$model->s->phone ?></span>
+
         </div>
-        <div class="row">
-            <div class="col col-lg-12">
-            <?= DetailView::widget([
-                'options'=>[
-                ],
-                'model'=>$model,
-                'condensed'=>true,
-                'striped'=>false,
-                'mode'=>DetailView::MODE_VIEW,
-                'attributes' => [
-                    [
-                        'label'=>'配送详情',
-                        'format' => 'html',
-                        'value'=>$model->state<4||empty($model->send_id) ? '<span class="not-set">尚未配送</span>':(empty($model->send) ?
-                            '<span class="not-set">配送人员信息异常</span>':$this->render('_ordersend',[
-                                'dataProvider'=>new ActiveDataProvider([
-                                    'query'=>OrderInfo::find()->where("id=$model->id"),
-                                ])
-                            ])),
-                    ]
-                ],
-                'hAlign' =>DetailView::ALIGN_MIDDLE,
-                'vAlign' =>DetailView::ALIGN_CENTER,
-            ]) ?>
-            </div>
-        </div>
+        <p class="addre">地址：<?=empty($model->s) ? '数据丢失':$model->s->address ?></p>
+        <div class="bordbblue"></div>
+        <table class="wine-det">
+            <tr>
+                <th valign="top">订单编号：</th>
+                <td valign="top"><?=$model->order_code ?></td>
+            </tr>
+            <tr>
+                <th valign="top">购买时间：</th>
+                <td valign="top"><?=date('Y-m-d H:i:s',$model->order_date) ?></td>
+            </tr>
+            <tr>
+                <th valign="top">接收人：</th>
+                <td valign="top"><?=empty($model->a) ? '数据丢失':$model->a->get_person.' '.$model->a->get_phone ?></td>
+
+            </tr>
+            <tr>
+                <th valign="top">配送地址：</th>
+                <td valign="top"><?=empty($model->a) ? '数据丢失':$model->a->province.$model->a->city.$model->a->district.$model->a->region.$model->a->address ?></td>
+
+            </tr>
+            <tr>
+                <th valign="top">优惠额度：</th>
+                <td valign="top"><?=empty(((double)$model->discount+(double)$model->point)-0) ? '未使用优惠':((double)$model->discount+(double)$model->point).'元' ?></td>
+
+            </tr>
+        </table>
+        <div class="bordbblue"></div>
+        <table class="wine-price">
+            <tr>
+                <th valign="top">商品名称</th>
+                <th valign="top">数量</th>
+                <th valign="top">单价</th>
+                <th valign="top">金额</th>
+            </tr>
+            <tr>
+                <?php
+                if(empty($model->orderDetails)){
+                    echo '
+                <td valign="top">丢失</td>
+                <td valign="top">丢失</td>
+                <td valign="top">丢失</td>
+                <td valign="top">丢失</td>';
+                }else{
+                    foreach($model->orderDetails as $detail){
+                        if(empty($detail->g)){
+                            echo "
+                <td valign='top'>丢失</td>
+                <td valign='top'>".$detail->amount."</td>
+                <td valign='top'>".$detail->single_price."</td>
+                <td valign='top'>".$detail->total_price."</td>";
+                        }else{
+                            echo "
+                <td valign='top'>".$detail->g->name.$detail->g->volum."</td>
+                <td valign='top'>".$detail->amount."</td>
+                <td valign='top'>".$detail->single_price."</td>
+                <td valign='top'>".$detail->total_price."</td>";
+                        }
+                    }
+                }
+                ?>
+            </tr>
+            <tr>
+                <td colspan="4" style="text-align: right;">合计：<?=$model->total ?></td>
+            </tr>
+        </table>
+        <div class="bordbblue"></div>
+        <table class="wine-det">
+            <tr>
+                <th valign="top">支付方式：</th>
+                <td valign="top"><?=empty($payArr[$model->pay_id]) ? '未知':$payArr[$model->pay_id] ?></td>
+            </tr>
+            <tr>
+                <th valign="top">防伪挂锁编码：</th>
+                <td valign="top"><?=$model->real_code ?></td>
+            </tr>
+        </table>
+        <p class="tips">尊敬的客户：您签收时，请务必对防伪挂锁进行校验，确认编码与上述信息一致，并在核对商品数量金额无误后签字。即日起当月内凭小票换取发票。</p>
+
     </div>
 </div>
 <?php
@@ -337,6 +439,9 @@ $payArr = [1=>'余额支付','2'=>'支付宝支付','3'=>'微信支付'];
                     $('#send-modal').find('.modal-body').html(data);  //给该弹框下的body赋值
                 }
             );
+        });
+        $('#print').click(function () {
+            $('#order_ticket').printArea();
         });
     });
     function init(distance,userAddress) {

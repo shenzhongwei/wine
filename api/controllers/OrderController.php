@@ -184,6 +184,7 @@ class OrderController extends ApiController{
                 'aid'=>$address_id,
                 'order_date'=>time(),
                 'order_code'=>OrderInfo::generateCode().date('YmdHis').$user_id,
+                'real_code'=>OrderInfo::generateCode().OrderInfo::generateCode().OrderInfo::generateCode().rand(100000,999999),
                 'pay_id'=>$pay_mode,
                 'total'=>$total_price,
                 'type'=>$type,
