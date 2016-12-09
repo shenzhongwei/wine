@@ -222,7 +222,7 @@ class OrderPay extends \yii\db\ActiveRecord
                 'sum'=>$params['pay_money'],
                 'discount'=>0,
                 'status'=>1,
-                'note'=>'用户'.$userInfo->nickname.'于'.date('Y年m月d日 H时i分s秒')."完成订单单号为$orderInfo->id"."的付款.金额：¥".$params['pay_money'],
+                'note'=>'用户'.$userInfo->phone.'于'.date('Y年m月d日 H时i分s秒')."完成订单单号为$orderInfo->id"."的付款.金额：¥".$params['pay_money'],
             ];
             if(!$sysInout->save()){
                 throw new Exception('保存系统账户明细出错',400);

@@ -331,6 +331,7 @@ class PayController extends ApiController{
                 'sum'=>$orderInfo->pay_bill,
                 'discount'=>0,
                 'status'=>1,
+                'note'=>'用户'.$userInfo->phone.'于'.date('Y年m月d日 H时i分s秒')."完成订单单号为$orderInfo->id"."的付款.金额：¥".$orderInfo->pay_bill,
             ];
             if(!$userInout->save()){
                 throw new Exception('记录账户明细出错',400);
@@ -366,7 +367,7 @@ class PayController extends ApiController{
                     'pio_type'=>2,
                     'amount'=>$orderInfo->point,
                     'oid'=>$orderInfo->id,
-                    'note'=>"用户$userInfo->nickname"."于".date('Y年m月d日 H时i分s秒')."，支出$orderInfo->point"."积分用于支付编号为".$orderCode."的订单",
+                    'note'=>"用户$userInfo->phone"."于".date('Y年m月d日 H时i分s秒')."，支出$orderInfo->point"."积分用于支付编号为".$orderCode."的订单",
                     'status'=>1,
                 ];
                 if(!$pointInout->save()){
