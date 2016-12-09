@@ -328,7 +328,9 @@ $payArr = [1=>'余额支付','2'=>'支付宝支付','3'=>'微信支付'];
     <?=Html::cssFile('@web/css/wine/order.css')?>
     <?=Html::cssFile('@web/css/wine/print.css')?>
     <div class="wine-wrap" id="order_ticket">
-            <h3><?=$model->s->name ?></h3>
+
+
+<p class="p-title"><?=$model->s->name ?></p>
             <div class="wine-title clearfix">
                 <?=$model->s->region ?>
                 <span class="fr"><?=empty($model->s) ? '数据丢失':$model->s->phone ?></span>
@@ -413,6 +415,8 @@ $payArr = [1=>'余额支付','2'=>'支付宝支付','3'=>'微信支付'];
             </table>
             <p class="tips">尊敬的客户：您签收时，请务必对防伪挂锁进行校验，确认编码与上述信息一致，并在核对商品数量金额无误后签字。即日起当月内凭小票换取发票。</p>
         </div>
+
+
 </div>
 <?php
 

@@ -15,7 +15,7 @@ class UserAccountSearch extends UserAccount
     public function rules()
     {
         return [
-            [['id', 'target', 'level', 'type', 'create_at', 'is_active', 'update_at'], 'integer'],
+            [['target', 'level', 'type', 'create_at'], 'integer'],
             [['start', 'end'], 'number'],
             [['pay_password'], 'safe'],
 

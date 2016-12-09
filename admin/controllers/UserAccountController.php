@@ -37,39 +37,6 @@ class UserAccountController extends Controller
         $dataProvider->pagination = [
             'pageSize'=>15,
         ];
-        $dataProvider->sort = [
-            'defaultOrder'=>['id'=>SORT_ASC,'end'=>SORT_DESC,'start'=>SORT_DESC,]
-        ];
-
-        /*********************在gridview列表页面上直接修改数据 start*****************************************/
-        //获取前面一部传过来的值
-        if (Yii::$app->request->post('hasEditable')) {
-            $id = Yii::$app->request->post('editableKey'); //获取需要编辑的id
-            $model = $this->findModel($id);
-            $out = Json::encode(['output'=>'', 'message'=>'']);
-            //获取输入的金额
-            $posted = current($_POST['UserAccount']); //输出数组中当前元素的值，默认初始指向插入到数组中的第一个元素。移动数组内部指针，使用next()和prev()
-
-            $post = ['UserAccount' => $posted];
-            $output = '';
-            if ($model->load($post)) { //赋值
-                if(isset($posted['end'])){
-                    $model->end=$posted['end'];
-                }
-                if(isset($posted['start'])){
-                    $model->start=$posted['start'];
-                }
-                $model->save(); //save()方法会先调用validate()再执行insert()或者update()
-                isset($posted['end']) && $output= $model->end; //最终余额
-                isset($posted['start']) && $output= $model->start; //初始金额
-            }
-            $out = Json::encode(['output'=>$output, 'message'=>'']);
-            echo $out;
-            return;
-        }
-        /*******************在gridview列表页面上直接修改数据 end***********************************************/
-
-
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,

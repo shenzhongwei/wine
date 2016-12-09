@@ -49,7 +49,7 @@ if($admin->wa_type>3){
                     $address = empty($model->a) ? '数据丢失':$model->a->province.$model->a->city.$model->a->district.$model->a->region.$model->a->address;
                     $discount = empty(((double)$model->discount+(double)$model->point)-0) ? '未使用优惠':((double)$model->discount+(double)$model->point).'元';
                     $ordertable .= "<div class='wine-wrap' id='model$model->id'>
-        <h3>$shop_name</h3>
+        <p class='p-title'>$shop_name</p>
         <div class='wine-title clearfix'>$shop_region<span class='fr'>$shop_phone</span>
         </div>
         <p class='addre'>地址：$shop_address</p>
@@ -110,7 +110,7 @@ if($admin->wa_type>3){
                     }
                     $ordertable.="</tr>
 <tr>
-    <td colspan='4' style='text-align: right;'>合计：<?=$model->total ?></td>
+    <td colspan='4' style='text-align: right;'>合计：$model->total</td>
 </tr>
 </table>
 <div class='bordbblue'></div>
@@ -412,7 +412,7 @@ if($admin->wa_type>3){
                     $address = empty($model->a) ? '数据丢失':$model->a->province.$model->a->city.$model->a->district.$model->a->region.$model->a->address;
                     $discount = empty(((double)$model->discount+(double)$model->point)-0) ? '未使用优惠':((double)$model->discount+(double)$model->point).'元';
                     $ordertable .= "<div class='wine-wrap' id='model$model->id'>
-        <h3>$shop_name</h3>
+        <p class='p-title'>$shop_name</p>
         <div class='wine-title clearfix'>$shop_region<span class='fr'>$shop_phone</span>
         </div>
         <p class='addre'>地址：$shop_address</p>
@@ -470,7 +470,7 @@ if($admin->wa_type>3){
                     }
                     $ordertable.="</tr>
 <tr>
-    <td colspan='4' style='text-align: right;'>合计：<?=$model->total ?></td>
+    <td colspan='4' style='text-align: right;'>合计：$model->total</td>
 </tr>
 </table>
 <div class='bordbblue'></div>
