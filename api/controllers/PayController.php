@@ -318,6 +318,7 @@ class PayController extends ApiController{
             }
             $account->start = $account->end;
             $account->end = $account->end-$orderInfo->pay_bill;
+            $account->update_at = time();
             if(!$account->save()){
                 throw new Exception('更改账户余额信息出错',400);
             }

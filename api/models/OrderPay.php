@@ -209,6 +209,7 @@ class OrderPay extends \yii\db\ActiveRecord
             $sysAccount->level=1;
             $sysAccount->type=$params['pay_id'];
             $sysAccount->is_active = 1;
+            $sysAccount->update_at = time();
             if(!$sysAccount->save()){
                 throw new Exception('保存系统账户信息出错',400);
             }

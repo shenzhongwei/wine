@@ -124,6 +124,7 @@ class InoutPay extends \yii\db\ActiveRecord
             $userAccount->level=2;
             $userAccount->type=1;
             $userAccount->is_active = 1;
+            $userAccount->update_at = time();
             if(!$userAccount->save()){
                 throw new Exception('保存用户余额账户信息出错',400);
             }
@@ -187,6 +188,7 @@ class InoutPay extends \yii\db\ActiveRecord
             $sysAccount->level=1;
             $sysAccount->type=$params['pay_id'];
             $sysAccount->is_active = 1;
+            $sysAccount->update_at = time();
             if(!$sysAccount->save()){
                 throw new Exception('保存系统账户信息出错',400);
             }

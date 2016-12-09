@@ -22,7 +22,7 @@ use Yii;
  */
 class UserAccount extends \yii\db\ActiveRecord
 {
-    public $target_name;
+    public $set_pwd;
     /**
      * @inheritdoc
      */
@@ -59,8 +59,6 @@ class UserAccount extends \yii\db\ActiveRecord
             'create_at' => 'Create At',
             'is_active' => 'Is Active',
             'update_at' => 'Update At',
-
-            'target_name' => '对象名称',
         ];
     }
 
@@ -87,8 +85,29 @@ class UserAccount extends \yii\db\ActiveRecord
             case 2: //用户
                 $str=\admin\models\UserInfo::find()->where(['id'=>$model->target])->one()->realname;
                 break;
-            default:$str='无';break;
+            default:$str='<span class="no-set">未设置</span>';break;
         }
         return $str;
+    }
+
+    public static function GetLevels(){
+        return [
+            1=>'管理员',2=>'用 户'
+        ];
+    }
+
+    public static function GetTypes(){
+        return [
+            1=>'余额账户',2=>'支付宝账户',3=>'微信账户'
+        ];
+    }
+
+    public static function getTargets(){
+        $targets = self::find()->leftJoin('wine_admin','user_account.target=wine_admin.wa_id and user_account.level=1')
+            ->leftJoin('user_info','user_account.target=user_info.id and user_account.level=2')
+            ->addSelect(['wine_admin.wa_name','user_info.phone'])->asArray()->all();
+        $names = array_filter(array_values(array_column($targets,'wa_name')));
+        $phones = array_filter(array_values(array_column($targets,'phone')));
+        return array_values(array_unique(array_merge($names,$phones)));
     }
 }

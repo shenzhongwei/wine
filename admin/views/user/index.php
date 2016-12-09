@@ -61,7 +61,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filterType'=>AutoComplete::className(),
                 'filterWidgetOptions'=>[
                     'clientOptions' => [
-                        'source' =>UserInfoSearch::geAllPhone(),
+                        'source' =>GoodInfo::GetGoodNames(),
                     ],
                 ]
 

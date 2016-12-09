@@ -2,136 +2,203 @@
 
 use yii\helpers\Html;
 use kartik\grid\GridView;
-use yii\widgets\Pjax;
-use admin\models\Dics;
+use admin\models\UserAccount;
+use yii\jui\AutoComplete;
 /**
  * @var yii\web\View $this
  * @var yii\data\ActiveDataProvider $dataProvider
  * @var admin\models\UserAccountSearch $searchModel
  */
 
-$this->title = '账户列表';
+$this->title = '账户管理';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<style>
-    .modal-dialog{
-        min-width:1000px;
-        width:auto;;
-    }
-</style>
-<div class="user-account-index">
-    <?php Pjax::begin();
+<div class="account-info-index">
+    <?php
     echo GridView::widget([
+        "options" => [
+            // ...其他设置项
+            "id" => "account_info"
+        ],
         'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
+        'containerOptions'=>['style'=>'overflow: auto'], // only set when $responsive = false
+        'headerRowOptions'=>['class'=>'kartik-sheet-style'],
+        'filterRowOptions'=>['class'=>'kartik-sheet-style'],
+        'pjax'=>true,  //pjax is set to always true for this demo
+        'pjaxSettings'=>[
+            'options'=>[
+                'id'=>'account_pjax',
+            ],
+            'neverTimeout'=>true,
+        ],
         'columns' => [
             [
-                'header'=>'序号',
-                'class' => 'yii\grid\SerialColumn'
+                'header'=>'',
+                'width'=>'5%',
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+                'contentOptions'=>['class'=>'kartik-sheet-style'],
+                'class' => 'kartik\grid\SerialColumn'
             ],
             [
+                'header'=>'账户等级',
+                'width'=>'14%',
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
                 'attribute'=>'level',
-                'value'=>function($data){
-                    switch($data->level){
-                        case 1:$str='管理员';break;
-                        case 2:$str='用户';break;
-                        default:$str='类别有误';break;
-                    }
-                    return $str;
-                }
+                'format'=>'raw',
+                'value'=> function($model){
+                    return $model->level == 1 ? '管理员账户':($model->level == 2 ? '用户账户':'<span class="no-set">未设置</span>');
+                },
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=>UserAccount::GetLevels(),
+                'filterWidgetOptions'=>[
+                    'options'=>['placeholder'=>'账户等级'],
+                    'pluginOptions' => ['allowClear' => true],
+                    'hideSearch' => true,
+                ]
             ],
             [
-                'attribute'=>'target_name',
-                'format'=>'html',
-                'value'=>function($data){
-                    return Html::a(\admin\models\UserAccount::getAccountAcceptName($data),['view','id'=>$data->target]);
-                }
+                'header'=>'账户类型',
+                'attribute'=>'type',
+                'width'=>'14%',
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+                'format' => 'html',
+                'value'=> function($model){
+                    $typeArr = [1=>'余额账户',2=>'支付宝账户',3=>'微信账户'];
+                    return empty($typeArr[$model->type]) ? '<span class="no-set">未设置</span>':$typeArr[$model->type];
+                },
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filterWidgetOptions'=>[
+                    'data'=>UserAccount::GetTypes(),
+                    'options'=>['placeholder'=>'账户类型'],
+                    'pluginOptions' => ['allowClear' => true],
+                    'hideSearch' => true,
+                ],
             ],
             [
-                'attribute'=> 'type',
-                'value'=>function($data){
-                    return Dics::find()->where(['type'=>'钱包类型','id'=>$data->type])->one()->name;
-                }
+                'header'=>'账户所属',
+                'hAlign'=>'center',
+                'width'=>'12%',
+                'vAlign'=>'middle',
+                'attribute'=>'target',
+                'format'=>'raw',
+                'value'=> function($model){
+                    return UserAccount::getAccountAcceptName($model);
+                },
+                'filterType'=>AutoComplete::className(),
+                'filterWidgetOptions'=>[
+                    'clientOptions' => [
+                        'source' =>UserAccount::getTargets(),
+                    ],
+                ],
+            ],
+            [
+                'attribute'=>'end',
+                'label' => '余额',
+                'width'=>'10%',
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+                'value'=> function($model){
+                    return '¥'.$model->end;
+                },
+                'filterInputOptions'=>['onkeyup'=>'clearNoNum(this)','class'=>'form-control'],
+            ],
+            [
+                'label'=>'支付密码',
+                'width'=>'10%',
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+                'class'=>'kartik\grid\BooleanColumn',
+                'trueIcon'=>'<label class="label label-success">已设置</label>',
+                'falseIcon'=>'<label class="label label-danger">未设置</label>',
+                'attribute' => 'set_pwd',
+                'trueLabel'=>'已设置',
+                'falseLabel'=>'未设置',
+            ],
+            [
+                'label'=>'创建时间',
+                'width'=>'14%',
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+                'attribute'=>'create_at',
+                'format'=>['date','php:Y年m月d日'],
+                'value'=>function($model){
+                    return $model->create_at;
+                },
+                'filterType'=>GridView::FILTER_DATE,
+                'filterWidgetOptions'=>[
+                    // inline too, not bad
+                    'language' => 'zh-CN',
+                    'options' => ['placeholder' => '创建时间','readonly'=>true],
+                    'pluginOptions' => [
+                        'format' => 'yyyy年mm月dd日',
+                        'autoclose' => true,
+
+                    ]
+                ]
             ],
 
             [
-                'attribute'=> 'start',
-                'class'=>'kartik\grid\EditableColumn',
-                'editableOptions'=>[
-                    'asPopover' => false,
-                ]
+                'label'=>'状态',
+                'width'=>'10%',
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+                'class'=>'kartik\grid\BooleanColumn',
+                'trueIcon'=>'<label class="label label-success">使用中</label>',
+                'falseIcon'=>'<label class="label label-danger">已冻结</label>',
+                'attribute' => 'is_active',
+                'trueLabel'=>'使用中',
+                'falseLabel'=>'已冻结',
             ],
             [
-                'attribute'=> 'end',
-                'class'=>'kartik\grid\EditableColumn',
-                'editableOptions'=>[
-                    'asPopover' => false,
-                ]
-            ],
-            [
-                'header'=>'操作',
-                'class' => 'yii\grid\ActionColumn',
-                'template'=>'{view}&nbsp;&nbsp;&nbsp;{delete}',
+                'header' => '操作',
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+                'width'=>'11%',
+                'template'=>'{view}',
+                'class' =>  'kartik\grid\ActionColumn',
                 'buttons' => [
-                    'view' => function ($url, $model,$key) {
-                        return Html::a('<i class="fa fa-eye">账户明细</i>', '#',
-                            [                                                  //属性
-                                'data-toggle' => 'modal',    //弹框
-                                'data-target' => '#pop-modal',    //指定弹框的id
-                                'class' => 'del btn btn-primary btn-xs',
-                               // 'class' => 'data-view',   //链接的class
-                                'data-id' => $key,
-                                'rel'=>'look'
-                            ]
-                        );
+                    'view' => function ($url, $model) {
+                        return Html::a('<i class="fa fa-eye"> 查看明细</i>', $url, [
+                            'data-pjax'=>0,
+                            'title' => '查看详细信息',
+                            'class' => 'btn btn-info btn-xs',
+                        ]);
                     },
-                    'delete' => function ($url, $model) {
-                        if($model->is_active == 1){
-                            return Html::a('<i class="fa fa-close">删除</i>',$url, [
-                                'title' => Yii::t('app', '删除订单'),
-                                'class' => 'del btn btn-danger btn-xs',
-                                'data'=>['confirm'=>'你确定要删除该账户吗？']
-                            ]);
-                        }
-                    }
                 ],
             ],
         ],
-        'responsive'=>true,
-        'hover'=>true,
-        'condensed'=>true,
-        'floatHeader'=>false,
-
-
-        'panel' => [
-            'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> '.Html::encode($this->title).' </h3>',
-            'type'=>'info',
-            'before'=>$this->render('_search', ['model' => $searchModel]),
-            'after'=>Html::a('<i class="glyphicon glyphicon-repeat"></i>刷新列表', ['index'], ['class' => 'btn btn-info']),
-            'showFooter'=>false
+        // set your toolbar
+        'toolbar'=> [
+            ['content'=>
+                Html::a('<i class="glyphicon glyphicon-repeat">刷新列表</i>', ['index'], [ 'class'=>'btn btn-default', 'title'=>'刷新列表'])
+            ],
+            '{toggleData}',
+            '{export}',
         ],
-    ]); Pjax::end(); ?>
+        'responsive'=>false,
+        'condensed'=>true,
+        'panel' => [
+            'type'=>'info',
+            'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> '.Html::encode($this->title).' </h3>',
+            'before'=>'',
+            'after'=>false,
+            'showPanel'=>true,
+        ],
+        'export'=>[
+            'fontAwesome'=>true
+        ],
+    ]); ?>
 
 </div>
-<!--查看看详情弹出框  start-->
-<?php
-
-\yii\bootstrap\Modal::begin([
-    'id' => 'pop-modal',
-    'header' => '<h4 class="modal-title">查看详情</h4>',
-    'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">关闭</a>',
-]);
-$requestUrl = \yii\helpers\Url::toRoute('view');  //当前控制器下的view方法
-$Js = <<<JS
-         $('.del.btn.btn-primary.btn-xs').on('click', function () {  //查看详情的触发事件
-
-            $.get('{$requestUrl}', { id:$(this).closest('tr').data('key'),edit_type:$(this).attr('rel')  },
-                function (data) {
-                    $('#pop-modal').find('.modal-body').html(data);  //给该弹框下的body赋值
-                }
-             );
-         });
-JS;
-$this->registerJs($Js);
-\yii\bootstrap\Modal::end();
-?>
-<!--查看看详情弹出框  end-->
+<script language="JavaScript">
+    $(function () {
+        $('.panel').find('.dropdown-toggle').unbind();
+        $('.panel').find('.dropdown-toggle').attr('class','btn btn-default dropdown-toggle');
+        $('.ui-autocomplete').css('z-index','99999');
+        $('.datepicker-days').css('z-index','99999');
+    })
+</script>

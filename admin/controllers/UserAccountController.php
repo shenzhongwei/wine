@@ -33,7 +33,6 @@ class UserAccountController extends Controller
     {
         $searchModel = new UserAccountSearch;
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
-
         $dataProvider->pagination = [
             'pageSize'=>15,
         ];
@@ -49,16 +48,15 @@ class UserAccountController extends Controller
     public function actionView($id)
     {
         $model = $this->findModel($id);
-
-        $query = AccountInout::find()->where(['aid'=>$id]);
+        $query = AccountInout::find()->where(['aid'=>$id,'status'=>1]);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
         $dataProvider->pagination = [
-            'pageSize'=>10,
+            'pageSize'=>18,
         ];
 
-        return $this->render('view', ['model' => $model,'dataProvider'=>$dataProvider]);
+        return $this->render('view', ['dataProvider'=>$dataProvider,'model'=>$model]);
 
     }
 

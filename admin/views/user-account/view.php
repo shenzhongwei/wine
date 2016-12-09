@@ -7,151 +7,118 @@ use yii\widgets\Pjax;
 use kartik\grid\GridView;
 /**
  * @var yii\web\View $this
- * @var admin\models\UserAccount $model
+ * @var \admin\models\UserAccount $model
+ * @var yii\data\ActiveDataProvider $dataProvider
  */
 
-$this->title = $model->id;
+$this->title = '账户明细';
 $this->params['breadcrumbs'][] = ['label' => '账户明细', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <!--账户明细-->
 
-<?php Pjax::begin();
-$table= GridView::widget([
-    'dataProvider' => $dataProvider,
-    'columns' => [
-        [
-            'header'=>'序号',
-            'class' => 'yii\grid\SerialColumn'
+<div class="account-inout-index">
+    <?php
+    echo GridView::widget([
+        "options" => [
+            // ...其他设置项
+            "id" => "account_inout"
         ],
-        [
-            'attribute'=>'aio_date',
-            'value'=>function($data){
-                return date('Y-m-d H:i:s',$data->aio_date);
-            }
+        'dataProvider' => $dataProvider,
+        'containerOptions'=>['style'=>'overflow: auto'], // only set when $responsive = false
+        'headerRowOptions'=>['class'=>'kartik-sheet-style'],
+        'filterRowOptions'=>['class'=>'kartik-sheet-style'],
+        'pjax'=>true,  //pjax is set to always true for this demo
+        'pjaxSettings'=>[
+            'options'=>[
+                'id'=>'account_inout_pjax',
+            ],
+            'neverTimeout'=>true,
         ],
-        [
-            'attribute'=>'type',
-            'value'=>function($data){
-                $query=\admin\models\Dics::find()->where(['type'=>'钱包明细类型','id'=>$data->type])->one();
-                return empty($query)?'':$query->name;
-            },
-        ],
-        [
-            'label'=>'订单号/用户名称',
-            'attribute'=>'target_id',
-            'format'=>'html',
-            'value'=>function($data){
-                if($data->type<=2){ //订单号
-                    $query=\admin\models\OrderInfo::find()->where(['id'=>$data->target_id])->one();
-
-                    return Html::a((empty($query)?'':$query->order_code),'../order/view?id='.$data->target_id);
-
-                }elseif($data->type>2){ //用户id
-                    $query=\admin\models\UserInfo::find()->where(['id'=>$data->target_id])->one();
-
-                   return  Html::a(empty($query)?'':$query->realname,'../user/view?id='.$data->target_id);
-
-                }
-            }
-        ],
-        [
-            'label'=>'金额',
-            'attribute'=> 'money',
-            'format'=>'html',
-            'value'=>function($data){
-                if($data->type==1){ $f='-';}
-                elseif($data->type>=2){ $f='+';}
-                return "<h4>".$f.$data->inoutPays->money.'</h4>';
-            }
-        ],
-
-        [
-            'label'=>'支付时间',
-            'attribute'=> 'pay_date',
-            'value'=>function($data){
-                return date('Y-m-d H:i:s',$data->inoutPays->pay_date);
-            }
-        ],
-        [
-            'label'=>'支付方式',
-            'attribute'=> 'pay_id',
-            'value'=>function($data){
-                $query = \admin\models\Dics::find()->where(['id' =>$data->inoutPays->pay_id, 'type' => '付款方式'])->one();
-                return empty($query) ? '' : $query->name;
-            }
-        ],
-        [
-            'label'=>'支付账户',
-            'attribute'=>  'account',
-            'value'=>function($data){
-                return $data->inoutPays->account;
-
-            }
-        ],
-        [
-            'label'=>'流水号',
-            'attribute'=>  'transaction_id',
-            'value'=>function($data){
-                return $data->inoutPays->transaction_id;
-            }
-        ],
-        [
-            'label'=>'交易状态',
-            'attribute'=>  'status',
-            'format'=>'html',
-            'value'=>function($data){
-                switch($data->status){
-                    case 0: $str='删除'; break;
-                    case 1: $str='正常'; break;
-                    case 2: $str='待付款'; break;
-                    default: $str='无'; break;
-                }
-                return $str;
-            }
-        ],
-    ],
-    'responsive'=>true,
-    'hover'=>true,
-    'condensed'=>true,
-    'floatHeader'=>true,
-]); Pjax::end(); ?>
-
-
-
-<div class="user-account-view">
-    <?= DetailView::widget([
-        'model' => $model,
-        'condensed'=>false,
-        'hover'=>true,
-        'attributes' => [
-            'id',
+        'columns' => [
             [
-                'attribute'=>'target_name',
-                'value'=>\admin\models\UserAccount::getAccountAcceptName($model).'('.($model->level==1?'管理员':'用户').')',
+                'class'=>'kartik\grid\SerialColumn',
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+                'width'=>'3%',
+                'header'=>'',
             ],
             [
+                'attribute'=>'aio_date',
+                'label' => '时间',
+                'width'=>'15%',
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+                'format'=>['date','php:Y-m-d H:i:s' ],
+            ],
+            [
+                'header'=>'收支类型',
                 'attribute'=>'type',
-                'value'=>\admin\models\Dics::find()->where(['id'=>$model->type,'type'=>'钱包类型'])->one()->name,
+                'width'=>'12%',
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+                'format' => 'html',
+                'value'=> function($model){
+                    $typeArr = [1=>'订单支付', 2=>'订单收入', 3=>'活动奖励', 4=>'余额充值'];
+                    return empty($typeArr[$model->type]) ? '<span class="no-set">未设置</span>':$typeArr[$model->type];
+                }
             ],
             [
-                'attribute'=> 'start',
-                'format'=>'html',
-                'value'=>'<span style="color: red">'.$model->start.'</span> 元',
+                'label'=>'金额',
+                'hAlign'=>'center',
+                'width'=>'8%',
+                'vAlign'=>'middle',
+                'attribute'=>'sum',
+                'value'=> function($model){
+                    return '¥'.$model->sum;
+                },
             ],
             [
-                'attribute'=> 'end',
-                'format'=>'html',
-                'value'=>'<span style="color: red">'.$model->end.'</span> 元',
+                'attribute'=>'discount',
+                'label' => '赠送金额',
+                'width'=>'8%',
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+                'value'=> function($model){
+                    return '¥'.$model->discount;
+                },
             ],
-
-           [
-               'label'=>'账户明细',
-               'format'=>'html',
-               'value'=>$table
-           ],
+            [
+                'attribute'=>'note',
+                'header' => '备注',
+                'width'=>'64%',
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+            ],
         ],
-
-    ]) ?>
+        // set your toolbar
+        'toolbar'=> [
+            ['content'=>
+                Html::a('<i class="glyphicon glyphicon-repeat">刷新列表</i>', ['view','id'=>$model->id], [ 'class'=>'btn btn-default', 'title'=>'刷新列表'])
+            ],
+            '{toggleData}',
+            '{export}',
+        ],
+        'responsive'=>false,
+        'condensed'=>true,
+        'panel' => [
+            'type'=>'info',
+            'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-th-list"></i> '.Html::encode($this->title).' </h3>',
+            'before'=>'',
+            'after'=>false,
+            'showPanel'=>true,
+        ],
+        'export'=>[
+            'fontAwesome'=>true
+        ],
+    ]); ?>
 
 </div>
+<script language="JavaScript">
+    $(function () {
+        $('.panel').find('.dropdown-toggle').unbind();
+        $('.panel').find('.dropdown-toggle').attr('class','btn btn-default dropdown-toggle');
+        $('.ui-autocomplete').css('z-index','99999');
+        $('.datepicker-days').css('z-index','99999');
+    })
+</script>
