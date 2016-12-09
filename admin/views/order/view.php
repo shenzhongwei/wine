@@ -18,11 +18,6 @@ $admin = Yii::$app->user->identity;
 $typeArr = [1=>'普通订单','2'=>'会员订单','3'=>'抢购订单'];
 $payArr = [1=>'余额支付','2'=>'支付宝支付','3'=>'微信支付'];
 ?>
-<?=Html::cssFile('@web/css/wine/order.css')?>
-<?=Html::cssFile('@web/css/wine/print.css',[
-    'type'=>"text/css",
-    'media'=>'print',
-])?>
 <?=Html::jsFile('@web/js/wine/jquery.PrintArea.js')?>
 <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=<?=Yii::$app->params['key'] ?>"></script>
 <style>
@@ -330,92 +325,94 @@ $payArr = [1=>'余额支付','2'=>'支付宝支付','3'=>'微信支付'];
             </div>
         </div>
     </div>
+    <?=Html::cssFile('@web/css/wine/order.css')?>
+    <?=Html::cssFile('@web/css/wine/print.css')?>
     <div class="wine-wrap" id="order_ticket">
-        <h3><?=$model->s->name ?></h3>
-        <div class="wine-title clearfix">
-            <?=$model->s->region ?>
-            <span class="fr"><?=empty($model->s) ? '数据丢失':$model->s->phone ?></span>
+            <h3><?=$model->s->name ?></h3>
+            <div class="wine-title clearfix">
+                <?=$model->s->region ?>
+                <span class="fr"><?=empty($model->s) ? '数据丢失':$model->s->phone ?></span>
 
-        </div>
-        <p class="addre">地址：<?=empty($model->s) ? '数据丢失':$model->s->address ?></p>
-        <div class="bordbblue"></div>
-        <table class="wine-det">
-            <tr>
-                <th valign="top">订单编号：</th>
-                <td valign="top"><?=$model->order_code ?></td>
-            </tr>
-            <tr>
-                <th valign="top">购买时间：</th>
-                <td valign="top"><?=date('Y-m-d H:i:s',$model->order_date) ?></td>
-            </tr>
-            <tr>
-                <th valign="top">接收人：</th>
-                <td valign="top"><?=empty($model->a) ? '数据丢失':$model->a->get_person.' '.$model->a->get_phone ?></td>
+            </div>
+            <p class="addre">地址：<?=empty($model->s) ? '数据丢失':$model->s->address ?></p>
+            <div class="bordbblue"></div>
+            <table class="wine-det">
+                <tr>
+                    <th valign="top">订单编号：</th>
+                    <td valign="top"><?=$model->order_code ?></td>
+                </tr>
+                <tr>
+                    <th valign="top">购买时间：</th>
+                    <td valign="top"><?=date('Y-m-d H:i:s',$model->order_date) ?></td>
+                </tr>
+                <tr>
+                    <th valign="top">接收人：</th>
+                    <td valign="top"><?=empty($model->a) ? '数据丢失':$model->a->get_person.' '.$model->a->get_phone ?></td>
 
-            </tr>
-            <tr>
-                <th valign="top">配送地址：</th>
-                <td valign="top"><?=empty($model->a) ? '数据丢失':$model->a->province.$model->a->city.$model->a->district.$model->a->region.$model->a->address ?></td>
+                </tr>
+                <tr>
+                    <th valign="top">配送地址：</th>
+                    <td valign="top"><?=empty($model->a) ? '数据丢失':$model->a->province.$model->a->city.$model->a->district.$model->a->region.$model->a->address ?></td>
 
-            </tr>
-            <tr>
-                <th valign="top">优惠额度：</th>
-                <td valign="top"><?=empty(((double)$model->discount+(double)$model->point)-0) ? '未使用优惠':((double)$model->discount+(double)$model->point).'元' ?></td>
+                </tr>
+                <tr>
+                    <th valign="top">优惠额度：</th>
+                    <td valign="top"><?=empty(((double)$model->discount+(double)$model->point)-0) ? '未使用优惠':((double)$model->discount+(double)$model->point).'元' ?></td>
 
-            </tr>
-        </table>
-        <div class="bordbblue"></div>
-        <table class="wine-price">
-            <tr>
-                <th valign="top">商品名称</th>
-                <th valign="top">数量</th>
-                <th valign="top">单价</th>
-                <th valign="top">金额</th>
-            </tr>
-            <tr>
-                <?php
-                if(empty($model->orderDetails)){
-                    echo '
+                </tr>
+            </table>
+            <div class="bordbblue"></div>
+            <table class="wine-price">
+                <tr>
+                    <th valign="top">商品名称</th>
+                    <th valign="top">数量</th>
+                    <th valign="top">单价</th>
+                    <th valign="top">金额</th>
+                </tr>
+                <tr>
+                    <?php
+                    if(empty($model->orderDetails)){
+                        echo '
                 <td valign="top">丢失</td>
                 <td valign="top">丢失</td>
                 <td valign="top">丢失</td>
                 <td valign="top">丢失</td>';
-                }else{
-                    foreach($model->orderDetails as $detail){
-                        if(empty($detail->g)){
-                            echo "
+                    }else{
+                        foreach($model->orderDetails as $detail){
+                            if(empty($detail->g)){
+                                echo "
                 <td valign='top'>丢失</td>
                 <td valign='top'>".$detail->amount."</td>
                 <td valign='top'>".$detail->single_price."</td>
                 <td valign='top'>".$detail->total_price."</td>";
-                        }else{
-                            echo "
+                            }else{
+                                echo "
                 <td valign='top'>".$detail->g->name.$detail->g->volum."</td>
                 <td valign='top'>".$detail->amount."</td>
                 <td valign='top'>".$detail->single_price."</td>
                 <td valign='top'>".$detail->total_price."</td>";
+                            }
                         }
                     }
-                }
-                ?>
-            </tr>
-            <tr>
-                <td colspan="4" style="text-align: right;">合计：<?=$model->total ?></td>
-            </tr>
-        </table>
-        <div class="bordbblue"></div>
-        <table class="wine-det">
-            <tr>
-                <th valign="top">支付方式：</th>
-                <td valign="top"><?=empty($payArr[$model->pay_id]) ? '未知':$payArr[$model->pay_id] ?></td>
-            </tr>
-            <tr>
-                <th valign="top">防伪挂锁编码：</th>
-                <td valign="top"><?=$model->real_code ?></td>
-            </tr>
-        </table>
-        <p class="tips">尊敬的客户：您签收时，请务必对防伪挂锁进行校验，确认编码与上述信息一致，并在核对商品数量金额无误后签字。即日起当月内凭小票换取发票。</p>
-    </div>
+                    ?>
+                </tr>
+                <tr>
+                    <td colspan="4" style="text-align: right;">合计：<?=$model->total ?></td>
+                </tr>
+            </table>
+            <div class="bordbblue"></div>
+            <table class="wine-det">
+                <tr>
+                    <th valign="top">支付方式：</th>
+                    <td valign="top"><?=empty($payArr[$model->pay_id]) ? '未知':$payArr[$model->pay_id] ?></td>
+                </tr>
+                <tr>
+                    <th valign="top">防伪挂锁编码：</th>
+                    <td valign="top"><?=$model->real_code ?></td>
+                </tr>
+            </table>
+            <p class="tips">尊敬的客户：您签收时，请务必对防伪挂锁进行校验，确认编码与上述信息一致，并在核对商品数量金额无误后签字。即日起当月内凭小票换取发票。</p>
+        </div>
 </div>
 <?php
 

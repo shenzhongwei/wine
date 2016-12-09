@@ -16,7 +16,7 @@
     .clearfix {display: block;}
     /* End hide from IE-mac */
 
-    .wine-wrap{width:340px; height:400px;display: block;page-break-after: always}
+    .wine-wrap{width:340px; height:400px;display:block;page-break-after: always}
     .wine-wrap h3{font-size: 16px; text-align: center;}
     .wine-wrap .wine-title .fl,.wine-wrap .wine-title .fr{width:48%;}
     .wine-wrap .wine-title .fl{text-align:left;white-space:nowrap;text-overflow:ellipsis; overflow:hidden;word-break:break-all;word-wrap:break-word; }

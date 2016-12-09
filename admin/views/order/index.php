@@ -372,8 +372,7 @@ if($admin->wa_type>3){
                 'print'=>function ($url,$model) {
                     if($model->state>=2 && $model->state<=7){
                         return Html::button(Yii::t('app','Print'), [
-                            'class' => 'btn btn-default btn-xs',
-                            'onclick'=>'Print(this)',
+                            'class' => 'btn btn-default btn-xs print',
                         ]);
                     }else{
                         return '';
@@ -713,8 +712,7 @@ if($admin->wa_type>3){
                 'print'=>function ($url,$model) {
                     if($model->state>=2 && $model->state<=7){
                         return Html::button(Yii::t('app','Print'), [
-                            'class' => 'btn btn-default btn-xs',
-                            'onclick'=>'Print(this)',
+                            'class' => 'btn btn-default btn-xs print',
                         ]);
                     }else{
                         return '';
@@ -725,12 +723,9 @@ if($admin->wa_type>3){
     ];
 }
 ?>
-<?=Html::cssFile('@web/css/wine/order.css')?>
-<?=Html::cssFile('@web/css/wine/print.css',[
-    'type'=>"text/css",
-    'media'=>'print',
-])?>
 <?=Html::jsFile('@web/js/wine/jquery.PrintArea.js')?>
+<?=Html::cssFile('@web/css/wine/order.css')?>
+<?=Html::cssFile('@web/css/wine/print.css')?>
 <div class="order-info-index">
     <?php
     echo GridView::widget([
@@ -879,12 +874,12 @@ if($admin->wa_type>3){
         $(document).ready(init());
         $(document).on('pjax:complete', function() {init();});
     });
-    function Print(obj) {
-        var print = $(obj).closest('tr').find(".wine-wrap");
-        $( print ).printArea();
-        return false;
-    }
     function init() {
+        $('.print').on('click', function () {
+            var print = $(this).closest('tr').find(".wine-wrap");
+            $( print ).printArea();
+            return false;
+        });
         $('.locate').on('click', function () {  //查看详情的触发事件
             $.post(toRoute('order/locate'), {id: $(this).closest('tr').data('key')},
                 function (data) {
