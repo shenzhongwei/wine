@@ -37,6 +37,7 @@ class OrderController extends ApiController{
      * 确认订单接口
      */
     public function actionOrder(){
+        return $this->showResult(303,'该功能暂未开放');
         $user_id = Yii::$app->user->identity->getId();
         $userInfo = UserInfo::findOne($user_id);
         if(empty($userInfo)){

@@ -119,12 +119,8 @@ if($admin->wa_type>3){
         <th valign='top'>支付方式：</th>
         <td valign='top'>$pay</td>
     </tr>
-    <tr>
-        <th valign='top'>防伪挂锁编码：</th>
-        <td valign='top'>$model->real_code</td>
-    </tr>
 </table>
-<p class='tips'>尊敬的客户：您签收时，请务必对防伪挂锁进行校验，确认编码与上述信息一致，并在核对商品数量金额无误后签字。即日起当月内凭小票换取发票。</p></div>";
+<p class='tips'>尊敬的客户：您签收时，请核对商品数量金额无误后签字。即日起当月内凭小票换取发票。</p></div>";
                 }
                 return $ordertable;
             },
@@ -479,12 +475,8 @@ if($admin->wa_type>3){
         <th valign='top'>支付方式：</th>
         <td valign='top'>$pay</td>
     </tr>
-    <tr>
-        <th valign='top'>防伪挂锁编码：</th>
-        <td valign='top'>$model->real_code</td>
-    </tr>
 </table>
-<p class='tips'>尊敬的客户：您签收时，请务必对防伪挂锁进行校验，确认编码与上述信息一致，并在核对商品数量金额无误后签字。即日起当月内凭小票换取发票。</p></div>";
+<p class='tips'>尊敬的客户：您签收时，请核对商品数量金额无误后签字。即日起当月内凭小票换取发票。</p></div>";
                 }
                 return $ordertable;
             },
