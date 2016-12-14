@@ -186,7 +186,7 @@ echo GridView::widget([
             ],
             "format" => "raw",
             'value'=>function($model){
-                return empty($model->logo) ? '<label class="label label-primary">暂无</label>':Html::img('../../../photo'.$model->logo,[
+                return empty($model->logo) ? '<label class="label label-primary">暂无</label>':Html::img('../../../../photo'.$model->logo,[
                     'width'=>"70px",'height'=>"30px"
                 ]);
             }
