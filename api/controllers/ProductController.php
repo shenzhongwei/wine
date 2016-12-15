@@ -345,7 +345,7 @@ class ProductController extends ApiController{
             return $this->showResult(301,'获取数据异常');
         }
         if(!empty($key)&&!empty($value)){
-            if($key == 'vloum'){
+            if($key == 'volum'){
                 $volum = GoodModel::findOne($value);
                 if(empty($volum)){
                     return $this->showResult(301,'规格信息异常');
