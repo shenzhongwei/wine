@@ -5,6 +5,7 @@ namespace api\controllers;
 use api\models\CommentDetail;
 use api\models\GoodCollection;
 use api\models\GoodInfo;
+use api\models\GoodModel;
 use api\models\GoodRush;
 use api\models\GoodType;
 use api\models\GoodVip;
@@ -245,10 +246,14 @@ class ProductController extends ApiController{
             good_type.id>0 and good_type.is_active=1');
         if($from == 1){
             $token = Yii::$app->request->post('token');
-            if(empty($token)||empty(UserLogin::findOne(['token'=>$token]))){
+            if(empty($token)){
                 return $this->showResult(401,'您的登录信息已失效，请重新登录');
             }
-            $userInfo = UserLogin::findOne(['token'=>$token])->userInfo;
+            $userLogin = UserLogin::findOne(['token'=>$token]);
+            if(empty($userLogin)){
+                return $this->showResult(401,'您的登录信息已失效，请重新登录');
+            }
+            $userInfo = $userLogin->userInfo;
             if(empty($userInfo)){
                 return $this->showResult(302,'用户信息状态异常');
             }
@@ -340,8 +345,16 @@ class ProductController extends ApiController{
             return $this->showResult(301,'获取数据异常');
         }
         if(!empty($key)&&!empty($value)){
+            if($key == 'vloum'){
+                $volum = GoodModel::findOne($value);
+                if(empty($volum)){
+                    return $this->showResult(301,'规格信息异常');
+                }else{
+                    $value = $volum->name;
+                }
+            }
             $query->andWhere(['and',$key=='price' ? "$key >= $value[0] ".(empty($value[1])||$value[1]=='+∞' ? '' :
-                    "and $key <$value[1]") : "$key=$value"]);
+                    "and $key <$value[1]") : "`$key`=$value"]);
         }
         $count = $query->count();
         //排序
@@ -397,10 +410,14 @@ class ProductController extends ApiController{
         }elseif ($type==2){
             $goodQuery->where("good_info.id=$good_id");
             if($operate==1){
-                if(empty($token)||empty(UserLogin::findOne(['token'=>$token]))){
+                if(empty($token)){
                     return $this->showResult(401,'您的登录信息已失效，请重新登录');
                 }
-                $userInfo = UserLogin::findOne(['token'=>$token])->userInfo;
+                $userLogin = UserLogin::findOne(['token'=>$token]);
+                if(empty($userLogin)){
+                    return $this->showResult(401,'您的登录信息已失效，请重新登录');
+                }
+                $userInfo = $userLogin->userInfo;
                 if(empty($userInfo)){
                     return $this->showResult(302,'用户信息状态异常');
                 }
