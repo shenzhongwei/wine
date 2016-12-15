@@ -350,7 +350,7 @@ class ProductController extends ApiController{
                 if(empty($volum)){
                     return $this->showResult(301,'规格信息异常');
                 }else{
-                    $value = $volum->name;
+                    $value = "'$volum->name'";
                 }
             }
             $query->andWhere(['and',$key=='price' ? "$key >= $value[0] ".(empty($value[1])||$value[1]=='+∞' ? '' :
