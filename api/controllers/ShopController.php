@@ -47,6 +47,8 @@ class ShopController extends ApiController{
                     'lat'=>$shop->lat/1000000,
                     'lng'=>$shop->lng/1000000,
                     'distance'=>$shop->distance<500 ? $shop->distance.'m':number_format($shop->distance/1000,1).'km',
+                    'start_at' => '09:00:00',
+                    'end_at' => '21:00:00',
                 ];
             }
         }else{
@@ -61,6 +63,8 @@ class ShopController extends ApiController{
                         'lat'=>$element->lat/1000000,
                         'lng'=>$element->lng/1000000,
                         'distance'=>$element->distance<500 ? $element->distance.'m':number_format($element->distance/1000,1).'km',
+                        'start_at' => '09:00:00',
+                        'end_at' => '21:00:00',
                     ];
                 });
             }
@@ -115,6 +119,8 @@ class ShopController extends ApiController{
                     'send_bill'=>$userInfo->is_vip ? 0:$element['send_bill'],
                     'no_send_need'=>$element['no_send_need'],
                     'tips'=>$element['distance']<=3000 ? '19分钟内送达':($element['distance']<5000 ? '29分钟内送达':'您的配送距离较长，请耐心等待'),
+                    'start_at' => '09:00:00',
+                    'end_at' => '21:00:00',
                 ];
             }
         }

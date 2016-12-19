@@ -239,6 +239,8 @@ class ProductController extends ApiController{
         $sort_key = Yii::$app->request->post('sort_key','');
         //排序 0默认 1升序 2降序
         $sort_val = Yii::$app->request->post('sort_val',0);
+        //是否有关键字查询
+        $search_val = Yii::$app->request->post('search_val', '');
         //查询会员
         $query = GoodInfo::find()->joinWith(['merchant0','type0'])
             ->where('good_info.is_active=1 and good_info.merchant>0 and 
@@ -263,6 +265,9 @@ class ProductController extends ApiController{
             $query->leftJoin("(SELECT a.* FROM order_detail a LEFT JOIN order_info b ON a.oid=b.id 
             WHERE state between 2 and 7 and order_date>=".strtotime(date('Y-m-01 00:00:00',time())).") c",'good_info.id=c.gid');
             $query->addSelect(['good_info.*','IFNULL(sum(c.amount),0) as sum'])->groupBy(['good_info.id']);
+            if (!empty($search_val)) {
+                $query->andWhere("good_info.name like '%$search_val%'");
+            }
             if(!empty($from_val)){
                 $query->andWhere("type=$from_val");
                 if($sort_key == 'price'){
@@ -356,6 +361,7 @@ class ProductController extends ApiController{
             $query->andWhere(['and',$key=='price' ? "$key >= $value[0] ".(empty($value[1])||$value[1]=='+∞' ? '' :
                     "and $key <$value[1]") : "`$key`=$value"]);
         }
+
         $count = $query->count();
         //排序
         if(empty($sortKey)||empty($sortValue)){
